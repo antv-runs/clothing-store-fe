@@ -1,19 +1,19 @@
-import { Button } from "./components/atoms/Button/Button";
-import { Input } from "./components/atoms/Input/Input";
-import { Heading } from "./components/atoms/Heading/Heading";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   return (
-    <div style={{ padding: 20 }}>
-      <Heading title="Clothing Store" subtitle="Welcome" />
-
-      <Input placeholder="Search product..." />
-
-      <br />
-      <br />
-
-      <Button>Buy Now</Button>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   );
 }
 

@@ -1,0 +1,165 @@
+@use "./variables" as v;
+
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+
+  -webkit-line-clamp: $lines;
+  overflow: hidden;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between-center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin inline-flex-center {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin focus-ring($outline-offset: 2px, $border-radius: 4px) {
+  &:focus-visible {
+    outline: 2px solid v.$color-black;
+    outline-offset: $outline-offset;
+    border-radius: $border-radius;
+  }
+}
+
+/// Strip default button / control chrome.
+@mixin button-native-reset(
+  $transparent-bg: true,
+  $with-cursor: true,
+  $appearance-none: false,
+  $padding-zero: false,
+  $font-inherit: false
+) {
+  border: none;
+
+  @if $transparent-bg {
+    background-color: transparent;
+  }
+
+  @if $with-cursor {
+    cursor: pointer;
+  }
+
+  @if $appearance-none {
+    appearance: none;
+  }
+
+  @if $padding-zero {
+    padding: 0;
+  }
+
+  @if $font-inherit {
+    font: inherit;
+  }
+}
+
+@mixin skeleton-shimmer(
+  $bg: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%),
+  $bg-size: 200% 100%
+) {
+  background: $bg;
+  background-size: $bg-size;
+  animation: reviews-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+@mixin icon-bg($url, $width: 16px, $height: 16px) {
+  content: "";
+  width: $width;
+  height: $height;
+  background: url($url) no-repeat center / contain;
+}
+
+@mixin icon-mask(
+  $url,
+  $width: 16px,
+  $height: 16px,
+  $color: currentColor,
+  $opacity: 1
+) {
+  content: "";
+  display: inline-block;
+  width: $width;
+  height: $height;
+  background-color: $color;
+  opacity: $opacity;
+  mask: url($url) no-repeat center / contain;
+  -webkit-mask: url($url) no-repeat center / contain;
+}
+
+@mixin panel($padding: 24px) {
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  padding: $padding;
+}
+
+@mixin button-base($background: v.$color-black, $color: v.$color-white) {
+  border: none;
+  border-radius: v.$radius-pill;
+  background-color: $background;
+  color: $color;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+@mixin hover-darken($color: #1a1a1a) {
+  &:hover {
+    background-color: $color;
+  }
+}
+
+@mixin breadcrumb($gap: 12px, $font-size: 16px, $margin-bottom: 24px) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $gap;
+  list-style: none;
+  margin: 0 0 $margin-bottom;
+  padding: 0;
+  color: v.$color-muted;
+  font-size: $font-size;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  li + li::before {
+    content: "";
+    width: 6px;
+    height: 10px;
+    margin-right: $gap;
+    flex: 0 0 auto;
+    background-color: currentColor;
+    -webkit-mask: url("/images/icn_breadcrumb_next.svg") no-repeat center /
+      contain;
+    mask: url("/images/icn_breadcrumb_next.svg") no-repeat center / contain;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      color: v.$color-black;
+    }
+  }
+
+  li[aria-current="page"] {
+    color: v.$color-black;
+  }
+}
