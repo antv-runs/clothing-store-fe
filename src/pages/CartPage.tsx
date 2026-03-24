@@ -1,146 +1,168 @@
 import { FooterForm } from "../components/layout/Footer";
+import { useMemo, useState } from "react";
+import { products } from "../data/products";
+import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
+import { CartEmptyState } from "../components/molecules/CartEmptyState/CartEmptyState";
+import { CartItemRow } from "../components/organisms/CartItemRow/CartItemRow";
+import { CartSummaryPanel } from "../components/organisms/CartSummaryPanel/CartSummaryPanel";
+
+type CartStorageItem = {
+  product_id?: string | number;
+  productId?: string | number;
+  id?: string | number;
+  quantity?: string | number;
+  color?: string;
+  size?: string;
+};
+
+type CartRow = {
+  productId: string;
+  quantity: number;
+  color: string | null;
+  size: string | null;
+};
+
+const CART_STORAGE_KEYS = ["cart", "cartItems", "shoppingCart"];
+
+function formatPrice(amount: number, currency = "USD") {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+function resolveProductId(item: CartStorageItem) {
+  const rawId = item.product_id ?? item.productId ?? item.id ?? "";
+  return String(rawId).trim();
+}
+
+function parseStoredCart(): CartRow[] {
+  for (const key of CART_STORAGE_KEYS) {
+    const raw = localStorage.getItem(key);
+    if (!raw) {
+      continue;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        continue;
+      }
+
+      return parsed
+        .map((item: CartStorageItem) => {
+          const productId = resolveProductId(item);
+          const quantity = Math.max(1, Number(item.quantity) || 1);
+
+          return {
+            productId,
+            quantity,
+            color: item.color ? String(item.color) : null,
+            size: item.size ? String(item.size) : null,
+          };
+        })
+        .filter((item) => item.productId.length > 0);
+    } catch {
+      continue;
+    }
+  }
+
+  return [];
+}
+
+function idsMatch(a: string, b: string) {
+  if (a === b) {
+    return true;
+  }
+
+  const na = Number(a);
+  const nb = Number(b);
+  return Number.isFinite(na) && na === nb;
+}
 
 const CartPage: React.FC = () => {
+  const [cartRows] = useState<CartRow[]>(() => parseStoredCart());
+
+  const cartItems = useMemo(() => {
+    return cartRows
+      .map((row) => {
+        const product = products.find((item) =>
+          idsMatch(String(item.id), row.productId),
+        );
+        if (!product) {
+          return null;
+        }
+
+        return {
+          ...product,
+          quantity: row.quantity,
+          color: row.color,
+          size: row.size,
+        };
+      })
+      .filter((item) => item !== null);
+  }, [cartRows]);
+
+  const summary = useMemo(() => {
+    const subtotal = cartItems.reduce((acc, item) => {
+      const basePrice =
+        item.pricing.original && item.pricing.original > item.pricing.current
+          ? item.pricing.original
+          : item.pricing.current;
+      return acc + basePrice * item.quantity;
+    }, 0);
+
+    const discount = cartItems.reduce((acc, item) => {
+      const original = item.pricing.original;
+      if (!original || original <= item.pricing.current) {
+        return acc;
+      }
+
+      return acc + (original - item.pricing.current) * item.quantity;
+    }, 0);
+
+    const delivery = 0;
+    const total = subtotal - discount + delivery;
+
+    return { subtotal, discount, delivery, total };
+  }, [cartItems]);
+
+  const isEmpty = cartItems.length === 0;
+
   return (
     <div className="container">
       <main className="cart-page js-cart-page">
-        <ol className="cart-page__breadcrumb" aria-label="Breadcrumb">
-          <li>
-            <a href="#">Home</a>
-          </li>
-          <li aria-current="page">Cart</li>
-        </ol>
+        <Breadcrumb
+          items={["Home", "Cart"]}
+          className="cart-page__breadcrumb"
+          id="cart-breadcrumb-list"
+        />
 
         <h1 className="cart-page__title">Your Cart</h1>
 
-        <div
-          className="cart-empty js-cart-empty"
-          style={{ display: "none" }}
-          aria-live="polite"
-        >
-          <div className="cart-empty__inner">
-            <p className="cart-empty__text">Your cart is empty.</p>
-            <a href="/" className="cart-empty__cta">
-              Continue Shopping
-            </a>
-          </div>
-        </div>
+        <CartEmptyState isVisible={isEmpty} />
 
         <section
           className="cart-page__layout js-cart-layout"
           aria-label="Cart summary"
+          style={{ display: isEmpty ? "none" : "" }}
         >
           <div
             className="cart-items js-cart-items"
-            aria-busy="true"
+            aria-busy="false"
             aria-live="polite"
           >
-            {/* Skeleton cart items */}
-            {[0, 1].map((i) => (
-              <article
-                key={i}
-                className="cart-item cart-item--skeleton"
-                aria-hidden="true"
-              >
-                <div className="cart-item__image cart-skeleton-block"></div>
-                <div className="cart-item__content">
-                  <div className="cart-item__head">
-                    <div className="cart-skeleton-block cart-skeleton-block--title"></div>
-                    <div className="cart-skeleton-block cart-skeleton-block--icon"></div>
-                  </div>
-                  <div className="cart-skeleton-block cart-skeleton-block--meta"></div>
-                  <div className="cart-skeleton-block cart-skeleton-block--meta cart-skeleton-block--meta-short"></div>
-                  <div className="cart-item__foot">
-                    <div className="cart-skeleton-block cart-skeleton-block--price"></div>
-                    <div className="cart-item__quantity cart-item__quantity--skeleton">
-                      <div className="cart-skeleton-block cart-skeleton-block--qty-icon"></div>
-                      <div className="cart-skeleton-block cart-skeleton-block--qty-value"></div>
-                      <div className="cart-skeleton-block cart-skeleton-block--qty-icon"></div>
-                    </div>
-                  </div>
-                </div>
-              </article>
+            {cartItems.map((item) => (
+              <CartItemRow
+                key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
+                item={item}
+                formatPrice={formatPrice}
+              />
             ))}
           </div>
 
-          <aside
-            className="cart-summary js-cart-summary"
-            aria-label="Order summary"
-            aria-busy="true"
-          >
-            <h2 className="cart-summary__title">Order Summary</h2>
-
-            <dl className="cart-summary__rows">
-              <div className="cart-summary__row u-mb-28">
-                <dt>Subtotal</dt>
-                <dd className="js-cart-subtotal">
-                  <span className="cart-skeleton-block cart-skeleton-block--summary"></span>
-                </dd>
-              </div>
-              <div className="cart-summary__row u-mb-28">
-                <dt>Discount (-20%)</dt>
-                <dd className="cart-summary__discount js-cart-discount">
-                  <span className="cart-skeleton-block cart-skeleton-block--summary"></span>
-                </dd>
-              </div>
-              <div className="cart-summary__row">
-                <dt>Delivery Fee</dt>
-                <dd className="js-cart-delivery">
-                  <span className="cart-skeleton-block cart-skeleton-block--summary"></span>
-                </dd>
-              </div>
-            </dl>
-
-            <div className="cart-summary__total">
-              <p>Total</p>
-              <p className="js-cart-total">
-                <span className="cart-skeleton-block cart-skeleton-block--summary cart-skeleton-block--summary-total"></span>
-              </p>
-            </div>
-
-            <form
-              className="cart-summary__coupon js-cart-promo-form"
-              action="#"
-            >
-              <div className="coupon-input">
-                <figure>
-                  <img src="/images/icn_promo_code.svg" alt="Promo code" />
-                </figure>
-                <input
-                  className="js-cart-coupon-input"
-                  type="text"
-                  placeholder="Add promo code"
-                  aria-label="Promo code"
-                  disabled
-                  aria-disabled="true"
-                />
-              </div>
-              <button
-                className="js-cart-coupon-apply"
-                type="button"
-                disabled
-                aria-disabled="true"
-              >
-                Apply
-              </button>
-            </form>
-            <p
-              className="cart-summary__coupon-msg js-cart-coupon-msg"
-              aria-live="polite"
-              hidden
-            ></p>
-
-            <button
-              className="cart-summary__checkout js-cart-checkout"
-              type="button"
-              disabled
-              aria-disabled="true"
-            >
-              <span className="cart-summary__checkout-text">
-                Go to Checkout
-              </span>
-            </button>
-          </aside>
+          <CartSummaryPanel summary={summary} formatPrice={formatPrice} />
         </section>
       </main>
 
