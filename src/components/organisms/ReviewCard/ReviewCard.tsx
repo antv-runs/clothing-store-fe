@@ -1,4 +1,5 @@
 import React from "react";
+import "./ReviewCard.scss";
 import { Star } from "../../atoms/Star/Star";
 import { ReviewMeta } from "~/components/molecules/ReviewMeta/ReviewMeta";
 import { formatDate } from "../../../utils/formatters";

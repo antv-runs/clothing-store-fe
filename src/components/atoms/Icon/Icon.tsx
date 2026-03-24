@@ -22,7 +22,7 @@ function Icon({
   return (
     <ReactSVG
       className={clsx("iconContainer", className)}
-      src={`/icons/${svgName}.svg`}
+      src={`/images/${svgName}.svg`}
       wrapper="span"
       onClick={onClick}
       style={{

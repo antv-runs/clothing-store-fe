@@ -1,4 +1,5 @@
 import React from "react";
+import "./ProductActions.scss";
 
 /**
  * ProductActions - Quantity controls and add-to-cart CTA.

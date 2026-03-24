@@ -1,4 +1,5 @@
 import React from "react";
+import "./WriteReviewModal.scss";
 
 /**
  * WriteReviewModal - Static review modal markup.

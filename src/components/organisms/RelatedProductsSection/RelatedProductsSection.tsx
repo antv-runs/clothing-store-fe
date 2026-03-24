@@ -1,4 +1,5 @@
 import React from "react";
+import "./RelatedProductsSection.scss";
 import { Star } from "../../atoms/Star/Star";
 import type { Product } from "../../../types/product";
 

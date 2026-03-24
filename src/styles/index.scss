@@ -10,17 +10,9 @@
 @use "./base/utilities";
 
 // === Layout ===
-@use "./layout/header";
-@use "./layout/footer";
 
 // === Components ===
-@use "./components/button";
 @use "./components/form";
-@use "./components/card";
-@use "./components/tabs";
-@use "./components/reviews";
-@use "./components/product-card";
-@use "./components/carousel";
 
 // === Pages ===
 @use "./pages/product";

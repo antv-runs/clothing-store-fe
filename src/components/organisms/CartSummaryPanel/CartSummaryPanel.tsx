@@ -1,4 +1,5 @@
 import React from "react";
+import "./CartSummaryPanel.scss";
 
 interface CartSummary {
   subtotal: number;

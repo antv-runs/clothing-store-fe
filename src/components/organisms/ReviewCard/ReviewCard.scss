@@ -1,0 +1,84 @@
+@use "../../../styles/abstracts/variables" as v;
+@use "../../../styles/abstracts/mixins" as *;
+
+.review-card {
+  border: 1px solid rgba(0, 0, 0, 0.1019607843);
+  border-radius: 20px;
+  padding: 25px 30px;
+  display: flex;
+  flex-direction: column;
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 17px;
+  }
+
+  &__stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__star {
+    width: 20px;
+    aspect-ratio: 22/21;
+    flex-shrink: 0;
+
+    path {
+      fill: none;
+      stroke: #ffc633;
+      stroke-width: 1;
+      transition: fill 0.2s ease;
+    }
+
+    &--active path {
+      fill: #ffc633;
+    }
+
+    &--empty path {
+      opacity: 0.3;
+    }
+  }
+
+  &__more-btn {
+    @include button-native-reset;
+    padding: 0 25px 0 0;
+    @include icon-bg(v.$icon-review-more, 25px, 25px);
+  }
+
+  &__header {
+    position: relative;
+    padding-right: 32px;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  &__header--verified {
+    &::after {
+      content: "";
+      position: absolute;
+      @include icon-bg(v.$icn_verified_review, 25px, 25px);
+    }
+  }
+
+  &__content {
+    @include line-clamp(3);
+    line-height: 1.375;
+    color: v.$color-muted;
+    padding-right: 25px;
+    margin-bottom: 22px;
+    min-height: 66px;
+  }
+
+  &__footer {
+    @include line-clamp(1);
+    font-weight: 500;
+    line-height: 1.375;
+    color: v.$color-muted;
+    margin-top: auto;
+  }
+}
