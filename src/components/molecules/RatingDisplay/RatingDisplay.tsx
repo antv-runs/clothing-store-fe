@@ -4,6 +4,7 @@ import { Rating } from "../../atoms/Rating/Rating";
 
 interface RatingDisplayProps {
   rating: number;
+  maxStars?: number;
   starClassName?: string;
   showEmpty?: boolean;
 }
@@ -14,19 +15,30 @@ interface RatingDisplayProps {
  */
 export const RatingDisplay: React.FC<RatingDisplayProps> = ({
   rating,
-  starClassName = "review-card__star",
+  maxStars = 5,
+  starClassName = "product-overview__star",
   showEmpty = false,
 }) => {
+  const safeRating = Math.max(0, Math.min(maxStars, Number(rating) || 0));
+
   return (
-    <div className="product-overview__rating js-product-rating-section">
+    <div
+      className="product-overview__rating js-product-rating-section"
+      aria-label={`${safeRating.toFixed(1)} out of ${maxStars} stars`}
+    >
       <div id="product-rating-stars" className="js-product-rating-stars">
-        <Star rating={rating} className={starClassName} showEmpty={showEmpty} />
+        <Star
+          rating={safeRating}
+          className={starClassName}
+          showEmpty={showEmpty}
+          maxStars={maxStars}
+        />
       </div>
       <p
         id="product-rating-text"
         className="product-overview__rating-text js-product-rating-text"
       >
-        <Rating rating={rating} />
+        <Rating rating={safeRating} />
       </p>
     </div>
   );

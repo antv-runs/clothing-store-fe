@@ -81,7 +81,7 @@ const ProductDetailPage: React.FC = () => {
 
   if (!product) {
     return (
-      <div className="container">
+      <div className="container u-mt-25">
         <main className="product-overview js-product-overview">
           <p className="product-overview__description">Product not found.</p>
         </main>
@@ -91,7 +91,7 @@ const ProductDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="container">
+    <div className="container u-mt-25">
       {/* Product Overview Section */}
       <section className="product-overview js-product-overview">
         <Breadcrumb

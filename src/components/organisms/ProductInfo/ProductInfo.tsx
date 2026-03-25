@@ -32,10 +32,6 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
       >
         {product.description}
       </p>
-
-      <p className="product-overview__description">
-        Category: {product.category?.name || "N/A"}
-      </p>
     </>
   );
 
@@ -43,9 +39,5 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
     return content;
   }
 
-  return (
-    <div className="product-overview__info">
-      {content}
-    </div>
-  );
+  return <div className="product-overview__info">{content}</div>;
 };
