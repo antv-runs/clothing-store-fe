@@ -1,5 +1,5 @@
-@use "../abstracts/mixins" as m;
-@use "../abstracts/variables" as v;
+@use "../styles/abstracts/mixins" as m;
+@use "../styles/abstracts/variables" as v;
 
 .cart-page {
   margin-bottom: 80px;
@@ -32,7 +32,6 @@
 }
 
 .cart-page {
-
   &__title {
     font-family: "IntegralCF", sans-serif;
     font-size: 40px;
@@ -154,10 +153,12 @@
 .cart-skeleton-block {
   display: block;
   border-radius: 10px;
-  background: linear-gradient(90deg,
-      rgba(0, 0, 0, 0.08) 25%,
-      rgba(0, 0, 0, 0.15) 37%,
-      rgba(0, 0, 0, 0.08) 63%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.08) 25%,
+    rgba(0, 0, 0, 0.15) 37%,
+    rgba(0, 0, 0, 0.08) 63%
+  );
   background-size: 200% 100%;
   animation: cartSkeletonShimmer 1.2s ease-in-out infinite;
 
@@ -442,7 +443,6 @@
   }
 
   &--skeleton {
-
     .cart-item__name,
     .cart-item__meta,
     .cart-item__price,
@@ -641,7 +641,6 @@
 }
 
 .cart-summary[aria-busy="true"] {
-
   .cart-summary__row dd,
   .cart-summary__total p:last-child {
     display: inline-flex;
@@ -735,7 +734,6 @@
 
   .cart-summary {
     &__row {
-
       dt,
       dd {
         font-size: 16px;

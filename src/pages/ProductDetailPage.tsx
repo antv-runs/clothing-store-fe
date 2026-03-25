@@ -1,5 +1,5 @@
 import { FooterForm } from "../components/organisms/Footer";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { products } from "../data/products";
 import { reviews } from "../data/reviews";
@@ -11,6 +11,7 @@ import { ProductActions } from "../components/molecules/ProductActions/ProductAc
 import { ProductTabsSection } from "../components/organisms/ProductTabsSection/ProductTabsSection";
 import { RelatedProductsSection } from "../components/organisms/RelatedProductsSection/RelatedProductsSection";
 import { WriteReviewModal } from "../components/organisms/WriteReviewModal/WriteReviewModal";
+import "./ProductDetailPage.scss";
 
 function formatPrice(amount: number, currency = "USD") {
   return new Intl.NumberFormat("en-US", {
@@ -79,14 +80,8 @@ const ProductDetailPage: React.FC = () => {
     return products.filter((item) => item.id !== product.id).slice(0, 4);
   }, [product]);
 
-  useEffect(() => {
-    if (import.meta.env.DEV) {
-      console.log("[ProductDetailPage] route id:", id);
-      console.log("[ProductDetailPage] matched product:", product);
-    }
-  }, [id, product]);
-
   if (!product) {
+    console.log("[RENDER] Product is null, showing 'not found' message");
     return (
       <div className="container">
         <main className="product-overview js-product-overview">
@@ -97,11 +92,20 @@ const ProductDetailPage: React.FC = () => {
     );
   }
 
+  console.log("[RENDER] Rendering product page for:", product.id, product.name);
+  console.log("[RENDER] Props to ProductGallery:", {
+    imagesLength: product.images?.length,
+    imagesSample: product.images?.[0],
+    thumbnail: product.thumbnail,
+  });
+
   return (
     <div className="container">
       {/* Product Overview Section */}
       <section className="product-overview js-product-overview">
-        <Breadcrumb items={product.breadcrumb || ["Home", "Shop", product.name]} />
+        <Breadcrumb
+          items={product.breadcrumb || ["Home", "Shop", product.name]}
+        />
 
         <div className="product-overview__details">
           <ProductGallery
@@ -127,7 +131,10 @@ const ProductDetailPage: React.FC = () => {
         faqs={product.faqs || []}
       />
 
-      <RelatedProductsSection items={relatedProducts} formatPrice={formatPrice} />
+      <RelatedProductsSection
+        items={relatedProducts}
+        formatPrice={formatPrice}
+      />
 
       {/* Footer Form (newsletter) */}
       <FooterForm />

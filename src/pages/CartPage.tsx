@@ -5,6 +5,7 @@ import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
 import { CartEmptyState } from "../components/molecules/CartEmptyState/CartEmptyState";
 import { CartItemRow } from "../components/organisms/CartItemRow/CartItemRow";
 import { CartSummaryPanel } from "../components/organisms/CartSummaryPanel/CartSummaryPanel";
+import "./CartPage.scss";
 
 type CartStorageItem = {
   product_id?: string | number;
