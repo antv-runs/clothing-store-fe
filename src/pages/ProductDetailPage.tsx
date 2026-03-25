@@ -1,8 +1,6 @@
 import { FooterForm } from "../components/organisms/Footer";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { products } from "../data/products";
-import { reviews } from "../data/reviews";
 import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
 import { ProductGallery } from "../components/organisms/ProductGallery/ProductGallery";
 import { ProductInfo } from "../components/organisms/ProductInfo/ProductInfo";
@@ -11,51 +9,93 @@ import { ProductActions } from "../components/molecules/ProductActions/ProductAc
 import { ProductTabsSection } from "../components/organisms/ProductTabsSection/ProductTabsSection";
 import { RelatedProductsSection } from "../components/organisms/RelatedProductsSection/RelatedProductsSection";
 import { WriteReviewModal } from "../components/organisms/WriteReviewModal/WriteReviewModal";
-import { selectReviewsForProduct } from "../services/reviewSelector";
+import { getProductById, getProducts } from "../services/productService";
+import { getReviewsByProductId } from "../services/reviewService";
+import type { Product } from "../types/product";
+import type { Review } from "../types/review";
+import { formatPrice, isSameProductId } from "../utils/formatters";
 import "./ProductDetailPage.scss";
-
-function formatPrice(amount: number, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-function isSameProductId(routeId: string, productId: string) {
-  if (routeId === productId) {
-    return true;
-  }
-
-  const routeAsNumber = Number(routeId);
-  const productAsNumber = Number(productId);
-
-  return Number.isFinite(routeAsNumber) && routeAsNumber === productAsNumber;
-}
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams();
   const normalizedRouteId = String(id || "").trim();
 
-  const product = useMemo(() => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [productReviews, setProductReviews] = useState<Review[]>([]);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
     if (!normalizedRouteId) {
-      return null;
+      setProduct(null);
+      setProductReviews([]);
+      setReviewCount(0);
+      setCatalogProducts([]);
+      setIsLoading(false);
+      return () => {
+        abortController.abort();
+      };
     }
 
-    return (
-      products.find((item) =>
-        isSameProductId(normalizedRouteId, String(item.id)),
-      ) || null
-    );
+    async function loadProductDetail() {
+      setIsLoading(true);
+      setProduct(null);
+      setProductReviews([]);
+      setReviewCount(0);
+
+      try {
+        const [productResult, productsResult] = await Promise.all([
+          getProductById(normalizedRouteId, {
+            signal: abortController.signal,
+          }),
+          getProducts({}, { signal: abortController.signal }),
+        ]);
+
+        setCatalogProducts(productsResult.products);
+
+        if (!productResult) {
+          setProduct(null);
+          setProductReviews([]);
+          setReviewCount(0);
+          return;
+        }
+
+        setProduct(productResult);
+
+        const reviewsResult = await getReviewsByProductId(productResult.id, {
+          page: 1,
+          perPage: 50,
+          sort: "latest",
+          signal: abortController.signal,
+        });
+
+        setProductReviews(reviewsResult.data);
+        setReviewCount(reviewsResult.meta.total);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+
+        console.error("Failed to load product detail data.", error);
+        setProduct(null);
+        setProductReviews([]);
+        setReviewCount(0);
+      } finally {
+        if (!abortController.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadProductDetail();
+
+    return () => {
+      abortController.abort();
+    };
   }, [normalizedRouteId]);
-
-  const productReviews = useMemo(() => {
-    if (!product) {
-      return [];
-    }
-
-    return selectReviewsForProduct(reviews, String(product.id));
-  }, [product]);
 
   const relatedProducts = useMemo(() => {
     if (!product) {
@@ -64,11 +104,11 @@ const ProductDetailPage: React.FC = () => {
 
     const relatedFromIds = product.relatedProductIds
       .map((relatedId) =>
-        products.find((item) =>
+        catalogProducts.find((item) =>
           isSameProductId(String(relatedId), String(item.id)),
         ),
       )
-      .filter((item): item is (typeof products)[number] => {
+      .filter((item): item is Product => {
         return item !== undefined && item.id !== product.id;
       });
 
@@ -76,8 +116,19 @@ const ProductDetailPage: React.FC = () => {
       return relatedFromIds.slice(0, 4);
     }
 
-    return products.filter((item) => item.id !== product.id).slice(0, 4);
-  }, [product]);
+    return catalogProducts.filter((item) => item.id !== product.id).slice(0, 4);
+  }, [catalogProducts, product]);
+
+  if (isLoading) {
+    return (
+      <div className="container u-mt-25">
+        <main className="product-overview js-product-overview">
+          <p className="product-overview__description">Loading product...</p>
+        </main>
+        <FooterForm />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -118,7 +169,7 @@ const ProductDetailPage: React.FC = () => {
       <ProductTabsSection
         details={product.details}
         reviews={productReviews}
-        reviewCount={productReviews.length || product.reviewCount || 0}
+        reviewCount={reviewCount || product.reviewCount || 0}
         faqs={product.faqs || []}
       />
 
