@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "~/components/layout/Header";
-import Footer from "~/components/layout/Footer";
+import Header from "~/components/organisms/Header";
+import Footer from "~/components/organisms/Footer";
 import ProductDetailPage from "~/pages/ProductDetailPage";
 import CartPage from "~/pages/CartPage";
 import IconButton from "./components/atoms/IconButton/IconButton";

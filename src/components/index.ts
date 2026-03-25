@@ -25,6 +25,8 @@ export { ReviewMeta } from "./molecules";
 export { Breadcrumb } from "./organisms";
 export { CartItemRow } from "./organisms";
 export { CartSummaryPanel } from "./organisms";
+export { Header } from "./organisms";
+export { Footer, FooterForm } from "./organisms";
 export { ProductGallery } from "./organisms";
 export { ProductInfo } from "./organisms";
 export { ProductReviews } from "./organisms";
@@ -33,7 +35,3 @@ export { ProductVariants } from "./organisms";
 export { RelatedProductsSection } from "./organisms";
 export { ReviewCard } from "./organisms";
 export { WriteReviewModal } from "./organisms";
-
-// Layout
-export { default as Header, Footer } from "./layout";
-export { FooterForm } from "./layout";

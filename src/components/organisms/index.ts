@@ -1,3 +1,5 @@
+export { default as Header } from "./Header";
+export { default as Footer, FooterForm } from "./Footer";
 export { Breadcrumb } from "./Breadcrumb";
 export { CartItemRow } from "./CartItemRow";
 export { CartSummaryPanel } from "./CartSummaryPanel";

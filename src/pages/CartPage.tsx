@@ -1,4 +1,4 @@
-import { FooterForm } from "../components/layout/Footer";
+import { FooterForm } from "../components/organisms/Footer";
 import { useMemo, useState } from "react";
 import { products } from "../data/products";
 import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";

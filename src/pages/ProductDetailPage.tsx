@@ -1,4 +1,4 @@
-import { FooterForm } from "../components/layout/Footer";
+import { FooterForm } from "../components/organisms/Footer";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { products } from "../data/products";
