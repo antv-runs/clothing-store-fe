@@ -70,7 +70,7 @@ export const HomeReviews: React.FC = () => {
         <h2 id="home-reviews-title">OUR HAPPY CUSTOMERS</h2>
         <div className="home-reviews__actions">
           <IconButton
-            svgName="icn_back"
+            svgName="icn_arrow_left_home"
             className="home-reviews__action"
             ariaLabel="Scroll reviews left"
             onClick={() => handleScrollReviews("prev")}
@@ -79,7 +79,7 @@ export const HomeReviews: React.FC = () => {
             iconHeight={18}
           />
           <IconButton
-            svgName="icn_next"
+            svgName="icn_arrow_right_home"
             className="home-reviews__action"
             ariaLabel="Scroll reviews right"
             onClick={() => handleScrollReviews("next")}
