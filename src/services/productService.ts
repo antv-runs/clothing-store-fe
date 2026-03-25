@@ -28,6 +28,10 @@ interface ServiceOptions {
   signal?: AbortSignal;
 }
 
+export interface GetRelatedProductsOptions extends ServiceOptions {
+  limit?: number;
+}
+
 function createAbortError(): Error {
   return new DOMException("The operation was aborted.", "AbortError");
 }
@@ -76,6 +80,57 @@ function cloneProduct(product: Product): Product {
   };
 }
 
+function resolveImageUrl(product: Product): string {
+  const primaryImage =
+    product.images.find((image) => image.is_primary) || product.images[0];
+
+  return (
+    String(product.thumbnail || "").trim() ||
+    String(primaryImage?.url || "").trim() ||
+    String(primaryImage?.image_url || "").trim() ||
+    ""
+  );
+}
+
+function resolveImageAlt(product: Product): string {
+  const primaryImage =
+    product.images.find((image) => image.is_primary) || product.images[0];
+
+  return (
+    String(product.thumbnailAlt || "").trim() ||
+    String(primaryImage?.alt || "").trim() ||
+    String(primaryImage?.alt_text || "").trim() ||
+    product.name
+  );
+}
+
+function normalizeProduct(product: Product): Product {
+  const cloned = cloneProduct(product);
+  const normalizedImages = cloned.images.map((image, index) => {
+    const resolvedUrl =
+      String(image.url || "").trim() || String(image.image_url || "").trim();
+
+    return {
+      ...image,
+      id: String(image.id || `${cloned.id}-image-${index + 1}`),
+      url: resolvedUrl,
+      image_url: resolvedUrl,
+      alt: String(image.alt || "").trim() || cloned.name,
+      alt_text: image.alt_text,
+    };
+  });
+
+  cloned.images = normalizedImages;
+  cloned.thumbnail = resolveImageUrl(cloned);
+  cloned.thumbnailAlt = resolveImageAlt(cloned);
+
+  return cloned;
+}
+
+function getNormalizedProductList(): Product[] {
+  return products.map((product) => normalizeProduct(product));
+}
+
 function paginateProducts(
   items: Product[],
   params: GetProductsParams,
@@ -105,7 +160,7 @@ function filterProducts(params: GetProductsParams): Product[] {
       ? null
       : String(params.category_id);
 
-  return products
+  return getNormalizedProductList()
     .filter((product) => {
       const matchesSearch =
         !normalizedSearch ||
@@ -149,7 +204,7 @@ export async function getProductById(
 
   await delay(MOCK_DELAY_MS, options.signal);
 
-  const matchedProduct = products.find((product) => {
+  const matchedProduct = getNormalizedProductList().find((product) => {
     return (
       isSameProductId(normalizedId, String(product.id)) ||
       product.slug === normalizedId
@@ -157,4 +212,64 @@ export async function getProductById(
   });
 
   return matchedProduct ? cloneProduct(matchedProduct) : null;
+}
+
+export async function getRelatedProducts(
+  productId: string | number,
+  { limit = 8, signal }: GetRelatedProductsOptions = {},
+): Promise<Product[]> {
+  const normalizedProductId = String(productId || "").trim();
+  const normalizedLimit = Math.max(1, Number(limit) || 8);
+
+  await delay(MOCK_DELAY_MS, signal);
+
+  const allProducts = getNormalizedProductList();
+  const currentProduct = allProducts.find((product) => {
+    return isSameProductId(normalizedProductId, String(product.id));
+  });
+
+  if (!currentProduct) {
+    return allProducts.slice(0, normalizedLimit).map(cloneProduct);
+  }
+
+  const pickedIds = new Set<string>();
+  const relatedByIds: Product[] = [];
+
+  currentProduct.relatedProductIds.forEach((relatedId) => {
+    const matched = allProducts.find((product) => {
+      return isSameProductId(String(relatedId), String(product.id));
+    });
+
+    if (!matched || isSameProductId(String(matched.id), normalizedProductId)) {
+      return;
+    }
+
+    if (pickedIds.has(String(matched.id))) {
+      return;
+    }
+
+    pickedIds.add(String(matched.id));
+    relatedByIds.push(matched);
+  });
+
+  if (relatedByIds.length < normalizedLimit) {
+    allProducts.forEach((product) => {
+      if (relatedByIds.length >= normalizedLimit) {
+        return;
+      }
+
+      if (isSameProductId(String(product.id), normalizedProductId)) {
+        return;
+      }
+
+      if (pickedIds.has(String(product.id))) {
+        return;
+      }
+
+      pickedIds.add(String(product.id));
+      relatedByIds.push(product);
+    });
+  }
+
+  return relatedByIds.slice(0, normalizedLimit).map(cloneProduct);
 }

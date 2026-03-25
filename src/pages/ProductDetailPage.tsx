@@ -1,5 +1,5 @@
 import { FooterForm } from "../components/organisms/Footer";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
 import { ProductGallery } from "../components/organisms/ProductGallery/ProductGallery";
@@ -9,11 +9,11 @@ import { ProductActions } from "../components/molecules/ProductActions/ProductAc
 import { ProductTabsSection } from "../components/organisms/ProductTabsSection/ProductTabsSection";
 import { RelatedProductsSection } from "../components/organisms/RelatedProductsSection/RelatedProductsSection";
 import { WriteReviewModal } from "../components/organisms/WriteReviewModal/WriteReviewModal";
-import { getProductById, getProducts } from "../services/productService";
+import { getProductById } from "../services/productService";
 import { getReviewsByProductId } from "../services/reviewService";
 import type { Product } from "../types/product";
 import type { Review } from "../types/review";
-import { formatPrice, isSameProductId } from "../utils/formatters";
+import { formatPrice } from "../utils/formatters";
 import "./ProductDetailPage.scss";
 
 const ProductDetailPage: React.FC = () => {
@@ -24,7 +24,6 @@ const ProductDetailPage: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [productReviews, setProductReviews] = useState<Review[]>([]);
   const [reviewCount, setReviewCount] = useState(0);
-  const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -33,7 +32,6 @@ const ProductDetailPage: React.FC = () => {
       setProduct(null);
       setProductReviews([]);
       setReviewCount(0);
-      setCatalogProducts([]);
       setIsLoading(false);
       return () => {
         abortController.abort();
@@ -47,14 +45,9 @@ const ProductDetailPage: React.FC = () => {
       setReviewCount(0);
 
       try {
-        const [productResult, productsResult] = await Promise.all([
-          getProductById(normalizedRouteId, {
-            signal: abortController.signal,
-          }),
-          getProducts({}, { signal: abortController.signal }),
-        ]);
-
-        setCatalogProducts(productsResult.products);
+        const productResult = await getProductById(normalizedRouteId, {
+          signal: abortController.signal,
+        });
 
         if (!productResult) {
           setProduct(null);
@@ -96,28 +89,6 @@ const ProductDetailPage: React.FC = () => {
       abortController.abort();
     };
   }, [normalizedRouteId]);
-
-  const relatedProducts = useMemo(() => {
-    if (!product) {
-      return [];
-    }
-
-    const relatedFromIds = product.relatedProductIds
-      .map((relatedId) =>
-        catalogProducts.find((item) =>
-          isSameProductId(String(relatedId), String(item.id)),
-        ),
-      )
-      .filter((item): item is Product => {
-        return item !== undefined && item.id !== product.id;
-      });
-
-    if (relatedFromIds.length > 0) {
-      return relatedFromIds.slice(0, 4);
-    }
-
-    return catalogProducts.filter((item) => item.id !== product.id).slice(0, 4);
-  }, [catalogProducts, product]);
 
   if (isLoading) {
     return (
@@ -174,7 +145,7 @@ const ProductDetailPage: React.FC = () => {
       />
 
       <RelatedProductsSection
-        items={relatedProducts}
+        currentProductId={String(product.id)}
         formatPrice={formatPrice}
       />
 

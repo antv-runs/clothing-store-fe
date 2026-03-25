@@ -2,7 +2,7 @@
 @use "../styles/abstracts/mixins" as m;
 
 .product-overview {
-  margin-bottom: 80px;
+  margin-bottom: 75px;
 
   &--bootstrap-locked {
     .product-overview__choose-colors,
@@ -141,20 +141,19 @@
 
   &__details {
     display: flex;
-    gap: 20px;
+    gap: 40px;
   }
 
   &__info {
     flex: 1;
     min-width: 0;
-    padding-left: 20px;
-    max-width: 600px;
+    max-width: 590px;
 
     h1 {
       font-size: 40px;
       font-weight: 700;
       font-family: v.$font-family-display;
-      margin-bottom: 14px;
+      margin-bottom: 20px;
       line-height: 1;
       @include m.line-clamp(1);
     }
@@ -164,7 +163,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 14px;
+    margin-bottom: 25px;
 
     > div {
       display: inline-flex;
@@ -251,7 +250,7 @@
     color: rgba(0, 0, 0, 0.6);
     padding-bottom: 24px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     @include m.line-clamp(3);
 
     &:has(.product-overview__skeleton-line--text) {
