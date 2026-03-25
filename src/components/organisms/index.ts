@@ -11,3 +11,8 @@ export { ProductVariants } from "./ProductVariants";
 export { RelatedProductsSection } from "./RelatedProductsSection";
 export { ReviewCard } from "./ReviewCard";
 export { WriteReviewModal } from "./WriteReviewModal";
+export { HomeHero } from "./HomeHero";
+export { HomeBrands } from "./HomeBrands";
+export { HomeProductSection } from "./HomeProductSection";
+export { HomeStyleGrid } from "./HomeStyleGrid";
+export { HomeReviews } from "./HomeReviews";

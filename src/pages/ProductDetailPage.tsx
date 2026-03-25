@@ -11,6 +11,7 @@ import { ProductActions } from "../components/molecules/ProductActions/ProductAc
 import { ProductTabsSection } from "../components/organisms/ProductTabsSection/ProductTabsSection";
 import { RelatedProductsSection } from "../components/organisms/RelatedProductsSection/RelatedProductsSection";
 import { WriteReviewModal } from "../components/organisms/WriteReviewModal/WriteReviewModal";
+import { selectReviewsForProduct } from "../services/reviewSelector";
 import "./ProductDetailPage.scss";
 
 function formatPrice(amount: number, currency = "USD") {
@@ -53,9 +54,7 @@ const ProductDetailPage: React.FC = () => {
       return [];
     }
 
-    return reviews.filter((item) =>
-      isSameProductId(String(item.productId), String(product.id)),
-    );
+    return selectReviewsForProduct(reviews, String(product.id));
   }, [product]);
 
   const relatedProducts = useMemo(() => {
@@ -81,7 +80,6 @@ const ProductDetailPage: React.FC = () => {
   }, [product]);
 
   if (!product) {
-    console.log("[RENDER] Product is null, showing 'not found' message");
     return (
       <div className="container">
         <main className="product-overview js-product-overview">
@@ -91,13 +89,6 @@ const ProductDetailPage: React.FC = () => {
       </div>
     );
   }
-
-  console.log("[RENDER] Rendering product page for:", product.id, product.name);
-  console.log("[RENDER] Props to ProductGallery:", {
-    imagesLength: product.images?.length,
-    imagesSample: product.images?.[0],
-    thumbnail: product.thumbnail,
-  });
 
   return (
     <div className="container">

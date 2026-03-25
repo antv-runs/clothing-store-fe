@@ -150,10 +150,8 @@
       width: 48px;
       @include m.flex-center;
 
-      &::after {
-        content: "";
-        position: absolute;
-        @include m.icon-bg(#D8D8D8, 22px, 22px);
+      .iconContainer {
+        color: #000;
       }
     }
 

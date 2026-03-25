@@ -44,28 +44,12 @@
     width: 36px;
     height: 36px;
     @include button-native-reset($transparent-bg: false);
+    @include flex-center;
     border-radius: 50%;
     background-color: #f3f3f3;
-    position: relative;
 
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 16px;
-      height: 2px;
-      background-color: #333;
-      transform-origin: center;
-    }
-
-    &::before {
-      transform: translate(-50%, -50%) rotate(45deg);
-    }
-
-    &::after {
-      transform: translate(-50%, -50%) rotate(-45deg);
+    .iconContainer {
+      color: #333;
     }
   }
 

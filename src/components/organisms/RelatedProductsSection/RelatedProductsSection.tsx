@@ -1,6 +1,7 @@
 import React from "react";
 import "./RelatedProductsSection.scss";
 import { Star } from "../../atoms/Star/Star";
+import IconButton from "../../atoms/IconButton/IconButton";
 import type { Product } from "../../../types/product";
 
 interface RelatedProductsSectionProps {
@@ -20,7 +21,13 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
     <section className="other-products js-related-products">
       <h2 className="other-products__title">You Might Also Like</h2>
 
-      <button className="other-products__prev js-other-products__prev"></button>
+      <IconButton
+        svgName="icn_back"
+        className="other-products__prev js-other-products__prev"
+        ariaLabel="Previous related products"
+        iconWidth={50}
+        iconHeight={50}
+      />
 
       <div className="other-products__viewport js-related-viewport">
         <ul
@@ -79,7 +86,13 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
         </ul>
       </div>
 
-      <button className="other-products__next js-other-products__next"></button>
+      <IconButton
+        svgName="icn_next"
+        className="other-products__next js-other-products__next"
+        ariaLabel="Next related products"
+        iconWidth={50}
+        iconHeight={50}
+      />
     </section>
   );
 };

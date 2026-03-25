@@ -400,22 +400,12 @@
         flex: 0 0 44px;
         @include m.button-native-reset;
         @include m.flex-center;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 20px 20px;
+        color: #000;
 
         &:disabled {
           opacity: 0.45;
           cursor: not-allowed;
         }
-      }
-
-      .quantity-button-minus {
-        background-image: url("/images/icn_minus.svg");
-      }
-
-      .quantity-button-plus {
-        background-image: url("/images/icn_plus.svg");
       }
     }
 

@@ -59,9 +59,6 @@ Use the following mental model when creating components:
 - **organisms**: larger composed UI blocks  
   Examples: Header, ProductCard, ProductGallery, ReviewList
 
-- **templates/layouts**: page structure and layout wrappers  
-  Examples: MainLayout, ProductLayout
-
 - **pages**: route-level screens using real data  
   Examples: HomePage, ProductDetailPage, CartPage
 
@@ -88,7 +85,6 @@ src/
     atoms/
     molecules/
     organisms/
-    layouts/
   pages/
   hooks/
   services/

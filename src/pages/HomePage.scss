@@ -1,0 +1,46 @@
+@use "../styles/abstracts/variables" as v;
+@use "../styles/abstracts/mixins" as m;
+
+.btn {
+  @include m.button-base;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 12px 24px;
+  text-decoration: none;
+
+  &--primary {
+    background-color: v.$color-black;
+    color: v.$color-white;
+
+    &:hover {
+      background-color: #1a1a1a;
+    }
+  }
+
+  &--light {
+    background-color: v.$color-white;
+    color: v.$color-black;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+
+  &--cta {
+    width: 218px;
+    min-height: 52px;
+    border-radius: v.$radius-pill;
+  }
+}
+
+.home-page {
+  margin-bottom: 80px;
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    margin-bottom: 64px;
+  }
+}

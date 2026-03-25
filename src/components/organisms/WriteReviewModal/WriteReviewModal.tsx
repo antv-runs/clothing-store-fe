@@ -1,5 +1,6 @@
 import React from "react";
 import "./WriteReviewModal.scss";
+import IconButton from "../../atoms/IconButton/IconButton";
 
 /**
  * WriteReviewModal - Static review modal markup.
@@ -21,11 +22,13 @@ export const WriteReviewModal: React.FC = () => {
           <h3 id="write-review-title" className="review-modal__title">
             Write a Review
           </h3>
-          <button
-            type="button"
+          <IconButton
+            svgName="icn_close"
             className="review-modal__close js-review-modal-close"
-            aria-label="Close review form"
-          ></button>
+            ariaLabel="Close review form"
+            iconWidth={16}
+            iconHeight={16}
+          />
         </div>
 
         <form className="review-modal__form js-review-modal-form">

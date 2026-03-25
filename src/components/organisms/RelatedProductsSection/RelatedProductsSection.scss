@@ -69,36 +69,25 @@
     transform: translateY(-50%);
     opacity: 0.5;
 
-    &::after {
-      content: "";
-      position: absolute;
-      width: 50px;
-      height: 50px;
+    .iconContainer {
+      color: #000;
       transition:
-        background-color 0.25s ease,
+        color 0.25s ease,
         transform 0.2s ease;
     }
 
-    &:hover::after {
-      background-color: #333;
+    &:hover .iconContainer {
+      color: #333;
       transform: scale(1.1);
     }
   }
 
   &__prev {
     left: -30px;
-
-    &::after {
-      @include icon-mask(v.$icon-back, 60px, 60px, #000, 0.8);
-    }
   }
 
   &__next {
     right: -30px;
-
-    &::after {
-      @include icon-mask(v.$icon-next, 60px, 60px, #000, 0.8);
-    }
   }
 }
 

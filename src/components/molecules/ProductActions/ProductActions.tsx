@@ -1,4 +1,5 @@
 import React from "react";
+import IconButton from "../../atoms/IconButton/IconButton";
 import "./ProductActions.scss";
 
 /**
@@ -9,11 +10,13 @@ export const ProductActions: React.FC = () => {
   return (
     <div className="product-overview__actions">
       <form action="#">
-        <button
+        <IconButton
+          svgName="icn_minus"
           className="quantity-button-minus js-quantity-button-minus"
-          type="button"
-          aria-label="Decrease quantity"
-        ></button>
+          ariaLabel="Decrease quantity"
+          iconWidth={20}
+          iconHeight={20}
+        />
         <input
           id="quantity-input"
           className="quantity-input js-quantity-input"
@@ -23,11 +26,13 @@ export const ProductActions: React.FC = () => {
           step={1}
           aria-label="Quantity"
         />
-        <button
+        <IconButton
+          svgName="icn_plus"
           className="quantity-button-plus js-quantity-button-plus"
-          type="button"
-          aria-label="Increase quantity"
-        ></button>
+          ariaLabel="Increase quantity"
+          iconWidth={20}
+          iconHeight={20}
+        />
       </form>
       <button className="add-to-cart-button js-add-to-cart" type="button">
         Add to Cart

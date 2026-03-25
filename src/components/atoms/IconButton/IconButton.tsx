@@ -9,11 +9,12 @@ type IconButtonProps = {
   color?: string;
   iconWidth?: number | string;
   iconHeight?: number | string;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
-  disabled?: boolean;
   type?: "button" | "submit" | "reset";
-};
+} & Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "aria-label" | "type"
+>;
 
 function IconButton({
   svgName,
@@ -21,18 +22,16 @@ function IconButton({
   color,
   iconWidth = 20,
   iconHeight = 20,
-  onClick,
   className,
-  disabled = false,
   type = "button",
+  ...buttonProps
 }: IconButtonProps) {
   return (
     <button
       type={type}
       className={clsx("icon-button", className)}
       aria-label={ariaLabel}
-      onClick={onClick}
-      disabled={disabled}
+      {...buttonProps}
     >
       <Icon
         svgName={svgName}

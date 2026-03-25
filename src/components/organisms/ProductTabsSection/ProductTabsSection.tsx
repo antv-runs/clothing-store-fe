@@ -1,5 +1,6 @@
 import React from "react";
 import "./ProductTabsSection.scss";
+import IconButton from "../../atoms/IconButton/IconButton";
 import type { Review } from "../../../types/review";
 import type { ProductFaq } from "../../../types/product";
 import { ReviewCard } from "../ReviewCard/ReviewCard";
@@ -68,15 +69,17 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
 
           <div className="reviews__actions">
             <div className="reviews__filter">
-              <button
-                type="button"
+              <IconButton
+                svgName="icn_filter"
                 id="btn-filter-by-stars"
                 className="reviews__action reviews__action--filter js-btn-filter-by-stars"
-                aria-label="Filter reviews by star rating"
+                ariaLabel="Filter reviews by star rating"
                 aria-haspopup="listbox"
                 aria-expanded="false"
                 aria-controls="dropdown-filter-by-stars"
-              ></button>
+                iconWidth={22}
+                iconHeight={22}
+              />
 
               <div
                 id="dropdown-filter-by-stars"

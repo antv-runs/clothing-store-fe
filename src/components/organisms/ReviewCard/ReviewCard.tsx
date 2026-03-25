@@ -1,6 +1,7 @@
 import React from "react";
 import "./ReviewCard.scss";
 import { Star } from "../../atoms/Star/Star";
+import IconButton from "../../atoms/IconButton/IconButton";
 import { ReviewMeta } from "~/components/molecules/ReviewMeta/ReviewMeta";
 import { formatDate } from "../../../utils/formatters";
 import type { Review } from "../../../types/review";
@@ -24,10 +25,13 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             showEmpty={false}
           />
         </div>
-        <button
+        <IconButton
+          svgName="icn_review_more"
           className="review-card__more-btn"
-          aria-label="More actions"
+          ariaLabel="More actions"
           aria-haspopup="menu"
+          iconWidth={25}
+          iconHeight={25}
         />
       </div>
       <ReviewMeta name={review.name} isVerified={review.isVerified} />
