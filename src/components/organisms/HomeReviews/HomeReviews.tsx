@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import IconButton from "~/components/atoms/IconButton/IconButton";
 import { ReviewCard } from "~/components/organisms/ReviewCard/ReviewCard";
-import { HOME_REVIEWS } from "~/data/home";
+import { getReviewsByProductId } from "~/services/reviewService";
+import type { Review } from "~/types/review";
 import "./HomeReviews.scss";
 
 function getReviewScrollStep(track: HTMLUListElement | null) {
@@ -21,9 +22,44 @@ function getReviewScrollStep(track: HTMLUListElement | null) {
 
 export const HomeReviews: React.FC = () => {
   const reviewsTrackRef = useRef<HTMLUListElement | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasOverflow, setHasOverflow] = useState(false);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+
+  // Fetch reviews on mount
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchReviews = async () => {
+      try {
+        setIsLoading(true);
+        const result = await getReviewsByProductId(180, {
+          perPage: 10,
+          sort: "latest",
+        });
+        if (isMounted) {
+          setReviews(result.data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error("Failed to fetch reviews:", err);
+          setReviews([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchReviews();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const track = reviewsTrackRef.current;
@@ -64,6 +100,28 @@ export const HomeReviews: React.FC = () => {
 
   const viewportStateClass = `${hasOverflow ? " has-overflow" : ""}${canScrollPrev ? " is-not-at-start" : ""}${canScrollNext ? " is-not-at-end" : ""}`;
 
+  const renderReviews = () => {
+    if (isLoading) {
+      return (
+        <li className="reviews__item review-card" style={{ opacity: 0.5 }}>
+          <p>Loading reviews...</p>
+        </li>
+      );
+    }
+
+    if (reviews.length === 0) {
+      return (
+        <li className="reviews__item review-card" style={{ opacity: 0.6 }}>
+          <p>No reviews available</p>
+        </li>
+      );
+    }
+
+    return reviews.map((review) => (
+      <ReviewCard key={review.id} review={review} />
+    ));
+  };
+
   return (
     <section className="home-reviews" aria-labelledby="home-reviews-title">
       <div className="home-reviews__head">
@@ -73,19 +131,21 @@ export const HomeReviews: React.FC = () => {
             svgName="icn_arrow_left_home"
             className="home-reviews__action"
             ariaLabel="Scroll reviews left"
+            color="black"
             onClick={() => handleScrollReviews("prev")}
             disabled={!canScrollPrev}
-            iconWidth={18}
-            iconHeight={18}
+            iconWidth={24}
+            iconHeight={24}
           />
           <IconButton
             svgName="icn_arrow_right_home"
             className="home-reviews__action"
             ariaLabel="Scroll reviews right"
+            color="black"
             onClick={() => handleScrollReviews("next")}
             disabled={!canScrollNext}
-            iconWidth={18}
-            iconHeight={18}
+            iconWidth={24}
+            iconHeight={24}
           />
         </div>
       </div>
@@ -96,11 +156,9 @@ export const HomeReviews: React.FC = () => {
           className="home-reviews__track reviews__list"
           aria-label="Customer reviews"
           aria-live="polite"
-          aria-busy="false"
+          aria-busy={isLoading}
         >
-          {HOME_REVIEWS.map((review) => (
-            <ReviewCard key={review.id} review={review} />
-          ))}
+          {renderReviews()}
         </ul>
       </div>
     </section>
