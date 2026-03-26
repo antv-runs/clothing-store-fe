@@ -1,3 +1,4 @@
+import IconButton from "../../atoms/IconButton/IconButton";
 import "./Header.scss";
 
 const Header: React.FC = () => {
@@ -12,11 +13,13 @@ const Header: React.FC = () => {
             </a>
           </p>
 
-          <button
+          <IconButton
+            svgName="icn_close"
             className="announcement-bar__close js-announcement-bar__close"
-            type="button"
-            aria-label="Close announcement"
-          ></button>
+            ariaLabel="Close announcement"
+            iconWidth={14}
+            iconHeight={14}
+          />
         </div>
       </div>
 

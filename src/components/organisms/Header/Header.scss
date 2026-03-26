@@ -52,16 +52,6 @@
     &:hover {
       opacity: 0.7;
     }
-
-    &::before {
-      content: "";
-      display: block;
-      width: 14px;
-      height: 14px;
-      background-color: v.$color-white;
-      -webkit-mask: url(v.$icon-close) center / contain no-repeat;
-      mask: url(v.$icon-close) center / contain no-repeat;
-    }
   }
 }
 
