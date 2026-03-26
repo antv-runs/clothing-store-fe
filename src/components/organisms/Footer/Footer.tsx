@@ -1,4 +1,6 @@
 import "./Footer.scss";
+import IconLink from "../../atoms/IconLink";
+import BrandImage from "../../atoms/BrandImage";
 
 const FooterForm: React.FC = () => {
   return (
@@ -23,6 +25,45 @@ const FooterForm: React.FC = () => {
   );
 };
 
+const socialLinks = [
+  {
+    label: "Twitter",
+    iconName: "icn_twiter",
+    iconWidth: 11.2,
+    iconHeight: 9,
+    className: "footer-main__social-link",
+  },
+  {
+    label: "Facebook",
+    iconName: "icn_fb",
+    iconWidth: 6.3,
+    iconHeight: 12,
+    className: "footer-main__social-link icon-fb",
+  },
+  {
+    label: "Instagram",
+    iconName: "icn_instagram",
+    iconWidth: 14,
+    iconHeight: 14,
+    className: "footer-main__social-link",
+  },
+  {
+    label: "Github",
+    iconName: "icn_github",
+    iconWidth: 13,
+    iconHeight: 13,
+    className: "footer-main__social-link",
+  },
+];
+
+const paymentLogos = [
+  { src: "/images/icn_visa.svg", alt: "Visa" },
+  { src: "/images/icn_mastercard.svg", alt: "Mastercard" },
+  { src: "/images/icn_paypal.svg", alt: "PayPal" },
+  { src: "/images/icn_apay.svg", alt: "Apple Pay" },
+  { src: "/images/icn_gpay.svg", alt: "Google Pay" },
+];
+
 const Footer: React.FC = () => {
   return (
     <>
@@ -39,54 +80,19 @@ const Footer: React.FC = () => {
                 wear. From women to men.
               </p>
               <ul className="footer-main__socials" aria-label="Social links">
-                <li className="footer-main__social-item">
-                  <a
-                    href="#"
-                    className="footer-main__social-link"
-                    aria-label="Twitter"
-                  >
-                    <img
-                      src="/images/icn_twiter.svg"
-                      alt=""
-                      aria-hidden="true"
+                {socialLinks.map((link) => (
+                  <li className="footer-main__social-item" key={link.label}>
+                    <IconLink
+                      href="#"
+                      label={link.label}
+                      iconName={link.iconName}
+                      className={link.className}
+                      size={28}
+                      iconWidth={link.iconWidth}
+                      iconHeight={link.iconHeight}
                     />
-                  </a>
-                </li>
-                <li className="footer-main__social-item">
-                  <a
-                    href="#"
-                    className="footer-main__social-link icon-fb"
-                    aria-label="Facebook"
-                  >
-                    <img src="/images/icn_fb.svg" alt="" aria-hidden="true" />
-                  </a>
-                </li>
-                <li className="footer-main__social-item">
-                  <a
-                    href="#"
-                    className="footer-main__social-link"
-                    aria-label="Instagram"
-                  >
-                    <img
-                      src="/images/icn_instagram.svg"
-                      alt=""
-                      aria-hidden="true"
-                    />
-                  </a>
-                </li>
-                <li className="footer-main__social-item">
-                  <a
-                    href="#"
-                    className="footer-main__social-link"
-                    aria-label="Github"
-                  >
-                    <img
-                      src="/images/icn_github.svg"
-                      alt=""
-                      aria-hidden="true"
-                    />
-                  </a>
-                </li>
+                  </li>
+                ))}
               </ul>
             </section>
 
@@ -220,21 +226,9 @@ const Footer: React.FC = () => {
           <div className="footer-main__copyright">
             <p>Shop.co © 2000-2023, All Rights Reserved</p>
             <div className="footer-main__copyright-logo">
-              <figure>
-                <img src="/images/icn_visa.svg" alt="Visa" />
-              </figure>
-              <figure>
-                <img src="/images/icn_mastercard.svg" alt="Mastercard" />
-              </figure>
-              <figure>
-                <img src="/images/icn_paypal.svg" alt="PayPal" />
-              </figure>
-              <figure>
-                <img src="/images/icn_apay.svg" alt="Apple Pay" />
-              </figure>
-              <figure>
-                <img src="/images/icn_gpay.svg" alt="Google Pay" />
-              </figure>
+              {paymentLogos.map((item) => (
+                <BrandImage key={item.alt} src={item.src} alt={item.alt} />
+              ))}
             </div>
           </div>
         </div>

@@ -16,6 +16,17 @@
     @include button-native-reset;
     transition: color 0.2s ease;
 
+    .product-image-wrapper {
+      width: 295px;
+      height: 298px;
+      margin-bottom: 20px;
+
+      .image-placeholder {
+        height: 298px;
+        min-height: 298px;
+      }
+    }
+
     &:hover {
       .product-item__title {
         color: #ff4d4f;
@@ -105,14 +116,6 @@
 }
 
 .product-item {
-  &__image {
-    max-width: 295px;
-    min-height: 300px;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    margin-bottom: 20px;
-  }
-
   &__title {
     @include line-clamp(1);
     font-size: 20px;

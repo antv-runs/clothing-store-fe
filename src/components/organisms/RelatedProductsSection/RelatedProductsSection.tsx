@@ -90,7 +90,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   }
 
   return (
-    <section className="other-products js-related-products">
+    <section className="other-products js-related-products u-mb-85">
       <h2 className="other-products__title">You Might Also Like</h2>
 
       <IconButton

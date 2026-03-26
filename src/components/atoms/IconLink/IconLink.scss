@@ -1,0 +1,33 @@
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+
+  &:visited,
+  &:active {
+    color: inherit;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+}
+
+/* ensure Icon component fills based on current color */
+.icon-link .iconContainer {
+  /* Icon component sets width/height inline; color uses currentColor */
+  color: inherit;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.iconContainer svg {
+  display: block;
+}

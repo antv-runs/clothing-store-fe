@@ -15,7 +15,6 @@
   align-items: center;
   background-color: v.$color-black;
   border-radius: v.$radius-lg;
-  margin-top: 78px;
   padding: 36px 64px;
   position: relative;
   z-index: 2;
@@ -124,31 +123,32 @@
   }
 
   &__social-link {
-    position: relative;
-    width: 36px;
-    height: 36px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     background-color: v.$color-white;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    color: v.$color-black;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
 
     &:hover {
       background-color: #e8e8e8;
+      color: v.$color-black;
     }
 
-    img {
-      width: 16px;
-      height: 16px;
-      object-fit: contain;
+    &:visited,
+    &:active {
+      color: v.$color-black;
     }
 
     &.icon-fb {
       background-color: v.$color-black;
+      color: v.$color-white;
 
       &:hover {
         background-color: #1a1a1a;
