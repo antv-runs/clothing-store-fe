@@ -1,29 +1,19 @@
 import { FooterForm } from "../components/organisms/Footer";
 import { useMemo, useState } from "react";
 import { products } from "../data/products";
+import { mockCartItems } from "../data/cartItem";
 import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
 import { CartEmptyState } from "../components/molecules/CartEmptyState/CartEmptyState";
 import { CartItemRow } from "../components/organisms/CartItemRow/CartItemRow";
 import { CartSummaryPanel } from "../components/organisms/CartSummaryPanel/CartSummaryPanel";
 import "./CartPage.scss";
 
-type CartStorageItem = {
-  product_id?: string | number;
-  productId?: string | number;
-  id?: string | number;
-  quantity?: string | number;
-  color?: string;
-  size?: string;
-};
-
-type CartRow = {
+export type CartRow = {
   productId: string;
   quantity: number;
   color: string | null;
   size: string | null;
 };
-
-const CART_STORAGE_KEYS = ["cart", "cartItems", "shoppingCart"];
 
 function formatPrice(amount: number, currency = "USD") {
   return new Intl.NumberFormat("en-US", {
@@ -31,45 +21,6 @@ function formatPrice(amount: number, currency = "USD") {
     currency,
     maximumFractionDigits: 0,
   }).format(amount);
-}
-
-function resolveProductId(item: CartStorageItem) {
-  const rawId = item.product_id ?? item.productId ?? item.id ?? "";
-  return String(rawId).trim();
-}
-
-function parseStoredCart(): CartRow[] {
-  for (const key of CART_STORAGE_KEYS) {
-    const raw = localStorage.getItem(key);
-    if (!raw) {
-      continue;
-    }
-
-    try {
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) {
-        continue;
-      }
-
-      return parsed
-        .map((item: CartStorageItem) => {
-          const productId = resolveProductId(item);
-          const quantity = Math.max(1, Number(item.quantity) || 1);
-
-          return {
-            productId,
-            quantity,
-            color: item.color ? String(item.color) : null,
-            size: item.size ? String(item.size) : null,
-          };
-        })
-        .filter((item) => item.productId.length > 0);
-    } catch {
-      continue;
-    }
-  }
-
-  return [];
 }
 
 function idsMatch(a: string, b: string) {
@@ -83,7 +34,7 @@ function idsMatch(a: string, b: string) {
 }
 
 const CartPage: React.FC = () => {
-  const [cartRows] = useState<CartRow[]>(() => parseStoredCart());
+  const [cartRows] = useState<CartRow[]>(() => mockCartItems);
 
   const cartItems = useMemo(() => {
     return cartRows
@@ -132,7 +83,7 @@ const CartPage: React.FC = () => {
   const isEmpty = cartItems.length === 0;
 
   return (
-    <div className="container">
+    <div className="container u-mt-25">
       <main className="cart-page js-cart-page">
         <Breadcrumb
           items={["Home", "Cart"]}
@@ -140,7 +91,7 @@ const CartPage: React.FC = () => {
           id="cart-breadcrumb-list"
         />
 
-        <h1 className="cart-page__title">Your Cart</h1>
+        <h1 className="cart-page__title u-mt-30">Your Cart</h1>
 
         <CartEmptyState isVisible={isEmpty} />
 
