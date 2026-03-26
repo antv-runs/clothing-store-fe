@@ -8,3 +8,4 @@ export { ProductPrice } from "./ProductPrice";
 export { ProductRating } from "./ProductRating";
 export { RatingDisplay } from "./RatingDisplay";
 export { ReviewMeta } from "./ReviewMeta";
+export { ReviewSortSelect } from "./ReviewSortSelect/ReviewSortSelect";

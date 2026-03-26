@@ -1,5 +1,9 @@
 import React from "react";
-import IconButton from "../../atoms/IconButton/IconButton";
+import IconButton from "~/components/atoms/IconButton/IconButton";
+import {
+  ReviewSortSelect,
+  type ReviewSortOption,
+} from "~/components/molecules/ReviewSortSelect/ReviewSortSelect";
 
 interface ReviewFilterOption {
   label: string;
@@ -20,10 +24,18 @@ const REVIEW_FILTER_OPTIONS: ReviewFilterOption[] = [
   { label: "1 star", value: "1" },
 ];
 
+const REVIEW_SORT_OPTIONS: ReviewSortOption[] = [
+  { value: "latest", label: "Latest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "highest", label: "Highest Rating" },
+];
+
 /**
  * ProductReviewsFilter - Review filter dropdown and sort controls.
  */
 export const ProductReviewsFilter: React.FC = () => {
+  const [sortValue, setSortValue] = React.useState<string>("latest");
+
   return (
     <div className="reviews__actions">
       <div className="reviews__filter">
@@ -61,17 +73,14 @@ export const ProductReviewsFilter: React.FC = () => {
         </div>
       </div>
 
-      <div className="reviews__action reviews__action--sort">
-        <select
-          id="reviews-sort-select"
-          className="reviews__select js-reviews-sort-select"
-          aria-label="Sort reviews"
-        >
-          <option value="latest">Latest</option>
-          <option value="oldest">Oldest</option>
-          <option value="highest">Highest Rating</option>
-        </select>
-      </div>
+      <ReviewSortSelect
+        id="reviews-sort-select"
+        className="reviews__action reviews__action--sort js-reviews-sort-select"
+        value={sortValue}
+        options={REVIEW_SORT_OPTIONS}
+        onChange={setSortValue}
+        ariaLabel="Sort reviews"
+      />
 
       <button
         type="button"
