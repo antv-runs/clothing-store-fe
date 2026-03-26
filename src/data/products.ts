@@ -241,8 +241,7 @@ export const products: Product[] = [
     slug: "urban-zip-hoodie-knit-158",
     description:
       "Lightweight knit hoodie with front zip and soft brushed interior.",
-    details:
-      "Ribbed cuff and hem construction with a modern regular fit.",
+    details: "Ribbed cuff and hem construction with a modern regular fit.",
     pricing: {
       currency: "USD",
       current: 121,
@@ -299,14 +298,14 @@ export const products: Product[] = [
       discountPercent: 14,
     },
     thumbnail:
-      "https://images.unsplash.com/photo-1593032465171-8bd9f2ff1668?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
     thumbnailAlt: "Tailored Blazer Stretch",
     images: [
       {
         id: "162-1",
         image_url:
-          "https://images.unsplash.com/photo-1593032465171-8bd9f2ff1668?auto=format&fit=crop&w=900&q=80",
-        url: "https://images.unsplash.com/photo-1593032465171-8bd9f2ff1668?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
+        url: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
         alt_text: null,
         alt: "Tailored Blazer",
       },
@@ -331,6 +330,5 @@ export const products: Product[] = [
   },
 ];
 
-export const productDetailsById: Record<string, ProductDetail> = Object.fromEntries(
-  products.map((product) => [product.id, product]),
-);
+export const productDetailsById: Record<string, ProductDetail> =
+  Object.fromEntries(products.map((product) => [product.id, product]));

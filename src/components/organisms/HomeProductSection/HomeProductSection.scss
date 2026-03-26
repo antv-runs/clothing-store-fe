@@ -1,5 +1,4 @@
 @use "../../../styles/abstracts/variables" as v;
-@use "../../../styles/abstracts/mixins" as m;
 
 .home-products {
   padding-top: 72px;
@@ -42,104 +41,6 @@
   }
 }
 
-.home-product-card {
-  &__stars {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    line-height: 1;
-  }
-
-  &__star {
-    width: 16px;
-    aspect-ratio: 22/21;
-    flex-shrink: 0;
-
-    path {
-      fill: none;
-      stroke: #ffc633;
-      stroke-width: 1;
-      transition: fill 0.2s ease;
-    }
-
-    &--active path {
-      fill: #ffc633;
-    }
-  }
-}
-
-.product-tile {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-
-  &__image-link {
-    display: block;
-    background-color: #f0f0f0;
-    border-radius: 16px;
-    margin-bottom: 16px;
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-  }
-
-  &__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  &__title {
-    margin-bottom: 6px;
-    line-height: 1.4;
-    min-height: calc(1.4 * 1em);
-
-    a {
-      text-decoration: none;
-      color: #000;
-      font-size: 20px;
-      font-weight: 700;
-      @include m.line-clamp(1);
-    }
-  }
-
-  &__rating {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    line-height: 1.4;
-    color: rgba(0, 0, 0, 0.7);
-  }
-
-  &__price {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 24px;
-    font-weight: 700;
-
-    &-original {
-      color: rgba(0, 0, 0, 0.4);
-      text-decoration: line-through;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    &-badge {
-      font-size: 12px;
-      font-weight: 600;
-      line-height: 1.2;
-      color: v.$color-danger;
-      background-color: rgba(255, 51, 51, 0.1);
-      border-radius: v.$radius-pill;
-      padding: 6px 10px;
-    }
-  }
-}
-
 @media (max-width: 992px) {
   .home-products {
     &__grid {
@@ -166,17 +67,4 @@
     }
   }
 
-  .product-tile {
-    &__title a {
-      font-size: 16px;
-    }
-
-    &__price {
-      font-size: 20px;
-
-      &-original {
-        font-size: 16px;
-      }
-    }
-  }
 }

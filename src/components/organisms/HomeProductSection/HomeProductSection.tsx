@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star } from "~/components/atoms/Star/Star";
+import { ProductCard } from "~/components/molecules/ProductCard/ProductCard";
 import type { Product } from "~/types/product";
 import "./HomeProductSection.scss";
 
@@ -34,67 +34,9 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
       </div>
 
       <div className="home-products__grid" aria-live="polite" aria-busy="false">
-        {productsList.map((item) => {
-          const hasComparePrice =
-            item.pricing.original !== null &&
-            item.pricing.original > item.pricing.current;
-
-          return (
-            <article key={item.id} className="product-tile">
-              <Link
-                className="product-tile__image-link"
-                to={`/product/${encodeURIComponent(item.id)}`}
-                aria-label={`View ${item.name}`}
-              >
-                <img
-                  className="product-tile__image"
-                  src={item.thumbnail}
-                  alt={item.thumbnailAlt || item.name}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </Link>
-
-              <h3 className="product-tile__title">
-                <Link to={`/product/${encodeURIComponent(item.id)}`}>
-                  {item.name}
-                </Link>
-              </h3>
-
-              <div
-                className="product-tile__rating"
-                aria-label={`Rating ${item.rating.toFixed(1)} out of 5`}
-              >
-                <span className="home-product-card__stars">
-                  <Star
-                    rating={item.rating}
-                    className="home-product-card__star"
-                    showEmpty={false}
-                  />
-                </span>
-                <span>{item.rating.toFixed(1)}/5</span>
-              </div>
-
-              <p className="product-tile__price">
-                <span className="product-tile__price-current">
-                  {formatPrice(item.pricing.current, item.pricing.currency)}
-                </span>
-
-                {hasComparePrice ? (
-                  <span className="product-tile__price-original">
-                    {formatPrice(item.pricing.original || 0, item.pricing.currency)}
-                  </span>
-                ) : null}
-
-                {item.pricing.discountPercent ? (
-                  <span className="product-tile__price-badge">
-                    -{item.pricing.discountPercent}%
-                  </span>
-                ) : null}
-              </p>
-            </article>
-          );
-        })}
+        {productsList.map((item) => (
+          <ProductCard key={item.id} product={item} formatPrice={formatPrice} />
+        ))}
       </div>
 
       <div className="home-products__foot">

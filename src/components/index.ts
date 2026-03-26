@@ -14,6 +14,7 @@ export { AddToCart } from "./molecules";
 export { BreadcrumbItem } from "./molecules";
 export { CartEmptyState } from "./molecules";
 export { ProductActions } from "./molecules";
+export { ProductCard } from "./molecules";
 export { ProductImages } from "./molecules";
 export { ProductInfo as ProductInfoMolecule } from "./molecules";
 export { ProductPrice } from "./molecules";

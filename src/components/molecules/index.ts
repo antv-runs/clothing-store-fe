@@ -2,6 +2,7 @@ export { AddToCart } from "./AddToCart";
 export { BreadcrumbItem } from "./BreadcrumbItem";
 export { CartEmptyState } from "./CartEmptyState";
 export { ProductActions } from "./ProductActions";
+export { ProductCard } from "./ProductCard";
 export { ProductImages } from "./ProductImages";
 export { ProductInfo } from "./ProductInfo";
 export { ProductPrice } from "./ProductPrice";

@@ -32,7 +32,7 @@ export const HomeHero: React.FC = () => {
 
       <figure className="home-hero__media">
         <img
-          src="/images/pic_hero_couple.png"
+          src="/images/pic_hero_couple.jpg"
           alt="Fashion models wearing black outfits"
           loading="eager"
           decoding="async"
