@@ -36,10 +36,10 @@
   }
 
   &__stats {
-    margin-top: 44px;
+    margin-top: 60px;
     display: flex;
     flex-wrap: wrap;
-    gap: 28px;
+    gap: 64px;
   }
 
   &__stat {
@@ -71,6 +71,7 @@
   }
 
   &__media {
+    max-height: 663px;
     margin: 0;
     min-width: 0;
     display: flex;

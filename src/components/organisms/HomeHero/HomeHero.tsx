@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { HOME_HERO_STATS } from "~/data/home";
+import { Image } from "../../atoms/Image/Image";
 import "./HomeHero.scss";
 
 export const HomeHero: React.FC = () => {
@@ -30,14 +31,14 @@ export const HomeHero: React.FC = () => {
         </div>
       </div>
 
-      <figure className="home-hero__media">
-        <img
-          src="/images/pic_hero_couple.jpg"
-          alt="Fashion models wearing black outfits"
-          loading="eager"
-          decoding="async"
-        />
-      </figure>
+      <Image
+        src="/images/pic_hero_couple.jpg"
+        alt="Fashion models wearing black outfits"
+        loading="eager"
+        decoding="async"
+        className="home-hero__media"
+        imgClassName="home-hero__image"
+      />
     </section>
   );
 };
