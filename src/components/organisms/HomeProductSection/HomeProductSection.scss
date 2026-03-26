@@ -65,6 +65,28 @@
         font-size: 32px;
       }
     }
-  }
 
+    &__grid {
+      display: flex;
+      grid-template-columns: unset;
+      gap: 16px;
+      min-height: unset;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .product-card {
+      flex: 0 0 auto;
+      width: 280px;
+      scroll-snap-align: start;
+    }
+  }
 }
