@@ -3,6 +3,8 @@ import clsx from "clsx";
 import Icon from "../Icon/Icon";
 import "./IconButton.scss";
 
+type IconButtonVariant = "default" | "ghost";
+
 type IconButtonProps = {
   svgName: string;
   ariaLabel: string;
@@ -10,6 +12,7 @@ type IconButtonProps = {
   iconWidth?: number | string;
   iconHeight?: number | string;
   className?: string;
+  variant?: IconButtonVariant;
   type?: "button" | "submit" | "reset";
 } & Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -23,13 +26,14 @@ function IconButton({
   iconWidth = 20,
   iconHeight = 20,
   className,
+  variant = "default",
   type = "button",
   ...buttonProps
 }: IconButtonProps) {
   return (
     <button
       type={type}
-      className={clsx("icon-button", className)}
+      className={clsx("icon-button", `icon-button--${variant}`, className)}
       aria-label={ariaLabel}
       {...buttonProps}
     >

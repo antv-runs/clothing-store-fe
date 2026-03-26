@@ -94,6 +94,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
       <h2 className="other-products__title">You Might Also Like</h2>
 
       <IconButton
+        variant="ghost"
         svgName="icn_back"
         className="other-products__prev js-other-products__prev"
         ariaLabel="Previous related products"
@@ -163,6 +164,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
       </div>
 
       <IconButton
+        variant="ghost"
         svgName="icn_next"
         className="other-products__next js-other-products__next"
         ariaLabel="Next related products"

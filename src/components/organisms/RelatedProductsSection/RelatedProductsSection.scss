@@ -65,11 +65,9 @@
   &__prev,
   &__next {
     position: absolute;
-    background: v.$color-white;
-    @include button-native-reset($transparent-bg: false);
     padding: 5px;
     @include flex-center;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
     z-index: 100;
     top: 50%;
     transform: translateY(-50%);
@@ -77,14 +75,15 @@
 
     .iconContainer {
       color: #000;
-      transition:
-        color 0.25s ease,
-        transform 0.2s ease;
+      transition: color 0.25s ease;
     }
 
     &:hover .iconContainer {
       color: #333;
-      transform: scale(1.1);
+    }
+
+    &:hover {
+      opacity: 0.8;
     }
   }
 
