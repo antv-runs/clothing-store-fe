@@ -1,0 +1,21 @@
+.ui-image {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.ui-image__img {
+  display: block;
+}
+
+.ui-image__placeholder {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ui-image--loaded .ui-image__placeholder,
+.ui-image--error .ui-image__placeholder {
+  opacity: 0;
+  visibility: hidden;
+}

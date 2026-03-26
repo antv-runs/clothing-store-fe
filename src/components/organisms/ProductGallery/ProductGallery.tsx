@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Image } from "../../atoms/Image/Image";
 import type { ProductImage } from "../../../types/product";
 
 interface ProductGalleryProps {
@@ -65,13 +66,16 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
               className="image-wrapper js-thumbnail-wrapper"
               key={image.id || `${productName}-${index}`}
             >
-              <div className="image-placeholder" />
-              <img
-                className={`product-image js-product-thumbnail ${
-                  isLoaded ? "product-image--loaded" : ""
-                }`}
+              <Image
                 src={srcUrl}
                 alt={image.alt || image.alt_text || productName}
+                renderWrapper={false}
+                imgClassName="product-image js-product-thumbnail"
+                placeholderClassName="image-placeholder"
+                showPlaceholder
+                isLoaded={isLoaded}
+                loadedClassName="product-image--loaded"
+                fit="cover"
                 onLoad={() => handleThumbnailLoad(image.id)}
               />
             </div>
@@ -80,13 +84,15 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
       </div>
 
       <div className="image-wrapper-main">
-        <img
+        <Image
           id="product-main-image"
-          className={`product-overview__main-image js-product-main-image ${
-            mainImageLoaded ? "is-loaded" : ""
-          }`}
-          alt={productName}
           src={mainImage}
+          alt={productName}
+          renderWrapper={false}
+          imgClassName="product-overview__main-image js-product-main-image"
+          isLoaded={mainImageLoaded}
+          loadedClassName="is-loaded"
+          fit="cover"
           onLoad={handleMainImageLoad}
         />
       </div>

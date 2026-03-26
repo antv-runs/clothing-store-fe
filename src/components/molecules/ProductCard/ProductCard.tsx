@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Image } from "../../atoms/Image/Image";
 import { Star } from "../../atoms/Star/Star";
 import "./ProductCard.scss";
 
@@ -48,6 +49,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const cardClassName = ["product-card", className].filter(Boolean).join(" ");
   const productPath = buildProductPath(product.id);
+  const productImage = (
+    <Image
+      src={product.thumbnail}
+      alt={product.thumbnailAlt || product.name}
+      renderWrapper={false}
+      imgClassName="product-card__image product-image js-product-item-image"
+      placeholderClassName="product-card__image-placeholder image-placeholder"
+      showPlaceholder
+      isLoaded={imageLoaded}
+      isError={imageError}
+      loadedClassName="product-image--loaded is-loaded"
+      errorClassName="product-image--error is-error"
+      loading="lazy"
+      decoding="async"
+      fit="cover"
+      onLoad={onImageLoad}
+      onError={onImageError}
+    />
+  );
 
   return (
     <article className={cardClassName}>
@@ -58,35 +78,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             to={productPath}
             aria-label={`View ${product.name}`}
           >
-            <img
-              className={`product-card__image product-image js-product-item-image${imageLoaded ? " product-image--loaded is-loaded" : ""}${imageError ? " product-image--error is-error" : ""}`}
-              src={product.thumbnail}
-              alt={product.thumbnailAlt || product.name}
-              loading="lazy"
-              decoding="async"
-              onLoad={onImageLoad}
-              onError={onImageError}
-            />
-            <span className="product-card__image-placeholder image-placeholder" aria-hidden="true" />
+            {productImage}
           </Link>
         ) : (
           <div className="product-card__image-link" aria-hidden="true">
-            <img
-              className={`product-card__image product-image js-product-item-image${imageLoaded ? " product-image--loaded is-loaded" : ""}${imageError ? " product-image--error is-error" : ""}`}
-              src={product.thumbnail}
-              alt={product.thumbnailAlt || product.name}
-              loading="lazy"
-              decoding="async"
-              onLoad={onImageLoad}
-              onError={onImageError}
-            />
-            <span className="product-card__image-placeholder image-placeholder" aria-hidden="true" />
+            {productImage}
           </div>
         )}
       </div>
 
       <h3 className="product-card__title">
-        {linkMode === "inline" ? <Link to={productPath}>{product.name}</Link> : product.name}
+        {linkMode === "inline" ? (
+          <Link to={productPath}>{product.name}</Link>
+        ) : (
+          product.name
+        )}
       </h3>
 
       <div
@@ -105,12 +111,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <p className="product-card__price">
         <span className="product-card__price-current">
-          {formatPrice(product.pricing.current, product.pricing.currency || "USD")}
+          {formatPrice(
+            product.pricing.current,
+            product.pricing.currency || "USD",
+          )}
         </span>
 
         {hasComparePrice ? (
           <span className="product-card__price-original">
-            {formatPrice(product.pricing.original || 0, product.pricing.currency || "USD")}
+            {formatPrice(
+              product.pricing.original || 0,
+              product.pricing.currency || "USD",
+            )}
           </span>
         ) : null}
 
