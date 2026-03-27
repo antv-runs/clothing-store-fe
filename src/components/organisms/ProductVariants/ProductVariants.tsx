@@ -1,8 +1,8 @@
 import React from "react";
-import type { ProductVariants } from "../../../types/product";
+import type { ProductVariants as ProductVariantsData } from "../../../types/product";
 
 interface ProductVariantsProps {
-  variants: ProductVariants;
+  variants: ProductVariantsData;
 }
 
 /**

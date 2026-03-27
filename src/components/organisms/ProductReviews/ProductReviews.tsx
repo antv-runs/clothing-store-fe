@@ -1,5 +1,12 @@
 import React from "react";
-import type { Review } from "../../../types/product";
+
+interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
 
 interface ProductReviewsProps {
   reviews: Review[];

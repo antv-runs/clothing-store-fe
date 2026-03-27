@@ -1,9 +1,9 @@
 export { Badge } from "./Badge";
-export { BrandImage } from "./BrandImage";
+export { default as BrandImage } from "./BrandImage";
 export { Button } from "./Button";
 export { Heading } from "./Heading";
 export { Icon } from "./Icon";
-export { IconLink } from "./IconLink";
+export { default as IconLink } from "./IconLink";
 export { Image } from "./Image";
 export { Input } from "./Input";
 export { Price } from "./Price";
