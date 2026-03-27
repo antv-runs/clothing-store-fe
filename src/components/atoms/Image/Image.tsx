@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactEventHandler } from "react";
+import clsx from "clsx";
 import "./Image.scss";
 
 type ImageProps = {
@@ -6,9 +7,7 @@ type ImageProps = {
   alt: string;
   id?: string;
   className?: string;
-  wrapperClassName?: string;
   imgClassName?: string;
-  imageClassName?: string;
   placeholderClassName?: string;
   width?: number | string;
   height?: number | string;
@@ -40,9 +39,7 @@ export function Image({
   alt,
   id,
   className,
-  wrapperClassName,
   imgClassName,
-  imageClassName,
   placeholderClassName,
   width,
   height,
@@ -61,68 +58,64 @@ export function Image({
   onError,
 }: ImageProps) {
   const resolvedAspectRatio = aspectRatio ?? ratio;
+  const resolvedWidth = toCssDimension(width);
+  const resolvedHeight = toCssDimension(height);
+  const resolvedAspectRatioValue =
+    resolvedAspectRatio !== undefined ? String(resolvedAspectRatio) : undefined;
 
   const wrapperStyle: CSSProperties = {
-    width: toCssDimension(width),
-    height: toCssDimension(height),
-    aspectRatio:
-      resolvedAspectRatio !== undefined
-        ? String(resolvedAspectRatio)
-        : undefined,
+    width: resolvedWidth,
+    height: resolvedHeight,
+    aspectRatio: resolvedAspectRatioValue,
   };
 
-  const imgStyle: CSSProperties = {
+  const wrappedImgStyle: CSSProperties = {
     width: "100%",
     height: "100%",
     objectFit: fit,
   };
 
-  const resolvedImgClassName = [
-    renderWrapper ? "ui-image__img" : "",
-    imgClassName || imageClassName,
-    isLoaded ? loadedClassName : "",
-    isError ? errorClassName : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const bareImgStyle: CSSProperties = {
+    width: resolvedWidth,
+    height: resolvedHeight,
+    aspectRatio: resolvedAspectRatioValue,
+    objectFit: fit,
+  };
 
-  const resolvedPlaceholderClassName = [
-    renderWrapper ? "ui-image__placeholder" : "",
+  const resolvedImgClassName = clsx(
+    renderWrapper && "ui-image__img",
+    imgClassName,
+    isLoaded && loadedClassName,
+    isError && errorClassName,
+  );
+
+  const resolvedPlaceholderClassName = clsx(
+    "ui-image__placeholder",
     placeholderClassName,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  );
 
   if (!renderWrapper) {
     return (
-      <>
-        <img
-          id={id}
-          className={resolvedImgClassName}
-          src={src || ""}
-          alt={alt}
-          loading={loading}
-          decoding={decoding}
-          style={imgStyle}
-          onLoad={onLoad}
-          onError={onError}
-        />
-        {showPlaceholder ? (
-          <span className={resolvedPlaceholderClassName} aria-hidden="true" />
-        ) : null}
-      </>
+      <img
+        id={id}
+        className={resolvedImgClassName}
+        src={src || ""}
+        alt={alt}
+        loading={loading}
+        decoding={decoding}
+        style={bareImgStyle}
+        onLoad={onLoad}
+        onError={onError}
+      />
     );
   }
 
-  const resolvedWrapperClassName = [
+  const resolvedWrapperClassName = clsx(
     "ui-image",
     className,
-    wrapperClassName,
-    isLoaded ? "ui-image--loaded" : "",
-    isError ? "ui-image--error" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    isLoaded && "ui-image--loaded",
+    isError && "ui-image--error",
+  );
 
   return (
     <div className={resolvedWrapperClassName} style={wrapperStyle}>
@@ -133,7 +126,7 @@ export function Image({
         alt={alt}
         loading={loading}
         decoding={decoding}
-        style={imgStyle}
+        style={wrappedImgStyle}
         onLoad={onLoad}
         onError={onError}
       />

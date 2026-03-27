@@ -71,8 +71,6 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
                 alt={image.alt || image.alt_text || productName}
                 renderWrapper={false}
                 imgClassName="product-image js-product-thumbnail"
-                placeholderClassName="image-placeholder"
-                showPlaceholder
                 isLoaded={isLoaded}
                 loadedClassName="product-image--loaded"
                 fit="cover"

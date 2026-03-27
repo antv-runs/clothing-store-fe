@@ -1,0 +1,21 @@
+@use "../../../styles/abstracts/variables" as v;
+
+.header-icon {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex: 0 0 auto;
+
+  &__cart,
+  &__profile {
+    color: v.$color-black;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-icon {
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+}

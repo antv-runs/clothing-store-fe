@@ -1,6 +1,8 @@
 export { AddToCart } from "./AddToCart";
 export { BreadcrumbItem } from "./BreadcrumbItem";
 export { CartEmptyState } from "./CartEmptyState";
+export { HeaderActions, HeaderMenuToggle } from "./HeaderActions";
+export { NavMenu } from "./NavMenu";
 export { ProductActions } from "./ProductActions";
 export { ProductCard } from "./ProductCard";
 export { ProductImages } from "./ProductImages";
@@ -10,3 +12,4 @@ export { ProductRating } from "./ProductRating";
 export { RatingDisplay } from "./RatingDisplay";
 export { ReviewMeta } from "./ReviewMeta";
 export { ReviewSortSelect } from "./ReviewSortSelect/ReviewSortSelect";
+export { SearchBox } from "./SearchBox";

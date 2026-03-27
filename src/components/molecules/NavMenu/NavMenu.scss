@@ -1,0 +1,36 @@
+@use "../../../styles/abstracts/variables" as v;
+
+.header-links {
+  ul {
+    display: flex;
+    gap: 24px;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: v.$color-black;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-links {
+    display: none;
+  }
+}

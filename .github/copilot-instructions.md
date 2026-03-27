@@ -2,82 +2,46 @@
 
 ## Project Goal
 
-This project is built with React and should follow clean, scalable, team-friendly frontend architecture.
+Build a clean, scalable React project with:
 
-The codebase must follow:
-
-- Airbnb-style clean coding principles
-- Atomic Design mindset for UI composition
-- Clear separation of UI, business logic, and data fetching
-- Reusable, maintainable, readable components
-- Consistent naming and folder structure
+- Airbnb-style code
+- Atomic Design
+- Clear separation of concerns
+- Reusable, maintainable components
 
 ---
 
 ## Core Principles
 
-### 1. Prefer clean, readable, maintainable code
-
-- Write simple and explicit code
-- Avoid overly clever solutions
-- Favor readability over short code
-- Keep components focused on one responsibility
-
-### 2. Use functional components only
-
-- Use function components
-- Use React hooks for state and side effects
-- Do not create class components unless explicitly requested
-
-### 3. Follow component-based architecture
-
-- Break UI into small reusable pieces
-- Reuse existing components before creating new ones
-- Avoid duplication in markup, logic, and styles
-
-### 4. Keep UI and logic separated
-
-- UI components should focus on rendering
-- Data fetching should be placed in `services`
-- Shared logic should be placed in `hooks` or `utils`
-- Page-level orchestration should stay in page components or container-style components
+- Write **simple, readable code**
+- Prefer **clarity over cleverness**
+- Use **functional components + hooks only**
+- Keep components **small, focused, single-responsibility**
+- Avoid duplication (UI, logic, styles)
 
 ---
 
-## Component Design Rules
+## Architecture Rules
 
-### 1. Follow Atomic Design
+- UI components → **render only**
+- Data fetching → `services`
+- Shared logic → `hooks` / `utils`
+- Page orchestration → `pages`
 
-Use the following mental model when creating components:
+---
 
-- **atoms**: smallest reusable UI parts  
-  Examples: Button, Input, Icon, Badge, Spinner
+## Component Design (Atomic Design)
 
-- **molecules**: small combinations of atoms  
-  Examples: SearchBox, QuantitySelector, PriceDisplay
+- **atoms**: Button, Input, Icon
+- **molecules**: SearchBox, QuantitySelector
+- **organisms**: Header, ProductCard, ReviewList
+- **pages**: HomePage, ProductDetailPage
 
-- **organisms**: larger composed UI blocks  
-  Examples: Header, ProductCard, ProductGallery, ReviewList
-
-- **pages**: route-level screens using real data  
-  Examples: HomePage, ProductDetailPage, CartPage
-
-### 2. Prefer composition over large components
-
-- Do not create one huge component with too many responsibilities
-- Split complex UI into smaller child components
-- Keep components short and focused
-
-### 3. One component = one clear purpose
-
-- Avoid mixing unrelated UI responsibilities in the same file
-- If a component becomes too large, split it into smaller parts
+➡️ Prefer **composition over large components**
 
 ---
 
 ## Folder Structure
-
-Use this structure unless the existing project already has an established pattern:
 
 ```txt
 src/
@@ -94,3 +58,12 @@ src/
   assets/
   routes/
 ```
+
+---
+
+## Package Manager
+
+- Use **Yarn** for dependency management
+- Install deps: `yarn install`
+- Run dev: `yarn dev`
+- Build project: `yarn build`

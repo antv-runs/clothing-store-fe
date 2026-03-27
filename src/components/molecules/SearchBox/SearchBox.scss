@@ -1,0 +1,62 @@
+@use "../../../styles/abstracts/variables" as v;
+
+.header-search {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: v.$color-surface;
+  border-radius: v.$radius-pill;
+  padding: 0 16px;
+  transition: opacity 0.2s ease;
+
+  input {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    padding-top: 12px;
+    padding-bottom: 14px;
+    font-size: 16px;
+    font-weight: 400;
+    order: 2;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__button {
+    order: 1;
+    width: 21px;
+    height: 21px;
+    min-width: 21px;
+    min-height: 21px;
+    flex: 0 0 21px;
+    color: v.$color-black;
+  }
+
+  &.is-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-search {
+    flex: 0 0 auto;
+    min-width: 21px;
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+
+    input {
+      display: none;
+    }
+
+    .header-search__button {
+      color: v.$color-black;
+      padding: 0;
+    }
+  }
+}

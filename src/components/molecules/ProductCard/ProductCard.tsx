@@ -55,8 +55,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       alt={product.thumbnailAlt || product.name}
       renderWrapper={false}
       imgClassName="product-card__image product-image js-product-item-image"
-      placeholderClassName="product-card__image-placeholder image-placeholder"
-      showPlaceholder
       isLoaded={imageLoaded}
       isError={imageError}
       loadedClassName="product-image--loaded is-loaded"

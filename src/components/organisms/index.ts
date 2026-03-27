@@ -1,4 +1,5 @@
 export { default as Header } from "./Header";
+export { AnnouncementBar } from "./AnnouncementBar";
 export { default as Footer, FooterForm } from "./Footer";
 export { Breadcrumb } from "./Breadcrumb";
 export { CartItemRow } from "./CartItemRow";
