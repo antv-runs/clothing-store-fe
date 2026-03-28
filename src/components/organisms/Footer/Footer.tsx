@@ -1,29 +1,6 @@
 import "./Footer.scss";
-import IconLink from "../../atoms/IconLink";
-import BrandImage from "../../atoms/BrandImage";
-
-const FooterForm: React.FC = () => {
-  return (
-    <div className="footer-form">
-      <p>STAY UPTO DATE ABOUT OUR LATEST OFFERS</p>
-      <form action="#">
-        <div className="footer-form__input">
-          <figure>
-            <img src="/images/icn_mail.svg" alt="Mail" />
-          </figure>
-          <input
-            type="email"
-            placeholder="Enter your email address"
-            aria-label="Email address"
-          />
-        </div>
-        <button className="footer-form__button" type="button">
-          Subscribe to Newsletter
-        </button>
-      </form>
-    </div>
-  );
-};
+import { Text } from "../../atoms";
+import { FooterNavSection, PaymentMethods, SocialLinks } from "../../molecules";
 
 const socialLinks = [
   {
@@ -64,7 +41,46 @@ const paymentLogos = [
   { src: "/images/icn_gpay.svg", alt: "Google Pay" },
 ];
 
-const Footer: React.FC = () => {
+const footerSections = [
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "#" },
+      { label: "Features", href: "#" },
+      { label: "Works", href: "#" },
+      { label: "Career", href: "#" },
+    ],
+  },
+  {
+    title: "Help",
+    links: [
+      { label: "Customer Support", href: "#" },
+      { label: "Delivery Details", href: "#" },
+      { label: "Terms & Conditions", href: "#" },
+      { label: "Privacy Policy", href: "#" },
+    ],
+  },
+  {
+    title: "FAQ",
+    links: [
+      { label: "Account", href: "#" },
+      { label: "Manage Deliveries", href: "#" },
+      { label: "Orders", href: "#" },
+      { label: "Payments", href: "#" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Free eBooks", href: "#" },
+      { label: "Development Tutorial", href: "#" },
+      { label: "How to - Blog", href: "#" },
+      { label: "Youtube Playlist", href: "#" },
+    ],
+  },
+];
+
+const Footer = () => {
   return (
     <>
       <footer className="footer">
@@ -74,162 +90,41 @@ const Footer: React.FC = () => {
               className="footer-main__info"
               aria-label="Brand information"
             >
-              <p className="footer-main__logo">SHOP.CO</p>
-              <p className="footer-main__description">
+              <Text as="p" className="footer-main__logo">
+                Shop.co
+              </Text>
+              <Text as="p" lineClamp={3} className="footer-main__description">
                 We have clothes that suits your style and which you're proud to
                 wear. From women to men.
-              </p>
-              <ul className="footer-main__socials" aria-label="Social links">
-                {socialLinks.map((link) => (
-                  <li className="footer-main__social-item" key={link.label}>
-                    <IconLink
-                      href="#"
-                      label={link.label}
-                      iconName={link.iconName}
-                      className={link.className}
-                      size={28}
-                      iconWidth={link.iconWidth}
-                      iconHeight={link.iconHeight}
-                    />
-                  </li>
-                ))}
-              </ul>
+              </Text>
+              <SocialLinks
+                items={socialLinks}
+                className="footer-main__socials"
+                itemClassName="footer-main__social-item"
+              />
             </section>
 
             <nav className="footer-main__links" aria-label="Footer navigation">
-              <section
-                className="footer-main__section"
-                aria-labelledby="footer-company-title"
-              >
-                <h4 id="footer-company-title" className="footer-main__title">
-                  Company
-                </h4>
-                <ul className="footer-main__list">
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      About
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Features
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Works
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Career
-                    </a>
-                  </li>
-                </ul>
-              </section>
-
-              <section
-                className="footer-main__section"
-                aria-labelledby="footer-help-title"
-              >
-                <h4 id="footer-help-title" className="footer-main__title">
-                  Help
-                </h4>
-                <ul className="footer-main__list">
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Customer Support
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Delivery Details
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Terms &amp; Conditions
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Privacy Policy
-                    </a>
-                  </li>
-                </ul>
-              </section>
-
-              <section
-                className="footer-main__section"
-                aria-labelledby="footer-faq-title"
-              >
-                <h4 id="footer-faq-title" className="footer-main__title">
-                  FAQ
-                </h4>
-                <ul className="footer-main__list">
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Account
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Manage Deliveries
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Orders
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Payments
-                    </a>
-                  </li>
-                </ul>
-              </section>
-
-              <section
-                className="footer-main__section"
-                aria-labelledby="footer-resources-title"
-              >
-                <h4 id="footer-resources-title" className="footer-main__title">
-                  Resources
-                </h4>
-                <ul className="footer-main__list">
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Free eBooks
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Development Tutorial
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      How to - Blog
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="footer-main__link">
-                      Youtube Playlist
-                    </a>
-                  </li>
-                </ul>
-              </section>
+              {footerSections.map((section) => (
+                <FooterNavSection
+                  key={section.title}
+                  title={section.title}
+                  links={section.links}
+                  sectionClassName="footer-main__section"
+                  titleClassName="footer-main__title"
+                  listClassName="footer-main__list"
+                  linkClassName="footer-main__link"
+                />
+              ))}
             </nav>
           </div>
 
           <div className="footer-main__copyright">
-            <p>Shop.co © 2000-2023, All Rights Reserved</p>
-            <div className="footer-main__copyright-logo">
-              {paymentLogos.map((item) => (
-                <BrandImage key={item.alt} src={item.src} alt={item.alt} />
-              ))}
-            </div>
+            <Text as="p">Shop.co © 2000-2023, All Rights Reserved</Text>
+            <PaymentMethods
+              items={paymentLogos}
+              className="footer-main__copyright-logo"
+            />
           </div>
         </div>
       </footer>
@@ -237,5 +132,4 @@ const Footer: React.FC = () => {
   );
 };
 
-export { FooterForm };
 export default Footer;

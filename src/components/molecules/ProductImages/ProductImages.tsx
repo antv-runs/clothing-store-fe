@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Image } from "../../atoms";
 
 interface ProductImagesProps {
   images: string[];
@@ -18,10 +19,11 @@ export const ProductImages: React.FC<ProductImagesProps> = ({
   return (
     <div className="product-images">
       <div className="product-images__main">
-        <img
+        <Image
           src={images[selectedImageIndex]}
           alt={`${productName} - Image ${selectedImageIndex + 1}`}
-          className="product-images__main-image"
+          imgClassName="product-images__main-image"
+          renderWrapper={false}
         />
       </div>
       <div className="product-images__thumbnails">
@@ -34,7 +36,11 @@ export const ProductImages: React.FC<ProductImagesProps> = ({
             onClick={() => setSelectedImageIndex(index)}
             aria-label={`View image ${index + 1}`}
           >
-            <img src={image} alt={`${productName} thumbnail ${index + 1}`} />
+            <Image
+              src={image}
+              alt={`${productName} thumbnail ${index + 1}`}
+              renderWrapper={false}
+            />
           </button>
         ))}
       </div>

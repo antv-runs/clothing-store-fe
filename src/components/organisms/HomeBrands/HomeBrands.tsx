@@ -1,4 +1,5 @@
 import { HOME_BRANDS } from "~/data/home";
+import { Image } from "../../atoms";
 import "./HomeBrands.scss";
 
 export const HomeBrands: React.FC = () => {
@@ -7,11 +8,12 @@ export const HomeBrands: React.FC = () => {
       <ul className="home-brands__list">
         {HOME_BRANDS.map((brand) => (
           <li key={brand.name}>
-            <img
+            <Image
               src={brand.imagePath}
               alt={`${brand.name} logo`}
               loading="lazy"
               decoding="async"
+              renderWrapper={false}
             />
           </li>
         ))}

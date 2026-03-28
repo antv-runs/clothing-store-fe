@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Heading } from "~/components/atoms";
 import { ProductCard } from "~/components/molecules/ProductCard/ProductCard";
 import type { Product } from "~/types/product";
 import "./HomeProductSection.scss";
@@ -30,7 +31,9 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
       aria-labelledby={`home-${sectionSlug}-title`}
     >
       <div className="home-products__head">
-        <h2 id={`home-${sectionSlug}-title`}>{title}</h2>
+        <Heading as="h2" id={`home-${sectionSlug}-title`}>
+          {title}
+        </Heading>
       </div>
 
       <div className="home-products__grid" aria-live="polite" aria-busy="false">

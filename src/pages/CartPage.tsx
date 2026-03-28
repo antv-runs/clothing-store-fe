@@ -1,5 +1,6 @@
 import { FooterForm } from "../components/organisms/Footer";
 import { useMemo, useState } from "react";
+import { Heading } from "../components/atoms";
 import { products } from "../data/products";
 import { mockCartItems } from "../data/cartItem";
 import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
@@ -91,7 +92,9 @@ const CartPage: React.FC = () => {
           id="cart-breadcrumb-list"
         />
 
-        <h1 className="cart-page__title u-mt-30">Your Cart</h1>
+        <Heading as="h1" className="cart-page__title u-mt-30">
+          Your Cart
+        </Heading>
 
         <CartEmptyState isVisible={isEmpty} />
 

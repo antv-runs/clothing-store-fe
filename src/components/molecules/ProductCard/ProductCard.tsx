@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Heading } from "../../atoms";
 import { Image } from "../../atoms/Image/Image";
 import { Star } from "../../atoms/Star/Star";
 import "./ProductCard.scss";
@@ -85,13 +86,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
       </div>
 
-      <h3 className="product-card__title">
+      <Heading as="h3" className="product-card__title" noOfLines={2}>
         {linkMode === "inline" ? (
           <Link to={productPath}>{product.name}</Link>
         ) : (
           product.name
         )}
-      </h3>
+      </Heading>
 
       <div
         className="product-card__rating"

@@ -1,4 +1,5 @@
 import React from "react";
+import { Heading } from "../../atoms";
 import { RatingDisplay } from "../../molecules/RatingDisplay/RatingDisplay";
 import { ProductPrice } from "../../molecules/ProductPrice/ProductPrice";
 import type { Product } from "../../../types/product";
@@ -18,9 +19,14 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
 }) => {
   const content = (
     <>
-      <h1 id="product-title" className="js-product-title">
+      <Heading
+        as="h1"
+        noOfLines={2}
+        id="product-title"
+        className="js-product-title"
+      >
         {product.name}
-      </h1>
+      </Heading>
 
       <RatingDisplay rating={product.rating} showEmpty={false} />
 

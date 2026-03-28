@@ -1,4 +1,5 @@
 import React from "react";
+import { Text, TextLink } from "../../atoms";
 
 interface CartEmptyStateProps {
   isVisible: boolean;
@@ -17,10 +18,12 @@ export const CartEmptyState: React.FC<CartEmptyStateProps> = ({
       aria-live="polite"
     >
       <div className="cart-empty__inner">
-        <p className="cart-empty__text">Your cart is empty.</p>
-        <a href="/" className="cart-empty__cta">
+        <Text as="p" className="cart-empty__text">
+          Your cart is empty.
+        </Text>
+        <TextLink href="/" className="cart-empty__cta">
           Continue Shopping
-        </a>
+        </TextLink>
       </div>
     </div>
   );

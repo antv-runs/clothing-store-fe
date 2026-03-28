@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import IconButton from "~/components/atoms/IconButton/IconButton";
+import { Heading } from "~/components/atoms";
 import { ReviewCard } from "~/components/organisms/ReviewCard/ReviewCard";
 import { getReviewsByProductId } from "~/services/reviewService";
 import type { Review } from "~/types/review";
@@ -125,7 +126,9 @@ export const HomeReviews: React.FC = () => {
   return (
     <section className="home-reviews" aria-labelledby="home-reviews-title">
       <div className="home-reviews__head">
-        <h2 id="home-reviews-title">OUR HAPPY CUSTOMERS</h2>
+        <Heading as="h2" id="home-reviews-title">
+          OUR HAPPY CUSTOMERS
+        </Heading>
         <div className="home-reviews__actions">
           <IconButton
             svgName="icn_arrow_left_home"

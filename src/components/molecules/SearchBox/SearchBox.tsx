@@ -1,4 +1,5 @@
 import IconButton from "../../atoms/IconButton/IconButton";
+import { Input } from "../../atoms";
 import "./SearchBox.scss";
 
 type SearchBoxProps = {
@@ -8,10 +9,11 @@ type SearchBoxProps = {
 export const SearchBox: React.FC<SearchBoxProps> = ({ action = "#" }) => {
   return (
     <form action={action} className="header-search">
-      <input
+      <Input
         type="text"
         placeholder="Search for products..."
         aria-label="Search for products"
+        unstyled
       />
       <IconButton
         svgName="icn_search"

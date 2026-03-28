@@ -1,16 +1,17 @@
 import IconButton from "../../atoms/IconButton/IconButton";
+import { Text, TextLink } from "../../atoms";
 import "./AnnouncementBar.scss";
 
 export const AnnouncementBar: React.FC = () => {
   return (
     <div className="announcement-bar">
       <div className="announcement-bar__container">
-        <p className="announcement-bar__text">
+        <Text as="p" className="announcement-bar__text">
           Sign up and get 20% off to your first order.{" "}
-          <a href="#" className="announcement-bar__link">
+          <TextLink href="#" className="announcement-bar__link">
             Sign Up Now
-          </a>
-        </p>
+          </TextLink>
+        </Text>
 
         <IconButton
           svgName="icn_close"

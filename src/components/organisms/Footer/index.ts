@@ -1,1 +1,2 @@
-export { default, FooterForm } from "./Footer";
+export { default } from "./Footer";
+export { FooterForm } from "./FooterForm";

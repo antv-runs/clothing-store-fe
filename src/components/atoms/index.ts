@@ -9,3 +9,5 @@ export { Input } from "./Input";
 export { Price } from "./Price";
 export { Rating } from "./Rating";
 export { Star } from "./Star";
+export { Text } from "./Text";
+export { TextLink } from "./TextLink";

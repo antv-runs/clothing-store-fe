@@ -1,4 +1,5 @@
 import React from "react";
+import { Heading } from "../../atoms";
 import "./ProductReviewsHeader.scss";
 import { ProductReviewsFilter } from "./ProductReviewsFilter.tsx";
 
@@ -14,12 +15,12 @@ export const ProductReviewsHeader: React.FC<ProductReviewsHeaderProps> = ({
 }) => {
   return (
     <div className="reviews__header">
-      <h2 className="reviews__title">
+      <Heading as="h2" className="reviews__title">
         All Reviews
         <span id="reviews-count" className="js-reviews-count">
           ({reviewCount})
         </span>
-      </h2>
+      </Heading>
 
       <ProductReviewsFilter />
     </div>

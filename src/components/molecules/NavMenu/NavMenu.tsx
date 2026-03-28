@@ -1,4 +1,5 @@
 import Icon from "../../atoms/Icon/Icon";
+import { TextLink } from "../../atoms";
 import "./NavMenu.scss";
 
 type NavMenuItem = {
@@ -20,14 +21,14 @@ export const NavMenu: React.FC = () => {
       <ul id="nav-categories">
         {NAV_ITEMS.map((item) => (
           <li key={item.label}>
-            <a href={item.href}>
+            <TextLink href={item.href}>
               {item.label}
               {item.hasDropdown ? (
                 <span className="header-links__arrow" aria-hidden="true">
                   <Icon svgName="icn_arrow_down" width={10} height={6} />
                 </span>
               ) : null}
-            </a>
+            </TextLink>
           </li>
         ))}
       </ul>

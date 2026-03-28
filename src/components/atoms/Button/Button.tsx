@@ -1,13 +1,32 @@
 import styles from "./Button.module.scss";
 import clsx from "clsx";
+import type { ButtonHTMLAttributes } from "react";
 
 type ButtonProps = {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
-};
+  unstyled?: boolean;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({ children, variant = "primary" }: ButtonProps) {
+export function Button({
+  children,
+  variant = "primary",
+  unstyled = false,
+  className,
+  type = "button",
+  ...buttonProps
+}: ButtonProps) {
   return (
-    <button className={clsx(styles.button, styles[variant])}>{children}</button>
+    <button
+      type={type}
+      className={clsx(
+        !unstyled && styles.button,
+        !unstyled && styles[variant],
+        className,
+      )}
+      {...buttonProps}
+    >
+      {children}
+    </button>
   );
 }

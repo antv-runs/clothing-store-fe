@@ -1,4 +1,5 @@
 import React from "react";
+import { Heading } from "../../atoms";
 import "./CartSummaryPanel.scss";
 
 interface CartSummary {
@@ -26,7 +27,9 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
       aria-label="Order summary"
       aria-busy="false"
     >
-      <h2 className="cart-summary__title">Order Summary</h2>
+      <Heading as="h2" className="cart-summary__title">
+        Order Summary
+      </Heading>
 
       <dl className="cart-summary__rows">
         <div className="cart-summary__row u-mb-28">

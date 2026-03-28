@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./RelatedProductsSection.scss";
 import { ProductCard } from "../../molecules/ProductCard/ProductCard";
 import IconButton from "../../atoms/IconButton/IconButton";
+import { Heading } from "../../atoms";
 import { getRelatedProducts } from "../../../services/productService";
 import type { Product } from "../../../types/product";
 
@@ -83,7 +84,9 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   if (!isLoading && items.length === 0) {
     return (
       <section className="other-products js-related-products">
-        <h2 className="other-products__title">You Might Also Like</h2>
+        <Heading as="h2" className="other-products__title">
+          You Might Also Like
+        </Heading>
         <p className="other-products__empty">No related products available.</p>
       </section>
     );
@@ -91,7 +94,9 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
 
   return (
     <section className="other-products js-related-products u-mb-85">
-      <h2 className="other-products__title">You Might Also Like</h2>
+      <Heading as="h2" className="other-products__title">
+        You Might Also Like
+      </Heading>
 
       <IconButton
         variant="ghost"

@@ -1,4 +1,5 @@
 import React from "react";
+import { Text, TextLink } from "../../atoms";
 
 interface BreadcrumbItemProps {
   label: string;
@@ -18,14 +19,14 @@ export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
   if (isActive) {
     return (
       <li aria-current="page">
-        <span>{label}</span>
+        <Text as="span">{label}</Text>
       </li>
     );
   }
 
   return (
     <li>
-      <a href={href || "#"}>{label}</a>
+      <TextLink href={href || "#"}>{label}</TextLink>
     </li>
   );
 };

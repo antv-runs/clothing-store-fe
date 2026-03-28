@@ -1,0 +1,36 @@
+.heading {
+  margin: 0;
+
+  &--clamp {
+    display: -webkit-box;
+
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+  }
+
+  &--clamp-1 {
+    -webkit-line-clamp: 1;
+  }
+
+  &--clamp-2 {
+    -webkit-line-clamp: 2;
+  }
+
+  &--clamp-3 {
+    -webkit-line-clamp: 3;
+  }
+
+  &--clamp-4 {
+    -webkit-line-clamp: 4;
+  }
+
+  &--clamp-5 {
+    -webkit-line-clamp: 5;
+  }
+
+  &--clamp-6 {
+    -webkit-line-clamp: 6;
+  }
+}

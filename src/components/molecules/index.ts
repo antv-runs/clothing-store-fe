@@ -1,8 +1,11 @@
 export { AddToCart } from "./AddToCart";
 export { BreadcrumbItem } from "./BreadcrumbItem";
 export { CartEmptyState } from "./CartEmptyState";
+export { FooterNavSection } from "./FooterNavSection";
 export { HeaderActions, HeaderMenuToggle } from "./HeaderActions";
+export { InputWithIcon } from "./InputWithIcon";
 export { NavMenu } from "./NavMenu";
+export { PaymentMethods } from "./PaymentMethods";
 export { ProductActions } from "./ProductActions";
 export { ProductCard } from "./ProductCard";
 export { ProductImages } from "./ProductImages";
@@ -13,3 +16,4 @@ export { RatingDisplay } from "./RatingDisplay";
 export { ReviewMeta } from "./ReviewMeta";
 export { ReviewSortSelect } from "./ReviewSortSelect/ReviewSortSelect";
 export { SearchBox } from "./SearchBox";
+export { SocialLinks } from "./SocialLinks";

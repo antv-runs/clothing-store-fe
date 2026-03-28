@@ -1,0 +1,29 @@
+.text {
+  &--clamp-1,
+  &--clamp-2,
+  &--clamp-3,
+  &--clamp-4 {
+    display: -webkit-box;
+
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+  }
+
+  &--clamp-1 {
+    -webkit-line-clamp: 1;
+  }
+
+  &--clamp-2 {
+    -webkit-line-clamp: 2;
+  }
+
+  &--clamp-3 {
+    -webkit-line-clamp: 3;
+  }
+
+  &--clamp-4 {
+    -webkit-line-clamp: 4;
+  }
+}
