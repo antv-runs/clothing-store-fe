@@ -14,6 +14,7 @@ import { getReviewsByProductId } from "../services/reviewService";
 import type { Product } from "../types/product";
 import type { Review } from "../types/review";
 import { formatPrice } from "../utils/formatters";
+import { Text } from "../components/atoms/Text/Text";
 import "./ProductDetailPage.scss";
 
 const ProductDetailPage: React.FC = () => {
