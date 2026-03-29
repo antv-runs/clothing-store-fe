@@ -2,20 +2,18 @@ import React from "react";
 
 interface StarProps {
   rating: number;
-  className: string;
+  className?: string;
   showEmpty?: boolean;
   maxStars?: number;
+  size?: number | string;
 }
 
-/**
- * Star component - renders inline SVG stars with full/half/empty states.
- * Uses the same nearest-0.5 rounding behavior as the legacy product page.
- */
 export const Star: React.FC<StarProps> = ({
   rating,
-  className,
+  className = "",
   showEmpty = true,
   maxStars = 5,
+  size,
 }) => {
   const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || 5));
   const safeRating = Math.max(
@@ -27,6 +25,19 @@ export const Star: React.FC<StarProps> = ({
   const fullStars = Math.floor(displayRating);
   const hasHalfStar = displayRating - fullStars >= 0.5;
 
+  const starSizeStyle =
+    size !== undefined
+      ? ({
+          "--star-size": typeof size === "number" ? `${size}px` : size,
+        } as React.CSSProperties)
+      : undefined;
+
+  const fullPath =
+    "M7.35521 0L9.54627 4.718L14.7104 5.34389L10.9004 8.88566L11.901 13.9905L7.35521 11.4614L2.80942 13.9905L3.80999 8.88566L-2.3365e-05 5.34389L5.16414 4.718L7.35521 0Z";
+
+  const halfPath =
+    "M2.80945 13.9905L7.35523 11.4614V0L5.16416 4.718L0 5.34389L3.81001 8.88566L2.80945 13.9905Z";
+
   return (
     <>
       {Array.from({ length: normalizedMaxStars }, (_, index) => {
@@ -37,24 +48,36 @@ export const Star: React.FC<StarProps> = ({
           return null;
         }
 
-        const activeModifier = isFull || isHalf ? ` ${className}--active` : "";
-        const fullPath =
-          "M10.737 0L13.9355 6.8872L21.4739 7.80085L15.9122 12.971L17.3728 20.4229L10.737 16.731L4.10121 20.4229L5.56179 12.971L0 7.80085L7.53855 6.8872L10.737 0Z";
-        const halfPath =
-          "M4.10115 20.4229L10.7369 16.731V0L7.53849 6.8872L0 7.80085L5.56174 12.971L4.10115 20.4229Z";
+        const stateClass =
+          isFull || isHalf ? `${className}--active` : `${className}--empty`;
 
         return (
-          <svg
-            key={`${className}-${index}`}
-            className={`${className}${activeModifier}`}
+          <span
+            key={`${className || "star"}-${index}`}
+            className={`star-item ${className ? `${className}__item` : ""}`}
+            style={starSizeStyle}
             aria-hidden="true"
-            viewBox="0 0 22 21"
-            focusable="false"
           >
-            <path d={isHalf ? halfPath : fullPath} />
-          </svg>
+            {isHalf ? (
+              <svg
+                className={[className, stateClass].filter(Boolean).join(" ")}
+                viewBox="0 0 8 14"
+                focusable="false"
+              >
+                <path d={halfPath} />
+              </svg>
+            ) : (
+              <svg
+                className={[className, stateClass].filter(Boolean).join(" ")}
+                viewBox="0 0 15 14"
+                focusable="false"
+              >
+                <path d={fullPath} />
+              </svg>
+            )}
+          </span>
         );
-      }).filter(Boolean)}
+      })}
     </>
   );
 };

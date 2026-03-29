@@ -1,6 +1,8 @@
 @use "../../../styles/abstracts/variables" as v;
 
 .home-products {
+  display: flex;
+  flex-direction: column;
   padding-top: 72px;
 
   &--bordered {
@@ -8,42 +10,40 @@
     margin-top: 72px;
   }
 
-  &__head {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 40px;
-
-    h2 {
-      margin: 0;
-      font-size: 48px;
-      font-family: v.$font-family-display;
-      letter-spacing: -0.02em;
-      text-align: center;
-    }
+  &__title {
+    margin: 0 0 40px;
+    font-size: 48px;
+    font-family: v.$font-family-display;
+    letter-spacing: -0.02em;
+    text-align: center;
   }
 
-  &__grid {
+  &__list {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
     min-height: 345px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  &__foot {
+  &__cta {
     margin-top: 36px;
-    display: flex;
-    justify-content: center;
+    margin-inline: auto;
+    min-width: 218px;
+    min-height: 52px;
+    border: 1px solid v.$color-border !important;
+  }
 
-    .btn {
-      min-width: 218px;
-      border: 1px solid v.$color-border;
-    }
+  &__list-item {
+    min-width: 0;
   }
 }
 
 @media (max-width: 992px) {
   .home-products {
-    &__grid {
+    &__list {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
     }
@@ -58,15 +58,12 @@
       margin-top: 48px;
     }
 
-    &__head {
+    &__title {
       margin-bottom: 28px;
-
-      h2 {
-        font-size: 32px;
-      }
+      font-size: 32px;
     }
 
-    &__grid {
+    &__list {
       display: flex;
       grid-template-columns: unset;
       gap: 16px;
@@ -83,10 +80,21 @@
       }
     }
 
-    .product-card {
+    &__list-item {
       flex: 0 0 auto;
-      width: 280px;
+      width: 198px;
       scroll-snap-align: start;
+    }
+
+    .product-card {
+      width: 100%;
+    }
+
+    &__cta {
+      margin-top: 24px;
+      width: 100%;
+      min-height: 46px;
+      font-size: 14px;
     }
   }
 }

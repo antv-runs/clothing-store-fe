@@ -1,7 +1,6 @@
+import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { Heading } from "../../atoms";
-import { Image } from "../../atoms/Image/Image";
-import { Star } from "../../atoms/Star/Star";
+import { Heading, Image, Star, Text } from "../../atoms";
 import "./ProductCard.scss";
 
 type ProductCardData = {
@@ -43,19 +42,36 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onImageLoad,
   onImageError,
 }) => {
-  const hasComparePrice =
-    product.pricing.original !== null &&
-    product.pricing.original !== undefined &&
-    product.pricing.original > product.pricing.current;
+  const { id, name, thumbnail, thumbnailAlt, rating, pricing } = product;
+  const {
+    current: currentPrice,
+    original: originalPrice,
+    currency = "USD",
+    discountPercent,
+  } = pricing;
 
-  const cardClassName = ["product-card", className].filter(Boolean).join(" ");
-  const productPath = buildProductPath(product.id);
+  const isInlineLinkMode = linkMode === "inline";
+  const productPath = buildProductPath(id);
+  const viewProductLabel = `View ${name}`;
+  const formattedRating = rating.toFixed(1);
+
+  const hasComparePrice =
+    originalPrice !== null &&
+    originalPrice !== undefined &&
+    originalPrice > currentPrice;
+
+  const cardClassName = clsx("product-card", className);
+  const currentPriceLabel = formatPrice(currentPrice, currency);
+  const comparePriceLabel = hasComparePrice
+    ? formatPrice(originalPrice, currency)
+    : null;
+
   const productImage = (
     <Image
-      src={product.thumbnail}
-      alt={product.thumbnailAlt || product.name}
+      src={thumbnail}
+      alt={thumbnailAlt || name}
       renderWrapper={false}
-      imgClassName="product-card__image product-image js-product-item-image"
+      imgClassName="product-card__image product-image"
       isLoaded={imageLoaded}
       isError={imageError}
       loadedClassName="product-image--loaded is-loaded"
@@ -68,75 +84,74 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     />
   );
 
+  const imageContent = isInlineLinkMode ? (
+    <Link
+      className="product-card__image-link"
+      to={productPath}
+      aria-label={viewProductLabel}
+    >
+      {productImage}
+    </Link>
+  ) : (
+    <div className="product-card__image-link" aria-hidden="true">
+      {productImage}
+    </div>
+  );
+
+  const titleContent = isInlineLinkMode ? (
+    <Link to={productPath}>{name}</Link>
+  ) : (
+    name
+  );
+
   return (
     <article className={cardClassName}>
-      <div className="product-card__image-wrapper product-image-wrapper js-product-image-wrapper">
-        {linkMode === "inline" ? (
-          <Link
-            className="product-card__image-link"
-            to={productPath}
-            aria-label={`View ${product.name}`}
-          >
-            {productImage}
-          </Link>
-        ) : (
-          <div className="product-card__image-link" aria-hidden="true">
-            {productImage}
-          </div>
-        )}
+      <div className="product-card__image-wrapper product-image-wrapper">
+        {imageContent}
       </div>
 
       <Heading as="h3" className="product-card__title" noOfLines={2}>
-        {linkMode === "inline" ? (
-          <Link to={productPath}>{product.name}</Link>
-        ) : (
-          product.name
-        )}
+        {titleContent}
       </Heading>
 
       <div
         className="product-card__rating"
-        aria-label={`Rating ${product.rating.toFixed(1)} out of 5`}
+        aria-label={`Rating ${formattedRating} out of 5`}
       >
-        <span className="product-card__stars">
+        <Text as="span" className="product-card__stars">
           <Star
-            rating={product.rating}
+            rating={rating}
             className="product-card__star"
             showEmpty={false}
+            size={18}
           />
-        </span>
-        <span>{product.rating.toFixed(1)}/5</span>
+        </Text>
+        <Text as="span">{formattedRating}/5</Text>
       </div>
 
-      <p className="product-card__price">
-        <span className="product-card__price-current">
-          {formatPrice(
-            product.pricing.current,
-            product.pricing.currency || "USD",
-          )}
-        </span>
+      <Text as="p" className="product-card__price">
+        <Text as="span" className="product-card__price-current">
+          {currentPriceLabel}
+        </Text>
 
         {hasComparePrice ? (
-          <span className="product-card__price-original">
-            {formatPrice(
-              product.pricing.original || 0,
-              product.pricing.currency || "USD",
-            )}
-          </span>
+          <Text as="span" className="product-card__price-original">
+            {comparePriceLabel}
+          </Text>
         ) : null}
 
-        {product.pricing.discountPercent ? (
-          <span className="product-card__price-badge">
-            -{product.pricing.discountPercent}%
-          </span>
+        {discountPercent ? (
+          <Text as="span" className="product-card__price-badge">
+            -{discountPercent}%
+          </Text>
         ) : null}
-      </p>
+      </Text>
 
-      {linkMode === "overlay" ? (
+      {!isInlineLinkMode ? (
         <Link
           to={productPath}
           className="product-card__overlay-link"
-          aria-label={`View ${product.name}`}
+          aria-label={viewProductLabel}
         />
       ) : null}
     </article>

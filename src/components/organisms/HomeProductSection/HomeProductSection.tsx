@@ -30,23 +30,25 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
       className={`home-products${withTopBorder ? " home-products--bordered" : ""}`}
       aria-labelledby={`home-${sectionSlug}-title`}
     >
-      <div className="home-products__head">
-        <Heading as="h2" id={`home-${sectionSlug}-title`}>
-          {title}
-        </Heading>
-      </div>
+      <Heading
+        as="h2"
+        id={`home-${sectionSlug}-title`}
+        className="home-products__title"
+      >
+        {title}
+      </Heading>
 
-      <div className="home-products__grid" aria-live="polite" aria-busy="false">
+      <ul className="home-products__list" aria-live="polite" aria-busy="false">
         {productsList.map((item) => (
-          <ProductCard key={item.id} product={item} formatPrice={formatPrice} />
+          <li key={item.id} className="home-products__list-item">
+            <ProductCard product={item} formatPrice={formatPrice} />
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div className="home-products__foot">
-        <Link to="/" className="btn btn--light btn--cta">
-          View All
-        </Link>
-      </div>
+      <Link to="/" className="btn btn--light home-products__cta">
+        View All
+      </Link>
     </section>
   );
 };
