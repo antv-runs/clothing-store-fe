@@ -1,12 +1,5 @@
 import type { Review } from "~/types/review";
 
-export const HOME_HERO_STATS = [
-  { value: "200+", label: "International Brands" },
-  { value: "2,000+", label: "High-Quality Products" },
-  { value: "30,000+", label: "Happy Customers" },
-];
-
-
 export const HOME_STYLE_CARDS = [
   {
     title: "Casual",

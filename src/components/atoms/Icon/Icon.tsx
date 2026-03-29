@@ -5,6 +5,7 @@ import clsx from "clsx";
 export type IconProps = {
   svgName: string;
   color?: string;
+  size?: number | string;
   width?: number | string;
   height?: number | string;
   onClick?: React.MouseEventHandler<HTMLElement | SVGSVGElement>;
@@ -13,27 +14,34 @@ export type IconProps = {
 
 function Icon({
   color,
-  width = 20,
-  height = 20,
+  size = "1em",
+  width,
+  height,
   svgName,
   className,
   onClick,
 }: IconProps) {
+  const finalWidth = width ?? size;
+  const finalHeight = height ?? size;
+
   return (
     <ReactSVG
-      className={clsx("iconContainer", className)}
+      className={clsx("icon", className)}
       src={`/images/${svgName}.svg`}
       wrapper="span"
       onClick={onClick}
       style={{
-        width,
-        height,
+        width: finalWidth,
+        height: finalHeight,
         color,
-        display: "inline-block",
+        display: "inline-flex",
+        flexShrink: 0,
       }}
       beforeInjection={(svg) => {
-        svg.setAttribute("width", String(width));
-        svg.setAttribute("height", String(height));
+        svg.setAttribute("aria-hidden", "true");
+        svg.setAttribute("focusable", "false");
+        svg.setAttribute("width", "100%");
+        svg.setAttribute("height", "100%");
 
         svg.querySelectorAll("*").forEach((el) => {
           if (el.getAttribute("fill")) {

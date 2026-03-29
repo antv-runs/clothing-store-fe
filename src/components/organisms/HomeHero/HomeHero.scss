@@ -1,6 +1,7 @@
 @use "../../../styles/abstracts/variables" as v;
 
 .home-hero {
+  position: relative;
   margin: 0 calc(-50vw + 50%);
   padding: 0 calc(50vw - 50%);
   display: grid;
@@ -71,18 +72,51 @@
   }
 
   &__media {
-    max-height: 663px;
-    margin: 0;
+    position: relative;
+    min-height: 663px;
     min-width: 0;
-    display: flex;
-    align-items: flex-end;
+    pointer-events: none;
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-    }
+  &__sparkle {
+    position: absolute;
+    z-index: 2;
+    line-height: 0;
+  }
+
+  &__sparkle--left {
+    height: 56px;
+    width: 56px;
+    right: 535px;
+    bottom: 310px;
+  }
+
+  &__sparkle--right {
+    height: 104px;
+    width: 104px;
+    right: -18px;
+    top: 85px;
+  }
+
+  &__image-crop {
+    position: absolute;
+    right: -48px;
+    bottom: 0;
+    width: 600px;
+    height: 663px;
+    margin: 0;
+    overflow: visible;
+  }
+
+  &__image {
+    position: absolute;
+    right: 0;
+    bottom: -285px;
+    width: auto;
+    height: 150%;
+    max-width: none;
+    object-fit: contain;
+    object-position: right bottom;
   }
 }
 
@@ -103,7 +137,11 @@
     }
 
     &__media {
-      min-height: 400px;
+      min-height: 663px;
+    }
+
+    &__image-crop {
+      right: 0;
     }
   }
 }
@@ -167,7 +205,37 @@
     }
 
     &__media {
-      min-height: 320px;
+      min-height: 448px;
+    }
+
+    &__sparkle--left {
+      width: 44px;
+      height: 44px;
+      left: 10px;
+      right: auto;
+      bottom: 265px;
+    }
+
+    &__sparkle--right {
+      width: 76px;
+      height: 76px;
+      right: calc(50% - 170px);
+      top: 44px;
+    }
+
+    &__image-crop {
+      left: 50%;
+      right: auto;
+      bottom: 90px;
+      width: 420px;
+      height: 448px;
+      transform: translateX(-50%);
+    }
+
+    &__image {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
     }
   }
 }
