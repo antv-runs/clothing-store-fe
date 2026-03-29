@@ -5,6 +5,7 @@ import IconButton from "../../atoms/IconButton/IconButton";
 import { ReviewMeta } from "~/components/molecules/ReviewMeta/ReviewMeta";
 import { formatDate } from "../../../utils/formatters";
 import type { Review } from "../../../types/review";
+import { Text } from "../../atoms";
 
 interface ReviewCardProps {
   review: Review;
@@ -35,10 +36,12 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
         />
       </div>
       <ReviewMeta name={review.name} isVerified={review.isVerified} />
-      <p className="review-card__content">{review.desc}</p>
-      <p className="review-card__footer">
+      <Text as="p" className="review-card__content">
+        {review.desc}
+      </Text>
+      <Text as="p" className="review-card__footer">
         Posted on {formatDate(review.createdAt)}
-      </p>
+      </Text>
     </li>
   );
 };
