@@ -6,51 +6,115 @@
   background-color: v.$color-black;
   color: v.$color-white;
 
+  &__list,
+  &__row {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   &__list {
     width: min(1240px, 100% - 32px);
-    margin: 0 auto;
     min-height: 122px;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 18px;
+    margin: 0 auto;
+    display: flex;
     align-items: center;
+    justify-content: flex-start;
+    gap: 106px;
+  }
 
-    li {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
+  &__mobile {
+    display: none;
+  }
 
-      img {
-        display: block;
-        width: 100%;
-        max-width: 170px;
-        max-height: 40px;
-        object-fit: contain;
-        object-position: center;
-      }
-    }
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 34px;
+  }
+
+  &__item {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  &__item--versace {
+    width: 166px;
+    height: 33px;
+  }
+
+  &__item--zara {
+    width: 91px;
+    height: 38px;
+  }
+
+  &__item--gucci {
+    width: 156px;
+    height: 36px;
+  }
+
+  &__item--prada {
+    width: 194px;
+    height: 32px;
+  }
+
+  &__item--calvin-klein {
+    width: 206px;
+    height: 33px;
   }
 }
 
 @media (max-width: 768px) {
   .home-brands {
     &__list {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px 20px;
-      min-height: 0;
-      padding: 28px 0;
-      justify-items: center;
+      display: none;
+    }
 
-      li {
-        min-height: 40px;
-        width: 100%;
+    &__mobile {
+      width: min(100% - 32px, 390px);
+      min-height: 146px;
+      margin: 0 auto;
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      row-gap: 22.6px;
+    }
 
-        img {
-          max-width: 120px;
-          max-height: 32px;
-        }
-      }
+    &__item--versace {
+      width: 116px;
+      height: 23px;
+    }
+
+    &__item--zara {
+      width: 63px;
+      height: 26px;
+    }
+
+    &__item--gucci {
+      width: 109px;
+      height: 25px;
+    }
+
+    &__item--prada {
+      width: 127px;
+      height: 21px;
+    }
+
+    &__item--calvin-klein {
+      width: 134px;
+      height: 21px;
     }
   }
 }

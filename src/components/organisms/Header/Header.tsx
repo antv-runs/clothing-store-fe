@@ -6,6 +6,7 @@ import { NavMenu } from "../../molecules/NavMenu/NavMenu";
 import { SearchBox } from "../../molecules/SearchBox/SearchBox";
 import { AnnouncementBar } from "../AnnouncementBar/AnnouncementBar";
 import "./Header.scss";
+import { Text } from "../../atoms/Text/Text";
 
 const Header: React.FC = () => {
   return (
@@ -20,7 +21,9 @@ const Header: React.FC = () => {
           iconWidth={19}
           iconHeight={15}
         />
-        <p className="logo">SHOP.CO</p>
+        <Text as="h1" className="logo">
+          SHOP.CO
+        </Text>
 
         <NavMenu />
 

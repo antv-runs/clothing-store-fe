@@ -94,7 +94,9 @@ const ProductDetailPage: React.FC = () => {
     return (
       <div className="container u-mt-25">
         <main className="product-overview js-product-overview">
-          <p className="product-overview__description">Loading product...</p>
+          <Text as="p" className="product-overview__description">
+            Loading product...
+          </Text>
         </main>
         <FooterForm />
       </div>
@@ -105,7 +107,9 @@ const ProductDetailPage: React.FC = () => {
     return (
       <div className="container u-mt-25">
         <main className="product-overview js-product-overview">
-          <p className="product-overview__description">Product not found.</p>
+          <Text as="p" className="product-overview__description">
+            Product not found.
+          </Text>
         </main>
         <FooterForm />
       </div>

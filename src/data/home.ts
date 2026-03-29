@@ -6,13 +6,6 @@ export const HOME_HERO_STATS = [
   { value: "30,000+", label: "Happy Customers" },
 ];
 
-export const HOME_BRANDS = [
-  { name: "Versace", imagePath: "/images/pic_versace_logo.png" },
-  { name: "Zara", imagePath: "/images/pic_zara_logo.png" },
-  { name: "Gucci", imagePath: "/images/pic_gucci_logo.png" },
-  { name: "Prada", imagePath: "/images/pic_prada_logo.png" },
-  { name: "Calvin Klein", imagePath: "/images/pic_calvin_klein_logo.png" },
-];
 
 export const HOME_STYLE_CARDS = [
   {
