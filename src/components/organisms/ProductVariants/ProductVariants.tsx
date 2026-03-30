@@ -1,6 +1,7 @@
 import React from "react";
 import type { ProductVariants as ProductVariantsData } from "@custom-types/product";
 import { Text } from "@components/atoms";
+import "./ProductVariants.scss";
 
 interface ProductVariantsProps {
   variants: ProductVariantsData;
