@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image } from "../../atoms";
+import { Image } from "@/components/atoms";
 
 interface ProductImagesProps {
   images: string[];

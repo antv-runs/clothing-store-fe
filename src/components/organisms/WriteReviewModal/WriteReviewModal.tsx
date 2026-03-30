@@ -1,6 +1,6 @@
 import React from "react";
 import "./WriteReviewModal.scss";
-import IconButton from "~/components/atoms/IconButton/IconButton";
+import IconButton from "@/components/atoms/IconButton/IconButton";
 
 /**
  * WriteReviewModal - Static review modal markup.

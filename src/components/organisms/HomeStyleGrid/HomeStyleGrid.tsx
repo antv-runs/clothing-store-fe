@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { HOME_STYLE_CARDS } from "~/data/home";
-import { Heading, Image, Text } from "../../atoms";
+import { HOME_STYLE_CARDS } from "@/data/home";
+import { Heading, Image, Text } from "@/components/atoms";
 import "./HomeStyleGrid.scss";
 
 export const HomeStyleGrid: React.FC = () => {

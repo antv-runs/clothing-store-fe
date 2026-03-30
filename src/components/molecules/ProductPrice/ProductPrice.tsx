@@ -1,7 +1,7 @@
 import React from "react";
-import { Price } from "@components/atoms/Price/Price";
-import type { ProductPricing } from "@custom-types/product";
-import { Text } from "@components/atoms";
+import { Price } from "@/components/atoms/Price/Price";
+import type { ProductPricing } from "@/types/product";
+import { Text } from "@/components/atoms";
 import "./ProductPrice.scss";
 
 interface ProductPriceProps {

@@ -1,4 +1,4 @@
-import { Icon, Input } from "../../atoms";
+import { Icon, Input } from "@/components/atoms";
 
 type InputWithIconProps = {
   iconName: string;

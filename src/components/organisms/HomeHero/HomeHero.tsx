@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Image } from "../../atoms/Image/Image";
+import { Image } from "@/components/atoms/Image/Image";
 import "./HomeHero.scss";
-import { Heading, Icon, Text } from "~/components/atoms";
+import { Heading, Icon, Text } from "@/components/atoms";
 
 const HOME_HERO_STATS = [
   { value: "200+", label: "International Brands" },

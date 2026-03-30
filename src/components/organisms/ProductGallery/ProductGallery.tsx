@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import clsx from "clsx";
-import { Image } from "../../atoms/Image/Image";
-import type { ProductImage } from "../../../types/product";
+import { Image } from "@/components/atoms/Image/Image";
+import type { ProductImage } from "@/types/product";
 import "./ProductGallery.scss";
 
 interface ProductGalleryProps {

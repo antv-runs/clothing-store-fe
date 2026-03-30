@@ -1,4 +1,4 @@
-import type { CartRow } from "~/pages/CartPage";
+import type { CartRow } from "@/pages/CartPage";
 
 /**
  * Mock cart items for testing and development.

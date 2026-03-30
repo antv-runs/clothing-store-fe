@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextLink } from "../../atoms";
+import { Text, TextLink } from "@/components/atoms";
 
 interface BreadcrumbItemProps {
   label: string;

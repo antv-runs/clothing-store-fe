@@ -1,4 +1,4 @@
-import { IconLink } from "../../atoms";
+import { IconLink } from "@/components/atoms";
 
 type SocialLinkItem = {
   label: string;

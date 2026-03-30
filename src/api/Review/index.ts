@@ -1,20 +1,23 @@
-import { get, post } from "./httpClient";
-import type { ApiResponse, PaginatedApiResponse } from "@custom-types/api";
+// Review API module
+// Moved from services/reviewService.ts
+
+import { get, post } from "@/lib/axios";
+import type { ApiResponse, PaginatedApiResponse } from "@/types/api";
 import type {
   CreateReviewPayload,
   ProductReviewsResult,
   Review,
   ApiReview,
-} from "@custom-types/review";
+} from "@/types/review";
 import {
   mapApiReviewToReview,
   mapApiReviewsToReviews,
-} from "@custom-mappers/reviewMapper";
+} from "@/mappers/reviewMapper";
 import {
   unwrapApiResponse,
   unwrapPaginatedResponse,
   buildQueryString,
-} from "./apiHelpers";
+} from "@/utils/apiHelpers";
 
 type ReviewSort = "latest" | "oldest" | "highest";
 

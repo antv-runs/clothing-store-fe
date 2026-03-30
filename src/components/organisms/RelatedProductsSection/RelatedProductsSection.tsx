@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./RelatedProductsSection.scss";
-import { ProductCard } from "@components/molecules/ProductCard/ProductCard";
-import IconButton from "@components/atoms/IconButton/IconButton";
-import { Heading } from "@components/atoms";
-import { getProducts } from "@services/productService";
-import type { Product } from "@custom-types/product";
+import { ProductCard } from "@/components/molecules/ProductCard/ProductCard";
+import IconButton from "@/components/atoms/IconButton/IconButton";
+import { Heading } from "@/components/atoms";
+import { getProducts } from "@/api/Product";
+import type { Product } from "@/types/product";
 
 interface RelatedProductsSectionProps {
   currentProductId: string;

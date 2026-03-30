@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading } from "~/components/atoms";
+import { Heading } from "@/components/atoms";
 import "./CartSummaryPanel.scss";
 
 interface CartSummary {

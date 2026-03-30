@@ -1,10 +1,11 @@
-import { post } from "./httpClient";
-import type { ApiResponse } from "@custom-types/api";
-import { unwrapApiResponse } from "./apiHelpers";
+// Order API module
+// Moved from services/orderService.ts
+
+import { post } from "@/lib/axios";
+import type { ApiResponse } from "@/types/api";
+import { unwrapApiResponse } from "@/utils/apiHelpers";
 
 export interface CreateOrderPayload {
-  // Define the order payload fields as per backend API
-  // Example fields:
   items: Array<{
     product_id: string | number;
     quantity: number;

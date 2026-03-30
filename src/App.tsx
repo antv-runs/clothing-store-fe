@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "~/components/organisms/Header";
-import Footer from "~/components/organisms/Footer";
-import HomePage from "~/pages/HomePage";
-import ProductDetailPage from "~/pages/ProductDetailPage";
-import CartPage from "~/pages/CartPage";
+import Header from "@/components/organisms/Header";
+import Footer from "@/components/organisms/Footer";
+import HomePage from "@/pages/HomePage";
+import ProductDetailPage from "@/pages/ProductDetailPage";
+import CartPage from "@/pages/CartPage";
 
 function App() {
   return (

@@ -10,7 +10,7 @@ import type {
   ApiProductImage,
   ApiProductVariantOption,
   ApiProductVariants,
-} from "@custom-types/product";
+} from "@/types/product";
 
 /**
  * Maps common color labels to hex color codes

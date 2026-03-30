@@ -1,7 +1,7 @@
 import React from "react";
-import { Star } from "@components/atoms/Star/Star";
-import { Rating } from "@components/atoms/Rating/Rating";
-import { Text } from "@components/atoms";
+import { Star } from "@/components/atoms/Star/Star";
+import { Rating } from "@/components/atoms/Rating/Rating";
+import { Text } from "@/components/atoms";
 import "./RatingDisplay.scss";
 
 interface RatingDisplayProps {

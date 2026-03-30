@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "~/components/atoms";
+import { Text } from "@/components/atoms";
 
 interface ReviewMetaProps {
   name: string;

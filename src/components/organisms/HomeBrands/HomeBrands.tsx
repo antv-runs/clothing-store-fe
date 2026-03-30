@@ -1,4 +1,4 @@
-import { Image } from "../../atoms";
+import { Image } from "@/components/atoms";
 import "./HomeBrands.scss";
 
 const HOME_BRANDS_TOP = [

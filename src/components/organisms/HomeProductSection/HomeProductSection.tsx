@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Heading } from "~/components/atoms";
-import { ProductCard } from "~/components/molecules/ProductCard/ProductCard";
-import type { Product } from "~/types/product";
+import { Heading } from "@/components/atoms";
+import { ProductCard } from "@/components/molecules/ProductCard/ProductCard";
+import type { Product } from "@/types/product";
 import "./HomeProductSection.scss";
 
 type HomeProductSectionProps = {

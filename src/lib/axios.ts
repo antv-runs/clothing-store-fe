@@ -1,7 +1,8 @@
+// Axios HTTP client (moved from services/httpClient.ts)
 import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const BASE_URL = "https://api.vanannek.blog"; // Centralized base URL
+const BASE_URL = "https://api.vanannek.blog";
 
 const httpClient = axios.create({
   baseURL: BASE_URL,

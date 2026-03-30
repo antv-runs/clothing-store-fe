@@ -1,5 +1,5 @@
 import React from "react";
-import { formatPrice as formatPriceUtil } from "../../../utils/formatters";
+import { formatPrice as formatPriceUtil } from "@/utils/formatters";
 
 interface PriceProps {
   amount: number;

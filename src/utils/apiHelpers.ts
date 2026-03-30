@@ -1,20 +1,13 @@
-/**
- * Shared API response handling helpers
- * Reduces duplication across service files
- */
+// API helpers (moved from services/apiHelpers.ts)
+// Generic helpers for API response and query string
 
 import type {
   ApiResponse,
   PaginatedApiResponse,
   PaginationMeta,
   PaginationLinks,
-} from "@custom-types/api";
+} from "@/types/api";
 
-/**
- * Unwrap and validate a single-resource API response
- * @throws Error if response.success === false
- * @returns The unwrapped data
- */
 export function unwrapApiResponse<T>(
   response: ApiResponse<T>,
   fallbackMessage: string = "API request failed",
@@ -25,11 +18,6 @@ export function unwrapApiResponse<T>(
   return response.data;
 }
 
-/**
- * Unwrap and validate a paginated API response
- * @throws Error if response.success === false
- * @returns Object with { data, meta, links }
- */
 export function unwrapPaginatedResponse<T>(
   response: PaginatedApiResponse<T>,
   fallbackMessage: string = "API request failed",
@@ -48,11 +36,6 @@ export function unwrapPaginatedResponse<T>(
   };
 }
 
-/**
- * Build a safe query string from a params object
- * Ignores undefined, null, and empty string values
- * @returns URLSearchParams instance (can chain .toString())
- */
 export function buildQueryString(
   params: Record<string, any> = {},
 ): URLSearchParams {
@@ -65,11 +48,6 @@ export function buildQueryString(
   return query;
 }
 
-/**
- * Convert query params object to a query string suitable for URLs
- * Example: { page: 1, per_page: 10 } → "?page=1&per_page=10"
- * Pass the result to a URL endpoint
- */
 export function getQueryStringForUrl(params: Record<string, any> = {}): string {
   const query = buildQueryString(params);
   const queryStr = query.toString();

@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import Icon from "~/components/atoms/Icon/Icon";
+import Icon from "@/components/atoms/Icon/Icon";
 import "./IconButton.scss";
 
 type IconButtonVariant = "default" | "ghost";

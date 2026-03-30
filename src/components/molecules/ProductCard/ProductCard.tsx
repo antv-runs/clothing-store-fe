@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { Heading, Image, Star, Text } from "../../atoms";
+import { Heading, Image, Star, Text } from "@/components/atoms";
 import "./ProductCard.scss";
 
 type ProductCardData = {

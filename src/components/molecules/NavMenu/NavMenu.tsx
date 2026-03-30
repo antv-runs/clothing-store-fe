@@ -1,7 +1,7 @@
-import Icon from "../../atoms/Icon/Icon";
-import { TextLink } from "../../atoms";
+import Icon from "@/components/atoms/Icon/Icon";
+import { TextLink } from "@/components/atoms";
 import "./NavMenu.scss";
-import IconButton from "~/components/atoms/IconButton/IconButton";
+import IconButton from "@/components/atoms/IconButton/IconButton";
 
 type NavMenuItem = {
   label: string;

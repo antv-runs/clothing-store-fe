@@ -1,8 +1,8 @@
 import React from "react";
-import { Heading, Text } from "@components/atoms";
-import { RatingDisplay } from "@components/molecules/RatingDisplay/RatingDisplay";
-import { ProductPrice } from "@components/molecules/ProductPrice/ProductPrice";
-import type { Product } from "@custom-types/product";
+import { Heading, Text } from "@/components/atoms";
+import { RatingDisplay } from "@/components/molecules/RatingDisplay/RatingDisplay";
+import { ProductPrice } from "@/components/molecules/ProductPrice/ProductPrice";
+import type { Product } from "@/types/product";
 import "./ProductInfo.scss";
 
 interface ProductInfoProps {

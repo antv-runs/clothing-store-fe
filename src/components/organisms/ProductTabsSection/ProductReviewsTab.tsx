@@ -1,6 +1,6 @@
 import React from "react";
 import "./ProductReviewsTab.scss";
-import type { Review } from "../../../types/review";
+import type { Review } from "@/types/review";
 import { ProductReviewsHeader } from "./ProductReviewsHeader.tsx";
 import { ProductReviewsList } from "./ProductReviewsList.tsx";
 

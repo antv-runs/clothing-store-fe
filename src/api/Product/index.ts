@@ -1,19 +1,18 @@
-import { get } from "./httpClient";
-import type { PaginatedApiResponse, ApiResponse } from "@custom-types/api";
-import type {
-  Product,
-  ProductListResult,
-  ApiProduct,
-} from "@custom-types/product";
+// Product API module
+// Moved from services/productService.ts
+
+import { get } from "@/lib/axios";
+import type { PaginatedApiResponse, ApiResponse } from "@/types/api";
+import type { Product, ProductListResult, ApiProduct } from "@/types/product";
 import {
   mapApiProductToProduct,
   mapApiProductsToProducts,
-} from "@custom-mappers/productMapper";
+} from "@/mappers/productMapper";
 import {
   unwrapApiResponse,
   unwrapPaginatedResponse,
   buildQueryString,
-} from "./apiHelpers";
+} from "@/utils/apiHelpers";
 
 export interface GetProductsParams {
   search?: string;

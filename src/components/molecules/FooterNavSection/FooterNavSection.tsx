@@ -1,4 +1,4 @@
-import { TextLink } from "../../atoms";
+import { TextLink } from "@/components/atoms";
 
 type FooterNavLink = {
   label: string;

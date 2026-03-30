@@ -1,4 +1,4 @@
-import { BrandImage } from "../../atoms";
+import { BrandImage } from "@/components/atoms";
 
 type PaymentMethodItem = {
   src: string;

@@ -1,5 +1,5 @@
-import IconButton from "../../atoms/IconButton/IconButton";
-import { Text, TextLink } from "../../atoms";
+import IconButton from "@/components/atoms/IconButton/IconButton";
+import { Text, TextLink } from "@/components/atoms";
 import "./AnnouncementBar.scss";
 
 export const AnnouncementBar: React.FC = () => {

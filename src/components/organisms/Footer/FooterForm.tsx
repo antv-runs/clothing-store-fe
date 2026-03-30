@@ -1,5 +1,5 @@
-import { Button, Text } from "~/components/atoms";
-import { InputWithIcon } from "~/components/molecules";
+import { Button, Text } from "@/components/atoms";
+import { InputWithIcon } from "@/components/molecules";
 
 export const FooterForm = () => {
   return (

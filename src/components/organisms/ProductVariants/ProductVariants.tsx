@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import type { ProductVariants as ProductVariantsData } from "@custom-types/product";
-import { Text, Icon } from "@components/atoms";
+import type { ProductVariants as ProductVariantsData } from "@/types/product";
+import { Text, Icon } from "@/components/atoms";
 import "./ProductVariants.scss";
 
 interface ProductVariantsProps {

@@ -1,11 +1,11 @@
-import { get } from "./httpClient";
-import type { PaginatedApiResponse } from "@custom-types/api";
-import type {
-  CategoryListResult,
-  ApiCategory,
-} from "@custom-types/category";
-import { mapApiCategoriesToCategories } from "@mappers/categoryMapper";
-import { unwrapPaginatedResponse, buildQueryString } from "./apiHelpers";
+// Category API module
+// Moved from services/categoryService.ts
+
+import { get } from "@/lib/axios";
+import type { PaginatedApiResponse } from "@/types/api";
+import type { CategoryListResult, ApiCategory } from "@/types/category";
+import { mapApiCategoriesToCategories } from "@/mappers/categoryMapper";
+import { unwrapPaginatedResponse, buildQueryString } from "@/utils/apiHelpers";
 
 export interface GetCategoriesParams {
   search?: string;

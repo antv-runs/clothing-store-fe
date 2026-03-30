@@ -1,5 +1,5 @@
 import React from "react";
-import IconButton from "../../atoms/IconButton/IconButton";
+import IconButton from "@/components/atoms/IconButton/IconButton";
 import "./ProductActions.scss";
 
 interface ProductActionsProps {

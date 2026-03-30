@@ -1,9 +1,9 @@
 import React from "react";
-import IconButton from "~/components/atoms/IconButton/IconButton";
+import IconButton from "@/components/atoms/IconButton/IconButton";
 import {
   ReviewSortSelect,
   type ReviewSortOption,
-} from "~/components/molecules/ReviewSortSelect/ReviewSortSelect";
+} from "@/components/molecules/ReviewSortSelect/ReviewSortSelect";
 
 interface ReviewFilterOption {
   label: string;
