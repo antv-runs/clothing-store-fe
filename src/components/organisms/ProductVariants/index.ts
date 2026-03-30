@@ -1,1 +1,0 @@
-export { ProductVariants } from "./ProductVariants";

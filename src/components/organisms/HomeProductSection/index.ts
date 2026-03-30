@@ -1,1 +1,0 @@
-export { HomeProductSection } from "./HomeProductSection";

@@ -1,12 +1,12 @@
 import { FooterForm } from "@/components/organisms/Footer";
 import { useMemo, useState } from "react";
-import { Heading } from "@/components/atoms";
+import { Heading } from "@/components/atoms/Heading";
 import { products } from "@/data/products";
 import { mockCartItems } from "@/data/cartItem";
-import { Breadcrumb } from "@/components/organisms/Breadcrumb/Breadcrumb";
-import { CartEmptyState } from "@/components/molecules/CartEmptyState/CartEmptyState";
-import { CartItemRow } from "@/components/organisms/CartItemRow/CartItemRow";
-import { CartSummaryPanel } from "@/components/organisms/CartSummaryPanel/CartSummaryPanel";
+import { Breadcrumb } from "@/components/organisms/Breadcrumb";
+import { CartEmptyState } from "@/components/molecules/CartEmptyState";
+import { CartItemRow } from "@/components/organisms/CartItemRow";
+import { CartSummaryPanel } from "@/components/organisms/CartSummaryPanel";
 import type { CartRow } from "@/types/cart";
 import "./CartPage.scss";
 

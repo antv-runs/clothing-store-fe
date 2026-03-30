@@ -4,7 +4,7 @@
  */
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MainLayout } from "@/components/layouts/MainLayout";
+import { MainLayout } from "@/components/templates/MainLayout";
 import { routeConfig } from "./routeConfig";
 
 /**

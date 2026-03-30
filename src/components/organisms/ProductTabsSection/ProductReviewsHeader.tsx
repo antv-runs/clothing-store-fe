@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading } from "@/components/atoms";
+import { Heading } from "@/components/atoms/Heading";
 import "./ProductReviewsHeader.scss";
 import { ProductReviewsFilter } from "./ProductReviewsFilter.tsx";
 

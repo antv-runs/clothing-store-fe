@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { FooterForm } from "@/components/organisms/Footer";
-import { HomeHero } from "@/components/organisms/HomeHero";
-import { HomeBrands } from "@/components/organisms/HomeBrands";
-import { HomeProductSection } from "@/components/organisms/HomeProductSection";
-import { HomeStyleGrid } from "@/components/organisms/HomeStyleGrid";
-import { HomeReviews } from "@/components/organisms/HomeReviews";
+import { FooterForm } from "@/components/organisms/Footer/Footer";
+import { HomeHero } from "@/components/organisms/HomeHero/HomeHero";
+import { HomeBrands } from "@/components/organisms/HomeBrands/HomeBrands";
+import { HomeProductSection } from "@/components/organisms/HomeProductSection/HomeProductSection";
+import { HomeStyleGrid } from "@/components/organisms/HomeStyleGrid/HomeStyleGrid";
+import { HomeReviews } from "@/components/organisms/HomeReviews/HomeReviews";
 import { products } from "@/data/products";
 import "./HomePage.scss";
 

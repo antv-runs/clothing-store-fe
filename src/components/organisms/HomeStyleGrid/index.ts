@@ -1,1 +1,0 @@
-export { HomeStyleGrid } from "./HomeStyleGrid";

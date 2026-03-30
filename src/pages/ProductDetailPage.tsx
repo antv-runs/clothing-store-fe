@@ -1,4 +1,4 @@
-import { FooterForm } from "@/components/organisms/Footer";
+import { FooterForm } from "@/components/organisms/Footer/Footer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb/Breadcrumb";
@@ -14,7 +14,7 @@ import { getReviewsByProductId } from "@/api/Review";
 import type { Product } from "@/types/product";
 import type { Review } from "@/types/review";
 import { formatPrice } from "@/utils/formatters";
-import { Text } from "@/components/atoms/Text/Text";
+import { Text } from "@/components/atoms/Text";
 import "./ProductDetailPage.scss";
 
 const ProductDetailPage: React.FC = () => {
