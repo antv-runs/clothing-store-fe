@@ -25,6 +25,9 @@ const ProductDetailPage: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [productReviews, setProductReviews] = useState<Review[]>([]);
   const [reviewCount, setReviewCount] = useState(0);
+  // Track selected color and size for add-to-cart functionality
+  const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
+  const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -52,10 +55,15 @@ const ProductDetailPage: React.FC = () => {
           setProduct(null);
           setProductReviews([]);
           setReviewCount(0);
+          setSelectedColorId(null);
+          setSelectedSizeId(null);
           return;
         }
 
         setProduct(productResult);
+        // Reset variant selections when product changes
+        setSelectedColorId(null);
+        setSelectedSizeId(null);
 
         const reviewsResult = await getReviewsByProductId(productResult.id, {
           page: 1,
@@ -76,6 +84,8 @@ const ProductDetailPage: React.FC = () => {
         setProduct(null);
         setProductReviews([]);
         setReviewCount(0);
+        setSelectedColorId(null);
+        setSelectedSizeId(null);
       } finally {
         if (!abortController.signal.aborted) {
           setIsLoading(false);
@@ -134,9 +144,16 @@ const ProductDetailPage: React.FC = () => {
           <div className="product-overview__info">
             <ProductInfo product={product} withContainer={false} />
 
-            <ProductVariants variants={product.variants} />
+            <ProductVariants
+              variants={product.variants}
+              onColorSelect={setSelectedColorId}
+              onSizeSelect={setSelectedSizeId}
+            />
 
-            <ProductActions />
+            <ProductActions
+              selectedColorId={selectedColorId}
+              selectedSizeId={selectedSizeId}
+            />
           </div>
         </div>
       </section>
