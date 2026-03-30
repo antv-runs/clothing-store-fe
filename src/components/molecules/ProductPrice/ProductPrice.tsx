@@ -16,16 +16,16 @@ export const ProductPrice: React.FC<ProductPriceProps> = ({ pricing }) => {
     pricing.original > pricing.current;
 
   return (
-    <div className="product-overview__price">
+    <div className="product-info__price">
       <p
         id="product-price-current"
-        className="product-overview__price-current js-product-price-current js-product-price"
+        className="product-info__price-current js-product-price-current js-product-price"
       >
         <Price amount={pricing.current} currency={pricing.currency} />
       </p>
       <p
         id="product-price-old"
-        className="product-overview__price-old js-product-price-old js-product-original-price"
+        className="product-info__price-old js-product-price-old js-product-original-price"
       >
         {isOnSale ? (
           <Price amount={pricing.original!} currency={pricing.currency} />
@@ -33,7 +33,7 @@ export const ProductPrice: React.FC<ProductPriceProps> = ({ pricing }) => {
       </p>
       <p
         id="product-price-discount"
-        className="product-overview__price-discount js-product-price-discount js-product-discount"
+        className="product-info__price-discount js-product-price-discount js-product-discount"
       >
         {pricing.discountPercent ? `-${pricing.discountPercent}%` : ""}
       </p>

@@ -141,7 +141,7 @@ const ProductDetailPage: React.FC = () => {
             thumbnail={product.thumbnail}
           />
 
-          <div className="product-overview__info">
+        <div className="product-info">
             <ProductInfo product={product} withContainer={false} />
 
             <ProductVariants
@@ -161,7 +161,7 @@ const ProductDetailPage: React.FC = () => {
       <ProductTabsSection
         details={product.details}
         reviews={productReviews}
-        reviewCount={reviewCount || product.reviewCount || 0}
+        reviewCount={productReviews?.length || 0}
         faqs={product.faqs || []}
       />
 

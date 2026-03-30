@@ -152,7 +152,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
         <Text as="p">Select Colors</Text>
         <div
           id="product-color-options"
-          className="product-overview__choose-colors js-product-color-options"
+          className="product-overview__choose-colors"
         >
           {variants?.colors?.length ? (
             variants.colors.map((color) => {
@@ -164,7 +164,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
                 <button
                   key={color.id}
                   type="button"
-                  className={`color-option js-color-option${isSelected ? " is-active" : ""}${isLight ? " is-light" : ""}`}
+                  className={`color-option${isSelected ? " is-active" : ""}${isLight ? " is-light" : ""}`}
                   style={{ backgroundColor: color.colorCode || "#c5c5c5" }}
                   aria-label={color.label}
                   title={color.label}

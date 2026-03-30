@@ -1,0 +1,206 @@
+@use "../../../styles/abstracts/variables" as v;
+@use "../../../styles/abstracts/mixins" as m;
+
+.product-info {
+  flex: 1;
+  min-width: 0;
+  max-width: 590px;
+
+  h1 {
+    font-size: 40px;
+    font-weight: 700;
+    font-family: v.$font-family-display;
+    margin-bottom: 20px;
+    line-height: 1;
+    @include m.line-clamp(2);
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 25px;
+
+    > div {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      line-height: 1;
+    }
+
+    &-text {
+      margin: 0;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: 400;
+
+      span {
+        color: #a9a9a9;
+      }
+    }
+  }
+
+  &__star {
+    width: 20px;
+    aspect-ratio: 22/21;
+    flex-shrink: 0;
+
+    path {
+      fill: none;
+      stroke: #ffc633;
+      stroke-width: 1;
+      transition: fill 0.2s ease;
+    }
+
+    &--active path {
+      fill: #ffc633;
+    }
+  }
+
+  &__price {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    &-current {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    &-old {
+      font-size: 32px;
+      font-weight: 700;
+      color: rgba(0, 0, 0, 0.3);
+      text-decoration: line-through;
+    }
+
+    &-discount {
+      font-size: 16px;
+      font-weight: 500;
+      color: #ff3333;
+      padding: 6px 14px;
+      background-color: rgba(255, 51, 51, 0.1);
+      border-radius: v.$radius-pill;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    p:nth-child(2) .skeleton-pill {
+      width: 86px;
+    }
+
+    p:nth-child(3) .skeleton-pill {
+      width: 72px;
+      height: 28px;
+    }
+  }
+
+  &__description {
+    font-size: 16px;
+    line-height: 1.375;
+    color: rgba(0, 0, 0, 0.6);
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    @include m.line-clamp(3);
+
+    &:has(.skeleton-line--text) {
+      display: block;
+      overflow: visible;
+      -webkit-line-clamp: unset;
+      -webkit-box-orient: initial;
+    }
+  }
+
+  &__skeleton-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    @include m.skeleton-shimmer;
+    pointer-events: none;
+  }
+
+  &__skeleton-pill {
+    display: inline-block;
+    height: 32px;
+    border-radius: 999px;
+    width: 110px;
+    @include m.skeleton-shimmer;
+    pointer-events: none;
+  }
+
+  &__skeleton-line {
+    display: block;
+    border-radius: 8px;
+    @include m.skeleton-shimmer;
+    pointer-events: none;
+
+    &--title {
+      height: 22px;
+      margin-bottom: 10px;
+
+      &:last-child {
+        width: 62%;
+        margin-bottom: 0;
+      }
+    }
+
+    &--rating {
+      width: 46px;
+      height: 16px;
+    }
+
+    &--text {
+      width: 100%;
+      height: 14px;
+      margin-bottom: 10px;
+
+      &:nth-child(2) {
+        width: 90%;
+      }
+
+      &:nth-child(3) {
+        width: 95%;
+      }
+
+      &:nth-child(4) {
+        width: 60%;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .product-info {
+    padding-left: 0;
+
+    h1 {
+      font-size: 24px;
+      @include m.line-clamp(2);
+    }
+
+    &__rating-text {
+      font-size: 14px;
+    }
+
+    &__price-current,
+    &__price-old {
+      font-size: 24px;
+    }
+
+    &__price-discount {
+      font-size: 14px;
+    }
+
+    &__description {
+      font-size: 14px;
+    }
+  }
+}

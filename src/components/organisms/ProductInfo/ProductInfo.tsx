@@ -1,8 +1,9 @@
 import React from "react";
-import { Heading } from "../../atoms";
-import { RatingDisplay } from "../../molecules/RatingDisplay/RatingDisplay";
-import { ProductPrice } from "../../molecules/ProductPrice/ProductPrice";
-import type { Product } from "../../../types/product";
+import { Heading, Text } from "@components/atoms";
+import { RatingDisplay } from "@components/molecules/RatingDisplay/RatingDisplay";
+import { ProductPrice } from "@components/molecules/ProductPrice/ProductPrice";
+import type { Product } from "@custom-types/product";
+import "./ProductInfo.scss";
 
 interface ProductInfoProps {
   product: Product;
@@ -19,25 +20,15 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
 }) => {
   const content = (
     <>
-      <Heading
-        as="h1"
-        noOfLines={2}
-        id="product-title"
-        className="js-product-title"
-      >
-        {product.name}
-      </Heading>
+      <Heading as="h1">{product.name}</Heading>
 
       <RatingDisplay rating={product.rating} showEmpty={false} />
 
       <ProductPrice pricing={product.pricing} />
 
-      <p
-        id="product-description"
-        className="product-overview__description js-product-description"
-      >
+      <Text as="p" className="product-info__description">
         {product.description}
-      </p>
+      </Text>
     </>
   );
 
@@ -45,5 +36,5 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
     return content;
   }
 
-  return <div className="product-overview__info">{content}</div>;
+  return <div className="product-info">{content}</div>;
 };
