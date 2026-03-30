@@ -141,8 +141,8 @@ const ProductDetailPage: React.FC = () => {
             thumbnail={product.thumbnail}
           />
 
-        <div className="product-info">
-            <ProductInfo product={product} withContainer={false} />
+          <div className="product-info">
+            <ProductInfo product={product} />
 
             <ProductVariants
               variants={product.variants}

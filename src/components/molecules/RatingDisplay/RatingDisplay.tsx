@@ -1,6 +1,8 @@
 import React from "react";
-import { Star } from "../../atoms/Star/Star";
-import { Rating } from "../../atoms/Rating/Rating";
+import { Star } from "@components/atoms/Star/Star";
+import { Rating } from "@components/atoms/Rating/Rating";
+import { Text } from "@components/atoms";
+import "./RatingDisplay.scss";
 
 interface RatingDisplayProps {
   rating: number;
@@ -34,12 +36,9 @@ export const RatingDisplay: React.FC<RatingDisplayProps> = ({
           maxStars={maxStars}
         />
       </div>
-      <p
-        id="product-rating-text"
-        className="product-info__rating-text js-product-rating-text"
-      >
+      <Text as="p" className="product-info__rating-text js-product-rating-text">
         <Rating rating={safeRating} />
-      </p>
+      </Text>
     </div>
   );
 };

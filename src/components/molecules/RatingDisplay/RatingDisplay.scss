@@ -1,0 +1,52 @@
+@use "../../../styles/abstracts/variables" as v;
+@use "../../../styles/abstracts/mixins" as m;
+
+.product-info__rating {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 25px;
+
+  > div {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+  }
+
+  &-text {
+    margin: 0;
+  }
+
+  p {
+    font-size: 16px;
+    font-weight: 400;
+
+    span {
+      color: #a9a9a9;
+    }
+  }
+}
+
+.product-info__star {
+  width: 20px;
+  aspect-ratio: 22/21;
+  flex-shrink: 0;
+
+  path {
+    fill: none;
+    stroke: #ffc633;
+    stroke-width: 1;
+    transition: fill 0.2s ease;
+  }
+
+  &--active path {
+    fill: #ffc633;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-info__rating-text {
+    font-size: 14px;
+  }
+}

@@ -7,18 +7,10 @@ import "./ProductInfo.scss";
 
 interface ProductInfoProps {
   product: Product;
-  withContainer?: boolean;
 }
 
-/**
- * ProductInfo organism - Product title, description, category, and pricing
- * Core product information display
- */
-export const ProductInfo: React.FC<ProductInfoProps> = ({
-  product,
-  withContainer = true,
-}) => {
-  const content = (
+export const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
+  return (
     <>
       <Heading as="h1">{product.name}</Heading>
 
@@ -31,10 +23,4 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
       </Text>
     </>
   );
-
-  if (!withContainer) {
-    return content;
-  }
-
-  return <div className="product-info">{content}</div>;
 };

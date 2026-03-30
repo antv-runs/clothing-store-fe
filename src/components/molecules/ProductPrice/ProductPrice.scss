@@ -1,0 +1,53 @@
+@use "../../../styles/abstracts/variables" as v;
+
+.product-info__price {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  &-current {
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  &-old {
+    font-size: 32px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.3);
+    text-decoration: line-through;
+  }
+
+  &-discount {
+    font-size: 16px;
+    font-weight: 500;
+    color: #ff3333;
+    padding: 6px 14px;
+    background-color: rgba(255, 51, 51, 0.1);
+    border-radius: v.$radius-pill;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  p:nth-child(2) .skeleton-pill {
+    width: 86px;
+  }
+
+  p:nth-child(3) .skeleton-pill {
+    width: 72px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-info__price-current,
+  .product-info__price-old {
+    font-size: 24px;
+  }
+
+  .product-info__price-discount {
+    font-size: 14px;
+  }
+}

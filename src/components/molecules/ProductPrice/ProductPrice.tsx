@@ -1,6 +1,8 @@
 import React from "react";
-import { Price } from "../../atoms/Price/Price";
-import type { ProductPricing } from "../../../types/product";
+import { Price } from "@components/atoms/Price/Price";
+import type { ProductPricing } from "@custom-types/product";
+import { Text } from "@components/atoms";
+import "./ProductPrice.scss";
 
 interface ProductPriceProps {
   pricing: ProductPricing;
@@ -11,32 +13,21 @@ interface ProductPriceProps {
  * Shows: current price, original price (if on sale), discount percentage
  */
 export const ProductPrice: React.FC<ProductPriceProps> = ({ pricing }) => {
-  const isOnSale =
-    pricing.original &&
-    pricing.original > pricing.current;
+  const isOnSale = pricing.original && pricing.original > pricing.current;
 
   return (
     <div className="product-info__price">
-      <p
-        id="product-price-current"
-        className="product-info__price-current js-product-price-current js-product-price"
-      >
+      <Text as="p" className="product-info__price-current">
         <Price amount={pricing.current} currency={pricing.currency} />
-      </p>
-      <p
-        id="product-price-old"
-        className="product-info__price-old js-product-price-old js-product-original-price"
-      >
+      </Text>
+      <Text as="p" className="product-info__price-old">
         {isOnSale ? (
           <Price amount={pricing.original!} currency={pricing.currency} />
         ) : null}
-      </p>
-      <p
-        id="product-price-discount"
-        className="product-info__price-discount js-product-price-discount js-product-discount"
-      >
+      </Text>
+      <Text as="p" className="product-info__price-discount">
         {pricing.discountPercent ? `-${pricing.discountPercent}%` : ""}
-      </p>
+      </Text>
     </div>
   );
 };
