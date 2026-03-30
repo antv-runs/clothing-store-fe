@@ -1,12 +1,12 @@
-import { FooterForm } from "../components/organisms/Footer";
+import { FooterForm } from "~/components/organisms/Footer";
 import { useMemo, useState } from "react";
-import { Heading } from "../components/atoms";
-import { products } from "../data/products";
-import { mockCartItems } from "../data/cartItem";
-import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
-import { CartEmptyState } from "../components/molecules/CartEmptyState/CartEmptyState";
-import { CartItemRow } from "../components/organisms/CartItemRow/CartItemRow";
-import { CartSummaryPanel } from "../components/organisms/CartSummaryPanel/CartSummaryPanel";
+import { Heading } from "@components/atoms";
+import { products } from "~/data/products";
+import { mockCartItems } from "@data/cartItem";
+import { Breadcrumb } from "~/components/organisms/Breadcrumb/Breadcrumb";
+import { CartEmptyState } from "~/components/molecules/CartEmptyState/CartEmptyState";
+import { CartItemRow } from "@components/organisms/CartItemRow/CartItemRow";
+import { CartSummaryPanel } from "~/components/organisms/CartSummaryPanel/CartSummaryPanel";
 import "./CartPage.scss";
 
 export type CartRow = {

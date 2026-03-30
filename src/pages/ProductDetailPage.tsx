@@ -1,20 +1,20 @@
-import { FooterForm } from "../components/organisms/Footer";
+import { FooterForm } from "@components/organisms/Footer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Breadcrumb } from "../components/organisms/Breadcrumb/Breadcrumb";
-import { ProductGallery } from "../components/organisms/ProductGallery/ProductGallery";
-import { ProductInfo } from "../components/organisms/ProductInfo/ProductInfo";
-import { ProductVariants } from "../components/organisms/ProductVariants/ProductVariants";
-import { ProductActions } from "../components/molecules/ProductActions/ProductActions";
-import { ProductTabsSection } from "../components/organisms/ProductTabsSection/ProductTabsSection";
-import { RelatedProductsSection } from "../components/organisms/RelatedProductsSection/RelatedProductsSection";
-import { WriteReviewModal } from "../components/organisms/WriteReviewModal/WriteReviewModal";
-import { getProductById } from "../services/productService";
-import { getReviewsByProductId } from "../services/reviewService";
-import type { Product } from "../types/product";
-import type { Review } from "../types/review";
-import { formatPrice } from "../utils/formatters";
-import { Text } from "../components/atoms/Text/Text";
+import { Breadcrumb } from "@components/organisms/Breadcrumb/Breadcrumb";
+import { ProductGallery } from "@components/organisms/ProductGallery/ProductGallery";
+import { ProductInfo } from "@components/organisms/ProductInfo/ProductInfo";
+import { ProductVariants } from "@components/organisms/ProductVariants/ProductVariants";
+import { ProductActions } from "@components/molecules/ProductActions/ProductActions";
+import { ProductTabsSection } from "@components/organisms/ProductTabsSection/ProductTabsSection";
+import { RelatedProductsSection } from "@components/organisms/RelatedProductsSection/RelatedProductsSection";
+import { WriteReviewModal } from "@components/organisms/WriteReviewModal/WriteReviewModal";
+import { getProductById } from "@services/productService";
+import { getReviewsByProductId } from "@services/reviewService";
+import type { Product } from "@custom-types/product";
+import type { Review } from "@custom-types/review";
+import { formatPrice } from "@utils/formatters";
+import { Text } from "@components/atoms/Text/Text";
 import "./ProductDetailPage.scss";
 
 const ProductDetailPage: React.FC = () => {
@@ -46,9 +46,7 @@ const ProductDetailPage: React.FC = () => {
       setReviewCount(0);
 
       try {
-        const productResult = await getProductById(normalizedRouteId, {
-          signal: abortController.signal,
-        });
+        const productResult = await getProductById(normalizedRouteId);
 
         if (!productResult) {
           setProduct(null);
@@ -63,11 +61,12 @@ const ProductDetailPage: React.FC = () => {
           page: 1,
           perPage: 50,
           sort: "latest",
-          signal: abortController.signal,
         });
 
         setProductReviews(reviewsResult.data);
         setReviewCount(reviewsResult.meta.total);
+
+        console.log("Fetched product:", productResult); // Debug log to verify fetched product data
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;

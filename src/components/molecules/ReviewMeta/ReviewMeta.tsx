@@ -1,4 +1,5 @@
 import React from "react";
+import { Text } from "~/components/atoms";
 
 interface ReviewMetaProps {
   name: string;
@@ -15,8 +16,8 @@ export const ReviewMeta: React.FC<ReviewMetaProps> = ({
   const verifiedClass = isVerified ? " review-card__header--verified" : "";
 
   return (
-    <p className={`review-card__header${verifiedClass}`}>
+    <Text as="p" className={`review-card__header${verifiedClass}`}>
       {name}
-    </p>
+    </Text>
   );
 };

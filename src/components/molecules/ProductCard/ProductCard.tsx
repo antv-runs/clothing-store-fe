@@ -50,6 +50,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     discountPercent,
   } = pricing;
 
+  console.log("product in ProductCard:", product); // Debug log to verify product data
+
   const isInlineLinkMode = linkMode === "inline";
   const productPath = buildProductPath(id);
   const viewProductLabel = `View ${name}`;

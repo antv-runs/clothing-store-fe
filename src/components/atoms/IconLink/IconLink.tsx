@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import Icon from "../Icon/Icon";
+import Icon from "~/components/atoms/Icon/Icon";
 import "./IconLink.scss";
 
 type IconLinkProps = {

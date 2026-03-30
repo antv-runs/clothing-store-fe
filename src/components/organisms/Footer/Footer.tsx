@@ -1,6 +1,10 @@
 import "./Footer.scss";
-import { Text } from "../../atoms";
-import { FooterNavSection, PaymentMethods, SocialLinks } from "../../molecules";
+import { Text } from "~/components/atoms";
+import {
+  FooterNavSection,
+  PaymentMethods,
+  SocialLinks,
+} from "~/components/molecules";
 
 const socialLinks = [
   {

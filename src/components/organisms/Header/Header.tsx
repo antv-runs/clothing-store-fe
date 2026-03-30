@@ -21,7 +21,7 @@ const Header: React.FC = () => {
           iconWidth={19}
           iconHeight={15}
         />
-        <Text as="h1" className="logo">
+        <Text as="p" className="logo">
           SHOP.CO
         </Text>
 

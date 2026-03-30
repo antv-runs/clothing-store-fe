@@ -16,18 +16,27 @@
   }
 }
 
-/* ensure Icon component fills based on current color */
-.icon-link .iconContainer {
-  /* Icon component sets width/height inline; color uses currentColor */
-  color: inherit;
-
+// Dedicated icon wrapper for robust centering
+.icon-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 0;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1;
   flex-shrink: 0;
 }
 
-.iconContainer svg {
+.icon-link .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.icon-link .icon svg {
   display: block;
+  width: 100%;
+  height: 100%;
 }

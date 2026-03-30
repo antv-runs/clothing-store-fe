@@ -1,6 +1,7 @@
 import Icon from "../../atoms/Icon/Icon";
 import { TextLink } from "../../atoms";
 import "./NavMenu.scss";
+import IconButton from "~/components/atoms/IconButton/IconButton";
 
 type NavMenuItem = {
   label: string;
@@ -25,7 +26,7 @@ export const NavMenu: React.FC = () => {
               {item.label}
               {item.hasDropdown ? (
                 <span className="header-links__arrow" aria-hidden="true">
-                  <Icon svgName="icn_arrow_down" width={10} height={6} />
+                  <Icon svgName="icn_arrow_down" width={10} height={10} />
                 </span>
               ) : null}
             </TextLink>

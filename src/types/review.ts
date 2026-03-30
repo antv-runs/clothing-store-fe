@@ -1,8 +1,14 @@
+import type { PaginationMeta, PaginationLinks } from "./api";
+
+/**
+ * Raw API objects from /api/products/{id}/reviews
+ * Backend returns snake_case fields
+ */
+
 export interface ApiReviewUser {
   name: string;
 }
 
-// Raw API object from /api/products/{id}/reviews
 export interface ApiReview {
   id: number;
   comment: string;
@@ -19,7 +25,16 @@ export interface CreateReviewPayload {
   stars: number;
 }
 
-// UI model after page-level mapping in the old app
+export interface SubmitReviewPayload extends Partial<CreateReviewPayload> {
+  rating?: number;
+  stars?: number;
+  comment?: string;
+  username?: string;
+}
+
+/**
+ * UI model consumed by components after normalization/mapping
+ */
 export interface Review {
   id: string;
   productId: string;
@@ -29,4 +44,14 @@ export interface Review {
   desc: string;
   createdAt: string;
   isVerified: boolean;
+}
+
+/**
+ * Paginated list result from /api/products/{id}/reviews endpoint
+ * Contains normalized Review objects (UI models) with pagination metadata
+ */
+export interface ProductReviewsResult {
+  data: Review[];
+  meta: PaginationMeta;
+  links?: PaginationLinks;
 }

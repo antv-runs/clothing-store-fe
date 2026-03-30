@@ -1,5 +1,5 @@
-import type { ApiReview, Review } from "../types/review";
-import { isSameProductId } from "../utils/formatters";
+import type { ApiReview, Review } from "~/types/review";
+import { isSameProductId } from "~/utils/formatters";
 
 type ReviewLike = {
   id?: string | number;

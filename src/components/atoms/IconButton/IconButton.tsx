@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import Icon from "../Icon/Icon";
+import Icon from "~/components/atoms/Icon/Icon";
 import "./IconButton.scss";
 
 type IconButtonVariant = "default" | "ghost";
@@ -14,10 +14,7 @@ type IconButtonProps = {
   className?: string;
   variant?: IconButtonVariant;
   type?: "button" | "submit" | "reset";
-} & Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "aria-label" | "type"
->;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "aria-label" | "type">;
 
 function IconButton({
   svgName,

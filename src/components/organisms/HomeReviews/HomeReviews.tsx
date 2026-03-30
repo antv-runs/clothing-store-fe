@@ -10,14 +10,17 @@ function getReviewScrollStep(track: HTMLUListElement | null) {
   if (!track || !track.firstElementChild) {
     return 0;
   }
-
   const firstCard = track.firstElementChild as HTMLElement;
   const cardWidth = firstCard.getBoundingClientRect().width;
   const trackStyles = window.getComputedStyle(track);
   const gap = Number.parseFloat(
     trackStyles.columnGap || trackStyles.gap || "0",
   );
-
+  // On mobile, always scroll by 1 card
+  if (window.innerWidth <= 768) {
+    return cardWidth + (Number.isFinite(gap) ? gap : 0);
+  }
+  // On desktop, scroll by 1 card (default)
   return cardWidth + (Number.isFinite(gap) ? gap : 0);
 }
 
@@ -99,6 +102,8 @@ export const HomeReviews: React.FC = () => {
     track.scrollBy({ left: movement, behavior: "smooth" });
   };
 
+  // Add: determine if we have few items (1 or 2)
+  const isFew = reviews.length > 0 && reviews.length < 3;
   const viewportStateClass = `${hasOverflow ? " has-overflow" : ""}${canScrollPrev ? " is-not-at-start" : ""}${canScrollNext ? " is-not-at-end" : ""}`;
 
   const renderReviews = () => {
@@ -156,7 +161,7 @@ export const HomeReviews: React.FC = () => {
       <div className={`home-reviews__viewport${viewportStateClass}`}>
         <ul
           ref={reviewsTrackRef}
-          className="home-reviews__track reviews__list"
+          className={`home-reviews__track reviews__list${isFew ? " home-reviews__track--few" : ""}`}
           aria-label="Customer reviews"
           aria-live="polite"
           aria-busy={isLoading}

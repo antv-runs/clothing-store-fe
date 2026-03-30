@@ -1,5 +1,5 @@
 import React from "react";
-import { BreadcrumbItem } from "../../molecules/BreadcrumbItem/BreadcrumbItem";
+import { BreadcrumbItem } from "~/components/molecules/BreadcrumbItem/BreadcrumbItem";
 
 interface BreadcrumbProps {
   items: string[];

@@ -1,11 +1,11 @@
 import React from "react";
 import "./ReviewCard.scss";
-import { Star } from "../../atoms/Star/Star";
-import IconButton from "../../atoms/IconButton/IconButton";
+import { Star } from "~/components/atoms/Star/Star";
+import IconButton from "~/components/atoms/IconButton/IconButton";
 import { ReviewMeta } from "~/components/molecules/ReviewMeta/ReviewMeta";
 import { formatDate } from "../../../utils/formatters";
-import type { Review } from "../../../types/review";
-import { Text } from "../../atoms";
+import type { Review } from "~/types/review";
+import { Text } from "~/components/atoms";
 
 interface ReviewCardProps {
   review: Review;
@@ -37,7 +37,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
       </div>
       <ReviewMeta name={review.name} isVerified={review.isVerified} />
       <Text as="p" className="review-card__content">
-        {review.desc}
+        "{review.desc}"
       </Text>
       <Text as="p" className="review-card__footer">
         Posted on {formatDate(review.createdAt)}

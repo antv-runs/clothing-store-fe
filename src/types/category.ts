@@ -1,12 +1,20 @@
+import type { PaginationMeta, PaginationLinks } from "./api";
+
+/**
+ * Raw API object from /api/categories endpoint
+ * Backend returns snake_case fields
+ */
 export interface ApiCategory {
   id: string;
   name: string;
   slug: string;
   href: string;
-  hasChildren: boolean;
+  has_children: boolean;
 }
 
-// Normalized category used by UI and filters.
+/**
+ * UI model consumed by components after normalization/mapping
+ */
 export interface Category {
   id: string;
   name: string;
@@ -18,4 +26,14 @@ export interface Category {
   parentId: string | null;
   childrenCount: number;
   image?: string;
+}
+
+/**
+ * Paginated list result from /api/categories endpoint
+ * Contains normalized Category objects (UI models) with pagination metadata
+ */
+export interface CategoryListResult {
+  data: Category[];
+  meta: PaginationMeta;
+  links?: PaginationLinks;
 }

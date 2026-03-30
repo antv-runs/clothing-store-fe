@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./RelatedProductsSection.scss";
-import { ProductCard } from "../../molecules/ProductCard/ProductCard";
-import IconButton from "../../atoms/IconButton/IconButton";
-import { Heading } from "../../atoms";
-import { getRelatedProducts } from "../../../services/productService";
-import type { Product } from "../../../types/product";
+import { ProductCard } from "@components/molecules/ProductCard/ProductCard";
+import IconButton from "@components/atoms/IconButton/IconButton";
+import { Heading } from "@components/atoms";
+import { getProducts } from "@services/productService";
+import type { Product } from "@custom-types/product";
 
 interface RelatedProductsSectionProps {
   currentProductId: string;
@@ -38,12 +38,12 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
       setErrorImageIds(new Set());
 
       try {
-        const result = await getRelatedProducts(currentProductId, {
-          limit: 8,
-          signal: abortController.signal,
+        const result = await getProducts({
+          page: 1,
+          per_page: 8,
         });
 
-        setItems(result);
+        setItems(result.data);
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;

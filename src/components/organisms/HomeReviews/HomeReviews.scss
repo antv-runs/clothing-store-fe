@@ -2,11 +2,15 @@
 @use "../../../styles/abstracts/mixins" as m;
 
 .home-reviews {
-  --safe-zone-width: 1240px;
-  --safe-zone-gutter: max(calc((100vw - var(--safe-zone-width)) / 2), 0px);
-  --review-card-width: 400px;
+  --container-width: 1240px;
+  --safe-zone-gutter: max(calc((100vw - var(--container-width)) / 2), 0px);
+  --card-width: 400px;
+  --review-card-width: var(--card-width);
   --review-card-height: 240px;
-  --review-card-gap: 20px;
+  --card-gap: 20px;
+  --review-card-gap: var(--card-gap);
+  --visible-width: calc((var(--card-width) * 3) + (var(--card-gap) * 2));
+  --center-offset: calc((100vw - var(--visible-width)) / 2);
 
   margin-top: 80px;
 
@@ -101,16 +105,25 @@
     display: grid;
     grid-template-columns: none;
     grid-auto-flow: column;
-    grid-auto-columns: var(--review-card-width);
-    gap: var(--review-card-gap);
+    grid-auto-columns: var(--card-width);
+    gap: var(--card-gap);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    padding-left: var(--center-offset);
+    padding-right: var(--center-offset);
+    scroll-padding-left: var(--center-offset);
 
     &::-webkit-scrollbar {
       display: none;
+    }
+
+    // FEW ITEMS (1 or 2): align from container edge
+    &.home-reviews__track--few {
+      padding-left: var(--safe-zone-gutter);
+      scroll-padding-left: var(--safe-zone-gutter);
     }
   }
 
@@ -151,8 +164,8 @@
   }
 
   .review-card__header--verified::after {
-    width: 24px;
-    height: 24px;
+    width: 19.5px;
+    height: 19.5px;
   }
 }
 
@@ -160,14 +173,19 @@
   .home-reviews {
     &__track {
       gap: var(--review-card-gap);
+      padding-left: 0;
+      padding-right: 0;
+      scroll-padding-left: 0;
     }
   }
 }
 
 @media (max-width: 768px) {
   .home-reviews {
-    --review-card-width: 358px;
+    --card-width-mobile: 358px;
+    --review-card-width: var(--card-width-mobile);
     --review-card-height: 186px;
+    --mobile-offset: calc((100vw - var(--card-width-mobile)) / 2);
 
     padding-top: 50px;
 
@@ -190,10 +208,16 @@
 
     &__track {
       gap: var(--review-card-gap);
+      padding-left: var(--mobile-offset);
+      padding-right: var(--mobile-offset);
+      scroll-padding-left: var(--mobile-offset);
     }
 
     .reviews__item {
       height: var(--review-card-height);
+      width: var(--review-card-width);
+      min-width: var(--review-card-width);
+      max-width: var(--review-card-width);
     }
 
     .review-card {
@@ -217,8 +241,8 @@
     }
 
     .review-card__header--verified::after {
-      width: 19px;
-      height: 19px;
+      width: 15.44px;
+      height: 15.44px;
     }
   }
 }

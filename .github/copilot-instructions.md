@@ -67,3 +67,27 @@ src/
 - Install deps: `yarn install`
 - Run dev: `yarn dev`
 - Build project: `yarn build`
+
+---
+
+## Import & Path Alias Rules (VERY IMPORTANT)
+
+This project uses **path aliases**. DO NOT use relative imports like `../` or `../../`.
+
+### Required aliases
+
+Use the following mappings:
+
+```json
+{
+  "~/*": ["src/*"],
+  "@components/*": ["src/components/*"],
+  "@pages/*": ["src/pages/*"],
+  "@services/*": ["src/services/*"],
+  "@data/*": ["src/data/*"],
+  "@custom-types/*": ["src/types/*"],
+  "@utils/*": ["src/utils/*"],
+  "@styles/*": ["src/styles/*"],
+  "@custom-mappers/*": ["src/mappers/*"]
+}
+```

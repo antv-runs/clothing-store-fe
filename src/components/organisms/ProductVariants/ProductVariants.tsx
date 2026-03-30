@@ -1,5 +1,6 @@
 import React from "react";
-import type { ProductVariants as ProductVariantsData } from "../../../types/product";
+import type { ProductVariants as ProductVariantsData } from "@custom-types/product";
+import { Text } from "@components/atoms";
 
 interface ProductVariantsProps {
   variants: ProductVariantsData;
@@ -15,7 +16,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
   return (
     <>
       <div className="product-overview__choose">
-        <p>Select Colors</p>
+        <Text as="p">Select Colors</Text>
         <div
           id="product-color-options"
           className="product-overview__choose-colors js-product-color-options"
@@ -32,13 +33,13 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
               />
             ))
           ) : (
-            <span>No colors</span>
+            <Text as="span">No colors</Text>
           )}
         </div>
       </div>
 
       <div className="product-overview__size">
-        <p>Choose Size</p>
+        <Text as="p">Choose Size</Text>
         <div
           id="product-size-options"
           className="product-overview__size-options js-product-size-options"
@@ -55,7 +56,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
               </button>
             ))
           ) : (
-            <span>No sizes</span>
+            <Text as="span">No sizes</Text>
           )}
         </div>
       </div>
