@@ -2,13 +2,9 @@
 // Moved from services/reviewService.ts
 
 import { get, post } from "@/lib/axios";
-import type { ApiResponse, PaginatedApiResponse } from "@/types/api";
-import type {
-  CreateReviewPayload,
-  ProductReviewsResult,
-  Review,
-  ApiReview,
-} from "@/types/review";
+import type { ApiResponse, PaginatedApiResponse } from "@/types/pagination";
+import type { ProductReviewsResult, Review } from "@/types/review";
+import type { CreateReviewPayload, ApiReview } from "@/types/api/review";
 import {
   mapApiReviewToReview,
   mapApiReviewsToReviews,

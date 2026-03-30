@@ -3,7 +3,8 @@
  * Wraps all pages with shared header and footer
  */
 
-import { Outlet, Suspense } from "react-router-dom";
+import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
 import Header from "@/components/organisms/Header";
 import Footer from "@/components/organisms/Footer";
 

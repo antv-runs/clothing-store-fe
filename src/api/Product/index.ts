@@ -2,8 +2,9 @@
 // Moved from services/productService.ts
 
 import { get } from "@/lib/axios";
-import type { PaginatedApiResponse, ApiResponse } from "@/types/api";
-import type { Product, ProductListResult, ApiProduct } from "@/types/product";
+import type { PaginatedApiResponse, ApiResponse } from "@/types/pagination";
+import type { Product, ProductListResult } from "@/types/product";
+import type { ApiProduct, GetProductsParams } from "@/types/api/product";
 import {
   mapApiProductToProduct,
   mapApiProductsToProducts,
@@ -13,19 +14,6 @@ import {
   unwrapPaginatedResponse,
   buildQueryString,
 } from "@/utils/apiHelpers";
-
-export interface GetProductsParams {
-  search?: string;
-  category_id?: string | number | null;
-  min_price?: number;
-  max_price?: number;
-  colors?: string;
-  sizes?: string;
-  style?: string;
-  status?: string;
-  page?: number;
-  per_page?: number;
-}
 
 export async function getProducts(
   params: GetProductsParams = {},

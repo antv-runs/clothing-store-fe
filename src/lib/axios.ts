@@ -1,6 +1,7 @@
 // Axios HTTP client (moved from services/httpClient.ts)
 import axios from "axios";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
+import type { HttpClientOptions } from "@/types/common";
 
 const BASE_URL = "https://api.vanannek.blog";
 
@@ -11,8 +12,6 @@ const httpClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-
-export interface HttpClientOptions extends AxiosRequestConfig {}
 
 export async function get<T>(
   url: string,

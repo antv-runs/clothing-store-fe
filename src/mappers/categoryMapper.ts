@@ -1,4 +1,5 @@
-import type { ApiCategory, Category } from "@/types/category";
+import type { ApiCategory } from "@/types/api/category";
+import type { Category } from "@/types/category";
 
 /**
  * Convert a single ApiCategory to Category (UI model)

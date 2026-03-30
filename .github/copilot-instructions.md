@@ -1,43 +1,21 @@
-# Copilot Instructions for React Project
-
-## Project Goal
-
-Build a clean, scalable React project with:
-
-- Airbnb-style code
-- Atomic Design
-- Clear separation of concerns
-- Reusable, maintainable components
-
----
+# Copilot Instructions (Short Version)
 
 ## Core Principles
 
-- Write **simple, readable code**
-- Prefer **clarity over cleverness**
-- Use **functional components + hooks only**
-- Keep components **small, focused, single-responsibility**
-- Avoid duplication (UI, logic, styles)
+- Clean, readable, maintainable code
+- Functional components + hooks only
+- Single responsibility per component
+- Avoid duplication
 
 ---
 
-## Architecture Rules
+## Architecture
 
-- UI components → **render only**
-- Data fetching → `services`
-- Shared logic → `hooks` / `utils`
-- Page orchestration → `pages`
-
----
-
-## Component Design (Atomic Design)
-
-- **atoms**: Button, Input, Icon
-- **molecules**: SearchBox, QuantitySelector
-- **organisms**: Header, ProductCard, ReviewList
-- **pages**: HomePage, ProductDetailPage
-
-➡️ Prefer **composition over large components**
+- UI → `components/` (render only)
+- API → `api/`
+- Logic → `hooks/`, `utils/`
+- Page orchestration → `pages/`
+- External config → `lib/`
 
 ---
 
@@ -45,49 +23,123 @@ Build a clean, scalable React project with:
 
 ```txt
 src/
-  components/
-    atoms/
-    molecules/
-    organisms/
+  api/
+  components/ (atoms, molecules, organisms, templates)
   pages/
+  routes/
   hooks/
-  services/
   utils/
   constants/
   types/
+  contexts/
+  reducers/
+  lib/
+  styles/
   assets/
-  routes/
 ```
+
+---
+
+## API Rules
+
+- No `services/`, use `api/`
+- Split by domain: `api/Product`, `api/Review`, ...
+- Only handle HTTP (no UI logic)
+
+---
+
+## Types Rules
+
+- `types/api/*` → API request/response
+- `types/*` → shared/domain types
+- Local-only types → keep near component/page
+- Do NOT mix API + UI types
+
+---
+
+## Routing Rules
+
+- All routes in `routes/`
+- Structure:
+  - `paths.ts` → constants
+  - `routeConfig.tsx` → mapping
+  - `index.tsx` → router
+
+---
+
+## Components (Atomic)
+
+- atoms → basic UI
+- molecules → small combos
+- organisms → complex UI
+- templates → layouts
+
+➡️ Prefer composition
+
+---
+
+## Hooks & Utils
+
+- hooks → reusable logic (`useX`)
+- utils → pure functions only
+
+---
+
+## Lib
+
+- axios, interceptors, external setup
+
+---
+
+## Styling
+
+- SCSS + BEM
+- Each component has its own SCSS
+
+---
+
+## Naming
+
+- components/pages → PascalCase
+- api/utils/hooks → lowercase
+- entry files → `index.tsx`
+
+---
+
+## Import Rules (CRITICAL)
+
+Use alias:
+
+```ts
+@/* → src/*
+```
+
+Correct:
+
+```ts
+import { Button } from "@/components/atoms/Button";
+```
+
+Forbidden:
+
+```ts
+import Button from "../../../components/Button";
+```
+
+---
+
+## Code Rules
+
+- No API calls inside components (except pages/hooks)
+- No mixing UI + business logic
+- Keep files small and reusable
 
 ---
 
 ## Package Manager
 
-- Use **Yarn** for dependency management
-- Install deps: `yarn install`
-- Run dev: `yarn dev`
-- Build project: `yarn build`
-
----
-
-## Import & Path Alias Rules (VERY IMPORTANT)
-
-This project uses **path aliases**. DO NOT use relative imports like `../` or `../../`.
-
-### Required aliases
-
-Use the following mappings:
-
-```json
-{
-  "~/*": ["src/*"],
-  "@components/*": ["src/components/*"],
-  "@pages/*": ["src/pages/*"],
-  "@services/*": ["src/services/*"],
-  "@data/*": ["src/data/*"],
-  "@custom-types/*": ["src/types/*"],
-  "@utils/*": ["src/utils/*"],
-  "@styles/*": ["src/styles/*"],
-  "@custom-mappers/*": ["src/mappers/*"]
-}
+```bash
+yarn install
+yarn dev
+yarn build
 ```

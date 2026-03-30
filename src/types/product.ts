@@ -1,4 +1,9 @@
-import type { PaginationMeta, PaginationLinks } from "./api";
+import type { PaginationMeta, PaginationLinks } from "./pagination";
+
+/**
+ * Frontend/Domain product types
+ * Normalized UI models after mapping from API responses
+ */
 
 /**
  * UI model: Pricing with camelCase fields
@@ -8,16 +13,6 @@ export interface ProductPricing {
   current: number;
   original: number | null;
   discountPercent: number | null;
-}
-
-/**
- * Paginated list result from /api/products endpoint
- * Contains normalized Product objects (UI models) with pagination metadata
- */
-export interface ProductListResult {
-  data: Product[];
-  meta: PaginationMeta;
-  links?: PaginationLinks;
 }
 
 export interface ProductCategorySummary {
@@ -64,57 +59,8 @@ export interface ProductStock {
 }
 
 /**
- * Raw API objects from /api/products and /api/products/{id}
- * Backend returns snake_case fields
+ * UI model consumed by components after normalization/mapping.
  */
-
-export interface ApiProductImage {
-  id: string;
-  image_url: string;
-  is_primary: boolean;
-  sort_order: number;
-  alt_text: string | null;
-}
-
-export interface ApiProductVariantOption {
-  id: string;
-  label: string;
-  in_stock?: boolean;
-  color_code?: string;
-}
-
-export interface ApiProductVariants {
-  colors: ApiProductVariantOption[];
-  sizes: ApiProductVariantOption[];
-}
-
-export interface ApiProductPricing {
-  currency: string;
-  current: number;
-  original: number | null;
-  discountPercent: number | null;
-}
-
-export interface ApiProductCategory {
-  id: string;
-  name: string;
-  slug: string;
-}
-
-export interface ApiProduct {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  ratingAvg: number;
-  variants: ApiProductVariants;
-  pricing: ApiProductPricing;
-  thumbnail: string;
-  images: ApiProductImage[];
-  category: ApiProductCategory;
-}
-
-// UI model consumed by components after normalization/mapping.
 export interface Product {
   id: string;
   name: string;
@@ -135,3 +81,13 @@ export interface Product {
 }
 
 export interface ProductDetail extends Product {}
+
+/**
+ * Paginated list result from /api/products endpoint
+ * Contains normalized Product objects (UI models) with pagination metadata
+ */
+export interface ProductListResult {
+  data: Product[];
+  meta: PaginationMeta;
+  links?: PaginationLinks;
+}

@@ -1,36 +1,9 @@
-import type { PaginationMeta, PaginationLinks } from "./api";
+import type { PaginationMeta, PaginationLinks } from "./pagination";
 
 /**
- * Raw API objects from /api/products/{id}/reviews
- * Backend returns snake_case fields
+ * Frontend/Domain review types
+ * Normalized UI models after mapping from API responses
  */
-
-export interface ApiReviewUser {
-  name: string;
-}
-
-export interface ApiReview {
-  id: number;
-  comment: string;
-  isVerified: boolean;
-  created_at: string;
-  rating: number;
-  user: ApiReviewUser;
-}
-
-// Payload used when posting a review
-export interface CreateReviewPayload {
-  username: string;
-  comment: string;
-  stars: number;
-}
-
-export interface SubmitReviewPayload extends Partial<CreateReviewPayload> {
-  rating?: number;
-  stars?: number;
-  comment?: string;
-  username?: string;
-}
 
 /**
  * UI model consumed by components after normalization/mapping

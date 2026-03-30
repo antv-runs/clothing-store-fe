@@ -1,4 +1,5 @@
-import type { ApiReview, Review } from "@/types/review";
+import type { ApiReview, ApiReviewUser } from "@/types/api/review";
+import type { Review } from "@/types/review";
 
 /**
  * Convert a single ApiReview to Review (UI model)

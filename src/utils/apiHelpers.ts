@@ -6,7 +6,7 @@ import type {
   PaginatedApiResponse,
   PaginationMeta,
   PaginationLinks,
-} from "@/types/api";
+} from "@/types/pagination";
 
 export function unwrapApiResponse<T>(
   response: ApiResponse<T>,

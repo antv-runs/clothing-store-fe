@@ -1,12 +1,6 @@
 /**
- * API response envelope for single resource / detail endpoints
- * @template T - The type of the single resource data
+ * Shared pagination and API response envelope types
  */
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
 
 /**
  * Pagination metadata structure in paginated list responses
@@ -30,6 +24,16 @@ export interface PaginationLinks {
   prev?: string | null;
   next?: string | null;
   [key: string]: string | null | undefined;
+}
+
+/**
+ * API response envelope for single resource / detail endpoints
+ * @template T - The type of the single resource data
+ */
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
 }
 
 /**

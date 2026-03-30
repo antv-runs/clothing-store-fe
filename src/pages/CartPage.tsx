@@ -7,14 +7,8 @@ import { Breadcrumb } from "@/components/organisms/Breadcrumb/Breadcrumb";
 import { CartEmptyState } from "@/components/molecules/CartEmptyState/CartEmptyState";
 import { CartItemRow } from "@/components/organisms/CartItemRow/CartItemRow";
 import { CartSummaryPanel } from "@/components/organisms/CartSummaryPanel/CartSummaryPanel";
+import type { CartRow } from "@/types/cart";
 import "./CartPage.scss";
-
-export type CartRow = {
-  productId: string;
-  quantity: number;
-  color: string | null;
-  size: string | null;
-};
 
 function formatPrice(amount: number, currency = "USD") {
   return new Intl.NumberFormat("en-US", {

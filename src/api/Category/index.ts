@@ -2,20 +2,11 @@
 // Moved from services/categoryService.ts
 
 import { get } from "@/lib/axios";
-import type { PaginatedApiResponse } from "@/types/api";
-import type { CategoryListResult, ApiCategory } from "@/types/category";
+import type { PaginatedApiResponse } from "@/types/pagination";
+import type { CategoryListResult } from "@/types/category";
+import type { ApiCategory, GetCategoriesParams } from "@/types/api/category";
 import { mapApiCategoriesToCategories } from "@/mappers/categoryMapper";
 import { unwrapPaginatedResponse, buildQueryString } from "@/utils/apiHelpers";
-
-export interface GetCategoriesParams {
-  search?: string;
-  status?: "active" | "inactive";
-  parent_id?: string | null;
-  has_children?: boolean;
-  sort?: string;
-  page?: number;
-  per_page?: number;
-}
 
 export async function getCategories(
   params: GetCategoriesParams = {},

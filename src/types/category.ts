@@ -1,16 +1,9 @@
-import type { PaginationMeta, PaginationLinks } from "./api";
+import type { PaginationMeta, PaginationLinks } from "./pagination";
 
 /**
- * Raw API object from /api/categories endpoint
- * Backend returns snake_case fields
+ * Frontend/Domain category types
+ * Normalized UI models after mapping from API responses
  */
-export interface ApiCategory {
-  id: string;
-  name: string;
-  slug: string;
-  href: string;
-  has_children: boolean;
-}
 
 /**
  * UI model consumed by components after normalization/mapping

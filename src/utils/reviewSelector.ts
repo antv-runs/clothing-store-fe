@@ -1,7 +1,8 @@
 // Review selector utilities (moved from services/reviewSelector.ts)
 // Pure selector/filter/normalize logic, not API
 
-import type { ApiReview, Review } from "@/types/review";
+import type { ApiReview } from "@/types/api/review";
+import type { Review } from "@/types/review";
 import { isSameProductId } from "@/utils/formatters";
 
 type ReviewLike = {
