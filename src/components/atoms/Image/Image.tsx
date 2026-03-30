@@ -24,6 +24,7 @@ type ImageProps = {
   renderWrapper?: boolean;
   onLoad?: ReactEventHandler<HTMLImageElement>;
   onError?: ReactEventHandler<HTMLImageElement>;
+  onClick?: ReactEventHandler<HTMLImageElement>;
 };
 
 function toCssDimension(value?: number | string) {
@@ -56,6 +57,7 @@ export function Image({
   renderWrapper = true,
   onLoad,
   onError,
+  onClick,
 }: ImageProps) {
   const resolvedAspectRatio = aspectRatio ?? ratio;
   const resolvedWidth = toCssDimension(width);
@@ -105,6 +107,7 @@ export function Image({
         decoding={decoding}
         style={bareImgStyle}
         onLoad={onLoad}
+        onClick={onClick}
         onError={onError}
       />
     );
@@ -128,6 +131,7 @@ export function Image({
         decoding={decoding}
         style={wrappedImgStyle}
         onLoad={onLoad}
+        onClick={onClick}
         onError={onError}
       />
       {showPlaceholder ? (
