@@ -8,7 +8,7 @@ import { ProductActions } from "@/components/molecules/ProductActions";
 import { ProductTabsSection } from "@/components/organisms/ProductTabsSection";
 import { RelatedProductsSection } from "@/components/organisms/RelatedProductsSection";
 import { WriteReviewModal } from "@/components/organisms/WriteReviewModal";
-import { getProductById } from "@/api/Product";
+import { getProductById, getProducts } from "@/api/Product";
 import { getReviewsByProductId } from "@/api/Review";
 import type { Product } from "@/types/product";
 import type { Review } from "@/types/review";
@@ -26,6 +26,8 @@ const ProductDetailPage: React.FC = () => {
   // Track selected color and size for add-to-cart functionality
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -34,6 +36,8 @@ const ProductDetailPage: React.FC = () => {
       setProduct(null);
       setProductReviews([]);
       setIsLoading(false);
+      setRelatedProducts([]);
+      setRelatedLoading(false);
       return () => {
         abortController.abort();
       };
@@ -43,6 +47,8 @@ const ProductDetailPage: React.FC = () => {
       setIsLoading(true);
       setProduct(null);
       setProductReviews([]);
+      setRelatedProducts([]);
+      setRelatedLoading(false);
 
       try {
         const productResult = await getProductById(normalizedRouteId);
@@ -68,6 +74,21 @@ const ProductDetailPage: React.FC = () => {
 
         setProductReviews(reviewsResult.data);
 
+        // Fetch related products
+        setRelatedLoading(true);
+        try {
+          const relatedResult = await getProducts({
+            page: 1,
+            per_page: 8,
+          });
+          setRelatedProducts(relatedResult.data);
+        } catch (relatedError) {
+          console.error("Failed to load related products.", relatedError);
+          setRelatedProducts([]);
+        } finally {
+          setRelatedLoading(false);
+        }
+
         console.log("Fetched product:", productResult); // Debug log to verify fetched product data
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -79,6 +100,8 @@ const ProductDetailPage: React.FC = () => {
         setProductReviews([]);
         setSelectedColorId(null);
         setSelectedSizeId(null);
+        setRelatedProducts([]);
+        setRelatedLoading(false);
       } finally {
         if (!abortController.signal.aborted) {
           setIsLoading(false);
@@ -163,8 +186,10 @@ const ProductDetailPage: React.FC = () => {
       />
 
       <RelatedProductsSection
-        currentProductId={String(product.id)}
+        products={relatedProducts}
+        isLoading={relatedLoading}
         formatPrice={formatPrice}
+        title="You Might Also Like"
       />
 
       <WriteReviewModal />

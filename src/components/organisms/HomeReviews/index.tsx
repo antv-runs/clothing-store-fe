@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
 import { ReviewCard } from "@/components/organisms/ReviewCard";
-import { getReviewsByProductId } from "@/api/Review";
 import type { Review } from "@/types/review";
 import "./index.scss";
+
+interface HomeReviewsProps {
+  reviews: Review[];
+  isLoading: boolean;
+}
 
 function getReviewScrollStep(track: HTMLUListElement | null) {
   if (!track || !track.firstElementChild) {
@@ -24,46 +28,14 @@ function getReviewScrollStep(track: HTMLUListElement | null) {
   return cardWidth + (Number.isFinite(gap) ? gap : 0);
 }
 
-export const HomeReviews: React.FC = () => {
+export const HomeReviews: React.FC<HomeReviewsProps> = ({
+  reviews,
+  isLoading,
+}) => {
   const reviewsTrackRef = useRef<HTMLUListElement | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [hasOverflow, setHasOverflow] = useState(false);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
-
-  // Fetch reviews on mount
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchReviews = async () => {
-      try {
-        setIsLoading(true);
-        const result = await getReviewsByProductId(180, {
-          perPage: 10,
-          sort: "latest",
-        });
-        if (isMounted) {
-          setReviews(result.data);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error("Failed to fetch reviews:", err);
-          setReviews([]);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchReviews();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     const track = reviewsTrackRef.current;

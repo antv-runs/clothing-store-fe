@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./index.scss";
 import { ProductCard } from "@/components/molecules/ProductCard";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
-import { getProducts } from "@/api/Product";
 import type { Product } from "@/types/product";
 
 interface RelatedProductsSectionProps {
-  currentProductId: string;
+  products: Product[];
+  isLoading: boolean;
+  title?: string;
   formatPrice: (amount: number, currency?: string) => string;
 }
 
@@ -16,54 +17,13 @@ interface RelatedProductsSectionProps {
  * Keeps original classes and rendered structure.
  */
 export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
-  currentProductId,
+  products,
+  isLoading,
+  title = "You Might Also Like",
   formatPrice,
 }) => {
-  const [items, setItems] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set());
   const [errorImageIds, setErrorImageIds] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    async function loadRelatedItems() {
-      if (!currentProductId) {
-        setItems([]);
-        return;
-      }
-
-      setIsLoading(true);
-      setLoadedImageIds(new Set());
-      setErrorImageIds(new Set());
-
-      try {
-        const result = await getProducts({
-          page: 1,
-          per_page: 8,
-        });
-
-        setItems(result.data);
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-
-        console.error("Failed to load related products.", error);
-        setItems([]);
-      } finally {
-        if (!abortController.signal.aborted) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    loadRelatedItems();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [currentProductId]);
 
   const handleImageLoad = (productId: string) => {
     setLoadedImageIds((previous) => {
@@ -81,11 +41,11 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
     });
   };
 
-  if (!isLoading && items.length === 0) {
+  if (!isLoading && products.length === 0) {
     return (
       <section className="other-products js-related-products">
         <Heading as="h2" className="other-products__title">
-          You Might Also Like
+          {title}
         </Heading>
         <p className="other-products__empty">No related products available.</p>
       </section>
@@ -95,7 +55,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   return (
     <section className="other-products js-related-products u-mb-85">
       <Heading as="h2" className="other-products__title">
-        You Might Also Like
+        {title}
       </Heading>
 
       <IconButton
@@ -112,7 +72,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
           id="other-products-list"
           className="other-products__list js-other-products__list js-related-track"
         >
-          {items.map((item) => (
+          {products.map((item) => (
             <li
               key={item.id}
               className="other-products__item js-other-products__item js-related-item"
