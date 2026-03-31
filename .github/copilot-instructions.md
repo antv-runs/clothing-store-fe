@@ -13,7 +13,7 @@
 
 - UI → `components/` (render only)
 - API → `api/`
-- Logic → `hooks/`, `utils/`
+- Logic → `utils/`
 - Page orchestration → `pages/`
 - External config → `lib/`
 
@@ -23,19 +23,14 @@
 
 ```txt
 src/
-  api/
+  api/ (split by domain: Category/, Product/, etc.)
   components/ (atoms, molecules, organisms, templates)
   pages/
   routes/
-  hooks/
   utils/
-  constants/
-  types/
-  contexts/
-  reducers/
+  types/ (shared types + api/ subfolder)
   lib/
-  styles/
-  assets/
+  styles/ (SCSS with abstracts/, base/)
 ```
 
 ---
@@ -43,7 +38,7 @@ src/
 ## API Rules
 
 - No `services/`, use `api/`
-- Split by domain: `api/Product`, `api/Review`, ...
+- Split by domain: `api/Category`, `api/Product`, ...
 - Only handle HTTP (no UI logic)
 
 ---
@@ -67,21 +62,21 @@ src/
 
 ---
 
-## Components (Atomic)
+## Components (Atomic Design)
 
-- atoms → basic UI
-- molecules → small combos
-- organisms → complex UI
-- templates → layouts
+- atoms → basic UI (Button, Input, etc.)
+- molecules → small combos (ProductCard, SearchBox, etc.)
+- organisms → complex UI (Header, ProductGallery, etc.)
+- templates → layouts (MainLayout)
 
 ➡️ Prefer composition
 
 ---
 
-## Hooks & Utils
+## Utils
 
-- hooks → reusable logic (`useX`)
-- utils → pure functions only
+- Pure functions only (formatters, helpers, selectors)
+- No custom hooks (logic stays in components/pages)
 
 ---
 
@@ -94,15 +89,16 @@ src/
 ## Styling
 
 - SCSS + BEM
-- Each component has its own SCSS
+- Each component has its own SCSS file
+- Global styles in `styles/`
 
 ---
 
 ## Naming
 
 - components/pages → PascalCase
-- api/utils/hooks → lowercase
-- entry files → `index.tsx`
+- api/utils/mappers → lowercase
+- entry files → `index.tsx` or `index.ts`
 
 ---
 
@@ -130,7 +126,7 @@ import Button from "../../../components/Button";
 
 ## Code Rules
 
-- No API calls inside components (except pages/hooks)
+- No API calls inside components (use pages or utils)
 - No mixing UI + business logic
 - Keep files small and reusable
 

@@ -1,4 +1,5 @@
 import React from "react";
+import "./index.scss";
 import type { Product } from "@/types/product";
 
 interface CartItemRowProps {

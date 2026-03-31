@@ -1,5 +1,5 @@
 import React from "react";
-import "./ProductTabsSection.scss";
+import "./index.scss";
 import type { Review } from "@/types/review";
 import type { ProductFaq } from "@/types/product";
 import { ProductTabsNav } from "./ProductTabsNav.tsx";

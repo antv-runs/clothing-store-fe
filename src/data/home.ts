@@ -1,32 +1,5 @@
 import type { Review } from "@/types/review";
 
-export const HOME_STYLE_CARDS = [
-  {
-    title: "Casual",
-    imagePath: "/images/pic_style_casual.png",
-    cardSize: "small" as const,
-    to: "/",
-  },
-  {
-    title: "Formal",
-    imagePath: "/images/pic_style_formal.png",
-    cardSize: "large" as const,
-    to: "/",
-  },
-  {
-    title: "Party",
-    imagePath: "/images/pic_style_party.png",
-    cardSize: "large" as const,
-    to: "/",
-  },
-  {
-    title: "Gym",
-    imagePath: "/images/pic_style_gym.png",
-    cardSize: "small" as const,
-    to: "/",
-  },
-];
-
 export const HOME_REVIEWS: Review[] = [
   {
     id: "home-1",

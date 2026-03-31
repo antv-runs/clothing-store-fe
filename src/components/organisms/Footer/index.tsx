@@ -87,26 +87,26 @@ const footerSections = [
 export const Footer = () => {
   return (
     <>
-      <footer className="footer">
-        {/* Newsletter Section */}
-        <div className="footer-form">
-          <Text as="p" className="footer-form__title">
-            STAY UPTO DATE ABOUT OUR LATEST OFFERS
-          </Text>
-          <form className="footer-form__form" action="#">
-            <InputWithIcon
-              iconName="icn_mail"
-              placeholder="Enter your email address"
-              type="email"
-              ariaLabel="Email address"
-              className="footer-form__input"
-            />
-            <Button className="footer-form__button" type="button" unstyled>
-              Subscribe to Newsletter
-            </Button>
-          </form>
-        </div>
+      {/* Newsletter Section */}
+      <div className="footer-form">
+        <Text as="p" className="footer-form__title">
+          STAY UPTO DATE ABOUT OUR LATEST OFFERS
+        </Text>
+        <form className="footer-form__form" action="#">
+          <InputWithIcon
+            iconName="icn_mail"
+            placeholder="Enter your email address"
+            type="email"
+            ariaLabel="Email address"
+            className="footer-form__input"
+          />
+          <Button className="footer-form__button" type="button" unstyled>
+            Subscribe to Newsletter
+          </Button>
+        </form>
+      </div>
 
+      <footer className="footer">
         {/* Main Footer Content */}
         <div className="footer-main">
           <div className="footer-main__content">

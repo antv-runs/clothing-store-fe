@@ -16,11 +16,6 @@
   font-size: 16px;
 }
 
-.breadcrumb__item {
-  display: inline-flex;
-  align-items: center;
-}
-
 .breadcrumb__item + .breadcrumb__item::before {
   content: "";
   width: 6px;
@@ -31,17 +26,4 @@
   -webkit-mask: url("/images/icn_breadcrumb_next.svg") no-repeat center /
     contain;
   mask: url("/images/icn_breadcrumb_next.svg") no-repeat center / contain;
-}
-
-.breadcrumb__link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.breadcrumb__link:hover {
-  color: v.$color-black;
-}
-
-.breadcrumb__item--active {
-  color: v.$color-black;
 }

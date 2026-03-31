@@ -1,4 +1,12 @@
+@use "@/styles/abstracts/variables" as v;
+
 .breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumb__item--active {
+  color: v.$color-black;
 }
 
 .breadcrumb__current {
@@ -6,4 +14,13 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.breadcrumb__link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.breadcrumb__link:hover {
+  color: v.$color-black;
 }

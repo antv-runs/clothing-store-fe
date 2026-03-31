@@ -1,13 +1,8 @@
-/**
- * Route configuration
- * Defines all application routes and their corresponding components
- */
-
+import HomePage from "@/pages/HomePage";
 import { lazy } from "react";
 import { ROUTES } from "./paths";
 
 // Lazy load page components for better performance
-const HomePage = lazy(() => import("@/pages/HomePage"));
 const ProductDetailPage = lazy(() => import("@/pages/ProductDetailPage"));
 const CartPage = lazy(() => import("@/pages/CartPage"));
 

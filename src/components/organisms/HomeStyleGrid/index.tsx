@@ -1,9 +1,35 @@
 import { Link } from "react-router-dom";
-import { HOME_STYLE_CARDS } from "@/data/home";
 import { Heading } from "@/components/atoms/Heading";
 import { Image } from "@/components/atoms/Image";
 import { Text } from "@/components/atoms/Text";
 import "./index.scss";
+
+const HOME_STYLE_CARDS = [
+  {
+    title: "Casual",
+    imagePath: "/images/pic_style_casual.png",
+    cardSize: "small" as const,
+    to: "/",
+  },
+  {
+    title: "Formal",
+    imagePath: "/images/pic_style_formal.png",
+    cardSize: "large" as const,
+    to: "/",
+  },
+  {
+    title: "Party",
+    imagePath: "/images/pic_style_party.png",
+    cardSize: "large" as const,
+    to: "/",
+  },
+  {
+    title: "Gym",
+    imagePath: "/images/pic_style_gym.png",
+    cardSize: "small" as const,
+    to: "/",
+  },
+];
 
 export const HomeStyleGrid: React.FC = () => {
   return (

@@ -1,6 +1,7 @@
 import React from "react";
 import { Text } from "@/components/atoms/Text";
 import { TextLink } from "@/components/atoms/TextLink";
+import "./index.scss";
 
 interface CartEmptyStateProps {
   isVisible: boolean;
