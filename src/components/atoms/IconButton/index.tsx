@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Icon } from "@/components/atoms/Icon";
 import "./index.scss";
 
-type IconButtonVariant = "default" | "ghost";
+type IconButtonVariant = "default" | "ghost" | "circular";
 
 type IconButtonProps = {
   svgName: string;

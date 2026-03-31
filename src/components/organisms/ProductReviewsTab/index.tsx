@@ -1,0 +1,91 @@
+import React from "react";
+import "./index.scss";
+import type { Review } from "@/types/review";
+import { ProductReviewsHeader } from "@/components/molecules/ProductReviewsHeader";
+import { ProductReviewsList } from "@/components/molecules/ProductReviewsList";
+
+interface ProductReviewsTabProps {
+  reviews: Review[];
+  reviewCount: number;
+  isActive: boolean;
+  isLoading: boolean;
+  isLoadingMore: boolean;
+  hasMore: boolean;
+  selectedRating: string;
+  selectedSort: string;
+  onRatingChange: (value: string) => void;
+  onSortChange: (value: "latest" | "oldest" | "highest") => void;
+  onLoadMore: () => void;
+  error?: string | null;
+}
+
+/**
+ * ProductReviewsTab - Reviews tab content section.
+ */
+export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
+  reviews,
+  reviewCount,
+  isActive,
+  isLoading,
+  isLoadingMore,
+  hasMore,
+  selectedRating,
+  selectedSort,
+  onRatingChange,
+  onSortChange,
+  onLoadMore,
+  error,
+}) => {
+  return (
+    <section
+      id="tc-reviews"
+      data-tab-content="tc-reviews"
+      role="tabpanel"
+      aria-labelledby="tab-tc-reviews"
+      aria-hidden={!isActive}
+      className={`reviews products-tabs__content js-products-tabs__content${
+        isActive ? " products-tabs__content--active" : ""
+      }`}
+    >
+      <ProductReviewsHeader
+        reviewCount={reviewCount}
+        selectedRating={selectedRating}
+        selectedSort={selectedSort}
+        onRatingChange={onRatingChange}
+        onSortChange={onSortChange}
+        isLoading={isLoading}
+      />
+
+      {isLoading && (
+        <div className="reviews__status reviews__status--loading">
+          Loading reviews...
+        </div>
+      )}
+
+      {error && !isLoading && (
+        <div className="reviews__status reviews__status--error" role="alert">
+          {error}
+        </div>
+      )}
+
+      {!isLoading && !error && <ProductReviewsList reviews={reviews} />}
+
+      <div className="reviews__load-more-wrapper">
+        <button
+          id="reviews-load-more"
+          className={`reviews__load-more js-reviews-load-more${
+            isLoadingMore ? " is-loading" : ""
+          }`}
+          type="button"
+          onClick={onLoadMore}
+          disabled={
+            !hasMore || isLoading || isLoadingMore || reviews.length === 0
+          }
+          aria-label="Load more reviews"
+        >
+          {isLoadingMore ? "Loading..." : "Load More Reviews"}
+        </button>
+      </div>
+    </section>
+  );
+};

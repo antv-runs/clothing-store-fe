@@ -1,0 +1,401 @@
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import { ProductCard } from "@/components/molecules/ProductCard";
+import { IconButton } from "@/components/atoms/IconButton";
+import type { Product } from "@/types/product";
+import "./index.scss";
+
+interface ProductCardListProps {
+  products: Product[];
+  formatPrice: (amount: number, currency?: string) => string;
+
+  // Navigation control (for carousel sections like RelatedProducts)
+  showNavigation?: boolean;
+
+  // ProductCard behavior props
+  linkMode?: "overlay" | "inline";
+
+  // Image state management (for carousel visibility)
+  imageLoaded?: Set<string>;
+  imageError?: Set<string>;
+  onImageLoad?: (productId: string) => void;
+  onImageError?: (productId: string) => void;
+}
+
+interface CarouselItem extends Product {
+  isClone?: boolean;
+  originalId?: string;
+}
+
+/**
+ * ProductCardList - Shared carousel/slider component for rendering product lists.
+ *
+ * Owns the complete slider structure:
+ * - Viewport wrapper with horizontal scroll
+ * - Flex list with proper carousel layout
+ * - Individual product items with scroll-snap
+ * - Optional navigation buttons (prev/next)
+ *
+ * Styling includes:
+ * - Desktop: horizontal flex layout
+ * - Mobile: horizontal scroll with scroll-snap
+ * - Shared item sizing and hover effects
+ *
+ * Used by:
+ * - HomeProductSection (showNavigation={false})
+ * - RelatedProductsSection (showNavigation={true})
+ */
+export const ProductCardList: React.FC<ProductCardListProps> = ({
+  products,
+  formatPrice,
+  showNavigation = false,
+  linkMode,
+  imageLoaded = new Set(),
+  imageError = new Set(),
+  onImageLoad,
+  onImageError,
+}) => {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLUListElement>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const isAdjustingLoopRef = useRef(false);
+  const isMouseDownRef = useRef(false);
+  const hasDraggedRef = useRef(false);
+  const pointerStartXRef = useRef(0);
+  const scrollStartLeftRef = useRef(0);
+
+  // Clone items for infinite loop (only when navigation is enabled)
+  const cloneCount = showNavigation ? Math.min(4, products.length) : 0;
+  const clonedItems: CarouselItem[] = showNavigation
+    ? products.slice(0, cloneCount).map((product) => ({
+        ...product,
+        isClone: true,
+        originalId: product.id,
+      }))
+    : [];
+
+  const allItems: CarouselItem[] = [...products, ...clonedItems];
+
+  const getTrackGap = useCallback(() => {
+    if (!trackRef.current) return 0;
+    const styles = window.getComputedStyle(trackRef.current);
+    const rawGap = styles.gap || styles.columnGap || "0";
+    const parsedGap = parseFloat(rawGap);
+    return isFinite(parsedGap) ? parsedGap : 0;
+  }, []);
+
+  const getStepWidth = useCallback(() => {
+    if (!trackRef.current || !trackRef.current.firstElementChild) {
+      return 0;
+    }
+    const firstItem = trackRef.current.firstElementChild as HTMLElement;
+    const itemWidth = firstItem.getBoundingClientRect().width;
+    return itemWidth + getTrackGap();
+  }, [getTrackGap]);
+
+  const getLoopStart = useCallback(() => {
+    if (!trackRef.current) return 0;
+    // The loop start is where the cloned items begin (after original items)
+    const originalItems = trackRef.current.querySelectorAll(
+      '[data-is-clone="false"]',
+    );
+    if (originalItems.length === 0) return 0;
+    const lastOriginal = originalItems[originalItems.length - 1] as HTMLElement;
+    return lastOriginal.offsetLeft + lastOriginal.offsetWidth + getTrackGap();
+  }, [getTrackGap]);
+
+  const getLoopBoundary = useCallback(() => {
+    if (!viewportRef.current) return 0;
+    const loopStart = getLoopStart();
+    const maxScrollLeft = Math.max(
+      0,
+      viewportRef.current.scrollWidth - viewportRef.current.clientWidth,
+    );
+    return Math.min(loopStart, maxScrollLeft);
+  }, [getLoopStart]);
+
+  const normalizeLoopPosition = useCallback(() => {
+    if (!showNavigation || !viewportRef.current || isAdjustingLoopRef.current)
+      return;
+
+    const loopBoundary = getLoopBoundary();
+    if (!loopBoundary) return;
+
+    // Forward wrap: when scrolled past clone zone, teleport back to start
+    if (viewportRef.current.scrollLeft >= loopBoundary - 1) {
+      isAdjustingLoopRef.current = true;
+      viewportRef.current.scrollLeft = 0;
+      isAdjustingLoopRef.current = false;
+    }
+  }, [showNavigation, getLoopBoundary]);
+
+  const updateButtonStates = useCallback(() => {
+    // With infinite loop, buttons are always enabled
+    setCanScrollPrev(true);
+    setCanScrollNext(true);
+  }, []);
+
+  const scrollByStep = useCallback(
+    (direction: number) => {
+      if (!viewportRef.current) return;
+
+      const step = getStepWidth();
+      if (!step) return;
+
+      if (showNavigation && direction === -1) {
+        // Backward wrap logic from old implementation
+        const needsWrap =
+          viewportRef.current.scrollLeft <= 0 ||
+          viewportRef.current.scrollLeft < step;
+        const loopBoundary = needsWrap ? getLoopBoundary() : 0;
+
+        if (needsWrap && loopBoundary) {
+          isAdjustingLoopRef.current = true;
+          viewportRef.current.scrollLeft = loopBoundary - step;
+          isAdjustingLoopRef.current = false;
+          return;
+        }
+      }
+
+      viewportRef.current.scrollBy({
+        left: direction * step,
+        behavior: "smooth",
+      });
+    },
+    [showNavigation, getStepWidth, getLoopBoundary],
+  );
+
+  const handleMouseDown = useCallback(
+    (event: MouseEvent) => {
+      if (event.button !== 0 || !showNavigation) return;
+
+      isMouseDownRef.current = true;
+      hasDraggedRef.current = false;
+      pointerStartXRef.current = event.clientX;
+      scrollStartLeftRef.current = viewportRef.current?.scrollLeft || 0;
+      viewportRef.current?.classList.add("is-dragging");
+    },
+    [showNavigation],
+  );
+
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!isMouseDownRef.current || !viewportRef.current || !showNavigation)
+        return;
+
+      const deltaX = event.clientX - pointerStartXRef.current;
+      if (Math.abs(deltaX) > 3) {
+        hasDraggedRef.current = true;
+      }
+
+      viewportRef.current.scrollLeft = scrollStartLeftRef.current - deltaX;
+      normalizeLoopPosition();
+    },
+    [showNavigation, normalizeLoopPosition],
+  );
+
+  const snapToNearestItem = useCallback(() => {
+    if (!viewportRef.current || !showNavigation) return;
+
+    const viewport = viewportRef.current;
+    const step = getStepWidth();
+    if (!step || step === 0) return;
+
+    const currentScroll = viewport.scrollLeft;
+    const nearestItemIndex = Math.round(currentScroll / step);
+    const targetScroll = nearestItemIndex * step;
+
+    // Avoid snapping if already very close to target
+    if (Math.abs(currentScroll - targetScroll) > 0.5) {
+      viewport.scrollBy({
+        left: targetScroll - currentScroll,
+        behavior: "smooth",
+      });
+    }
+  }, [getStepWidth, showNavigation]);
+
+  const snapTimeoutRef = useRef<number | null>(null);
+
+  const debounceSnap = useCallback(() => {
+    if (snapTimeoutRef.current) {
+      clearTimeout(snapTimeoutRef.current);
+    }
+
+    snapTimeoutRef.current = window.setTimeout(() => {
+      snapToNearestItem();
+    }, 150);
+  }, [snapToNearestItem]);
+
+  const handleTrackClick = useCallback((event: React.MouseEvent) => {
+    if (!hasDraggedRef.current) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    hasDraggedRef.current = false;
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    if (!isMouseDownRef.current) return;
+
+    isMouseDownRef.current = false;
+    viewportRef.current?.classList.remove("is-dragging");
+    // Snap to nearest item after drag ends
+    snapToNearestItem();
+  }, [snapToNearestItem]);
+
+  const handleWheel = useCallback(
+    (event: WheelEvent) => {
+      if (!showNavigation) return;
+
+      // Only handle vertical wheel (ignore horizontal)
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+
+      event.preventDefault();
+      if (viewportRef.current) {
+        viewportRef.current.scrollBy({
+          left: event.deltaY,
+        });
+        normalizeLoopPosition();
+        // Debounce snap after wheel scrolling settles
+        debounceSnap();
+      }
+    },
+    [showNavigation, normalizeLoopPosition, debounceSnap],
+  );
+
+  const handlePrevClick = useCallback(() => {
+    scrollByStep(-1);
+  }, [scrollByStep]);
+
+  const handleNextClick = useCallback(() => {
+    scrollByStep(1);
+  }, [scrollByStep]);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const handleScroll = () => {
+      if (!isAdjustingLoopRef.current) {
+        normalizeLoopPosition();
+        updateButtonStates();
+        // Debounce snap after any scroll (handles touch scrolling too)
+        debounceSnap();
+      }
+    };
+
+    const handleResize = () => {
+      updateButtonStates();
+    };
+
+    const handleMouseDownBound = (e: MouseEvent) => handleMouseDown(e);
+    const handleMouseMoveBound = (e: MouseEvent) => handleMouseMove(e);
+    const handleMouseUpBound = () => handleMouseUp();
+    const handleWheelBound = (e: WheelEvent) => handleWheel(e);
+
+    viewport.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+    viewport.addEventListener("mousedown", handleMouseDownBound);
+    window.addEventListener("mousemove", handleMouseMoveBound);
+    window.addEventListener("mouseup", handleMouseUpBound);
+    viewport.addEventListener("wheel", handleWheelBound, { passive: false });
+
+    // Initial state update
+    updateButtonStates();
+
+    return () => {
+      viewport.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      viewport.removeEventListener("mousedown", handleMouseDownBound);
+      window.removeEventListener("mousemove", handleMouseMoveBound);
+      window.removeEventListener("mouseup", handleMouseUpBound);
+      viewport.removeEventListener("wheel", handleWheelBound);
+      // Cleanup debounce timeout
+      if (snapTimeoutRef.current) {
+        clearTimeout(snapTimeoutRef.current);
+      }
+    };
+  }, [
+    normalizeLoopPosition,
+    updateButtonStates,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+    handleWheel,
+    debounceSnap,
+  ]);
+
+  // Update button states when products change
+  useEffect(() => {
+    updateButtonStates();
+  }, [products, updateButtonStates]);
+
+  return (
+    <div className="product-card-list">
+      {showNavigation && (
+        <IconButton
+          variant="ghost"
+          svgName="icn_back"
+          className="product-card-list__nav product-card-list__nav--prev js-other-products__prev"
+          ariaLabel="Previous products"
+          iconWidth={50}
+          iconHeight={50}
+          disabled={!canScrollPrev}
+          onClick={handlePrevClick}
+        />
+      )}
+
+      <div
+        ref={viewportRef}
+        className="product-card-list__viewport js-related-viewport"
+      >
+        <ul
+          ref={trackRef}
+          id="product-card-list"
+          className="product-card-list__track js-other-products__list js-related-track"
+          aria-live="polite"
+          aria-busy="false"
+          onClick={handleTrackClick}
+        >
+          {allItems.map((item) => {
+            const displayId = item.originalId || item.id;
+            return (
+              <li
+                key={item.isClone ? `clone-${item.id}` : item.id}
+                className="product-card-list__item js-other-products__item js-related-item"
+                data-product-id={displayId}
+                data-is-clone={item.isClone ? "true" : "false"}
+              >
+                <ProductCard
+                  product={item}
+                  formatPrice={formatPrice}
+                  {...(linkMode && { linkMode })}
+                  {...(onImageLoad &&
+                    onImageError && {
+                      imageLoaded: imageLoaded.has(String(displayId)),
+                      imageError: imageError.has(String(displayId)),
+                      onImageLoad: () => onImageLoad(String(displayId)),
+                      onImageError: () => onImageError(String(displayId)),
+                    })}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      {showNavigation && (
+        <IconButton
+          variant="ghost"
+          svgName="icn_next"
+          className="product-card-list__nav product-card-list__nav--next js-other-products__next"
+          ariaLabel="Next products"
+          iconWidth={50}
+          iconHeight={50}
+          disabled={!canScrollNext}
+          onClick={handleNextClick}
+        />
+      )}
+    </div>
+  );
+};

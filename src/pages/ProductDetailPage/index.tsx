@@ -22,7 +22,19 @@ const ProductDetailPage: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
+
   const [productReviews, setProductReviews] = useState<Review[]>([]);
+  const [reviewTotal, setReviewTotal] = useState(0);
+  const [reviewPage, setReviewPage] = useState(1);
+  const [reviewLastPage, setReviewLastPage] = useState(1);
+  const [reviewSort, setReviewSort] = useState<"latest" | "oldest" | "highest">(
+    "latest",
+  );
+  const [reviewRatingFilter, setReviewRatingFilter] = useState<string>("All");
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
+  const [isLoadingMoreReviews, setIsLoadingMoreReviews] = useState(false);
+  const [reviewError, setReviewError] = useState<string | null>(null);
+
   // Track selected color and size for add-to-cart functionality
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
@@ -65,14 +77,13 @@ const ProductDetailPage: React.FC = () => {
         // Reset variant selections when product changes
         setSelectedColorId(null);
         setSelectedSizeId(null);
-
-        const reviewsResult = await getReviewsByProductId(productResult.id, {
-          page: 1,
-          perPage: 50,
-          sort: "latest",
-        });
-
-        setProductReviews(reviewsResult.data);
+        setProductReviews([]);
+        setReviewTotal(0);
+        setReviewPage(1);
+        setReviewLastPage(1);
+        setReviewSort("latest");
+        setReviewRatingFilter("All");
+        setReviewError(null);
 
         // Fetch related products
         setRelatedLoading(true);
@@ -115,6 +126,81 @@ const ProductDetailPage: React.FC = () => {
       abortController.abort();
     };
   }, [normalizedRouteId]);
+
+  const reviewPerPage = 6;
+
+  const queryRating = (rating: string) => {
+    return rating === "All" ? null : Number(rating);
+  };
+
+  const loadReviews = async (page: number, append = false) => {
+    if (!product?.id) {
+      return;
+    }
+
+    if (append) {
+      setIsLoadingMoreReviews(true);
+    } else {
+      setIsLoadingReviews(true);
+    }
+
+    setReviewError(null);
+
+    try {
+      const result = await getReviewsByProductId(product.id, {
+        page,
+        perPage: reviewPerPage,
+        rating: queryRating(reviewRatingFilter),
+        sort: reviewSort,
+      });
+
+      if (append) {
+        setProductReviews((prev) => [...prev, ...result.data]);
+      } else {
+        setProductReviews(result.data);
+      }
+
+      setReviewTotal(result.meta.total);
+      setReviewLastPage(result.meta.last_page);
+    } catch (error) {
+      console.error("Failed to load reviews", error);
+      setReviewError("Unable to load reviews. Please try again.");
+    } finally {
+      setIsLoadingReviews(false);
+      setIsLoadingMoreReviews(false);
+    }
+  };
+
+  const handleLoadMoreReviews = async () => {
+    if (!product?.id || reviewPage >= reviewLastPage) {
+      return;
+    }
+
+    const nextPage = reviewPage + 1;
+    await loadReviews(nextPage, true);
+    setReviewPage(nextPage);
+  };
+
+  const handleReviewRatingChange = (value: string) => {
+    setReviewRatingFilter(value);
+    setReviewPage(1);
+  };
+
+  const handleReviewSortChange = (value: "latest" | "oldest" | "highest") => {
+    setReviewSort(value);
+    setReviewPage(1);
+  };
+
+  useEffect(() => {
+    if (!product?.id) {
+      return;
+    }
+
+    setReviewPage(1);
+    loadReviews(1, false);
+  }, [product?.id, reviewRatingFilter, reviewSort]);
+
+  const hasMoreReviews = reviewPage < reviewLastPage;
 
   if (isLoading) {
     return (
@@ -181,8 +267,17 @@ const ProductDetailPage: React.FC = () => {
       <ProductTabsSection
         details={product.details}
         reviews={productReviews}
-        reviewCount={productReviews?.length || 0}
+        reviewCount={reviewTotal || productReviews.length}
         faqs={product.faqs || []}
+        isLoadingReviews={isLoadingReviews}
+        isLoadingMoreReviews={isLoadingMoreReviews}
+        hasMoreReviews={hasMoreReviews}
+        selectedRating={reviewRatingFilter}
+        selectedSort={reviewSort}
+        onRatingChange={handleReviewRatingChange}
+        onSortChange={handleReviewSortChange}
+        onLoadMore={handleLoadMoreReviews}
+        reviewError={reviewError}
       />
 
       <RelatedProductsSection

@@ -1,4 +1,4 @@
-import type { ApiReview, ApiReviewUser } from "@/types/api/review";
+import type { ApiReview } from "@/types/api/review";
 import type { Review } from "@/types/review";
 
 /**

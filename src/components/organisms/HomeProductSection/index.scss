@@ -1,5 +1,12 @@
 @use "../../../styles/abstracts/variables" as v;
 
+/**
+ * HomeProductSection - Section wrapper for product list
+ * 
+ * Owns only section-level styling (heading, spacing, CTA button).
+ * Slider/carousel styling is owned by ProductCardList.
+ */
+
 .home-products {
   display: flex;
   flex-direction: column;
@@ -18,35 +25,12 @@
     text-align: center;
   }
 
-  &__list {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 24px;
-    min-height: 345px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
   &__cta {
     margin-top: 36px;
     margin-inline: auto;
     min-width: 218px;
     min-height: 52px;
     border: 1px solid v.$color-border !important;
-  }
-
-  &__list-item {
-    min-width: 0;
-  }
-}
-
-@media (max-width: 992px) {
-  .home-products {
-    &__list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
   }
 }
 
@@ -63,33 +47,6 @@
       font-size: 32px;
     }
 
-    &__list {
-      display: flex;
-      grid-template-columns: unset;
-      gap: 16px;
-      min-height: unset;
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      scroll-behavior: smooth;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-
-    &__list-item {
-      flex: 0 0 auto;
-      width: 198px;
-      scroll-snap-align: start;
-    }
-
-    .product-card {
-      width: 100%;
-    }
-
     &__cta {
       margin-top: 24px;
       width: 100%;
@@ -98,3 +55,4 @@
     }
   }
 }
+

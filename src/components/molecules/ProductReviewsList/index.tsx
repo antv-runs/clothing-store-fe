@@ -1,5 +1,5 @@
 import React from "react";
-import "./ProductReviewsList.scss";
+import "./index.scss";
 import type { Review } from "@/types/review";
 import { ReviewCard } from "@/components/organisms/ReviewCard";
 

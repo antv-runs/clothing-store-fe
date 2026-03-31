@@ -1,41 +1,21 @@
 @use "@/styles/abstracts/variables" as v;
-@use "@/styles/abstracts/mixins" as *;
+
+/**
+ * RelatedProductsSection - Section wrapper for related products carousel
+ * 
+ * Handles:
+ * - Section-level styling (heading, spacing, empty state)
+ * - Loading state for product cards
+ * - Skeleton placeholders while fetching data
+ * 
+ * NOTE: Slider/carousel styling is owned by ProductCardList component
+ */
 
 .other-products {
-  position: relative;
-
   &__empty {
     margin-top: 24px;
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
-  }
-
-  &__item {
-    max-width: 295px;
-    flex: 0 0 auto;
-    @include button-native-reset;
-    transition: color 0.2s ease;
-
-    .product-card__image-wrapper {
-      width: 295px;
-      height: 298px;
-      margin-bottom: 20px;
-
-      .product-card__image-placeholder {
-        height: 298px;
-        min-height: 298px;
-      }
-    }
-
-    &:hover {
-      .product-card__title {
-        color: #ff4d4f;
-      }
-
-      .product-card__price-current {
-        color: #ff4d4f;
-      }
-    }
   }
 
   &__title {
@@ -44,73 +24,87 @@
     text-align: center;
     font-family: v.$font-family-display;
   }
+}
 
-  &__viewport {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    touch-action: pan-x;
-    cursor: grab;
+/**
+ * Related products loading state
+ * Reduces opacity to indicate disabled state
+ */
+.other-products--loading {
+  opacity: 0.85;
+  pointer-events: none;
+}
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
+/**
+ * Skeleton loading placeholders for product cards
+ * 
+ * Displays animated placeholder cards while fetching related products
+ */
+.other-products {
+  &__skeleton-card {
+    width: 295px;
+    flex: 0 0 auto;
+    pointer-events: none;
+  }
 
-    &.is-dragging {
-      cursor: grabbing;
-      user-select: none;
+  &__skeleton-image,
+  &__skeleton-line,
+  &__skeleton-circle,
+  &__skeleton-pill {
+    @include m.skeleton-shimmer;
+  }
+
+  &__skeleton-image {
+    width: 100%;
+    min-height: 300px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  &__skeleton-line {
+    height: 18px;
+    width: 78%;
+    border-radius: 8px;
+    margin-bottom: 12px;
+
+    &--short {
+      width: 42px;
+      height: 14px;
+      margin-bottom: 0;
     }
   }
 
-  &__list {
+  &__skeleton-rating {
     display: flex;
-    width: max-content;
-    gap: 20px;
-    margin-top: 62px;
-
-    &.is-animated {
-      transition: transform 0.5s ease-in-out;
-    }
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
   }
 
-  &__prev,
-  &__next {
-    position: absolute;
-    padding: 5px;
-    @include flex-center;
-    transition: opacity 0.3s ease;
-    z-index: 100;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.5;
-
-    .iconContainer {
-      color: #000;
-      transition: color 0.25s ease;
-    }
-
-    &:hover .iconContainer {
-      color: #333;
-    }
-
-    &:hover {
-      opacity: 0.8;
-    }
+  &__skeleton-circle {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
   }
 
-  &__prev {
-    left: -30px;
-  }
-
-  &__next {
-    right: -30px;
+  &__skeleton-pill {
+    height: 30px;
+    width: 130px;
+    border-radius: 999px;
   }
 }
 
+/**
+ * Tablet responsive: Adjust section title sizing
+ */
 @media (max-width: 768px) {
   .other-products {
     &__title {
       font-size: 32px;
+    }
+
+    &__skeleton-card {
+      width: 240px;
     }
   }
 }

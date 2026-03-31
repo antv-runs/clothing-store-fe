@@ -6,8 +6,167 @@
   @include m.button-base(v.$color-black, v.$color-white);
 }
 
+/**
+ * ProductActions Component Styles
+ * 
+ * Handles:
+ * - Quantity selector form with +/- buttons
+ * - Add-to-cart button with feedback animation
+ * - Responsive layout for mobile
+ */
+
 .product-overview__actions {
   display: flex;
   gap: 20px;
   flex-wrap: nowrap;
+
+  form {
+    flex: 0 0 170px;
+    width: 170px;
+    height: 52px;
+    display: flex;
+    align-items: stretch;
+    background-color: #f0f0f0;
+    border-radius: v.$radius-pill;
+    padding: 0;
+    overflow: hidden;
+
+    input {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
+      text-align: center;
+      @include m.button-native-reset($with-cursor: false);
+      font-size: 16px;
+      font-weight: 500;
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+      appearance: textfield;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+    }
+
+    .quantity-button-minus,
+    .quantity-button-plus {
+      flex: 0 0 44px;
+      @include m.button-native-reset;
+      @include m.flex-center;
+      color: #000;
+
+      &:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .add-to-cart-button {
+    flex: 0 0 400px;
+    width: 400px;
+    height: 52px;
+    min-width: 0;
+    background-color: #000;
+    color: #fff;
+    border-radius: v.$radius-pill;
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      transform 0.2s ease,
+      background-color 0.2s ease;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+      background-color: #333;
+    }
+
+    &:hover {
+      background-color: #333;
+    }
+
+    &.is-added {
+      animation: add-to-cart-feedback 0.26s ease;
+      background-color: #1f1f1f;
+    }
+  }
+}
+
+/**
+ * Add-to-cart button feedback animation
+ * Scale animation provides tactile feedback to user
+ */
+@keyframes add-to-cart-feedback {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.96);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/**
+ * Tablet responsive: Reduce sizes and adjust layout
+ */
+@media (max-width: 768px) {
+  .product-overview__actions {
+    font-size: 14px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    form {
+      flex: 0 0 110px;
+      width: 110px;
+      height: 44px;
+    }
+
+    .quantity-button-minus,
+    .quantity-button-plus {
+      flex: 0 0 32px;
+    }
+
+    .add-to-cart-button {
+      flex: 0 0 236px;
+      width: 236px;
+      height: 44px;
+    }
+  }
+
+  .quantity-input,
+  .add-to-cart-button {
+    font-size: 14px;
+  }
+}
+
+/**
+ * Mobile responsive: Stack action buttons vertically on very small screens
+ */
+@media (max-width: 360px) {
+  .product-overview__actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    form {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }

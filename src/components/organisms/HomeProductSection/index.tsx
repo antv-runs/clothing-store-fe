@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
-import { ProductCard } from "@/components/molecules/ProductCard";
+import { ProductCardList } from "@/components/molecules/ProductCardList";
 import type { Product } from "@/types/product";
 import "./index.scss";
 
@@ -34,17 +34,16 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
         as="h2"
         id={`home-${sectionSlug}-title`}
         className="home-products__title"
+        noOfLines={2}
       >
         {title}
       </Heading>
 
-      <ul className="home-products__list" aria-live="polite" aria-busy="false">
-        {productsList.map((item) => (
-          <li key={item.id} className="home-products__list-item">
-            <ProductCard product={item} formatPrice={formatPrice} />
-          </li>
-        ))}
-      </ul>
+      <ProductCardList
+        products={productsList}
+        formatPrice={formatPrice}
+        showNavigation={false}
+      />
 
       <Link to="/" className="btn btn--light home-products__cta">
         View All

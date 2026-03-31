@@ -8,10 +8,12 @@ type ReviewSortOption = {
   label: string;
 };
 
+type AllowedReviewSort = "latest" | "oldest" | "highest";
+
 type ReviewSortSelectProps = {
-  value: string;
+  value: AllowedReviewSort;
   options: ReviewSortOption[];
-  onChange: (value: string) => void;
+  onChange: (value: AllowedReviewSort) => void;
   ariaLabel?: string;
   className?: string;
   id?: string;
@@ -25,9 +27,10 @@ export const ReviewSortSelect = ({
   className,
   id,
 }: ReviewSortSelectProps) => {
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(event.target.value);
-  };
+const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const value = event.target.value as AllowedReviewSort;
+  onChange(value);
+};
 
   return (
     <div className={clsx("review-sort-select", className)}>

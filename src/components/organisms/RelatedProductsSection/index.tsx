@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./index.scss";
-import { ProductCard } from "@/components/molecules/ProductCard";
-import { IconButton } from "@/components/atoms/IconButton";
+import { ProductCardList } from "@/components/molecules/ProductCardList";
 import { Heading } from "@/components/atoms/Heading";
 import type { Product } from "@/types/product";
 
@@ -14,7 +13,11 @@ interface RelatedProductsSectionProps {
 
 /**
  * RelatedProductsSection - Product recommendations carousel section.
- * Keeps original classes and rendered structure.
+ * 
+ * Handles:
+ * - Section wrapper and heading
+ * - Image state management for product cards
+ * - ProductCardList with navigation enabled
  */
 export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   products,
@@ -58,47 +61,15 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
         {title}
       </Heading>
 
-      <IconButton
-        variant="ghost"
-        svgName="icn_back"
-        className="other-products__prev js-other-products__prev"
-        ariaLabel="Previous related products"
-        iconWidth={50}
-        iconHeight={50}
-      />
-
-      <div className="other-products__viewport js-related-viewport">
-        <ul
-          id="other-products-list"
-          className="other-products__list js-other-products__list js-related-track"
-        >
-          {products.map((item) => (
-            <li
-              key={item.id}
-              className="other-products__item js-other-products__item js-related-item"
-              data-product-id={item.id}
-            >
-              <ProductCard
-                product={item}
-                formatPrice={formatPrice}
-                linkMode="overlay"
-                imageLoaded={loadedImageIds.has(String(item.id))}
-                imageError={errorImageIds.has(String(item.id))}
-                onImageLoad={() => handleImageLoad(String(item.id))}
-                onImageError={() => handleImageError(String(item.id))}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <IconButton
-        variant="ghost"
-        svgName="icn_next"
-        className="other-products__next js-other-products__next"
-        ariaLabel="Next related products"
-        iconWidth={50}
-        iconHeight={50}
+      <ProductCardList
+        products={products}
+        formatPrice={formatPrice}
+        showNavigation={true}
+        linkMode="overlay"
+        imageLoaded={loadedImageIds}
+        imageError={errorImageIds}
+        onImageLoad={handleImageLoad}
+        onImageError={handleImageError}
       />
     </section>
   );
