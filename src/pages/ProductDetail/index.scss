@@ -1,0 +1,84 @@
+@use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/mixins" as m;
+
+.product-overview {
+  margin-bottom: 75px;
+}
+
+/**
+ * Two-column layout container
+ * Places gallery on left and product info on right
+ */
+.product-overview__details {
+  display: flex;
+  gap: 40px;
+}
+
+/**
+ * Product info column wrapper
+ * Right-side container for product information
+ */
+.product-info {
+  flex: 1;
+  min-width: 0;
+  max-width: 590px;
+}
+
+/**
+ * Screen reader only utility class
+ * Hides visual content while keeping it accessible to screen readers
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/**
+ * Tablet responsive: Stack columns vertically
+ */
+@media (max-width: 992px) {
+  .product-overview {
+    &__details {
+      flex-direction: column;
+    }
+  }
+
+  .product-info {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .product-overview {
+    &__images {
+      max-width: 100%;
+    }
+  }
+}
+
+/**
+ * Mobile responsive: Adjust spacing and sizing
+ */
+@media (max-width: 768px) {
+  .product-overview {
+    margin-bottom: 48px;
+  }
+
+  .product-info {
+    padding-left: 0;
+  }
+}
+
+/**
+ * Extra small screens responsive: Stack action buttons vertically
+ */
+@media (max-width: 360px) {
+  // Media query section would be minimal here
+  // Most mobile styling is handled by child components
+}

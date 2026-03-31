@@ -96,7 +96,6 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
           aria-controls="dropdown-filter-by-stars"
           onClick={handleFilterToggle}
           disabled={isDisabled}
-          variant="circular"
           iconWidth={20.25}
           iconHeight={18.75}
         />

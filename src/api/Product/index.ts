@@ -8,7 +8,7 @@ import type { ApiProduct, GetProductsParams } from "@/types/api/product";
 import {
   mapApiProductToProduct,
   mapApiProductsToProducts,
-} from "@/mappers/productMapper";
+} from "@/utils/productMapper";
 import {
   unwrapApiResponse,
   unwrapPaginatedResponse,

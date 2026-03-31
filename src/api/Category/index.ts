@@ -5,7 +5,7 @@ import { get } from "@/lib/axios";
 import type { PaginatedApiResponse } from "@/types/pagination";
 import type { CategoryListResult } from "@/types/category";
 import type { ApiCategory, GetCategoriesParams } from "@/types/api/category";
-import { mapApiCategoriesToCategories } from "@/mappers/categoryMapper";
+import { mapApiCategoriesToCategories } from "@/utils/categoryMapper";
 import { unwrapPaginatedResponse, buildQueryString } from "@/utils/apiHelpers";
 
 export async function getCategories(

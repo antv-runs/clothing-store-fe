@@ -1,10 +1,10 @@
-import HomePage from "@/pages/HomePage";
+import Home from "@/pages/Home";
 import { lazy } from "react";
 import { ROUTES } from "./paths";
 
 // Lazy load page components for better performance
-const ProductDetailPage = lazy(() => import("@/pages/ProductDetailPage"));
-const CartPage = lazy(() => import("@/pages/CartPage"));
+const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
+const Cart = lazy(() => import("@/pages/Cart"));
 
 export interface RouteConfig {
   path: string;
@@ -18,14 +18,14 @@ export interface RouteConfig {
 export const routeConfig: RouteConfig[] = [
   {
     path: ROUTES.HOME,
-    element: HomePage,
+    element: Home,
   },
   {
     path: ROUTES.PRODUCT_DETAIL,
-    element: ProductDetailPage,
+    element: ProductDetail,
   },
   {
     path: ROUTES.CART,
-    element: CartPage,
+    element: Cart,
   },
 ];

@@ -8,7 +8,7 @@ import type { CreateReviewPayload, ApiReview } from "@/types/api/review";
 import {
   mapApiReviewToReview,
   mapApiReviewsToReviews,
-} from "@/mappers/reviewMapper";
+} from "@/utils/reviewMapper";
 import {
   unwrapApiResponse,
   unwrapPaginatedResponse,
