@@ -1,4 +1,3 @@
-import { FooterForm } from "@/components/organisms/Footer";
 import { useMemo, useState } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { products } from "@/data/products";
@@ -79,12 +78,8 @@ const CartPage: React.FC = () => {
 
   return (
     <div className="container u-mt-25">
-      <main className="cart-page js-cart-page">
-        <Breadcrumb
-          items={["Home", "Cart"]}
-          className="cart-page__breadcrumb"
-          id="cart-breadcrumb-list"
-        />
+      <section className="cart-page js-cart-page" aria-label="Shopping cart">
+        <Breadcrumb items={["Home", "Cart"]} id="cart-breadcrumb-list" />
 
         <Heading as="h1" className="cart-page__title u-mt-30">
           Your Cart
@@ -113,10 +108,7 @@ const CartPage: React.FC = () => {
 
           <CartSummaryPanel summary={summary} formatPrice={formatPrice} />
         </section>
-      </main>
-
-      {/* Footer Form (newsletter) */}
-      <FooterForm />
+      </section>
     </div>
   );
 };

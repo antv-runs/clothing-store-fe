@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import IconButton from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
 import { ReviewCard } from "@/components/organisms/ReviewCard";
 import { getReviewsByProductId } from "@/api/Review";
 import type { Review } from "@/types/review";
-import "./HomeReviews.scss";
+import "./index.scss";
 
 function getReviewScrollStep(track: HTMLUListElement | null) {
   if (!track || !track.firstElementChild) {

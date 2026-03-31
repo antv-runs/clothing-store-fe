@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { Icon } from "@/components/atoms/Icon";
-import styles from "./ReviewSortSelect.module.scss";
+import "./index.scss";
 
 type ReviewSortOption = {
   value: string;
@@ -17,23 +17,23 @@ type ReviewSortSelectProps = {
   id?: string;
 };
 
-export function ReviewSortSelect({
+export const ReviewSortSelect = ({
   value,
   options,
   onChange,
   ariaLabel = "Sort reviews",
   className,
   id,
-}: ReviewSortSelectProps) {
+}: ReviewSortSelectProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);
   };
 
   return (
-    <div className={clsx(styles.reviewSortSelect, className)}>
+    <div className={clsx("review-sort-select", className)}>
       <select
         id={id}
-        className={styles.select}
+        className="review-sort-select__select"
         value={value}
         onChange={handleChange}
         aria-label={ariaLabel}
@@ -50,10 +50,10 @@ export function ReviewSortSelect({
         width={14}
         height={14}
         color="#6f6f6f"
-        className={styles.icon}
+        className="review-sort-select__icon"
       />
     </div>
   );
-}
+};
 
 export type { ReviewSortOption, ReviewSortSelectProps };

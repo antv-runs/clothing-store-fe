@@ -1,4 +1,4 @@
-@use "../../../styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/mixins" as m;
 
 .reviewSortSelect {
   position: relative;
@@ -40,7 +40,7 @@
   display: none;
 }
 
-.icon {
+.review-sort-select__icon {
   position: absolute;
   right: 14px;
   top: 50%;

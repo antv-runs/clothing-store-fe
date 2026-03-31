@@ -2,7 +2,7 @@ import React from "react";
 import { Star } from "@/components/atoms/Star";
 import { Rating } from "@/components/atoms/Rating";
 import { Text } from "@/components/atoms/Text";
-import "./RatingDisplay.scss";
+import "./index.scss";
 
 interface RatingDisplayProps {
   rating: number;

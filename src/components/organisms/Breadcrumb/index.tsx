@@ -1,5 +1,6 @@
 import React from "react";
-import { BreadcrumbItem } from "@/components/molecules/BreadcrumbItem/BreadcrumbItem";
+import { BreadcrumbItem } from "@/components/molecules/BreadcrumbItem";
+import "./index.scss";
 
 interface BreadcrumbProps {
   items: string[];
@@ -13,12 +14,15 @@ interface BreadcrumbProps {
  */
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   items,
-  className = "cart-page__breadcrumb product-breadcrumb js-breadcrumb-list u-mb-40",
+  className = "u-mb-40",
   id = "breadcrumb-list",
 }) => {
   return (
-    <nav aria-label="Breadcrumb">
-      <ol id={id} className={className}>
+    <nav className="breadcrumb" aria-label="Breadcrumb">
+      <ol
+        id={id}
+        className={["breadcrumb__list", className].filter(Boolean).join(" ")}
+      >
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (

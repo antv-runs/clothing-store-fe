@@ -1,5 +1,5 @@
-@use "../../../styles/abstracts/variables" as v;
-@use "../../../styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/mixins" as *;
 
 .review-modal {
   position: fixed;

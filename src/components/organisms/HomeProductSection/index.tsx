@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
-import { ProductCard } from "@/components/molecules/ProductCard/ProductCard";
+import { ProductCard } from "@/components/molecules/ProductCard";
 import type { Product } from "@/types/product";
-import "./HomeProductSection.scss";
+import "./index.scss";
 
 type HomeProductSectionProps = {
   title: string;

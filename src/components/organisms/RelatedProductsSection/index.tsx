@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./RelatedProductsSection.scss";
+import "./index.scss";
 import { ProductCard } from "@/components/molecules/ProductCard";
-import IconButton from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
 import { getProducts } from "@/api/Product";
 import type { Product } from "@/types/product";

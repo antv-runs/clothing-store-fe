@@ -1,0 +1,47 @@
+@use "@/styles/abstracts/variables" as v;
+
+.breadcrumb {
+  margin-bottom: 24px;
+}
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: v.$color-muted;
+  font-size: 16px;
+}
+
+.breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumb__item + .breadcrumb__item::before {
+  content: "";
+  width: 6px;
+  height: 10px;
+  margin-right: 12px;
+  flex: 0 0 auto;
+  background-color: currentColor;
+  -webkit-mask: url("/images/icn_breadcrumb_next.svg") no-repeat center /
+    contain;
+  mask: url("/images/icn_breadcrumb_next.svg") no-repeat center / contain;
+}
+
+.breadcrumb__link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.breadcrumb__link:hover {
+  color: v.$color-black;
+}
+
+.breadcrumb__item--active {
+  color: v.$color-black;
+}

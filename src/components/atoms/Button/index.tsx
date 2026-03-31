@@ -1,4 +1,4 @@
-import styles from "./index.scss";
+import "./index.scss";
 import clsx from "clsx";
 import type { ButtonHTMLAttributes } from "react";
 
@@ -8,25 +8,21 @@ type ButtonProps = {
   unstyled?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({
+export const Button = ({
   children,
   variant = "primary",
   unstyled = false,
   className,
   type = "button",
   ...buttonProps
-}: ButtonProps) {
+}: ButtonProps) => {
   return (
     <button
       type={type}
-      className={clsx(
-        !unstyled && styles.button,
-        !unstyled && styles[variant],
-        className,
-      )}
+      className={clsx(!unstyled && "button", !unstyled && variant, className)}
       {...buttonProps}
     >
       {children}
     </button>
   );
-}
+};

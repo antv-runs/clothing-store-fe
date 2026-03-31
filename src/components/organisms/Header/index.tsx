@@ -5,10 +5,10 @@ import {
 import { NavMenu } from "@/components/molecules/NavMenu";
 import { SearchBox } from "@/components/molecules/SearchBox";
 import { AnnouncementBar } from "@/components/organisms/AnnouncementBar";
-import "./Header.scss";
+import "./index.scss";
 import { Text } from "@/components/atoms/Text";
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   return (
     <>
       <AnnouncementBar />
@@ -34,5 +34,3 @@ const Header: React.FC = () => {
     </>
   );
 };
-
-export default Header;

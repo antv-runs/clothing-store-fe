@@ -5,10 +5,10 @@
 
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import Header from "@/components/organisms/Header";
-import Footer from "@/components/organisms/Footer";
+import { Header } from "@/components/organisms/Header";
+import { Footer } from "@/components/organisms/Footer";
 
-export function MainLayout() {
+export const MainLayout = () => {
   return (
     <>
       <Header />
@@ -20,4 +20,4 @@ export function MainLayout() {
       <Footer />
     </>
   );
-}
+};

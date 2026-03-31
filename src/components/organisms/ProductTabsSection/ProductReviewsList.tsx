@@ -1,7 +1,7 @@
 import React from "react";
 import "./ProductReviewsList.scss";
 import type { Review } from "@/types/review";
-import { ReviewCard } from "@/components/organisms/ReviewCard/ReviewCard";
+import { ReviewCard } from "@/components/organisms/ReviewCard";
 
 interface ProductReviewsListProps {
   reviews: Review[];

@@ -1,5 +1,7 @@
-import "./Footer.scss";
+import "./index.scss";
+import { Button } from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
+import { InputWithIcon } from "@/components/molecules/InputWithIcon";
 import { FooterNavSection } from "@/components/molecules/FooterNavSection";
 import { PaymentMethods } from "@/components/molecules/PaymentMethods";
 import { SocialLinks } from "@/components/molecules/SocialLinks";
@@ -86,6 +88,26 @@ export const Footer = () => {
   return (
     <>
       <footer className="footer">
+        {/* Newsletter Section */}
+        <div className="footer-form">
+          <Text as="p" className="footer-form__title">
+            STAY UPTO DATE ABOUT OUR LATEST OFFERS
+          </Text>
+          <form className="footer-form__form" action="#">
+            <InputWithIcon
+              iconName="icn_mail"
+              placeholder="Enter your email address"
+              type="email"
+              ariaLabel="Email address"
+              className="footer-form__input"
+            />
+            <Button className="footer-form__button" type="button" unstyled>
+              Subscribe to Newsletter
+            </Button>
+          </form>
+        </div>
+
+        {/* Main Footer Content */}
         <div className="footer-main">
           <div className="footer-main__content">
             <section

@@ -1,6 +1,6 @@
-import IconButton from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import { Input } from "@/components/atoms/Input";
-import "./SearchBox.scss";
+import "./index.scss";
 
 type SearchBoxProps = {
   action?: string;

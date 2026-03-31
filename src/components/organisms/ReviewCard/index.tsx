@@ -1,7 +1,7 @@
 import React from "react";
-import "./ReviewCard.scss";
+import "./index.scss";
 import { Star } from "@/components/atoms/Star";
-import IconButton from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import { ReviewMeta } from "@/components/molecules/ReviewMeta";
 import { formatDate } from "@/utils/formatters";
 import type { Review } from "@/types/review";

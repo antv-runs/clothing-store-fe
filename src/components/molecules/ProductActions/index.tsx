@@ -1,6 +1,6 @@
 import React from "react";
-import IconButton from "@/components/atoms/IconButton";
-import "./ProductActions.scss";
+import { IconButton } from "@/components/atoms/IconButton";
+import "./index.scss";
 
 interface ProductActionsProps {
   selectedColorId?: string | null;

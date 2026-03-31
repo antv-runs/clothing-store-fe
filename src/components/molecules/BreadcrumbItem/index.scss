@@ -1,0 +1,9 @@
+.breadcrumb__item {
+}
+
+.breadcrumb__current {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

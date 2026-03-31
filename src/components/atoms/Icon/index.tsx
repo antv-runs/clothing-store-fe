@@ -35,6 +35,11 @@ const IconComponent = ({
         height: finalHeight,
         color,
         display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        lineHeight: 0,
+        verticalAlign: "middle",
+        position: "relative",
         flexShrink: 0,
       }}
       beforeInjection={(svg) => {

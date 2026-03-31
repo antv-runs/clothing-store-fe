@@ -9,12 +9,12 @@ type TextProps = {
   lineClamp?: number;
 };
 
-export function Text({
+export const Text = ({
   as: Component = "p",
   children,
   className,
   lineClamp,
-}: TextProps) {
+}: TextProps) => {
   return (
     <Component
       className={clsx(
@@ -26,4 +26,4 @@ export function Text({
       {children}
     </Component>
   );
-}
+};

@@ -16,7 +16,7 @@ type IconButtonProps = {
   type?: "button" | "submit" | "reset";
 } & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "aria-label" | "type">;
 
-function IconButton({
+const IconButtonComponent = ({
   svgName,
   ariaLabel,
   color,
@@ -26,7 +26,7 @@ function IconButton({
   variant = "default",
   type = "button",
   ...buttonProps
-}: IconButtonProps) {
+}: IconButtonProps) => {
   return (
     <button
       type={type}
@@ -42,6 +42,6 @@ function IconButton({
       />
     </button>
   );
-}
+};
 
-export default React.memo(IconButton);
+export const IconButton = React.memo(IconButtonComponent);

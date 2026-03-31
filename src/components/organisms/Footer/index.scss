@@ -19,19 +19,22 @@
   position: relative;
   z-index: 2;
   width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
 
-  form {
-    max-width: 349px;
-    width: 100%;
-  }
-
-  p {
+  &__title {
     font-size: 40px;
     font-weight: 700;
     font-family: v.$font-family-display;
     color: v.$color-white;
     max-width: 551px;
     line-height: 1.1;
+    margin: 0;
+  }
+
+  &__form {
+    max-width: 349px;
+    width: 100%;
   }
 
   &__input {
@@ -232,7 +235,7 @@
     align-items: flex-start;
     gap: 20px;
 
-    p {
+    &__title {
       font-size: 30px;
     }
   }
@@ -259,12 +262,12 @@
     align-items: center;
     text-align: center;
 
-    p {
+    &__title {
       font-size: 24px;
       margin: 0 auto;
     }
 
-    form {
+    &__form {
       width: 100%;
       max-width: 420px;
       margin: 0 auto;

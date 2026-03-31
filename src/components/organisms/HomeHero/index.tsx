@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Image } from "@/components/atoms/Image";
-import "./HomeHero.scss";
+import "./index.scss";
 import { Heading } from "@/components/atoms/Heading";
 import { Icon } from "@/components/atoms/Icon";
 import { Text } from "@/components/atoms/Text";

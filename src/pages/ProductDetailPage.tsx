@@ -1,14 +1,13 @@
-import { FooterForm } from "@/components/organisms/Footer/Footer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Breadcrumb } from "@/components/organisms/Breadcrumb/Breadcrumb";
-import { ProductGallery } from "@/components/organisms/ProductGallery/ProductGallery";
-import { ProductInfo } from "@/components/organisms/ProductInfo/ProductInfo";
-import { ProductVariants } from "@/components/organisms/ProductVariants/ProductVariants";
-import { ProductActions } from "@/components/molecules/ProductActions/ProductActions";
-import { ProductTabsSection } from "@/components/organisms/ProductTabsSection/ProductTabsSection";
-import { RelatedProductsSection } from "@/components/organisms/RelatedProductsSection/RelatedProductsSection";
-import { WriteReviewModal } from "@/components/organisms/WriteReviewModal/WriteReviewModal";
+import { Breadcrumb } from "@/components/organisms/Breadcrumb";
+import { ProductGallery } from "@/components/organisms/ProductGallery";
+import { ProductInfo } from "@/components/organisms/ProductInfo";
+import { ProductVariants } from "@/components/organisms/ProductVariants";
+import { ProductActions } from "@/components/molecules/ProductActions";
+import { ProductTabsSection } from "@/components/organisms/ProductTabsSection";
+import { RelatedProductsSection } from "@/components/organisms/RelatedProductsSection";
+import { WriteReviewModal } from "@/components/organisms/WriteReviewModal";
 import { getProductById } from "@/api/Product";
 import { getReviewsByProductId } from "@/api/Review";
 import type { Product } from "@/types/product";
@@ -103,12 +102,14 @@ const ProductDetailPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="container u-mt-25">
-        <main className="product-overview js-product-overview">
+        <section
+          className="product-overview js-product-overview"
+          aria-label="Product overview"
+        >
           <Text as="p" className="product-overview__description">
             Loading product...
           </Text>
-        </main>
-        <FooterForm />
+        </section>
       </div>
     );
   }
@@ -116,12 +117,14 @@ const ProductDetailPage: React.FC = () => {
   if (!product) {
     return (
       <div className="container u-mt-25">
-        <main className="product-overview js-product-overview">
+        <section
+          className="product-overview js-product-overview"
+          aria-label="Product overview"
+        >
           <Text as="p" className="product-overview__description">
             Product not found.
           </Text>
-        </main>
-        <FooterForm />
+        </section>
       </div>
     );
   }
@@ -169,9 +172,6 @@ const ProductDetailPage: React.FC = () => {
         currentProductId={String(product.id)}
         formatPrice={formatPrice}
       />
-
-      {/* Footer Form (newsletter) */}
-      <FooterForm />
 
       <WriteReviewModal />
 

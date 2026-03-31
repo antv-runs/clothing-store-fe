@@ -9,15 +9,15 @@ type TextLinkProps = {
   "href" | "className" | "children"
 >;
 
-export function TextLink({
+export const TextLink = ({
   href,
   children,
   className,
   ...anchorProps
-}: TextLinkProps) {
+}: TextLinkProps) => {
   return (
     <a href={href} className={className} {...anchorProps}>
       {children}
     </a>
   );
-}
+};

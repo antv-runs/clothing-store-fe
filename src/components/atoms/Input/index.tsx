@@ -1,20 +1,17 @@
 import type { InputHTMLAttributes } from "react";
 import clsx from "clsx";
-import styles from "./Input.module.scss";
+import "./index.scss";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   unstyled?: boolean;
 };
 
-export function Input({
+export const Input = ({
   className,
   unstyled = false,
   ...inputProps
-}: InputProps) {
+}: InputProps) => {
   return (
-    <input
-      className={clsx(!unstyled && styles.input, className)}
-      {...inputProps}
-    />
+    <input className={clsx(!unstyled && "input", className)} {...inputProps} />
   );
-}
+};

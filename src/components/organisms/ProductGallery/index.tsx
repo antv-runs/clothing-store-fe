@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from "react";
 import clsx from "clsx";
 import { Image } from "@/components/atoms/Image";
 import type { ProductImage } from "@/types/product";
-import "./ProductGallery.scss";
+import "./index.scss";
 
 interface ProductGalleryProps {
   images: ProductImage[];

@@ -3,7 +3,7 @@ import { HOME_STYLE_CARDS } from "@/data/home";
 import { Heading } from "@/components/atoms/Heading";
 import { Image } from "@/components/atoms/Image";
 import { Text } from "@/components/atoms/Text";
-import "./HomeStyleGrid.scss";
+import "./index.scss";
 
 export const HomeStyleGrid: React.FC = () => {
   return (

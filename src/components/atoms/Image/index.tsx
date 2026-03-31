@@ -35,7 +35,7 @@ function toCssDimension(value?: number | string) {
   return typeof value === "number" ? `${value}px` : value;
 }
 
-export function Image({
+export const Image = ({
   src,
   alt,
   id,
@@ -58,7 +58,7 @@ export function Image({
   onLoad,
   onError,
   onClick,
-}: ImageProps) {
+}: ImageProps) => {
   const resolvedAspectRatio = aspectRatio ?? ratio;
   const resolvedWidth = toCssDimension(width);
   const resolvedHeight = toCssDimension(height);
@@ -139,4 +139,4 @@ export function Image({
       ) : null}
     </div>
   );
-}
+};

@@ -1,6 +1,0 @@
-@use "../../../styles/abstracts/mixins" as m;
-@use "../../../styles/abstracts/variables" as v;
-
-.cart-summary__coupon button {
-  @include m.button-base(v.$color-black, v.$color-white);
-}

@@ -1,10 +1,10 @@
 import React from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { Text } from "@/components/atoms/Text";
-import { RatingDisplay } from "@/components/molecules/RatingDisplay/RatingDisplay";
-import { ProductPrice } from "@/components/molecules/ProductPrice/ProductPrice";
+import { RatingDisplay } from "@/components/molecules/RatingDisplay";
+import { ProductPrice } from "@/components/molecules/ProductPrice";
 import type { Product } from "@/types/product";
-import "./ProductInfo.scss";
+import "./index.scss";
 
 interface ProductInfoProps {
   product: Product;

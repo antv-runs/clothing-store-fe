@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
-import IconButton from "@/components/atoms/IconButton";
-import "./HeaderActions.scss";
+import { IconButton } from "@/components/atoms/IconButton";
+import "./index.scss";
 
 type HeaderMenuToggleProps = Omit<ComponentProps<typeof IconButton>, "type">;
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Text } from "@/components/atoms/Text";
 import { TextLink } from "@/components/atoms/TextLink";
+import "./index.scss";
 
 interface BreadcrumbItemProps {
   label: string;
@@ -19,15 +20,22 @@ export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
 }) => {
   if (isActive) {
     return (
-      <li aria-current="page">
-        <Text as="span">{label}</Text>
+      <li
+        className="breadcrumb__item breadcrumb__item--active"
+        aria-current="page"
+      >
+        <Text as="span" className="breadcrumb__current">
+          {label}
+        </Text>
       </li>
     );
   }
 
   return (
-    <li>
-      <TextLink href={href || "#"}>{label}</TextLink>
+    <li className="breadcrumb__item">
+      <TextLink href={href || "#"} className="breadcrumb__link">
+        {label}
+      </TextLink>
     </li>
   );
 };

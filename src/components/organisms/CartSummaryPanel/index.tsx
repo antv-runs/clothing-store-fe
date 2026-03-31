@@ -1,6 +1,6 @@
 import React from "react";
 import { Heading } from "@/components/atoms/Heading";
-import "./CartSummaryPanel.scss";
+import "./index.scss";
 
 interface CartSummary {
   subtotal: number;

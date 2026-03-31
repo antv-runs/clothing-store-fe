@@ -1,4 +1,4 @@
-import IconButton from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import { Text } from "@/components/atoms/Text";
 import { TextLink } from "@/components/atoms/TextLink";
 import "./index.scss";

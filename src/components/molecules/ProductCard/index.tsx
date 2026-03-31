@@ -4,7 +4,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { Image } from "@/components/atoms/Image";
 import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
-import "./ProductCard.scss";
+import "./index.scss";
 
 type ProductCardData = {
   id: string | number;

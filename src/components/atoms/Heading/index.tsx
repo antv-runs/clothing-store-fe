@@ -13,14 +13,14 @@ type HeadingProps = {
   id?: string;
 };
 
-export function Heading({
+export const Heading = ({
   as: Component = "h2",
   children,
   title,
   className,
   noOfLines,
   id,
-}: HeadingProps) {
+}: HeadingProps) => {
   const content = children ?? title;
 
   if (!content) {
@@ -45,4 +45,4 @@ export function Heading({
       {content}
     </Component>
   );
-}
+};

@@ -1,6 +1,6 @@
 import { Icon } from "@/components/atoms/Icon";
 import { TextLink } from "@/components/atoms/TextLink";
-import "./NavMenu.scss";
+import "./index.scss";
 
 type NavMenuItem = {
   label: string;

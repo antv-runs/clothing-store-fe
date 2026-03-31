@@ -1,5 +1,5 @@
 import React from "react";
-import IconButton from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import {
   ReviewSortSelect,
   type ReviewSortOption,

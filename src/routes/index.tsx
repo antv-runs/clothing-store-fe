@@ -11,7 +11,7 @@ import { routeConfig } from "./routeConfig";
  * AppRoutes component
  * Sets up the router and renders all application routes within a shared layout
  */
-export function AppRoutes() {
+const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -26,6 +26,6 @@ export function AppRoutes() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default AppRoutes;

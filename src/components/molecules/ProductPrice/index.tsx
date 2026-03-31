@@ -2,7 +2,7 @@ import React from "react";
 import { Price } from "@/components/atoms/Price";
 import type { ProductPricing } from "@/types/product";
 import { Text } from "@/components/atoms/Text";
-import "./ProductPrice.scss";
+import "./index.scss";
 
 interface ProductPriceProps {
   pricing: ProductPricing;
