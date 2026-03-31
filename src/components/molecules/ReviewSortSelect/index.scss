@@ -49,3 +49,13 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .reviews {
+    &__action {
+      &--sort {
+        display: none;
+      }
+    }
+  }
+}

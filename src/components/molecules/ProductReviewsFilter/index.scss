@@ -9,7 +9,7 @@
     gap: 10px;
     height: 48px;
     flex: 0 0 auto;
-    margin-bottom: 24px;
+    flex-wrap: nowrap;
   }
 
   &__filter {
@@ -47,22 +47,6 @@
 
       &:hover {
         background: #e6e6e6;
-      }
-    }
-
-    &--sort {
-      position: relative;
-      display: flex;
-      align-items: center;
-      width: 120px;
-      height: 48px;
-      border-radius: 62px;
-      background-color: #f5f5f5;
-      border: none;
-      transition: background 0.2s;
-
-      &:hover {
-        background-color: #e6e6e6;
       }
     }
 
@@ -139,5 +123,32 @@
     align-items: center;
     gap: 5px;
     padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviews {
+    &__actions {
+      gap: 8px;
+      height: auto;
+    }
+
+    &__action {
+      font-size: 12px;
+
+      &:disabled {
+        opacity: 0.55;
+      }
+
+      &--write {
+        width: auto;
+        padding: 0 16px;
+      }
+    }
+
+    &__filter-dropdown {
+      width: calc(100vw - 32px);
+      max-width: 330px;
+    }
   }
 }

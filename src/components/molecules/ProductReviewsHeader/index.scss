@@ -168,8 +168,14 @@
 
 @media (max-width: 768px) {
   .reviews {
+    &__header {
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+
     &__title {
       font-size: 20px;
+      flex-shrink: 1;
 
       span {
         font-size: 14px;
@@ -179,6 +185,8 @@
     &__actions {
       gap: 8px;
       height: auto;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
     }
 
     &__action {
