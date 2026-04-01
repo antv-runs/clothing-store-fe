@@ -238,6 +238,7 @@ const ProductDetail: React.FC = () => {
       <section className="product-overview js-product-overview">
         <Breadcrumb
           items={product.breadcrumb || ["Home", "Shop", product.name]}
+          className="u-mb-40 breadcrumb__list--truncate"
         />
 
         <div className="product-overview__details">

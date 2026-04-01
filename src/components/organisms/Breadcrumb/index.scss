@@ -1,7 +1,7 @@
 @use "@/styles/abstracts/variables" as v;
 
 .breadcrumb {
-  margin-bottom: 24px;
+  min-width: 0;
 }
 
 .breadcrumb__list {
@@ -12,6 +12,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  min-width: 0;
   color: v.$color-muted;
   font-size: 16px;
 }
@@ -26,4 +27,29 @@
   -webkit-mask: url("/images/icn_breadcrumb_next.svg") no-repeat center /
     contain;
   mask: url("/images/icn_breadcrumb_next.svg") no-repeat center / contain;
+}
+
+.breadcrumb__list--truncate {
+  flex-wrap: nowrap;
+
+  .breadcrumb__item {
+    flex: 0 0 auto;
+  }
+
+  .breadcrumb__item--active {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 768px) {
+  .breadcrumb__list {
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .breadcrumb__item + .breadcrumb__item::before {
+    margin-right: 8px;
+  }
 }
