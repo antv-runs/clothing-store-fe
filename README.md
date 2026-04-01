@@ -50,12 +50,13 @@ src/
     organisms/    # Complex UI (Header, ProductCard, ReviewList)
   pages/          # Page-level components
   hooks/          # Custom hooks
-  services/       # Data fetching / API logic
+  api/            # Data fetching / API logic
   utils/          # Helper functions
-  constants/      # App constants
+  const/          # App constants
   types/          # TypeScript types
-  assets/         # Images, icons, fonts
   routes/         # Routing config
+  lib/
+  styles/
 ```
 
 ---
