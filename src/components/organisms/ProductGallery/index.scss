@@ -1,34 +1,17 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
 
-/**
- * ProductGallery Component Styles
- * Handles main image, thumbnail gallery, and interactive states
- * 
- * BEM Structure:
- * .product-gallery - Root container
- *   .product-gallery__thumbnails - Scrollable thumbnail gallery
- *     .product-gallery__thumb - Individual thumbnail button
- *       .product-gallery__image - Thumbnail image
- *       .product-gallery__placeholder - Loading skeleton
- *   .product-gallery__main - Main image container
- *     .product-gallery__main-wrapper - Wrapper for consistent sizing
- *       .product-gallery__main-image - Main display image
- *       .product-gallery__main-skeleton - Loading skeleton
- */
-
 .product-gallery {
   display: flex;
   gap: 14px;
   max-width: 610px;
   flex: 1;
 
-  /**
-   * Thumbnail gallery container
-   * - Grid layout for vertical scrolling
-   * - Scroll-aware mask gradients for fade effect
-   * - Lazy loading image transitions
-   */
+  img:not([src]) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   &__thumbnails {
     display: grid;
     grid-template-columns: 1fr;
@@ -45,7 +28,6 @@
       display: none;
     }
 
-    // State: Empty gallery (no images)
     &--empty {
       display: none;
     }
@@ -53,9 +35,6 @@
     mask-image: none;
     -webkit-mask-image: none;
 
-    /**
-     * Fade effect when scrolling down (more items below)
-     */
     &--scroll-bottom:not(.product-gallery__thumbnails--scroll-top) {
       mask-image: linear-gradient(
         to bottom,
@@ -71,9 +50,6 @@
       );
     }
 
-    /**
-     * Fade effect when scrolled up (items above)
-     */
     &--scroll-top:not(.product-gallery__thumbnails--scroll-bottom) {
       mask-image: linear-gradient(
         to bottom,
@@ -89,9 +65,6 @@
       );
     }
 
-    /**
-     * Fade effect when scrollable in both directions
-     */
     &--scroll-top.product-gallery__thumbnails--scroll-bottom {
       mask-image: linear-gradient(
         to bottom,
@@ -110,14 +83,9 @@
     }
   }
 
-  /**
-   * Individual thumbnail button
-   * - Clickable thumbnail that switches main image
-   * - Grid overlay for placeholder and image
-   * - Border indicator for active state
-   * - Accessibility: proper button semantics with aria-pressed
-   */
   &__thumb {
+    @include m.button-native-reset($transparent-bg: true, $padding-zero: true);
+
     position: relative;
     max-width: 152px;
     max-height: 167px;
@@ -125,14 +93,11 @@
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid transparent;
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
-    padding: 0;
-    background: none;
-    cursor: pointer;
     transition: border-color 0.2s ease;
-    @include m.button-native-reset($transparent-bg: true, $padding-zero: true);
 
     &:hover {
       border-color: rgba(0, 0, 0, 0.2);
@@ -142,33 +107,14 @@
       @include m.focus-ring($outline-offset: 2px, $border-radius: 20px);
     }
 
-    /**
-     * Active thumbnail indicator
-     */
     &--active {
       border-color: #000;
-
-      .product-gallery__placeholder {
-        visibility: hidden;
-      }
-    }
-
-    /**
-     * Thumbnail image container - maintains grid layout
-     */
-    .product-gallery__image,
-    .product-gallery__placeholder {
-      grid-column: 1;
-      grid-row: 1;
     }
   }
 
-  /**
-   * Placeholder skeleton effect
-   * Shows while thumbnail is loading, hides when image loads
-   * Uses shimmer animation for visual feedback
-   */
   &__placeholder {
+    grid-column: 1;
+    grid-row: 1;
     width: 100%;
     height: 100%;
     @include m.skeleton-shimmer;
@@ -181,59 +127,37 @@
     }
   }
 
-  /**
-   * Thumbnail image
-   * - Lazy loaded for performance
-   * - Smooth fade in when loaded
-   * - Maintains aspect ratio
-   */
   &__image {
+    grid-column: 1;
+    grid-row: 1;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    cursor: pointer;
     opacity: 0;
     transition: opacity 0.2s ease;
     z-index: 2;
-
-    &--thumb {
-      // Thumbnail-specific styling
-    }
 
     &--loaded {
       opacity: 1;
     }
 
-    /**
-     * Error state: image failed to load
-     * Still maintains layout, just shows with error treatment
-     */
     &--error {
-      opacity: 0.6;
-      background-color: #f5f5f5;
+      opacity: 0.45;
     }
   }
 
-  /**
-   * Main image container
-   * - Fixed dimensions for consistent layout (no shift during load)
-   * - Skeleton placeholder support via nested structure
-   * - Maintains aspect ratio
-   */
   &__main {
+    position: relative;
     flex: 1;
     max-width: 444px;
     max-height: 530px;
     border-radius: 20px;
     overflow: hidden;
+    background-color: #f0f0f0;
   }
 
-  /**
-   * Main image wrapper
-   * - Contains main image and skeleton overlay
-   * - Maintains stable aspect ratio
-   * - Grid layout allows overlaid skeleton
-   */
   &__main-wrapper {
     position: relative;
     width: 100%;
@@ -245,19 +169,14 @@
     border-radius: 20px;
   }
 
-  /**
-   * Main image display
-   * - Fills container with proper sizing
-   * - Eager loading for above-the-fold content
-   * - Smooth load transition
-   */
   &__main-image {
+    position: relative;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
     grid-column: 1;
     grid-row: 1;
     z-index: 2;
@@ -266,58 +185,75 @@
       opacity: 1;
     }
 
-    /**
-     * Error state: main image failed to load
-     * - Still displays with reduced opacity
-     * - Fallback placeholder visible in background
-     */
     &--error {
       opacity: 0.4;
-      background-color: #e8e8e8;
     }
   }
 
-  /**
-   * Main image skeleton/placeholder
-   * - Shows while main image is loading
-   * - Positioned behind loaded image
-   * - Shimmer animation provides visual feedback
-   * - Prevents layout shift
-   */
   &__main-skeleton {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     @include m.skeleton-shimmer;
+    border-radius: 20px;
     grid-column: 1;
     grid-row: 1;
     z-index: 1;
+    transition: opacity 0.2s ease;
     pointer-events: none;
   }
 
-  /**
-   * Responsive behavior
-   * Adjust dimensions on smaller screens
-   */
   @media (max-width: 768px) {
-    gap: 10px;
-    flex-direction: column;
+    flex-direction: column-reverse;
 
     &__thumbnails {
-      grid-auto-rows: 120px;
-      max-height: 360px;
-      gap: 10px;
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      flex-wrap: nowrap;
+      grid-template-columns: unset;
+      grid-auto-rows: unset;
+      max-height: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+      mask-image: none;
+      -webkit-mask-image: none;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     &__thumb {
-      max-width: 100px;
-      max-height: 120px;
+      flex: 0 0 112px;
+      width: auto;
+      height: auto;
+      max-width: none;
+      max-height: none;
+      aspect-ratio: 112 / 106;
+      box-sizing: border-box;
+    }
+
+    &__thumb--active {
+      border-color: #000;
+      box-shadow: inset 0 0 0 1px #000;
+    }
+
+    &__image,
+    &__placeholder {
+      width: 100%;
+      height: 100%;
     }
 
     &__main {
+      flex: none;
       max-width: 100%;
+      max-height: none;
+      width: 100%;
+      aspect-ratio: 358 / 290;
     }
   }
 }

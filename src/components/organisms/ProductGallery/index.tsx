@@ -32,13 +32,17 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
 }) => {
   // Thumbnail loading state
   const [loadedThumbIds, setLoadedThumbIds] = useState<Set<string>>(new Set());
+  const [erroredThumbIds, setErroredThumbIds] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Main image state management
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [mainImageLoaded, setMainImageLoaded] = useState(false);
   const [mainImageError, setMainImageError] = useState(false);
-  const [mainImageLoadToken, setMainImageLoadToken] = useState(0);
-  const mainImageLoadTokenRef = useRef(0);
+  const [mainImageSrc, setMainImageSrc] = useState("");
+  const [mainImageFallbackApplied, setMainImageFallbackApplied] =
+    useState(false);
 
   // Scroll fade state
   const [hasScrollTop, setHasScrollTop] = useState(false);
@@ -72,6 +76,30 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
     thumbnail ||
     fallbackPlaceholder;
 
+  const gallerySignature = React.useMemo(
+    () =>
+      sortedImages
+        .map(
+          (image, index) =>
+            `${image.id || index}:${image.url || image.image_url || ""}`,
+        )
+        .join("|"),
+    [sortedImages],
+  );
+
+  React.useEffect(() => {
+    setLoadedThumbIds(new Set());
+    setErroredThumbIds(new Set());
+    setActiveImageIndex(0);
+  }, [gallerySignature]);
+
+  React.useEffect(() => {
+    setMainImageSrc(mainImageUrl);
+    setMainImageLoaded(false);
+    setMainImageError(false);
+    setMainImageFallbackApplied(false);
+  }, [mainImageUrl]);
+
   /**
    * Handle thumbnail load completion
    */
@@ -83,42 +111,61 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
     });
   }, []);
 
+  const handleThumbnailError = useCallback(
+    (imageId: string) => {
+      setErroredThumbIds((prev) => {
+        const next = new Set(prev);
+        next.add(imageId);
+        return next;
+      });
+      handleThumbnailLoad(imageId);
+    },
+    [handleThumbnailLoad],
+  );
+
   /**
    * Handle main image load completion
-   * Only process if this is the current expected load token (prevents stale updates)
    */
   const handleMainImageLoad = useCallback(() => {
-    if (mainImageLoadTokenRef.current === mainImageLoadToken) {
-      setMainImageLoaded(true);
-      setMainImageError(false);
-    }
-  }, [mainImageLoadToken]);
+    setMainImageLoaded(true);
+    setMainImageError(false);
+  }, []);
 
   /**
    * Handle main image load error
-   * Falls back to placeholder and prevents stale update handling
+   * Falls back to placeholder once before marking error
    */
   const handleMainImageError = useCallback(() => {
-    if (mainImageLoadTokenRef.current === mainImageLoadToken) {
+    if (!mainImageFallbackApplied && mainImageSrc !== fallbackPlaceholder) {
+      setMainImageFallbackApplied(true);
+      setMainImageSrc(fallbackPlaceholder);
       setMainImageLoaded(false);
-      setMainImageError(true);
+      setMainImageError(false);
+      return;
     }
-  }, [mainImageLoadToken]);
+
+    setMainImageLoaded(false);
+    setMainImageError(true);
+  }, [fallbackPlaceholder, mainImageFallbackApplied, mainImageSrc]);
 
   /**
    * Handle thumbnail click to switch main image
    */
-  const handleThumbnailClick = useCallback((index: number) => {
-    // Update active index
-    setActiveImageIndex(index);
+  const handleThumbnailClick = useCallback(
+    (index: number) => {
+      if (index === activeImageIndex) {
+        return;
+      }
 
-    // Reset main image state and increment load token
-    setMainImageLoaded(false);
-    setMainImageError(false);
-    const nextToken = mainImageLoadTokenRef.current + 1;
-    mainImageLoadTokenRef.current = nextToken;
-    setMainImageLoadToken(nextToken);
-  }, []);
+      // Update active index
+      setActiveImageIndex(index);
+
+      // Reset main image state for next image loading cycle
+      setMainImageLoaded(false);
+      setMainImageError(false);
+    },
+    [activeImageIndex],
+  );
 
   /**
    * Update scroll fade state for thumbnail gallery
@@ -191,7 +238,9 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
       >
         {sortedImages.map((image, index) => {
           const srcUrl = image.url || image.image_url;
-          const isLoaded = loadedThumbIds.has(image.id);
+          const thumbLoadKey = image.id || `${productName}-${index}`;
+          const isLoaded = loadedThumbIds.has(thumbLoadKey);
+          const isError = erroredThumbIds.has(thumbLoadKey);
           const isActive = index === activeImageIndex;
 
           return (
@@ -220,14 +269,13 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
                 renderWrapper={false}
                 imgClassName="product-gallery__image product-gallery__image--thumb"
                 isLoaded={isLoaded}
+                isError={isError}
                 loadedClassName="product-gallery__image--loaded"
+                errorClassName="product-gallery__image--error"
                 loading="lazy"
                 fit="cover"
-                onLoad={() => handleThumbnailLoad(image.id)}
-                onError={() => {
-                  // Handle error by marking as loaded to show error state
-                  handleThumbnailLoad(image.id);
-                }}
+                onLoad={() => handleThumbnailLoad(thumbLoadKey)}
+                onError={() => handleThumbnailError(thumbLoadKey)}
               />
             </button>
           );
@@ -249,8 +297,12 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
 
           <Image
             id="product-main-image"
-            src={mainImageUrl}
-            alt={activeImage?.alt || activeImage?.alt_text || productName}
+            src={mainImageSrc || fallbackPlaceholder}
+            alt={
+              mainImageError
+                ? `${productName} image unavailable`
+                : activeImage?.alt || activeImage?.alt_text || productName
+            }
             renderWrapper={false}
             imgClassName="product-gallery__main-image"
             isLoaded={mainImageLoaded}
