@@ -42,7 +42,7 @@ const ProductDetail: React.FC = () => {
   const [relatedLoading, setRelatedLoading] = useState(false);
 
   useEffect(() => {
-    const abortController = new AbortController();
+    let isActive = true;
 
     if (!normalizedRouteId) {
       setProduct(null);
@@ -51,7 +51,7 @@ const ProductDetail: React.FC = () => {
       setRelatedProducts([]);
       setRelatedLoading(false);
       return () => {
-        abortController.abort();
+        isActive = false;
       };
     }
 
@@ -64,6 +64,10 @@ const ProductDetail: React.FC = () => {
 
       try {
         const productResult = await getProductById(normalizedRouteId);
+
+        if (!isActive) {
+          return;
+        }
 
         if (!productResult) {
           setProduct(null);
@@ -92,17 +96,28 @@ const ProductDetail: React.FC = () => {
             page: 1,
             per_page: 8,
           });
+
+          if (!isActive) {
+            return;
+          }
+
           setRelatedProducts(relatedResult.data);
         } catch (relatedError) {
+          if (!isActive) {
+            return;
+          }
+
           console.error("Failed to load related products.", relatedError);
           setRelatedProducts([]);
         } finally {
-          setRelatedLoading(false);
+          if (isActive) {
+            setRelatedLoading(false);
+          }
         }
 
         console.log("Fetched product:", productResult); // Debug log to verify fetched product data
       } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
+        if (!isActive) {
           return;
         }
 
@@ -114,7 +129,7 @@ const ProductDetail: React.FC = () => {
         setRelatedProducts([]);
         setRelatedLoading(false);
       } finally {
-        if (!abortController.signal.aborted) {
+        if (isActive) {
           setIsLoading(false);
         }
       }
@@ -123,7 +138,7 @@ const ProductDetail: React.FC = () => {
     loadProductDetail();
 
     return () => {
-      abortController.abort();
+      isActive = false;
     };
   }, [normalizedRouteId]);
 
@@ -233,7 +248,7 @@ const ProductDetail: React.FC = () => {
   }
 
   return (
-    <div className="container u-mt-25">
+    <div className="container u-mt-25 product-detail-page">
       {/* Product Overview Section */}
       <section className="product-overview js-product-overview">
         <Breadcrumb

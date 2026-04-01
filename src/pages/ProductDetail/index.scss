@@ -24,6 +24,16 @@
   max-width: 590px;
 }
 
+.product-detail-page {
+  .review-card__header--verified::after {
+    width: 19.5px;
+    height: 19.5px;
+    background-size: 19.5px 19.5px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
 /**
  * Screen reader only utility class
  * Hides visual content while keeping it accessible to screen readers
@@ -72,6 +82,50 @@
 
   .product-info {
     padding-left: 0;
+  }
+
+  .product-detail-page {
+    .reviews__list {
+      gap: 14px;
+    }
+
+    .reviews__item.review-card {
+      min-height: 0;
+      height: fit-content;
+    }
+
+    .review-card {
+      padding: 24px;
+    }
+
+    .review-card__meta {
+      margin-bottom: 12px;
+    }
+
+    .review-card__header {
+      font-size: 16px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .review-card__header--verified::after {
+      width: 15.4px;
+      height: 15.4px;
+      background-size: 15.4px 15.4px;
+    }
+
+    .review-card__content {
+      @include m.line-clamp(5);
+      font-size: 14px;
+      line-height: 1.45;
+      min-height: 60px;
+      margin-bottom: 12px;
+      padding-right: 0;
+    }
+
+    .review-card__footer {
+      font-size: 13px;
+    }
   }
 }
 

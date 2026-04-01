@@ -69,4 +69,10 @@
       grid-template-columns: 1fr;
     }
   }
+
+  .review-card {
+    &__more-btn {
+      display: none;
+    }
+  }
 }
