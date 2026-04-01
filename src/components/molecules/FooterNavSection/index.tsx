@@ -1,3 +1,4 @@
+import "./index.scss";
 import { TextLink } from "@/components/atoms/TextLink";
 
 type FooterNavLink = {
@@ -8,10 +9,7 @@ type FooterNavLink = {
 type FooterNavSectionProps = {
   title: string;
   links: FooterNavLink[];
-  sectionClassName?: string;
-  titleClassName?: string;
-  listClassName?: string;
-  linkClassName?: string;
+  className?: string;
 };
 
 function getSectionId(title: string) {
@@ -21,22 +19,25 @@ function getSectionId(title: string) {
 export const FooterNavSection = ({
   title,
   links,
-  sectionClassName,
-  titleClassName,
-  listClassName,
-  linkClassName,
+  className,
 }: FooterNavSectionProps) => {
   const sectionId = getSectionId(title);
+  const sectionClassName = className
+    ? `footer-nav-section ${className}`
+    : "footer-nav-section";
 
   return (
     <section className={sectionClassName} aria-labelledby={sectionId}>
-      <h4 id={sectionId} className={titleClassName}>
+      <h4 id={sectionId} className="footer-nav-section__title">
         {title}
       </h4>
-      <ul className={listClassName}>
+      <ul className="footer-nav-section__list">
         {links.map((link) => (
-          <li key={`${title}-${link.label}`}>
-            <TextLink href={link.href} className={linkClassName}>
+          <li
+            key={`${title}-${link.label}`}
+            className="footer-nav-section__item"
+          >
+            <TextLink href={link.href} className="footer-nav-section__link">
               {link.label}
             </TextLink>
           </li>

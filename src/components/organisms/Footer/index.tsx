@@ -134,10 +134,6 @@ export const Footer = () => {
                   key={section.title}
                   title={section.title}
                   links={section.links}
-                  sectionClassName="footer-main__section"
-                  titleClassName="footer-main__title"
-                  listClassName="footer-main__list"
-                  linkClassName="footer-main__link"
                 />
               ))}
             </nav>
