@@ -1,5 +1,6 @@
 import React from "react";
 import { Heading } from "@/components/atoms/Heading";
+import { Button } from "@/components/atoms/Button";
 import "./index.scss";
 
 interface CartSummary {
@@ -67,14 +68,15 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
             aria-disabled="true"
           />
         </div>
-        <button
+        <Button
           className="js-cart-coupon-apply"
           type="button"
           disabled
           aria-disabled="true"
+          unstyled
         >
           Apply
-        </button>
+        </Button>
       </form>
       <p
         className="cart-summary__coupon-msg js-cart-coupon-msg"
@@ -82,14 +84,15 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
         hidden
       ></p>
 
-      <button
+      <Button
         className="cart-summary__checkout js-cart-checkout"
         type="button"
         disabled
         aria-disabled="true"
+        unstyled
       >
         <span className="cart-summary__checkout-text">Go to Checkout</span>
-      </button>
+      </Button>
     </aside>
   );
 };

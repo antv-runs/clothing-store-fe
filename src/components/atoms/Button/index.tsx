@@ -1,28 +1,41 @@
 import "./index.scss";
 import clsx from "clsx";
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type ButtonProps = {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   unstyled?: boolean;
+  isLoading?: boolean;
+  loadingText?: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button = ({
   children,
   variant = "primary",
   unstyled = false,
+  isLoading = false,
+  loadingText,
   className,
   type = "button",
+  disabled,
   ...buttonProps
 }: ButtonProps) => {
+  const isDisabled = disabled || isLoading;
+
   return (
     <button
       type={type}
-      className={clsx(!unstyled && "button", !unstyled && variant, className)}
+      disabled={isDisabled}
+      className={clsx(
+        !unstyled && "button",
+        !unstyled && variant,
+        isLoading && "is-loading",
+        className,
+      )}
       {...buttonProps}
     >
-      {children}
+      {isLoading ? loadingText ?? children : children}
     </button>
   );
 };

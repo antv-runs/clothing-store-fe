@@ -153,6 +153,10 @@
       background-color: v.$color-black;
       color: v.$color-white;
 
+      .icon {
+        color: v.$color-white;
+      }
+
       &:hover {
         background-color: #1a1a1a;
       }
@@ -291,7 +295,7 @@
 
     &__links {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px 16px;
+      gap: 30px 16px;
     }
 
     &__copyright {

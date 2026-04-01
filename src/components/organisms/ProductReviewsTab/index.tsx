@@ -1,6 +1,7 @@
 import React from "react";
 import "./index.scss";
 import type { Review } from "@/types/review";
+import { Button } from "@/components/atoms/Button";
 import { ProductReviewsHeader } from "@/components/molecules/ProductReviewsHeader";
 import { ProductReviewsList } from "@/components/molecules/ProductReviewsList";
 
@@ -67,20 +68,19 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
       {isLoading && <ProductReviewsList reviews={[]} isLoading={true} />}
 
       <div className="reviews__load-more-wrapper">
-        <button
+        <Button
+          unstyled
           id="reviews-load-more"
-          className={`reviews__load-more js-reviews-load-more${
-            isLoadingMore ? " is-loading" : ""
-          }`}
+          className="reviews__load-more js-reviews-load-more"
           type="button"
           onClick={onLoadMore}
-          disabled={
-            !hasMore || isLoading || isLoadingMore || reviews.length === 0
-          }
+          isLoading={isLoadingMore}
+          loadingText="Loading..."
+          disabled={!hasMore || isLoading || reviews.length === 0}
           aria-label="Load more reviews"
         >
-          {isLoadingMore ? "Loading..." : "Load More Reviews"}
-        </button>
+          Load More Reviews
+        </Button>
       </div>
     </section>
   );

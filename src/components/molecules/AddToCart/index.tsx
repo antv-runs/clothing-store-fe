@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@/components/atoms/Button";
 
 interface AddToCartProps {
   quantity: number;
@@ -59,15 +60,18 @@ export const AddToCart: React.FC<AddToCartProps> = ({
           </button>
         </div>
       </div>
-      <button
+      <Button
         type="button"
         className="btn-add-to-cart"
         onClick={onAddToCart}
-        disabled={!isInStock || isLoading}
+        disabled={!isInStock}
         aria-label="Add to cart"
+        isLoading={isLoading}
+        loadingText="Adding..."
+        unstyled
       >
-        {isLoading ? "Adding..." : isInStock ? "Add to Cart" : "Out of Stock"}
-      </button>
+        {isInStock ? "Add to Cart" : "Out of Stock"}
+      </Button>
     </div>
   );
 };
