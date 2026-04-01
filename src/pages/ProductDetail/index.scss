@@ -118,7 +118,7 @@
       @include m.line-clamp(5);
       font-size: 14px;
       line-height: 1.45;
-      min-height: 60px;
+      min-height: fit-content;
       margin-bottom: 12px;
       padding-right: 0;
     }

@@ -67,6 +67,11 @@
   .reviews {
     &__list {
       grid-template-columns: 1fr;
+      margin-bottom: 20px;
+    }
+
+    &__load-more {
+      padding: 15px 36px;
     }
   }
 
