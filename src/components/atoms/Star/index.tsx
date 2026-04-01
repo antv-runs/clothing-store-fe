@@ -33,10 +33,10 @@ export const Star: React.FC<StarProps> = ({
       : undefined;
 
   const fullPath =
-    "M7.35521 0L9.54627 4.718L14.7104 5.34389L10.9004 8.88566L11.901 13.9905L7.35521 11.4614L2.80942 13.9905L3.80999 8.88566L-2.3365e-05 5.34389L5.16414 4.718L7.35521 0Z";
+    "M11.7515 0L15.2521 7.53796L23.5029 8.53794L17.4157 14.1966L19.0143 22.3526L11.7515 18.3119L4.48868 22.3526L6.08728 14.1966L2.00272e-05 8.53794L8.25081 7.53796L11.7515 0Z";
 
   const halfPath =
-    "M2.80945 13.9905L7.35523 11.4614V0L5.16416 4.718L0 5.34389L3.81001 8.88566L2.80945 13.9905Z";
+    "M4.48866 22.3526L11.7515 18.3119V0L8.25079 7.53796L0 8.53793L6.08726 14.1966L4.48866 22.3526Z";
 
   return (
     <>
@@ -61,7 +61,7 @@ export const Star: React.FC<StarProps> = ({
             {isHalf ? (
               <svg
                 className={[className, stateClass].filter(Boolean).join(" ")}
-                viewBox="0 0 8 14"
+                viewBox="0 0 12 23"
                 focusable="false"
               >
                 <path d={halfPath} />
@@ -69,7 +69,7 @@ export const Star: React.FC<StarProps> = ({
             ) : (
               <svg
                 className={[className, stateClass].filter(Boolean).join(" ")}
-                viewBox="0 0 15 14"
+                viewBox="0 0 24 23"
                 focusable="false"
               >
                 <path d={fullPath} />

@@ -141,32 +141,18 @@
     .quantity-button-minus,
     .quantity-button-plus {
       flex: 0 0 32px;
+      font-size: 14px;
     }
 
     .add-to-cart-button {
       flex: 0 0 236px;
       width: 236px;
       height: 44px;
+      font-size: 14px;
     }
-  }
 
-  .quantity-input,
-  .add-to-cart-button {
-    font-size: 14px;
-  }
-}
-
-/**
- * Mobile responsive: Stack action buttons vertically on very small screens
- */
-@media (max-width: 360px) {
-  .product-overview__actions {
-    flex-direction: column;
-    align-items: stretch;
-
-    form {
-      width: 100%;
-      justify-content: center;
+    form input {
+      font-size: 14px;
     }
   }
 }

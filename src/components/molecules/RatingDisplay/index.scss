@@ -30,13 +30,11 @@
 
 .product-info__star {
   width: 20px;
-  aspect-ratio: 22/21;
+  aspect-ratio: 24/23;
   flex-shrink: 0;
 
   path {
-    fill: none;
-    stroke: #ffc633;
-    stroke-width: 1;
+    fill: #ffc633;
     transition: fill 0.2s ease;
   }
 
