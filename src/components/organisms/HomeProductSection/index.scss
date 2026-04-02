@@ -10,15 +10,15 @@
 .home-products {
   display: flex;
   flex-direction: column;
-  padding-top: 72px;
+  padding-top: 70px;
 
   &--bordered {
     border-top: 1px solid v.$color-border;
-    margin-top: 72px;
+    margin-top: 65px;
   }
 
   &__title {
-    margin: 0 0 40px;
+    margin: 0 0 5px;
     font-size: 48px;
     font-family: v.$font-family-display;
     letter-spacing: -0.02em;
@@ -55,4 +55,3 @@
     }
   }
 }
-
