@@ -10,7 +10,7 @@
 .home-products {
   display: flex;
   flex-direction: column;
-  padding-top: 70px;
+  padding-top: 80px;
 
   &--bordered {
     border-top: 1px solid v.$color-border;
@@ -36,10 +36,10 @@
 
 @media (max-width: 768px) {
   .home-products {
-    padding-top: 48px;
+    padding-top: 50px;
 
     &--bordered {
-      margin-top: 48px;
+      margin-top: 40px;
     }
 
     &__title {
@@ -51,7 +51,11 @@
       margin-top: 24px;
       width: 100%;
       min-height: 46px;
-      font-size: 14px;
+      font-size: 14px !important;
+    }
+
+    .product-card-list__track {
+      margin-top: 5px;
     }
   }
 }

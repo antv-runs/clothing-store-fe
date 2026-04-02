@@ -16,7 +16,7 @@
 
   &__head {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     margin-bottom: 45px;
     gap: 20px;
@@ -186,13 +186,13 @@
     --review-card-width: var(--card-width-mobile);
     --review-card-height: 186px;
     --mobile-offset: calc((100vw - var(--card-width-mobile)) / 2);
-
-    padding-top: 50px;
+    margin-top: 50px;
 
     &__head {
       margin-bottom: 24px;
 
       h2 {
+        line-height: 1.125;
         font-size: 32px;
       }
     }

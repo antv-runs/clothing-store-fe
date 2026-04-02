@@ -18,8 +18,6 @@
   &__title {
     margin: 0;
     font-size: 64px;
-    line-height: 0.94;
-    letter-spacing: -0.04em;
     font-family: v.$font-family-display;
   }
 
@@ -39,12 +37,13 @@
   &__stats {
     margin-top: 60px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 64px;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0;
   }
 
   &__stat {
-    position: relative;
+    flex: 0 0 auto;
 
     h2 {
       margin: 0 0 8px;
@@ -59,16 +58,14 @@
       color: v.$color-muted;
       line-height: 1.3;
     }
+  }
 
-    &:not(:first-child)::before {
-      content: "";
-      position: absolute;
-      left: -14px;
-      top: 3px;
-      width: 1px;
-      height: 54px;
-      background-color: v.$color-border;
-    }
+  &__divider {
+    flex: 0 0 auto;
+    width: 1px;
+    height: 54px;
+    margin: 0 32px;
+    background-color: v.$color-border;
   }
 
   &__media {
@@ -151,22 +148,25 @@
     border-radius: 0;
     margin-left: -16px;
     margin-right: -16px;
+    gap: 0px;
 
     &__content {
-      padding: 40px 0 0;
+      padding: 25px 0 0;
     }
 
     &__title {
       font-size: 36px;
+
+      line-height: 0.94;
     }
 
     &__desc {
       font-size: 14px;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     &__cta {
-      margin-top: 24px;
+      margin-top: 15px;
       width: 100%;
       max-width: 358px;
       height: 52px;
@@ -183,25 +183,38 @@
     }
 
     &__stats {
-      margin-top: 24px;
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: auto auto auto;
       justify-content: center;
-      gap: 20px 28px;
+      align-items: center;
+      column-gap: 0;
+      row-gap: 15px;
     }
 
     &__stat {
-      text-align: center;
-
-      &:not(:first-child)::before {
-        display: none;
-      }
-
+      z-index: 1000;
       h2 {
-        font-size: 32px;
+        font-size: 24px;
+        margin-bottom: 0;
       }
 
       p {
-        font-size: 14px;
+        font-size: 12px;
       }
+
+      &--3 {
+        grid-column: 1 / -1;
+        justify-self: center;
+      }
+    }
+
+    &__divider {
+      margin: 0 27.5px;
+    }
+
+    &__divider--desktop-only {
+      display: none;
     }
 
     &__media {
