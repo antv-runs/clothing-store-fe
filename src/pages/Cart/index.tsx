@@ -79,9 +79,13 @@ const Cart: React.FC = () => {
   return (
     <div className="container u-mt-25">
       <section className="cart-page js-cart-page" aria-label="Shopping cart">
-        <Breadcrumb items={["Home", "Cart"]} id="cart-breadcrumb-list" />
+        <Breadcrumb
+          items={["Home", "Cart"]}
+          id="cart-breadcrumb-list"
+          className="cart-page__breadcrumb"
+        />
 
-        <Heading as="h1" className="cart-page__title u-mt-30">
+        <Heading as="h1" className="cart-page__title">
           Your Cart
         </Heading>
 

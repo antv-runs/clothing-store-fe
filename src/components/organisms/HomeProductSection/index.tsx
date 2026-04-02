@@ -58,7 +58,16 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
         skeletonCount={skeletonCount}
       />
 
-      <Link to="/" className="btn btn--light home-products__cta">
+      <Link
+        to="/"
+        className={clsx(
+          "btn btn--light home-products__cta",
+          isLoading && "home-products__cta--disabled",
+        )}
+        aria-disabled={isLoading || undefined}
+        tabIndex={isLoading ? -1 : undefined}
+        onClick={isLoading ? (e) => e.preventDefault() : undefined}
+      >
         View All
       </Link>
     </section>

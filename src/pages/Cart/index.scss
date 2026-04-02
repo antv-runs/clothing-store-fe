@@ -6,6 +6,10 @@
 }
 
 .cart-page {
+  &__breadcrumb {
+    margin-bottom: 40px;
+  }
+
   &__title {
     font-family: "IntegralCF", sans-serif;
     font-size: 40px;
@@ -171,19 +175,62 @@
 
 @media (max-width: 768px) {
   .cart-page {
-    margin-bottom: 56px;
+    margin-bottom: 50px;
 
     &__breadcrumb {
-      @include m.breadcrumb(8px, 14px);
+      @include m.breadcrumb(8px, 14px, 10px);
     }
 
     &__title {
       font-size: 32px;
+      margin-top: 0;
     }
   }
 
   .cart-items {
     padding: 16px;
     min-width: 0;
+  }
+
+  .cart-summary {
+    padding: 20px;
+
+    &__title {
+      font-size: 20px;
+      margin-bottom: 25px;
+    }
+
+    &__total {
+      margin-bottom: 20px;
+    }
+
+    &__total p:first-child {
+      font-size: 16px;
+    }
+
+    &__total p:last-child {
+      font-size: 20px;
+    }
+
+    &__row {
+      margin-bottom: 25px !important;
+    }
+
+    &__coupon {
+      margin-bottom: 15px !important;
+
+      button {
+        font-size: 14px;
+        max-width: 88px;
+      }
+    }
+
+    &__checkout {
+      font-size: 14px;
+    }
+
+    &__checkout-text {
+      font-size: 14px;
+    }
   }
 }
