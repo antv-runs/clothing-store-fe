@@ -7,7 +7,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    height: 48px;
+    min-height: 48px;
     flex: 0 0 auto;
     flex-wrap: nowrap;
   }
@@ -124,6 +124,23 @@
     gap: 5px;
     padding: 0;
   }
+
+  &__select {
+    @include m.button-native-reset($appearance-none: true, $font-inherit: true);
+    outline: none;
+    width: 100%;
+    height: 100%;
+    display: block;
+    font: inherit;
+    line-height: 48px;
+    cursor: pointer;
+    padding: 0 36px 0 20px;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -131,6 +148,7 @@
     &__actions {
       gap: 8px;
       height: auto;
+      min-height: 40px;
     }
 
     &__action {
@@ -140,10 +158,24 @@
         opacity: 0.55;
       }
 
+      &--filter {
+        width: 40px;
+        height: 40px;
+      }
+
+      &--sort {
+        height: 40px;
+      }
+
       &--write {
+        height: 40px;
         width: auto;
         padding: 0 16px;
       }
+    }
+
+    &__select {
+      line-height: 40px;
     }
 
     &__filter-dropdown {
