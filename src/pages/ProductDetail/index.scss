@@ -78,6 +78,10 @@
 @media (max-width: 768px) {
   .product-overview {
     margin-bottom: 48px;
+
+    &__details {
+      gap: 24px;
+    }
   }
 
   .product-info {
@@ -125,6 +129,14 @@
 
     .review-card__footer {
       font-size: 13px;
+    }
+
+    .breadcrumb__list.u-mb-40 {
+      margin-bottom: 20px !important;
+    }
+
+    .other-products.u-mb-85 {
+      margin-bottom: 50px !important;
     }
   }
 }

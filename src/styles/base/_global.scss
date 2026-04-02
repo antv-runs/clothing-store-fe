@@ -12,8 +12,14 @@ body {
   box-sizing: border-box;
 }
 
-img,
-svg {
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* SVGs with explicit sizing should respect their dimensions */
+/* Only apply auto-height to SVGs without specific size classes */
+svg:not([class*="--full"]):not([class*="--half"]):not([class*="--empty"]) {
   max-width: 100%;
   height: auto;
 }

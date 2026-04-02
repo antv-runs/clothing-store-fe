@@ -154,6 +154,10 @@
  * Tablet responsive: Adjust reviews list layout
  */
 @media (max-width: 768px) {
+  .products-tabs {
+    margin-bottom: 50px;
+  }
+
   .reviews {
     &__list {
       grid-template-columns: 1fr;

@@ -128,7 +128,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             rating={rating}
             className="product-card__star"
             showEmpty={false}
-            size={18}
           />
         </Text>
         <Text as="span">{formattedRating}/5</Text>
