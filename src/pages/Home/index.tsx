@@ -79,11 +79,18 @@ const Home: React.FC = () => {
         <HomeHero />
         <HomeBrands />
 
-        <HomeProductSection title="NEW ARRIVALS" productsList={newArrivals} />
+        <HomeProductSection
+          title="NEW ARRIVALS"
+          productsList={newArrivals}
+          isLoading={isLoading}
+          skeletonCount={4}
+        />
         <HomeProductSection
           title="TOP SELLING"
           productsList={topSelling}
           withTopBorder
+          isLoading={isLoading}
+          skeletonCount={4}
         />
 
         <HomeStyleGrid />

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { ProductCard } from "@/components/molecules/ProductCard";
 import { IconButton } from "@/components/atoms/IconButton";
+import { Skeleton } from "@/components/atoms/Skeleton";
 import type { Product } from "@/types/product";
 import "./index.scss";
 
@@ -10,6 +11,8 @@ interface ProductCardListProps {
 
   // Navigation control (for carousel sections like RelatedProducts)
   showNavigation?: boolean;
+  loading?: boolean;
+  skeletonCount?: number;
 
   // ProductCard behavior props
   linkMode?: "overlay" | "inline";
@@ -48,6 +51,8 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
   products,
   formatPrice,
   showNavigation = false,
+  loading = false,
+  skeletonCount = 4,
   linkMode,
   imageLoaded = new Set(),
   imageError = new Set(),
@@ -75,6 +80,10 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
     : [];
 
   const allItems: CarouselItem[] = [...products, ...clonedItems];
+  const skeletonItems = Array.from(
+    { length: Math.max(1, skeletonCount) },
+    (_, index) => index,
+  );
 
   const getTrackGap = useCallback(() => {
     if (!trackRef.current) return 0;
@@ -115,7 +124,12 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
   }, [getLoopStart]);
 
   const normalizeLoopPosition = useCallback(() => {
-    if (!showNavigation || !viewportRef.current || isAdjustingLoopRef.current)
+    if (
+      loading ||
+      !showNavigation ||
+      !viewportRef.current ||
+      isAdjustingLoopRef.current
+    )
       return;
 
     const loopBoundary = getLoopBoundary();
@@ -127,17 +141,23 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
       viewportRef.current.scrollLeft = 0;
       isAdjustingLoopRef.current = false;
     }
-  }, [showNavigation, getLoopBoundary]);
+  }, [loading, showNavigation, getLoopBoundary]);
 
   const updateButtonStates = useCallback(() => {
+    if (loading) {
+      setCanScrollPrev(false);
+      setCanScrollNext(false);
+      return;
+    }
+
     // With infinite loop, buttons are always enabled
     setCanScrollPrev(true);
     setCanScrollNext(true);
-  }, []);
+  }, [loading]);
 
   const scrollByStep = useCallback(
     (direction: number) => {
-      if (!viewportRef.current) return;
+      if (loading || !viewportRef.current) return;
 
       const step = getStepWidth();
       if (!step) return;
@@ -162,12 +182,12 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
         behavior: "smooth",
       });
     },
-    [showNavigation, getStepWidth, getLoopBoundary],
+    [loading, showNavigation, getStepWidth, getLoopBoundary],
   );
 
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
-      if (event.button !== 0 || !showNavigation) return;
+      if (loading || event.button !== 0 || !showNavigation) return;
 
       isMouseDownRef.current = true;
       hasDraggedRef.current = false;
@@ -175,13 +195,19 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
       scrollStartLeftRef.current = viewportRef.current?.scrollLeft || 0;
       viewportRef.current?.classList.add("is-dragging");
     },
-    [showNavigation],
+    [loading, showNavigation],
   );
 
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
-      if (!isMouseDownRef.current || !viewportRef.current || !showNavigation)
+      if (
+        loading ||
+        !isMouseDownRef.current ||
+        !viewportRef.current ||
+        !showNavigation
+      ) {
         return;
+      }
 
       const deltaX = event.clientX - pointerStartXRef.current;
       if (Math.abs(deltaX) > 3) {
@@ -191,11 +217,11 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
       viewportRef.current.scrollLeft = scrollStartLeftRef.current - deltaX;
       normalizeLoopPosition();
     },
-    [showNavigation, normalizeLoopPosition],
+    [loading, showNavigation, normalizeLoopPosition],
   );
 
   const snapToNearestItem = useCallback(() => {
-    if (!viewportRef.current || !showNavigation) return;
+    if (loading || !viewportRef.current || !showNavigation) return;
 
     const viewport = viewportRef.current;
     const step = getStepWidth();
@@ -212,7 +238,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
         behavior: "smooth",
       });
     }
-  }, [getStepWidth, showNavigation]);
+  }, [loading, getStepWidth, showNavigation]);
 
   const snapTimeoutRef = useRef<number | null>(null);
 
@@ -239,13 +265,18 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
 
     isMouseDownRef.current = false;
     viewportRef.current?.classList.remove("is-dragging");
+
+    if (loading) {
+      return;
+    }
+
     // Snap to nearest item after drag ends
     snapToNearestItem();
-  }, [snapToNearestItem]);
+  }, [loading, snapToNearestItem]);
 
   const handleWheel = useCallback(
     (event: WheelEvent) => {
-      if (!showNavigation) return;
+      if (loading || !showNavigation) return;
 
       // Only handle vertical wheel (ignore horizontal)
       if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
@@ -260,7 +291,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
         debounceSnap();
       }
     },
-    [showNavigation, normalizeLoopPosition, debounceSnap],
+    [loading, showNavigation, normalizeLoopPosition, debounceSnap],
   );
 
   const handlePrevClick = useCallback(() => {
@@ -276,6 +307,10 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
     if (!viewport) return;
 
     const handleScroll = () => {
+      if (loading) {
+        return;
+      }
+
       if (!isAdjustingLoopRef.current) {
         normalizeLoopPosition();
         updateButtonStates();
@@ -316,6 +351,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
       }
     };
   }, [
+    loading,
     normalizeLoopPosition,
     updateButtonStates,
     handleMouseDown,
@@ -328,10 +364,12 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
   // Update button states when products change
   useEffect(() => {
     updateButtonStates();
-  }, [products, updateButtonStates]);
+  }, [products, loading, updateButtonStates]);
 
   return (
-    <div className="product-card-list">
+    <div
+      className={`product-card-list${loading ? " product-card-list--loading" : ""}`}
+    >
       {showNavigation && (
         <IconButton
           variant="ghost"
@@ -340,7 +378,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
           ariaLabel="Previous products"
           iconWidth={50}
           iconHeight={50}
-          disabled={!canScrollPrev}
+          disabled={loading || !canScrollPrev}
           onClick={handlePrevClick}
         />
       )}
@@ -354,33 +392,76 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
           id="product-card-list"
           className="product-card-list__track js-other-products__list js-related-track"
           aria-live="polite"
-          aria-busy="false"
+          aria-busy={loading}
           onClick={handleTrackClick}
         >
-          {allItems.map((item) => {
-            const displayId = item.originalId || item.id;
-            return (
-              <li
-                key={item.isClone ? `clone-${item.id}` : item.id}
-                className="product-card-list__item js-other-products__item js-related-item"
-                data-product-id={displayId}
-                data-is-clone={item.isClone ? "true" : "false"}
-              >
-                <ProductCard
-                  product={item}
-                  formatPrice={formatPrice}
-                  {...(linkMode && { linkMode })}
-                  {...(onImageLoad &&
-                    onImageError && {
-                      imageLoaded: imageLoaded.has(String(displayId)),
-                      imageError: imageError.has(String(displayId)),
-                      onImageLoad: () => onImageLoad(String(displayId)),
-                      onImageError: () => onImageError(String(displayId)),
-                    })}
-                />
-              </li>
-            );
-          })}
+          {loading
+            ? skeletonItems.map((index) => (
+                <li
+                  key={`skeleton-${index}`}
+                  className="product-card-list__item product-card-list__item--skeleton js-other-products__item js-related-item"
+                  data-is-clone="false"
+                >
+                  <article className="product-card" aria-hidden="true">
+                    <div className="product-card__image-wrapper product-image-wrapper">
+                      <Skeleton variant="rect" width="100%" height="100%" />
+                    </div>
+
+                    <div className="product-card__title">
+                      <Skeleton
+                        className="product-card-list__skeleton-title"
+                        variant="line"
+                      />
+                    </div>
+
+                    <div className="product-card__rating">
+                      <span className="product-card__stars" aria-hidden="true">
+                        <Skeleton
+                          className="product-card-list__skeleton-stars"
+                          variant="line"
+                        />
+                      </span>
+                      <Skeleton
+                        className="product-card-list__skeleton-rating"
+                        variant="line"
+                      />
+                    </div>
+
+                    <div className="product-card__price">
+                      <span className="product-card__price-current">
+                        <Skeleton
+                          className="product-card-list__skeleton-price"
+                          variant="line"
+                        />
+                      </span>
+                    </div>
+                  </article>
+                </li>
+              ))
+            : allItems.map((item) => {
+                const displayId = item.originalId || item.id;
+                return (
+                  <li
+                    key={item.isClone ? `clone-${item.id}` : item.id}
+                    className="product-card-list__item js-other-products__item js-related-item"
+                    data-product-id={displayId}
+                    data-is-clone={item.isClone ? "true" : "false"}
+                  >
+                    <ProductCard
+                      product={item}
+                      formatPrice={formatPrice}
+                      {...(linkMode && { linkMode })}
+                      {...(onImageLoad &&
+                        onImageError && {
+                          imageLoaded: imageLoaded.has(String(displayId)),
+                          imageError: imageError.has(String(displayId)),
+                          onImageLoad: () => onImageLoad(String(displayId)),
+                          onImageError: () => onImageError(String(displayId)),
+                        })}
+                    />
+                  </li>
+                );
+              })}
         </ul>
       </div>
 
@@ -392,7 +473,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
           ariaLabel="Next products"
           iconWidth={50}
           iconHeight={50}
-          disabled={!canScrollNext}
+          disabled={loading || !canScrollNext}
           onClick={handleNextClick}
         />
       )}

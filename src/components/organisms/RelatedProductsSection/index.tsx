@@ -13,7 +13,7 @@ interface RelatedProductsSectionProps {
 
 /**
  * RelatedProductsSection - Product recommendations carousel section.
- * 
+ *
  * Handles:
  * - Section wrapper and heading
  * - Image state management for product cards
@@ -65,6 +65,8 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
         products={products}
         formatPrice={formatPrice}
         showNavigation={true}
+        loading={isLoading}
+        skeletonCount={8}
         linkMode="overlay"
         imageLoaded={loadedImageIds}
         imageError={errorImageIds}

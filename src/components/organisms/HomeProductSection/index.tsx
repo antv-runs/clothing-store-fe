@@ -8,6 +8,8 @@ type HomeProductSectionProps = {
   title: string;
   productsList: Product[];
   withTopBorder?: boolean;
+  isLoading?: boolean;
+  skeletonCount?: number;
 };
 
 function formatPrice(amount: number, currency = "USD") {
@@ -22,6 +24,8 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
   title,
   productsList,
   withTopBorder = false,
+  isLoading = false,
+  skeletonCount = 4,
 }) => {
   const sectionSlug = title.toLowerCase().replace(/\s+/g, "-");
 
@@ -43,6 +47,8 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
         products={productsList}
         formatPrice={formatPrice}
         showNavigation={false}
+        loading={isLoading}
+        skeletonCount={skeletonCount}
       />
 
       <Link to="/" className="btn btn--light home-products__cta">
