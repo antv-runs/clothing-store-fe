@@ -12,7 +12,7 @@
   --visible-width: calc((var(--card-width) * 3) + (var(--card-gap) * 2));
   --center-offset: calc((100vw - var(--visible-width)) / 2);
 
-  margin-top: 80px;
+  margin-top: 85px;
 
   &__head {
     display: flex;

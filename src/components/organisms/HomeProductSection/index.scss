@@ -10,11 +10,9 @@
 .home-products {
   display: flex;
   flex-direction: column;
-  padding-top: 80px;
 
   &--bordered {
     border-top: 1px solid v.$color-border;
-    margin-top: 65px;
   }
 
   &__title {
@@ -36,12 +34,6 @@
 
 @media (max-width: 768px) {
   .home-products {
-    padding-top: 50px;
-
-    &--bordered {
-      margin-top: 40px;
-    }
-
     &__title {
       margin-bottom: 28px;
       font-size: 32px;

@@ -82,12 +82,14 @@ const Home: React.FC = () => {
         <HomeProductSection
           title="NEW ARRIVALS"
           productsList={newArrivals}
+          className="home-page__product-section home-page__product-section--new-arrivals"
           isLoading={isLoading}
           skeletonCount={4}
         />
         <HomeProductSection
           title="TOP SELLING"
           productsList={topSelling}
+          className="home-page__product-section home-page__product-section--top-selling"
           withTopBorder
           isLoading={isLoading}
           skeletonCount={4}

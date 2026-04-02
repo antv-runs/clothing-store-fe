@@ -36,11 +36,29 @@
 }
 
 .home-page {
-  margin-bottom: 80px;
+  margin-bottom: 40px;
+}
+
+.home-page__product-section {
+  padding-top: 80px;
+}
+
+.home-page__product-section--top-selling {
+  margin-top: 64px;
+  padding-top: 64px;
 }
 
 @media (max-width: 768px) {
   .home-page {
     margin-bottom: 50px;
+  }
+
+  .home-page__product-section {
+    padding-top: 50px;
+  }
+
+  .home-page__product-section--top-selling {
+    margin-top: 40px;
+    padding-top: 45px;
   }
 }

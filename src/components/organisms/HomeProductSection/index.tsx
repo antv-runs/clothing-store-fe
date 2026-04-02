@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
 import { ProductCardList } from "@/components/molecules/ProductCardList";
 import type { Product } from "@/types/product";
@@ -7,6 +8,7 @@ import "./index.scss";
 type HomeProductSectionProps = {
   title: string;
   productsList: Product[];
+  className?: string;
   withTopBorder?: boolean;
   isLoading?: boolean;
   skeletonCount?: number;
@@ -23,6 +25,7 @@ function formatPrice(amount: number, currency = "USD") {
 export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
   title,
   productsList,
+  className,
   withTopBorder = false,
   isLoading = false,
   skeletonCount = 4,
@@ -31,7 +34,11 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
 
   return (
     <section
-      className={`home-products${withTopBorder ? " home-products--bordered" : ""}`}
+      className={clsx(
+        "home-products",
+        withTopBorder && "home-products--bordered",
+        className,
+      )}
       aria-labelledby={`home-${sectionSlug}-title`}
     >
       <Heading
