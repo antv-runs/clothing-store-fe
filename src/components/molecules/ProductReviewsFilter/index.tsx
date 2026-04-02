@@ -136,6 +136,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
         className="reviews__action reviews__action--sort js-reviews-sort-select"
         value={selectedSort}
         options={REVIEW_SORT_OPTIONS}
+        disabled={isDisabled}
         onChange={onSortChange}
         ariaLabel="Sort reviews"
       />

@@ -1,0 +1,27 @@
+@use "@/styles/abstracts/mixins" as m;
+
+.skeleton {
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  @include m.skeleton-shimmer(
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.08) 25%,
+      rgba(0, 0, 0, 0.15) 50%,
+      rgba(0, 0, 0, 0.08) 75%
+    ),
+    220% 100%
+  );
+
+  &--rect,
+  &--line {
+    border-radius: 8px;
+  }
+
+  &--circle {
+    border-radius: 50%;
+  }
+}

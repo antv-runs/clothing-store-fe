@@ -14,6 +14,7 @@ type ReviewSortSelectProps = {
   onChange: (value: AllowedReviewSort) => void;
   ariaLabel?: string;
   className?: string;
+  disabled?: boolean;
   id?: string;
 };
 
@@ -23,6 +24,7 @@ export const ReviewSortSelect = ({
   onChange,
   ariaLabel = "Sort reviews",
   className,
+  disabled = false,
   id,
 }: ReviewSortSelectProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -38,6 +40,7 @@ export const ReviewSortSelect = ({
         value={value}
         onChange={handleChange}
         aria-label={ariaLabel}
+        disabled={disabled}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

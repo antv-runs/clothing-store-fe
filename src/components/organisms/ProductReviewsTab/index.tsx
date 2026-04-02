@@ -65,8 +65,6 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
 
       <ProductReviewsList reviews={reviews} isLoading={isLoading} />
 
-      {isLoading && <ProductReviewsList reviews={[]} isLoading={true} />}
-
       <div className="reviews__load-more-wrapper">
         <Button
           unstyled
