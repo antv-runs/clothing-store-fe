@@ -1,55 +1,75 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { HomeHero } from "@/components/organisms/HomeHero";
 import { HomeBrands } from "@/components/organisms/HomeBrands";
 import { HomeProductSection } from "@/components/organisms/HomeProductSection";
 import { HomeStyleGrid } from "@/components/organisms/HomeStyleGrid";
 import { HomeReviews } from "@/components/organisms/HomeReviews";
+import { getProducts } from "@/api/Product";
 import { getReviewsByProductId } from "@/api/Review";
+import type { Product } from "@/types/product";
 import type { Review } from "@/types/review";
-import { products } from "@/const/products";
 import "./index.scss";
 
 const Home: React.FC = () => {
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [topSelling, setTopSelling] = useState<Product[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const newArrivals = useMemo(() => products.slice(0, 4), []);
-
-  const topSelling = useMemo(() => {
-    return [...products]
-      .sort((firstItem, secondItem) => secondItem.rating - firstItem.rating)
-      .slice(0, 4);
-  }, []);
-
   useEffect(() => {
-    let isMounted = true;
+    let isActive = true;
 
-    const fetchReviews = async () => {
+    const loadHomeData = async () => {
       try {
         setIsLoading(true);
-        const result = await getReviewsByProductId(180, {
-          perPage: 10,
-          sort: "latest",
-        });
-        if (isMounted) {
-          setReviews(result.data);
+        setNewArrivals([]);
+        setTopSelling([]);
+        setReviews([]);
+
+        const [newArrivalsResult, topSellingResult, reviewsResult] =
+          await Promise.all([
+            getProducts({
+              page: 1,
+              per_page: 4,
+            }),
+            getProducts({
+              page: 2,
+              per_page: 4,
+            }),
+            getReviewsByProductId(180, {
+              page: 1,
+              perPage: 10,
+              sort: "latest",
+            }),
+          ]);
+
+        if (!isActive) {
+          return;
         }
-      } catch (err) {
-        if (isMounted) {
-          console.error("Failed to fetch reviews:", err);
-          setReviews([]);
+
+        setNewArrivals(newArrivalsResult.data);
+        setTopSelling(topSellingResult.data);
+        setReviews(reviewsResult.data);
+      } catch (error) {
+        if (!isActive) {
+          return;
         }
+
+        console.error("Failed to load home page data.", error);
+        setNewArrivals([]);
+        setTopSelling([]);
+        setReviews([]);
       } finally {
-        if (isMounted) {
+        if (isActive) {
           setIsLoading(false);
         }
       }
     };
 
-    fetchReviews();
+    loadHomeData();
 
     return () => {
-      isMounted = false;
+      isActive = false;
     };
   }, []);
 
