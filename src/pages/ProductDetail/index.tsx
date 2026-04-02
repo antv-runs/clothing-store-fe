@@ -8,6 +8,7 @@ import { ProductActions } from "@/components/molecules/ProductActions";
 import { ProductTabsSection } from "@/components/organisms/ProductTabsSection";
 import { RelatedProductsSection } from "@/components/organisms/RelatedProductsSection";
 import { WriteReviewModal } from "@/components/organisms/WriteReviewModal";
+import { ProductDetailSkeleton } from "@/components/organisms/ProductDetailSkeleton";
 import { getProductById, getProducts } from "@/api/Product";
 import { getReviewsByProductId } from "@/api/Review";
 import type { Product } from "@/types/product";
@@ -218,18 +219,7 @@ const ProductDetail: React.FC = () => {
   const hasMoreReviews = reviewPage < reviewLastPage;
 
   if (isLoading) {
-    return (
-      <div className="container u-mt-25">
-        <section
-          className="product-overview js-product-overview"
-          aria-label="Product overview"
-        >
-          <Text as="p" className="product-overview__description">
-            Loading product...
-          </Text>
-        </section>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (!product) {

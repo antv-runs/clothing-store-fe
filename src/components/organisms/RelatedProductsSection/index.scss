@@ -1,5 +1,4 @@
 @use "@/styles/abstracts/variables" as v;
-@use "@/styles/abstracts/mixins" as m;
 
 /**
  * RelatedProductsSection - Section wrapper for related products carousel
@@ -46,13 +45,6 @@
     width: 295px;
     flex: 0 0 auto;
     pointer-events: none;
-  }
-
-  &__skeleton-image,
-  &__skeleton-line,
-  &__skeleton-circle,
-  &__skeleton-pill {
-    @include m.skeleton-shimmer;
   }
 
   &__skeleton-image {
