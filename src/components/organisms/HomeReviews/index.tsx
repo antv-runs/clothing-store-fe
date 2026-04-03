@@ -3,29 +3,12 @@ import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
 import { ReviewCard } from "@/components/molecules/ReviewCard";
 import type { Review } from "@/types/review";
+import { getFirstItemScrollStep } from "@/utils/carousel";
 import "./index.scss";
 
 interface HomeReviewsProps {
   reviews: Review[];
   isLoading: boolean;
-}
-
-function getReviewScrollStep(track: HTMLUListElement | null) {
-  if (!track || !track.firstElementChild) {
-    return 0;
-  }
-  const firstCard = track.firstElementChild as HTMLElement;
-  const cardWidth = firstCard.getBoundingClientRect().width;
-  const trackStyles = window.getComputedStyle(track);
-  const gap = Number.parseFloat(
-    trackStyles.columnGap || trackStyles.gap || "0",
-  );
-  // On mobile, always scroll by 1 card
-  if (window.innerWidth <= 768) {
-    return cardWidth + (Number.isFinite(gap) ? gap : 0);
-  }
-  // On desktop, scroll by 1 card (default)
-  return cardWidth + (Number.isFinite(gap) ? gap : 0);
 }
 
 export const HomeReviews: React.FC<HomeReviewsProps> = ({
@@ -68,7 +51,7 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
       return;
     }
 
-    const step = getReviewScrollStep(track);
+    const step = getFirstItemScrollStep(track);
     const movement = direction === "prev" ? -step : step;
 
     track.scrollBy({ left: movement, behavior: "smooth" });

@@ -3,6 +3,7 @@ import { ProductCard } from "@/components/molecules/ProductCard";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import type { Product } from "@/types/product";
+import { getFirstItemScrollStep, getTrackGap } from "@/utils/carousel";
 import "./index.scss";
 
 interface ProductCardListProps {
@@ -85,22 +86,9 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
     (_, index) => index,
   );
 
-  const getTrackGap = useCallback(() => {
-    if (!trackRef.current) return 0;
-    const styles = window.getComputedStyle(trackRef.current);
-    const rawGap = styles.gap || styles.columnGap || "0";
-    const parsedGap = parseFloat(rawGap);
-    return isFinite(parsedGap) ? parsedGap : 0;
-  }, []);
-
   const getStepWidth = useCallback(() => {
-    if (!trackRef.current || !trackRef.current.firstElementChild) {
-      return 0;
-    }
-    const firstItem = trackRef.current.firstElementChild as HTMLElement;
-    const itemWidth = firstItem.getBoundingClientRect().width;
-    return itemWidth + getTrackGap();
-  }, [getTrackGap]);
+    return getFirstItemScrollStep(trackRef.current);
+  }, []);
 
   const getLoopStart = useCallback(() => {
     if (!trackRef.current) return 0;
@@ -110,8 +98,12 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
     );
     if (originalItems.length === 0) return 0;
     const lastOriginal = originalItems[originalItems.length - 1] as HTMLElement;
-    return lastOriginal.offsetLeft + lastOriginal.offsetWidth + getTrackGap();
-  }, [getTrackGap]);
+    return (
+      lastOriginal.offsetLeft +
+      lastOriginal.offsetWidth +
+      getTrackGap(trackRef.current)
+    );
+  }, []);
 
   const getLoopBoundary = useCallback(() => {
     if (!viewportRef.current) return 0;
