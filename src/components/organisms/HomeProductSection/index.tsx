@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
-import { ProductCardList } from "@/components/molecules/ProductCardList";
+import { ProductCardList } from "@/components/organisms/ProductCardList";
 import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/formatters";
 import "./index.scss";

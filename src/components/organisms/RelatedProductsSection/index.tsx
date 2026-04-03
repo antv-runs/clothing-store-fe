@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./index.scss";
-import { ProductCardList } from "@/components/molecules/ProductCardList";
+import { ProductCardList } from "@/components/organisms/ProductCardList";
 import { Heading } from "@/components/atoms/Heading";
 import type { Product } from "@/types/product";
 

@@ -14,7 +14,19 @@ import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/formatters";
 import { Text } from "@/components/atoms/Text";
 import { useProductReviews } from "@/hooks/useProductReviews";
+import type { CartRow } from "@/types/cart";
+import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import "./index.scss";
+
+const DEFAULT_QUANTITY = 1;
+
+const normalizeQuantity = (value: number | string): number => {
+  const parsed = Number(value);
+  return Math.max(
+    DEFAULT_QUANTITY,
+    Number.isFinite(parsed) ? parsed : DEFAULT_QUANTITY,
+  );
+};
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
@@ -26,6 +38,7 @@ const ProductDetail: React.FC = () => {
   // Track selected color and size for add-to-cart functionality
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<number>(DEFAULT_QUANTITY);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [relatedLoading, setRelatedLoading] = useState(false);
 
@@ -73,6 +86,7 @@ const ProductDetail: React.FC = () => {
           setProduct(null);
           setSelectedColorId(null);
           setSelectedSizeId(null);
+          setQuantity(DEFAULT_QUANTITY);
           return;
         }
 
@@ -80,6 +94,7 @@ const ProductDetail: React.FC = () => {
         // Reset variant selections when product changes
         setSelectedColorId(null);
         setSelectedSizeId(null);
+        setQuantity(DEFAULT_QUANTITY);
 
         // Fetch related products
         setRelatedLoading(true);
@@ -115,6 +130,7 @@ const ProductDetail: React.FC = () => {
         setProduct(null);
         setSelectedColorId(null);
         setSelectedSizeId(null);
+        setQuantity(DEFAULT_QUANTITY);
         setRelatedProducts([]);
         setRelatedLoading(false);
       } finally {
@@ -130,6 +146,73 @@ const ProductDetail: React.FC = () => {
       isActive = false;
     };
   }, [normalizedRouteId]);
+
+  const getSafeSelectedColorId = () => {
+    if (selectedColorId) {
+      return selectedColorId;
+    }
+
+    return product?.variants?.colors?.[0]?.id ?? null;
+  };
+
+  const getSafeSelectedSizeId = () => {
+    if (selectedSizeId) {
+      return selectedSizeId;
+    }
+
+    return product?.variants?.sizes?.[0]?.id ?? null;
+  };
+
+  const handleDecreaseQuantity = () => {
+    setQuantity((prev) => Math.max(DEFAULT_QUANTITY, prev - 1));
+  };
+
+  const handleIncreaseQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleQuantityChange = (value: string) => {
+    const sanitized = value.replace(/[^0-9]/g, "");
+    setQuantity(normalizeQuantity(sanitized || DEFAULT_QUANTITY));
+  };
+
+  const handleAddToCart = () => {
+    if (!product?.id) {
+      return;
+    }
+
+    const safeColorId = getSafeSelectedColorId();
+    const safeSizeId = getSafeSelectedSizeId();
+    const safeQuantity = normalizeQuantity(quantity);
+
+    const existingRows = readStoredCartRows();
+    const nextRows: CartRow[] = [...existingRows];
+    const existingIndex = nextRows.findIndex((row) => {
+      return (
+        row.productId === String(product.id) &&
+        (row.color ?? null) === safeColorId &&
+        (row.size ?? null) === safeSizeId
+      );
+    });
+
+    if (existingIndex >= 0) {
+      nextRows[existingIndex] = {
+        ...nextRows[existingIndex],
+        quantity: normalizeQuantity(
+          nextRows[existingIndex].quantity + safeQuantity,
+        ),
+      };
+    } else {
+      nextRows.push({
+        productId: String(product.id),
+        quantity: safeQuantity,
+        color: safeColorId,
+        size: safeSizeId,
+      });
+    }
+
+    writeStoredCartRows(nextRows);
+  };
 
   if (isLoading) {
     return <ProductDetailSkeleton />;
@@ -176,8 +259,13 @@ const ProductDetail: React.FC = () => {
             />
 
             <ProductActions
-              selectedColorId={selectedColorId}
-              selectedSizeId={selectedSizeId}
+              selectedColorId={getSafeSelectedColorId()}
+              selectedSizeId={getSafeSelectedSizeId()}
+              quantity={quantity}
+              onDecreaseQuantity={handleDecreaseQuantity}
+              onIncreaseQuantity={handleIncreaseQuantity}
+              onQuantityChange={handleQuantityChange}
+              onAddToCart={handleAddToCart}
             />
           </div>
         </div>
