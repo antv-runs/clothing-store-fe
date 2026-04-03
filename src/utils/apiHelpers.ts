@@ -48,8 +48,3 @@ export function buildQueryString(
   return query;
 }
 
-export function getQueryStringForUrl(params: Record<string, any> = {}): string {
-  const query = buildQueryString(params);
-  const queryStr = query.toString();
-  return queryStr ? `?${queryStr}` : "";
-}

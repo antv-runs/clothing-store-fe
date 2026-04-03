@@ -1,4 +1,4 @@
-import type { Product, ProductDetail } from "@/types/product";
+import type { Product } from "@/types/product";
 
 export const products: Product[] = [
   {
@@ -324,5 +324,3 @@ export const products: Product[] = [
   },
 ];
 
-export const productDetailsById: Record<string, ProductDetail> =
-  Object.fromEntries(products.map((product) => [product.id, product]));

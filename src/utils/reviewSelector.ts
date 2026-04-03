@@ -3,7 +3,6 @@
 
 import type { ApiReview } from "@/types/api/review";
 import type { Review } from "@/types/review";
-import { isSameProductId } from "@/utils/formatters";
 
 type ReviewLike = {
   id?: string | number;
@@ -73,14 +72,3 @@ export function normalizeReview(raw: ReviewLike): Review {
   };
 }
 
-export function selectReviewsForProduct(
-  source: ReviewLike[],
-  productId: string,
-): Review[] {
-  return source
-    .map(normalizeReview)
-    .filter((review) => isSameProductId(String(review.productId), productId))
-    .sort((a, b) => {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
-}

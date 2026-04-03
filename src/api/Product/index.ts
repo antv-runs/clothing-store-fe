@@ -33,10 +33,6 @@ export async function getProducts(
   };
 }
 
-export async function getCatalogProducts(searchTerm = ""): Promise<Product[]> {
-  return (await getProducts({ search: searchTerm })).data;
-}
-
 export async function getProductById(
   id: string | number,
 ): Promise<Product | null> {

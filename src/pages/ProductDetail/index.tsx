@@ -106,8 +106,6 @@ const ProductDetail: React.FC = () => {
             setRelatedLoading(false);
           }
         }
-
-        console.log("Fetched product:", productResult); // Debug log to verify fetched product data
       } catch (error) {
         if (!isActive) {
           return;
