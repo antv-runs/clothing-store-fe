@@ -1,4 +1,4 @@
-import type { PaginationMeta, PaginationLinks } from "./pagination";
+import type { PaginationMeta, PaginationLinks } from "@/types/pagination";
 
 /**
  * Frontend/Domain product types

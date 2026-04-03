@@ -4,7 +4,11 @@
 import { get, post } from "@/lib/axios";
 import type { ApiResponse, PaginatedApiResponse } from "@/types/pagination";
 import type { ProductReviewsResult, Review } from "@/types/review";
-import type { CreateReviewPayload, ApiReview } from "@/types/api/review";
+import type {
+  ApiReview,
+  GetReviewsOptions,
+  SubmitReviewPayload,
+} from "@/types/api/review";
 import {
   mapApiReviewToReview,
   mapApiReviewsToReviews,
@@ -14,22 +18,6 @@ import {
   unwrapPaginatedResponse,
   buildQueryString,
 } from "@/utils/apiHelpers";
-
-type ReviewSort = "latest" | "oldest" | "highest";
-
-export interface GetReviewsOptions {
-  page?: number;
-  perPage?: number;
-  rating?: number | null;
-  sort?: ReviewSort;
-}
-
-export interface SubmitReviewPayload extends Partial<CreateReviewPayload> {
-  rating?: number;
-  stars?: number;
-  comment?: string;
-  username?: string;
-}
 
 export async function getReviewsByProductId(
   productId: string | number,

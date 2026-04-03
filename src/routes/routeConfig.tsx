@@ -1,6 +1,6 @@
 import Home from "@/pages/Home";
 import { lazy } from "react";
-import { ROUTES } from "./paths";
+import { ROUTES } from "@/routes/paths";
 
 // Lazy load page components for better performance
 const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
