@@ -1,5 +1,16 @@
 @use "../../../styles/abstracts/variables" as v;
 
+.product-price {
+  display: flex;
+  align-items: center;
+
+  &__current,
+  &__original,
+  &__discount {
+    margin: 0;
+  }
+}
+
 .product-info__price {
   display: flex;
   align-items: center;

@@ -1,4 +1,5 @@
 import React from "react";
+import { ProductPrice } from "@/components/molecules/ProductPrice";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
 import "./index.scss";
 import type { Product } from "@/types/product";
@@ -14,7 +15,7 @@ interface CartItemRowProps {
 
 /**
  * CartItemRow - Cart row item presentation.
- * Keeps original DOM/class names for current styles and scripts.
+ * Keeps current cart layout and price presentation.
  */
 export const CartItemRow: React.FC<CartItemRowProps> = ({
   item,
@@ -82,21 +83,17 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
         ) : null}
 
         <div className="cart-item__foot">
-          <div className="cart-item__price-wrap">
-            <p className="cart-item__price js-cart-item-price">
-              {formatPrice(currentPrice, item.pricing.currency)}
-            </p>
-            {lineOriginalPrice ? (
-              <p className="cart-item__price-original js-cart-item-price-orig">
-                {formatPrice(lineOriginalPrice, item.pricing.currency)}
-              </p>
-            ) : null}
-            {item.pricing.discountPercent ? (
-              <p className="cart-item__price-discount">
-                -{item.pricing.discountPercent}%
-              </p>
-            ) : null}
-          </div>
+          <ProductPrice
+            currentAmount={currentPrice}
+            originalAmount={lineOriginalPrice}
+            discountPercent={item.pricing.discountPercent}
+            currency={item.pricing.currency}
+            formatPrice={formatPrice}
+            className="cart-item__price-wrap"
+            currentClassName="cart-item__price"
+            originalClassName="cart-item__price-original"
+            discountClassName="cart-item__price-discount"
+          />
 
           <QuantityStepper
             className="cart-item__quantity"

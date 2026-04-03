@@ -4,6 +4,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { Image } from "@/components/atoms/Image";
 import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
+import { ProductPrice } from "@/components/molecules/ProductPrice";
 import "./index.scss";
 
 type ProductCardData = {
@@ -64,11 +65,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     originalPrice > currentPrice;
 
   const cardClassName = clsx("product-card", className);
-  const currentPriceLabel = formatPrice(currentPrice, currency);
-  const comparePriceLabel = hasComparePrice
-    ? formatPrice(originalPrice, currency)
-    : null;
-
   const productImage = (
     <Image
       src={thumbnail}
@@ -131,23 +127,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <Text as="span">{formattedRating}/5</Text>
       </div>
 
-      <Text as="p" className="product-card__price">
-        <Text as="span" className="product-card__price-current">
-          {currentPriceLabel}
-        </Text>
-
-        {hasComparePrice ? (
-          <Text as="span" className="product-card__price-original">
-            {comparePriceLabel}
-          </Text>
-        ) : null}
-
-        {discountPercent ? (
-          <Text as="span" className="product-card__price-badge">
-            -{discountPercent}%
-          </Text>
-        ) : null}
-      </Text>
+      <ProductPrice
+        currentAmount={currentPrice}
+        originalAmount={hasComparePrice ? originalPrice : null}
+        discountPercent={discountPercent}
+        currency={currency}
+        formatPrice={formatPrice}
+        className="product-card__price"
+        currentClassName="product-card__price-current"
+        originalClassName="product-card__price-original"
+        discountClassName="product-card__price-badge"
+      />
 
       {!isInlineLinkMode ? (
         <Link
