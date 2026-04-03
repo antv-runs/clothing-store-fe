@@ -7,25 +7,8 @@ import { CartEmptyState } from "@/components/molecules/CartEmptyState";
 import { CartItemRow } from "@/components/organisms/CartItemRow";
 import { CartSummaryPanel } from "@/components/organisms/CartSummaryPanel";
 import type { CartRow } from "@/types/cart";
+import { formatPrice, normalizeId } from "@/utils/formatters";
 import "./index.scss";
-
-function formatPrice(amount: number, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-function idsMatch(a: string, b: string) {
-  if (a === b) {
-    return true;
-  }
-
-  const na = Number(a);
-  const nb = Number(b);
-  return Number.isFinite(na) && na === nb;
-}
 
 const Cart: React.FC = () => {
   const [cartRows] = useState<CartRow[]>(() => mockCartItems);
@@ -34,7 +17,7 @@ const Cart: React.FC = () => {
     return cartRows
       .map((row) => {
         const product = products.find((item) =>
-          idsMatch(String(item.id), row.productId),
+          normalizeId(String(item.id), row.productId),
         );
         if (!product) {
           return null;

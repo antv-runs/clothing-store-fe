@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
 import { ProductCardList } from "@/components/molecules/ProductCardList";
 import type { Product } from "@/types/product";
+import { formatPrice } from "@/utils/formatters";
 import "./index.scss";
 
 type HomeProductSectionProps = {
@@ -13,14 +14,6 @@ type HomeProductSectionProps = {
   isLoading?: boolean;
   skeletonCount?: number;
 };
-
-function formatPrice(amount: number, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
   title,

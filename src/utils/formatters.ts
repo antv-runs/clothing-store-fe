@@ -23,17 +23,6 @@ export function formatDate(dateValue: string): string {
   });
 }
 
-export function isSameProductId(routeId: string, productId: string): boolean {
-  if (routeId === productId) {
-    return true;
-  }
-
-  const routeAsNumber = Number(routeId);
-  const productAsNumber = Number(productId);
-
-  return Number.isFinite(routeAsNumber) && routeAsNumber === productAsNumber;
-}
-
 export function normalizeId(a: string, b: string): boolean {
   if (a === b) {
     return true;
