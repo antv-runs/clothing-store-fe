@@ -2,6 +2,8 @@
 @use "@/styles/abstracts/mixins" as *;
 
 .product-card-list {
+  --nav-icon-size: 50px;
+
   position: relative;
 
   &--loading {
@@ -75,6 +77,11 @@
     transform: translateY(-50%);
     opacity: 0.5;
 
+    .icon {
+      --icon-width: var(--nav-icon-size);
+      --icon-height: var(--nav-icon-size);
+    }
+
     .iconContainer {
       color: #000;
       transition: color 0.25s ease;
@@ -137,6 +144,8 @@
 
 @media (max-width: 768px) {
   .product-card-list {
+    --nav-icon-size: 40px;
+
     &__track {
       margin-top: 40px;
       gap: 16px;

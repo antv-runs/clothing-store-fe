@@ -1,6 +1,11 @@
 import React from "react";
 import { ReactSVG } from "react-svg";
 import clsx from "clsx";
+import "./index.scss";
+
+function toCssDimension(value: number | string) {
+  return typeof value === "number" ? `${value}px` : value;
+}
 
 export type IconProps = {
   svgName: string;
@@ -23,6 +28,8 @@ const IconComponent = ({
 }: IconProps) => {
   const finalWidth = width ?? size;
   const finalHeight = height ?? size;
+  const resolvedWidth = toCssDimension(finalWidth);
+  const resolvedHeight = toCssDimension(finalHeight);
 
   return (
     <ReactSVG
@@ -31,16 +38,9 @@ const IconComponent = ({
       wrapper="span"
       onClick={onClick}
       style={{
-        width: finalWidth,
-        height: finalHeight,
+        width: `var(--icon-width, ${resolvedWidth})`,
+        height: `var(--icon-height, ${resolvedHeight})`,
         color,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        lineHeight: 0,
-        verticalAlign: "middle",
-        position: "relative",
-        flexShrink: 0,
       }}
       beforeInjection={(svg) => {
         svg.setAttribute("aria-hidden", "true");

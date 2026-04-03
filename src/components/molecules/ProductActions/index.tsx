@@ -20,7 +20,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
       <form action="#">
         <IconButton
           svgName="icn_minus"
-          className="quantity-button-minus js-quantity-button-minus"
+          className="quantity-button-minus quantity-button-minus--aligned js-quantity-button-minus"
           ariaLabel="Decrease quantity"
           iconWidth={20}
           iconHeight={20}
@@ -45,7 +45,6 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
       <button
         className="add-to-cart-button js-add-to-cart"
         type="button"
-        // TODO: Use selectedColorId and selectedSizeId in add-to-cart payload
         data-color-id={selectedColorId}
         data-size-id={selectedSizeId}
       >

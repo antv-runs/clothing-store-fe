@@ -18,16 +18,21 @@
   display: flex;
   gap: 20px;
   flex-wrap: nowrap;
+  --quantity-control-width: 170px;
+  --quantity-button-width: 44px;
+  --quantity-icon-width: 20px;
+  --quantity-icon-height: 20px;
+  --add-to-cart-width: 400px;
 
   form {
-    flex: 0 0 170px;
-    width: 170px;
+    flex: 0 0 var(--quantity-control-width);
+    width: var(--quantity-control-width);
     height: 52px;
     display: flex;
     align-items: stretch;
     background-color: #f0f0f0;
     border-radius: v.$radius-pill;
-    padding: 0;
+    padding: 0 10px;
     overflow: hidden;
 
     input {
@@ -60,21 +65,28 @@
 
     .quantity-button-minus,
     .quantity-button-plus {
-      flex: 0 0 44px;
+      flex: 0 0 var(--quantity-button-width);
+      width: var(--quantity-button-width);
       @include m.button-native-reset;
       @include m.flex-center;
       color: #000;
+      --icon-width: var(--quantity-icon-width);
+      --icon-height: var(--quantity-icon-height);
 
       &:disabled {
         opacity: 0.45;
         cursor: not-allowed;
       }
     }
+
+    .quantity-button-minus--aligned .icon svg {
+      transform: translateY(-1px);
+    }
   }
 
   .add-to-cart-button {
-    flex: 0 0 400px;
-    width: 400px;
+    flex: 0 0 var(--add-to-cart-width);
+    width: var(--add-to-cart-width);
     height: 52px;
     min-width: 0;
     background-color: #000;
@@ -130,22 +142,27 @@
     font-size: 14px;
     flex-direction: row;
     flex-wrap: nowrap;
+    gap: 12px;
+    --quantity-control-width: 110px;
+    --quantity-button-width: 32px;
+    --quantity-icon-width: 15.6px;
+    --quantity-icon-height: 15.6px;
 
     form {
-      flex: 0 0 110px;
-      width: 110px;
+      flex: 0 0 var(--quantity-control-width);
+      width: var(--quantity-control-width);
       height: 44px;
     }
 
     .quantity-button-minus,
     .quantity-button-plus {
-      flex: 0 0 32px;
+      flex: 0 0 var(--quantity-button-width);
+      width: var(--quantity-button-width);
       font-size: 14px;
     }
 
     .add-to-cart-button {
-      flex: 0 0 236px;
-      width: 236px;
+      flex: 1 1 auto;
       height: 44px;
       font-size: 14px;
     }
