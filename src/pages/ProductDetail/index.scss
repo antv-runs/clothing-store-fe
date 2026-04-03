@@ -32,6 +32,11 @@
     top: 50%;
     transform: translateY(-50%);
   }
+
+  .review-card__star {
+    width: 22.58px;
+    height: 22.58px;
+  }
 }
 
 /**
@@ -104,6 +109,11 @@
 
     .review-card__meta {
       margin-bottom: 12px;
+    }
+
+    .review-card__star {
+      width: 19.18px;
+      height: 19.18px;
     }
 
     .review-card__header {
