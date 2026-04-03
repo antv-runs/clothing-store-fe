@@ -37,10 +37,10 @@ export function unwrapPaginatedResponse<T>(
 }
 
 export function buildQueryString(
-  params: Record<string, any> = {},
+  params: object = {},
 ): URLSearchParams {
   const query = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
+  Object.entries(params as Record<string, unknown>).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       query.append(key, String(value));
     }

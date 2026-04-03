@@ -23,7 +23,7 @@ export async function get<T>(
 
 export async function post<T>(
   url: string,
-  data?: any,
+  data?: unknown,
   config?: HttpClientOptions,
 ): Promise<T> {
   const response: AxiosResponse<T> = await httpClient.post(url, data, config);
@@ -32,7 +32,7 @@ export async function post<T>(
 
 export async function put<T>(
   url: string,
-  data?: any,
+  data?: unknown,
   config?: HttpClientOptions,
 ): Promise<T> {
   const response: AxiosResponse<T> = await httpClient.put(url, data, config);
@@ -41,7 +41,7 @@ export async function put<T>(
 
 export async function patch<T>(
   url: string,
-  data?: any,
+  data?: unknown,
   config?: HttpClientOptions,
 ): Promise<T> {
   const response: AxiosResponse<T> = await httpClient.patch(url, data, config);

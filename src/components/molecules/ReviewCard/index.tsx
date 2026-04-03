@@ -12,7 +12,7 @@ interface ReviewCardProps {
 }
 
 /**
- * ReviewCard organism - Individual review card
+ * ReviewCard molecule - Individual review card
  * Displays reviewer info, rating, content, and date
  */
 export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
-import { ReviewCard } from "@/components/organisms/ReviewCard";
+import { ReviewCard } from "@/components/molecules/ReviewCard";
 import type { Review } from "@/types/review";
 import "./index.scss";
 

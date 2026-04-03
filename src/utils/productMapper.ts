@@ -1,16 +1,18 @@
 import type {
-  ApiProduct,
   Product,
   ProductPricing,
   ProductImage,
   ProductColorVariant,
   ProductSizeVariant,
   ProductVariants,
+} from "@/types/product";
+import type {
+  ApiProduct,
   ApiProductPricing,
   ApiProductImage,
   ApiProductVariantOption,
   ApiProductVariants,
-} from "@/types/product";
+} from "@/types/api/product";
 
 /**
  * Maps common color labels to hex color codes

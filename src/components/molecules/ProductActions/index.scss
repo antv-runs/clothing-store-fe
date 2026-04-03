@@ -1,8 +1,7 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
 
-.add-to-cart-button,
-.reviews__action--write {
+.add-to-cart-button {
   @include m.button-base(v.$color-black, v.$color-white);
 }
 
