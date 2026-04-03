@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "@/components/atoms/IconButton";
+import { QuantityStepper } from "@/components/molecules/QuantityStepper";
 import "./index.scss";
 
 interface ProductActionsProps {
@@ -17,31 +17,18 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
 }) => {
   return (
     <div className="product-overview__actions">
-      <form action="#">
-        <IconButton
-          svgName="icn_minus"
-          className="quantity-button-minus quantity-button-minus--aligned js-quantity-button-minus"
-          ariaLabel="Decrease quantity"
-          iconWidth={20}
-          iconHeight={20}
-        />
-        <input
-          id="quantity-input"
-          className="quantity-input js-quantity-input"
-          type="number"
-          defaultValue={1}
-          min={1}
-          step={1}
-          aria-label="Quantity"
-        />
-        <IconButton
-          svgName="icn_plus"
-          className="quantity-button-plus js-quantity-button-plus"
-          ariaLabel="Increase quantity"
-          iconWidth={20}
-          iconHeight={20}
-        />
-      </form>
+      <QuantityStepper
+        action="#"
+        inputId="quantity-input"
+        inputClassName="quantity-input js-quantity-input"
+        decrementButtonClassName="quantity-button-minus quantity-button-minus--aligned js-quantity-button-minus"
+        incrementButtonClassName="quantity-button-plus js-quantity-button-plus"
+        defaultValue={1}
+        min={1}
+        step={1}
+        iconWidth={20}
+        iconHeight={20}
+      />
       <button
         className="add-to-cart-button js-add-to-cart"
         type="button"

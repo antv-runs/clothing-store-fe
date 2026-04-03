@@ -184,12 +184,8 @@
   &__qty-btn {
     width: 32px;
     height: 32px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 16px;
-    @include m.button-native-reset($padding-zero: true);
     flex-shrink: 0;
+    color: #000;
 
     &:disabled,
     &.is-disabled {
@@ -199,14 +195,6 @@
     }
 
     @include m.focus-ring(2px, 4px);
-
-    &.js-cart-item-qty-minus {
-      background-image: url(v.$icn_minus);
-    }
-
-    &.js-cart-item-qty-plus {
-      background-image: url(v.$icn_plus);
-    }
   }
 
   &__quantity {

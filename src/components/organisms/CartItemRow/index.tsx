@@ -1,4 +1,5 @@
 import React from "react";
+import { QuantityStepper } from "@/components/molecules/QuantityStepper";
 import "./index.scss";
 import type { Product } from "@/types/product";
 
@@ -97,28 +98,19 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
             ) : null}
           </div>
 
-          <div className="cart-item__quantity" aria-label="Quantity controls">
-            <button
-              className="cart-item__qty-btn js-cart-item-qty-minus"
-              type="button"
-              aria-label="Decrease quantity"
-              disabled
-            ></button>
-            <input
-              className="js-cart-item-qty-input"
-              type="number"
-              min="1"
-              value={item.quantity}
-              aria-label="Quantity"
-              readOnly
-            />
-            <button
-              className="cart-item__qty-btn js-cart-item-qty-plus"
-              type="button"
-              aria-label="Increase quantity"
-              disabled
-            ></button>
-          </div>
+          <QuantityStepper
+            className="cart-item__quantity"
+            ariaLabel="Quantity controls"
+            inputClassName="js-cart-item-qty-input"
+            decrementButtonClassName="cart-item__qty-btn js-cart-item-qty-minus"
+            incrementButtonClassName="cart-item__qty-btn js-cart-item-qty-plus"
+            value={item.quantity}
+            min={1}
+            readOnly
+            disabled
+            iconWidth={16}
+            iconHeight={16}
+          />
         </div>
       </div>
     </article>
