@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import { ProductCard } from "@/components/molecules/ProductCard";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Skeleton } from "@/components/atoms/Skeleton";
@@ -28,6 +34,7 @@ interface ProductCardListProps {
 interface CarouselItem extends Product {
   isClone?: boolean;
   originalId?: string;
+  clonePosition?: "head" | "tail";
 }
 
 /**
@@ -72,15 +79,28 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
 
   // Clone items for infinite loop (only when navigation is enabled)
   const cloneCount = showNavigation ? Math.min(4, products.length) : 0;
-  const clonedItems: CarouselItem[] = showNavigation
+  const prependedClonedItems: CarouselItem[] = showNavigation
+    ? products.slice(-cloneCount).map((product) => ({
+        ...product,
+        isClone: true,
+        originalId: product.id,
+        clonePosition: "tail",
+      }))
+    : [];
+  const appendedClonedItems: CarouselItem[] = showNavigation
     ? products.slice(0, cloneCount).map((product) => ({
         ...product,
         isClone: true,
         originalId: product.id,
+        clonePosition: "head",
       }))
     : [];
 
-  const allItems: CarouselItem[] = [...products, ...clonedItems];
+  const allItems: CarouselItem[] = [
+    ...prependedClonedItems,
+    ...products,
+    ...appendedClonedItems,
+  ];
   const skeletonItems = Array.from(
     { length: Math.max(1, skeletonCount) },
     (_, index) => index,
@@ -90,30 +110,27 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
     return getFirstItemScrollStep(trackRef.current);
   }, []);
 
-  const getLoopStart = useCallback(() => {
-    if (!trackRef.current) return 0;
-    // The loop start is where the cloned items begin (after original items)
+  const getRealItemsRange = useCallback(() => {
+    if (!trackRef.current) return null;
+
     const originalItems = trackRef.current.querySelectorAll(
       '[data-is-clone="false"]',
     );
-    if (originalItems.length === 0) return 0;
+
+    if (originalItems.length === 0) return null;
+
+    const firstOriginal = originalItems[0] as HTMLElement;
     const lastOriginal = originalItems[originalItems.length - 1] as HTMLElement;
-    return (
+    const start = firstOriginal.offsetLeft;
+    const end =
       lastOriginal.offsetLeft +
       lastOriginal.offsetWidth +
-      getTrackGap(trackRef.current)
-    );
+      getTrackGap(trackRef.current);
+
+    return { start, end };
   }, []);
 
-  const getLoopBoundary = useCallback(() => {
-    if (!viewportRef.current) return 0;
-    const loopStart = getLoopStart();
-    const maxScrollLeft = Math.max(
-      0,
-      viewportRef.current.scrollWidth - viewportRef.current.clientWidth,
-    );
-    return Math.min(loopStart, maxScrollLeft);
-  }, [getLoopStart]);
+  const snapTimeoutRef = useRef<number | null>(null);
 
   const normalizeLoopPosition = useCallback(() => {
     if (
@@ -124,16 +141,59 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
     )
       return;
 
-    const loopBoundary = getLoopBoundary();
-    if (!loopBoundary) return;
+    const realItemsRange = getRealItemsRange();
+    if (!realItemsRange) return;
 
-    // Forward wrap: when scrolled past clone zone, teleport back to start
-    if (viewportRef.current.scrollLeft >= loopBoundary - 1) {
-      isAdjustingLoopRef.current = true;
-      viewportRef.current.scrollLeft = 0;
-      isAdjustingLoopRef.current = false;
+    const { start, end } = realItemsRange;
+    const realWidth = end - start;
+    if (realWidth <= 0) return;
+
+    const viewport = viewportRef.current;
+    let nextScrollLeft = viewport.scrollLeft;
+
+    if (nextScrollLeft < start) {
+      const distance = start - nextScrollLeft;
+      const wraps = Math.ceil(distance / realWidth);
+      nextScrollLeft += wraps * realWidth;
+    } else if (nextScrollLeft >= end) {
+      const distance = nextScrollLeft - end + 1;
+      const wraps = Math.ceil(distance / realWidth);
+      nextScrollLeft -= wraps * realWidth;
     }
-  }, [loading, showNavigation, getLoopBoundary]);
+
+    if (Math.abs(nextScrollLeft - viewport.scrollLeft) < 0.5) return;
+
+    // Teleport instantly between equivalent positions to avoid visual flicker.
+    if (snapTimeoutRef.current) {
+      clearTimeout(snapTimeoutRef.current);
+      snapTimeoutRef.current = null;
+    }
+
+    isAdjustingLoopRef.current = true;
+    viewport.scrollLeft = nextScrollLeft;
+    isAdjustingLoopRef.current = false;
+  }, [loading, showNavigation, getRealItemsRange]);
+
+  useLayoutEffect(() => {
+    if (
+      loading ||
+      !showNavigation ||
+      !viewportRef.current ||
+      cloneCount === 0
+    ) {
+      return;
+    }
+
+    const realItemsRange = getRealItemsRange();
+    if (!realItemsRange) return;
+
+    const viewport = viewportRef.current;
+    if (Math.abs(viewport.scrollLeft - realItemsRange.start) < 0.5) return;
+
+    isAdjustingLoopRef.current = true;
+    viewport.scrollLeft = realItemsRange.start;
+    isAdjustingLoopRef.current = false;
+  }, [loading, showNavigation, cloneCount, products, getRealItemsRange]);
 
   const updateButtonStates = useCallback(() => {
     if (loading) {
@@ -154,27 +214,12 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
       const step = getStepWidth();
       if (!step) return;
 
-      if (showNavigation && direction === -1) {
-        // Backward wrap logic from old implementation
-        const needsWrap =
-          viewportRef.current.scrollLeft <= 0 ||
-          viewportRef.current.scrollLeft < step;
-        const loopBoundary = needsWrap ? getLoopBoundary() : 0;
-
-        if (needsWrap && loopBoundary) {
-          isAdjustingLoopRef.current = true;
-          viewportRef.current.scrollLeft = loopBoundary - step;
-          isAdjustingLoopRef.current = false;
-          return;
-        }
-      }
-
       viewportRef.current.scrollBy({
         left: direction * step,
         behavior: "smooth",
       });
     },
-    [loading, showNavigation, getStepWidth, getLoopBoundary],
+    [loading, getStepWidth],
   );
 
   const handleMouseDown = useCallback(
@@ -217,11 +262,13 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
 
     const viewport = viewportRef.current;
     const step = getStepWidth();
-    if (!step || step === 0) return;
+    const realItemsRange = getRealItemsRange();
+    if (!step || step === 0 || !realItemsRange) return;
 
     const currentScroll = viewport.scrollLeft;
-    const nearestItemIndex = Math.round(currentScroll / step);
-    const targetScroll = nearestItemIndex * step;
+    const relativeScroll = currentScroll - realItemsRange.start;
+    const nearestItemIndex = Math.round(relativeScroll / step);
+    const targetScroll = realItemsRange.start + nearestItemIndex * step;
 
     // Avoid snapping if already very close to target
     if (Math.abs(currentScroll - targetScroll) > 0.5) {
@@ -230,9 +277,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
         behavior: "smooth",
       });
     }
-  }, [loading, getStepWidth, showNavigation]);
-
-  const snapTimeoutRef = useRef<number | null>(null);
+  }, [loading, getStepWidth, showNavigation, getRealItemsRange]);
 
   const debounceSnap = useCallback(() => {
     if (snapTimeoutRef.current) {
@@ -430,11 +475,15 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
                   </article>
                 </li>
               ))
-            : allItems.map((item) => {
+            : allItems.map((item, index) => {
                 const displayId = item.originalId || item.id;
                 return (
                   <li
-                    key={item.isClone ? `clone-${item.id}` : item.id}
+                    key={
+                      item.isClone
+                        ? `clone-${item.clonePosition}-${item.id}-${index}`
+                        : item.id
+                    }
                     className="product-card-list__item js-other-products__item js-related-item"
                     data-product-id={displayId}
                     data-is-clone={item.isClone ? "true" : "false"}
