@@ -185,6 +185,45 @@ const ProductActionsSkeleton: React.FC = () => {
   );
 };
 
+const ReviewCardShell: React.FC = () => {
+  return (
+    <li className="reviews__item review-card">
+      <Skeleton
+        className="product-detail-skeleton__review-card"
+        variant="rect"
+      />
+    </li>
+  );
+};
+
+type RelatedProductCardShellProps = {
+  mobileHidden?: boolean;
+};
+
+const RelatedProductCardShell: React.FC<RelatedProductCardShellProps> = ({
+  mobileHidden = false,
+}) => {
+  return (
+    <li
+      className={`product-card-list__item other-products__skeleton-card${mobileHidden ? " product-detail-skeleton__related-card--mobile-hidden" : ""}`}
+    >
+      <Skeleton className="other-products__skeleton-image" variant="rect" />
+      <Skeleton className="other-products__skeleton-line" variant="line" />
+      <div className="other-products__skeleton-rating">
+        <Skeleton
+          className="other-products__skeleton-circle"
+          variant="circle"
+        />
+        <Skeleton
+          className="other-products__skeleton-line other-products__skeleton-line--short"
+          variant="line"
+        />
+      </div>
+      <Skeleton className="other-products__skeleton-pill" variant="rect" />
+    </li>
+  );
+};
+
 const ProductTabsSkeleton: React.FC = () => {
   return (
     <section
@@ -217,18 +256,8 @@ const ProductTabsSkeleton: React.FC = () => {
         </div>
 
         <ul className="reviews__list">
-          <li className="reviews__item review-card">
-            <Skeleton
-              className="product-detail-skeleton__review-card"
-              variant="rect"
-            />
-          </li>
-          <li className="reviews__item review-card">
-            <Skeleton
-              className="product-detail-skeleton__review-card"
-              variant="rect"
-            />
-          </li>
+          <ReviewCardShell />
+          <ReviewCardShell />
         </ul>
       </div>
     </section>
@@ -252,78 +281,9 @@ const RelatedProductsSkeleton: React.FC = () => {
       <div className="product-card-list product-detail-skeleton__related-list">
         <div className="product-card-list__viewport">
           <ul className="product-card-list__track">
-            <li className="product-card-list__item other-products__skeleton-card">
-              <Skeleton
-                className="other-products__skeleton-image"
-                variant="rect"
-              />
-              <Skeleton
-                className="other-products__skeleton-line"
-                variant="line"
-              />
-              <div className="other-products__skeleton-rating">
-                <Skeleton
-                  className="other-products__skeleton-circle"
-                  variant="circle"
-                />
-                <Skeleton
-                  className="other-products__skeleton-line other-products__skeleton-line--short"
-                  variant="line"
-                />
-              </div>
-              <Skeleton
-                className="other-products__skeleton-pill"
-                variant="rect"
-              />
-            </li>
-            <li className="product-card-list__item other-products__skeleton-card">
-              <Skeleton
-                className="other-products__skeleton-image"
-                variant="rect"
-              />
-              <Skeleton
-                className="other-products__skeleton-line"
-                variant="line"
-              />
-              <div className="other-products__skeleton-rating">
-                <Skeleton
-                  className="other-products__skeleton-circle"
-                  variant="circle"
-                />
-                <Skeleton
-                  className="other-products__skeleton-line other-products__skeleton-line--short"
-                  variant="line"
-                />
-              </div>
-              <Skeleton
-                className="other-products__skeleton-pill"
-                variant="rect"
-              />
-            </li>
-            <li className="product-card-list__item other-products__skeleton-card product-detail-skeleton__related-card--mobile-hidden">
-              <Skeleton
-                className="other-products__skeleton-image"
-                variant="rect"
-              />
-              <Skeleton
-                className="other-products__skeleton-line"
-                variant="line"
-              />
-              <div className="other-products__skeleton-rating">
-                <Skeleton
-                  className="other-products__skeleton-circle"
-                  variant="circle"
-                />
-                <Skeleton
-                  className="other-products__skeleton-line other-products__skeleton-line--short"
-                  variant="line"
-                />
-              </div>
-              <Skeleton
-                className="other-products__skeleton-pill"
-                variant="rect"
-              />
-            </li>
+            <RelatedProductCardShell />
+            <RelatedProductCardShell />
+            <RelatedProductCardShell mobileHidden />
           </ul>
         </div>
       </div>
