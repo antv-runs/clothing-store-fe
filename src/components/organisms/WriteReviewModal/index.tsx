@@ -1,22 +1,74 @@
-import React from "react";
+import { useState, type FormEvent } from "react";
 import "./index.scss";
 import { IconButton } from "@/components/atoms/IconButton";
+import { Star } from "@/components/atoms/Star";
+
+type ReviewSubmission = {
+  username: string;
+  comment: string;
+  stars: number;
+};
+
+interface WriteReviewModalProps {
+  isOpen: boolean;
+  isSubmitting?: boolean;
+  onClose: () => void;
+  onSubmit: (values: ReviewSubmission) => void;
+}
+
+const DEFAULT_USERNAME = "Guest";
+const DEFAULT_RATING = 5;
 
 /**
  * WriteReviewModal - Static review modal markup.
  * Preserves existing classes and DOM structure.
  */
-export const WriteReviewModal: React.FC = () => {
+export const WriteReviewModal = ({
+  isOpen,
+  isSubmitting = false,
+  onClose,
+  onSubmit,
+}: WriteReviewModalProps) => {
+  const [comment, setComment] = useState("");
+  const [stars, setStars] = useState(DEFAULT_RATING);
+
+  const handleClose = () => {
+    if (isSubmitting) {
+      return;
+    }
+
+    onClose();
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
+
+    onSubmit({
+      username: DEFAULT_USERNAME,
+      comment,
+      stars,
+    });
+  };
+
   return (
     <div
       id="write-review-modal"
-      className="review-modal js-review-modal"
-      aria-hidden="true"
+      className={`review-modal js-review-modal${
+        isOpen ? " review-modal--open" : ""
+      }`}
+      aria-hidden={!isOpen}
       role="dialog"
       aria-modal="true"
       aria-labelledby="write-review-title"
     >
-      <div className="review-modal__backdrop js-review-modal-close"></div>
+      <div
+        className="review-modal__backdrop js-review-modal-close"
+        onClick={handleClose}
+      ></div>
       <div className="review-modal__dialog" role="document">
         <div className="review-modal__header">
           <h3 id="write-review-title" className="review-modal__title">
@@ -28,10 +80,15 @@ export const WriteReviewModal: React.FC = () => {
             ariaLabel="Close review form"
             iconWidth={16}
             iconHeight={16}
+            onClick={handleClose}
+            disabled={isSubmitting}
           />
         </div>
 
-        <form className="review-modal__form js-review-modal-form">
+        <form
+          className="review-modal__form js-review-modal-form"
+          onSubmit={handleSubmit}
+        >
           <label className="review-modal__field">
             <span>Username</span>
             <input
@@ -39,6 +96,8 @@ export const WriteReviewModal: React.FC = () => {
               className="js-review-username"
               name="username"
               autoComplete="name"
+              defaultValue={DEFAULT_USERNAME}
+              readOnly
               disabled
             />
           </label>
@@ -51,6 +110,8 @@ export const WriteReviewModal: React.FC = () => {
               rows={4}
               placeholder="Share your thoughts about this product"
               required
+              value={comment}
+              onChange={(event) => setComment(event.target.value)}
             ></textarea>
           </label>
 
@@ -60,14 +121,30 @@ export const WriteReviewModal: React.FC = () => {
               className="review-modal__rating-picker js-review-rating-picker"
               aria-label="Select a rating from 1 to 5 stars"
             >
-              <div className="review-modal__rating-stars js-review-rating-stars"></div>
+              <div className="review-modal__rating-stars js-review-rating-stars">
+                <Star rating={stars} className="review-modal__star" />
+              </div>
               <div
                 className="review-modal__rating-hitzones js-review-rating-hitzones"
                 aria-hidden="false"
-              ></div>
+              >
+                {Array.from({ length: 10 }, (_, index) => {
+                  const nextRating = (index + 1) / 2;
+
+                  return (
+                    <button
+                      key={nextRating}
+                      type="button"
+                      className="review-modal__rating-hit"
+                      aria-label={`Set rating to ${nextRating.toFixed(1)} stars`}
+                      onClick={() => setStars(nextRating)}
+                    />
+                  );
+                })}
+              </div>
             </div>
             <p className="review-modal__rating-value js-review-rating-value">
-              5.0/5
+              {stars.toFixed(1)}/5
             </p>
           </div>
 
@@ -75,12 +152,17 @@ export const WriteReviewModal: React.FC = () => {
             <button
               type="button"
               className="review-modal__button review-modal__button--cancel js-review-modal-close"
+              onClick={handleClose}
+              disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="review-modal__button js-review-modal-submit"
+              className={`review-modal__button js-review-modal-submit${
+                isSubmitting ? " is-loading" : ""
+              }`}
+              disabled={isSubmitting}
             >
               Submit Review
             </button>

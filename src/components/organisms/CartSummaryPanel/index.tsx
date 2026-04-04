@@ -13,6 +13,8 @@ interface CartSummary {
 interface CartSummaryPanelProps {
   summary: CartSummary;
   formatPrice: (amount: number, currency?: string) => string;
+  isCheckoutDisabled?: boolean;
+  onCheckout?: () => void;
 }
 
 /**
@@ -21,6 +23,8 @@ interface CartSummaryPanelProps {
 export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
   summary,
   formatPrice,
+  isCheckoutDisabled = true,
+  onCheckout,
 }) => {
   return (
     <aside
@@ -87,8 +91,9 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
       <Button
         className="cart-summary__checkout js-cart-checkout"
         type="button"
-        disabled
-        aria-disabled="true"
+        disabled={isCheckoutDisabled}
+        aria-disabled={isCheckoutDisabled}
+        onClick={onCheckout}
         unstyled
       >
         <span className="cart-summary__checkout-text">Go to Checkout</span>

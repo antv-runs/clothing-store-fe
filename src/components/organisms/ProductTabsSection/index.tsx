@@ -16,11 +16,12 @@ interface ProductTabsSectionProps {
   isLoadingMoreReviews: boolean;
   hasMoreReviews: boolean;
   selectedRating: string;
-  selectedSort: string;
+  selectedSort: "latest" | "oldest" | "highest";
   onRatingChange: (value: string) => void;
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   onLoadMore: () => void;
   reviewError?: string | null;
+  onWriteReview: () => void;
 }
 
 const DEFAULT_ACTIVE_TAB: TabKey = "tc-reviews";
@@ -43,6 +44,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   onSortChange,
   onLoadMore,
   reviewError,
+  onWriteReview,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(DEFAULT_ACTIVE_TAB);
 
@@ -104,6 +106,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         onSortChange={onSortChange}
         onLoadMore={onLoadMore}
         error={reviewError}
+        onWriteReview={onWriteReview}
       />
 
       <section

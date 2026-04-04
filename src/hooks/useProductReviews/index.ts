@@ -136,42 +136,32 @@ export const useProductReviews = (
   const previousProductIdRef = useRef(productId);
   const lastPageOneRequestKeyRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (!productId) {
-      requestIdRef.current += 1;
-      previousProductIdRef.current = productId;
-      lastPageOneRequestKeyRef.current = null;
-      dispatch({ type: REVIEW_ACTION.RESET });
-      return;
-    }
+  const requestPageOne = useCallback(
+    async (
+      targetProductId: string | number,
+      targetFilter: string,
+      targetSort: ReviewSort,
+      force = false,
+    ) => {
+      if (!targetProductId) {
+        return;
+      }
 
-    const productChanged = previousProductIdRef.current !== productId;
-    const effectiveFilter = productChanged ? DEFAULT_FILTER : state.filter;
-    const effectiveSort = productChanged ? DEFAULT_SORT : state.sort;
+      const pageOneRequestKey = `${String(targetProductId)}|${targetFilter}|${targetSort}`;
+      if (!force && lastPageOneRequestKeyRef.current === pageOneRequestKey) {
+        return;
+      }
 
-    if (productChanged) {
-      requestIdRef.current += 1;
-      previousProductIdRef.current = productId;
-      dispatch({ type: REVIEW_ACTION.RESET });
-    }
-
-    const pageOneRequestKey = `${String(productId)}|${effectiveFilter}|${effectiveSort}`;
-    if (lastPageOneRequestKeyRef.current === pageOneRequestKey) {
-      return;
-    }
-    lastPageOneRequestKeyRef.current = pageOneRequestKey;
-
-    // One effect drives initial fetch and filter/sort reloads.
-    const fetchPageOne = async () => {
+      lastPageOneRequestKeyRef.current = pageOneRequestKey;
       dispatch({ type: REVIEW_ACTION.REQUEST_START, append: false });
       const currentRequestId = ++requestIdRef.current;
 
       try {
-        const result = await getReviewsByProductId(productId, {
+        const result = await getReviewsByProductId(targetProductId, {
           page: 1,
           perPage: REVIEWS_PER_PAGE,
-          rating: queryRating(effectiveFilter),
-          sort: effectiveSort,
+          rating: queryRating(targetFilter),
+          sort: targetSort,
         });
 
         if (currentRequestId !== requestIdRef.current) {
@@ -197,10 +187,32 @@ export const useProductReviews = (
           message: DEFAULT_ERROR_MESSAGE,
         });
       }
-    };
+    },
+    [],
+  );
 
-    void fetchPageOne();
-  }, [productId, state.filter, state.sort]);
+  useEffect(() => {
+    if (!productId) {
+      requestIdRef.current += 1;
+      previousProductIdRef.current = productId;
+      lastPageOneRequestKeyRef.current = null;
+      dispatch({ type: REVIEW_ACTION.RESET });
+      return;
+    }
+
+    const productChanged = previousProductIdRef.current !== productId;
+    const effectiveFilter = productChanged ? DEFAULT_FILTER : state.filter;
+    const effectiveSort = productChanged ? DEFAULT_SORT : state.sort;
+
+    if (productChanged) {
+      requestIdRef.current += 1;
+      previousProductIdRef.current = productId;
+      dispatch({ type: REVIEW_ACTION.RESET });
+    }
+
+    // One effect drives initial fetch and filter/sort reloads.
+    void requestPageOne(productId, effectiveFilter, effectiveSort);
+  }, [productId, requestPageOne, state.filter, state.sort]);
 
   const setFilter = useCallback((value: string) => {
     dispatch({ type: REVIEW_ACTION.SET_FILTER, value });
@@ -266,6 +278,14 @@ export const useProductReviews = (
     state.sort,
   ]);
 
+  const reloadReviews = useCallback(async () => {
+    if (!productId) {
+      return;
+    }
+
+    await requestPageOne(productId, state.filter, state.sort, true);
+  }, [productId, requestPageOne, state.filter, state.sort]);
+
   return {
     reviews: state.reviews,
     reviewCount: state.total || state.reviews.length,
@@ -278,5 +298,6 @@ export const useProductReviews = (
     setFilter,
     setSort,
     loadMore,
+    reloadReviews,
   };
 };

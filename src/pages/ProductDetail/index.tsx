@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { submitReview } from "@/api/Review";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { ProductGallery } from "@/components/organisms/ProductGallery";
 import { ProductInfo } from "@/components/organisms/ProductInfo";
@@ -41,6 +42,12 @@ const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(DEFAULT_QUANTITY);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [relatedLoading, setRelatedLoading] = useState(false);
+  const [isWriteReviewModalOpen, setIsWriteReviewModalOpen] =
+    useState<boolean>(false);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [reviewStatusMessage, setReviewStatusMessage] = useState("");
+  const reviewSubmitRequestIdRef = useRef(0);
+  const isMountedRef = useRef(true);
 
   const {
     reviews,
@@ -54,7 +61,14 @@ const ProductDetail: React.FC = () => {
     setFilter,
     setSort,
     loadMore,
+    reloadReviews,
   } = useProductReviews(product?.id);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     let isActive = true;
@@ -146,6 +160,118 @@ const ProductDetail: React.FC = () => {
       isActive = false;
     };
   }, [normalizedRouteId]);
+
+  useEffect(() => {
+    if (isWriteReviewModalOpen) {
+      document.body.classList.add("review-modal-open");
+    } else {
+      document.body.classList.remove("review-modal-open");
+    }
+
+    return () => {
+      document.body.classList.remove("review-modal-open");
+    };
+  }, [isWriteReviewModalOpen]);
+
+  useEffect(() => {
+    if (!isWriteReviewModalOpen) {
+      return;
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsWriteReviewModalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isWriteReviewModalOpen]);
+
+  const handleOpenReviewModal = useCallback(() => {
+    if (isSubmittingReview) {
+      return;
+    }
+
+    setReviewStatusMessage("");
+    setIsWriteReviewModalOpen(true);
+  }, [isSubmittingReview]);
+
+  const handleCloseReviewModal = useCallback(() => {
+    if (isSubmittingReview) {
+      return;
+    }
+
+    setIsWriteReviewModalOpen(false);
+  }, [isSubmittingReview]);
+
+  const handleReviewSubmit = useCallback(
+    async ({
+      username,
+      comment,
+      stars,
+    }: {
+      username: string;
+      comment: string;
+      stars: number;
+    }) => {
+      if (!product?.id || isSubmittingReview) {
+        return;
+      }
+
+      const normalizedUsername = String(username || "Guest").trim() || "Guest";
+      const normalizedComment = String(comment || "").trim();
+      const normalizedStars = Math.max(1, Math.min(5, Number(stars) || 5));
+
+      if (!normalizedComment) {
+        setReviewStatusMessage("Please write a comment before submitting.");
+        return;
+      }
+
+      const requestId = ++reviewSubmitRequestIdRef.current;
+      setIsSubmittingReview(true);
+      setReviewStatusMessage("Submitting review...");
+
+      try {
+        await submitReview(product.id, {
+          username: normalizedUsername,
+          comment: normalizedComment,
+          stars: normalizedStars,
+        });
+
+        if (
+          !isMountedRef.current ||
+          requestId !== reviewSubmitRequestIdRef.current
+        ) {
+          return;
+        }
+
+        setIsWriteReviewModalOpen(false);
+        setReviewStatusMessage("Review submitted successfully.");
+        await reloadReviews();
+      } catch (error) {
+        if (
+          !isMountedRef.current ||
+          requestId !== reviewSubmitRequestIdRef.current
+        ) {
+          return;
+        }
+
+        console.error("Failed to submit review.", error);
+        setReviewStatusMessage("Failed to submit review. Please try again.");
+      } finally {
+        if (
+          isMountedRef.current &&
+          requestId === reviewSubmitRequestIdRef.current
+        ) {
+          setIsSubmittingReview(false);
+        }
+      }
+    },
+    [isSubmittingReview, product?.id, reloadReviews],
+  );
 
   const getSafeSelectedColorId = () => {
     if (selectedColorId) {
@@ -285,6 +411,7 @@ const ProductDetail: React.FC = () => {
         onSortChange={setSort}
         onLoadMore={loadMore}
         reviewError={reviewError}
+        onWriteReview={handleOpenReviewModal}
       />
 
       <RelatedProductsSection
@@ -294,10 +421,20 @@ const ProductDetail: React.FC = () => {
         title="You Might Also Like"
       />
 
-      <WriteReviewModal />
+      <WriteReviewModal
+        key={
+          isWriteReviewModalOpen ? "write-review-open" : "write-review-closed"
+        }
+        isOpen={isWriteReviewModalOpen}
+        isSubmitting={isSubmittingReview}
+        onClose={handleCloseReviewModal}
+        onSubmit={handleReviewSubmit}
+      />
 
       {/* Screen reader announcer */}
-      <div aria-live="polite" className="sr-only js-sr-announcer"></div>
+      <div aria-live="polite" className="sr-only js-sr-announcer">
+        {reviewStatusMessage}
+      </div>
     </div>
   );
 };

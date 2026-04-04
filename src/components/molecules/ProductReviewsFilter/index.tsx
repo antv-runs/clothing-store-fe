@@ -36,6 +36,7 @@ export interface ProductReviewsFilterProps {
   selectedSort: "latest" | "oldest" | "highest";
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   isDisabled?: boolean;
+  onWriteReview: () => void;
 }
 
 /**
@@ -47,6 +48,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
   selectedSort,
   onSortChange,
   isDisabled = false,
+  onWriteReview,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const filterRef = React.useRef<HTMLDivElement>(null);
@@ -146,6 +148,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
         className="reviews__action reviews__action--write js-write-review-button"
         aria-label="Write a review"
         disabled={isDisabled}
+        onClick={onWriteReview}
       >
         Write a Review
       </button>

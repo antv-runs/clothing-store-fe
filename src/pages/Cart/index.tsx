@@ -1,17 +1,20 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
 import { products } from "@/const/products";
-import { mockCartItems } from "@/const/cartItem";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { CartEmptyState } from "@/components/molecules/CartEmptyState";
 import { CartItemRow } from "@/components/organisms/CartItemRow";
 import { CartSummaryPanel } from "@/components/organisms/CartSummaryPanel";
+import { ROUTES } from "@/routes/paths";
 import type { CartRow } from "@/types/cart";
 import { formatPrice, normalizeId } from "@/utils/formatters";
+import { readStoredCartRows } from "@/utils/cartStorage";
 import "./index.scss";
 
 const Cart: React.FC = () => {
-  const [cartRows] = useState<CartRow[]>(() => mockCartItems);
+  const navigate = useNavigate();
+  const [cartRows] = useState<CartRow[]>(() => readStoredCartRows());
 
   const cartItems = useMemo(() => {
     return cartRows
@@ -58,6 +61,13 @@ const Cart: React.FC = () => {
   }, [cartItems]);
 
   const isEmpty = cartItems.length === 0;
+  const handleCheckout = () => {
+    if (isEmpty) {
+      return;
+    }
+
+    navigate(ROUTES.CHECKOUT);
+  };
 
   return (
     <div className="container u-mt-25">
@@ -93,7 +103,12 @@ const Cart: React.FC = () => {
             ))}
           </div>
 
-          <CartSummaryPanel summary={summary} formatPrice={formatPrice} />
+          <CartSummaryPanel
+            summary={summary}
+            formatPrice={formatPrice}
+            isCheckoutDisabled={isEmpty}
+            onCheckout={handleCheckout}
+          />
         </section>
       </section>
     </div>

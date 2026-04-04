@@ -10,6 +10,7 @@ interface ProductReviewsHeaderProps {
   onRatingChange: (value: string) => void;
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   isLoading?: boolean;
+  onWriteReview: () => void;
 }
 
 /**
@@ -22,6 +23,7 @@ export const ProductReviewsHeader: React.FC<ProductReviewsHeaderProps> = ({
   onRatingChange,
   onSortChange,
   isLoading = false,
+  onWriteReview,
 }) => {
   return (
     <div className="reviews__header">
@@ -38,6 +40,7 @@ export const ProductReviewsHeader: React.FC<ProductReviewsHeaderProps> = ({
         selectedSort={selectedSort}
         onSortChange={onSortChange}
         isDisabled={isLoading}
+        onWriteReview={onWriteReview}
       />
     </div>
   );

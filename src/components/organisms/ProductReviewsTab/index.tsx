@@ -13,11 +13,12 @@ interface ProductReviewsTabProps {
   isLoadingMore: boolean;
   hasMore: boolean;
   selectedRating: string;
-  selectedSort: string;
+  selectedSort: "latest" | "oldest" | "highest";
   onRatingChange: (value: string) => void;
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   onLoadMore: () => void;
   error?: string | null;
+  onWriteReview: () => void;
 }
 
 /**
@@ -36,6 +37,7 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
   onSortChange,
   onLoadMore,
   error,
+  onWriteReview,
 }) => {
   return (
     <section
@@ -55,6 +57,7 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
         onRatingChange={onRatingChange}
         onSortChange={onSortChange}
         isLoading={isLoading}
+        onWriteReview={onWriteReview}
       />
 
       {error && !isLoading && (
