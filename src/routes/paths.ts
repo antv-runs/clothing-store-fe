@@ -8,6 +8,7 @@ export const ROUTES = {
   PRODUCT_DETAIL: "/product/:id",
   CART: "/cart",
   CHECKOUT: "/checkout",
+  NOT_FOUND: "*",
 } as const;
 
 /**

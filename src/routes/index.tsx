@@ -6,6 +6,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MainLayout } from "@/components/templates/MainLayout";
 import { routeConfig } from "@/routes/routeConfig";
+import NotFound from "@/pages/NotFound";
+import { ROUTES } from "@/routes/paths";
 
 /**
  * AppRoutes component
@@ -23,6 +25,7 @@ const AppRoutes = () => {
             );
           })}
         </Route>
+        <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
