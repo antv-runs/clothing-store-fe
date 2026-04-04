@@ -7,13 +7,14 @@ import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
+import { useCartRows } from "@/hooks/useCartRows";
 import type { CreateOrderPayload } from "@/types/api/order";
 import { checkoutSchema, type CheckoutFormValues } from "@/types/checkout";
-import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import "./index.scss";
 
 const Checkout: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { getCartRows, clearCart } = useCartRows();
 
   const {
     control,
@@ -36,7 +37,7 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    const cartRows = readStoredCartRows();
+    const cartRows = getCartRows();
 
     if (cartRows.length === 0) {
       return;
@@ -56,7 +57,7 @@ const Checkout: React.FC = () => {
 
     try {
       await createOrder(payload);
-      writeStoredCartRows([]);
+      clearCart();
       reset();
       clearErrors();
     } catch (error) {

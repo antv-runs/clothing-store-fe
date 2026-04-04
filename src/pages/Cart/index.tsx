@@ -1,66 +1,18 @@
-import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
-import { products } from "@/const/products";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { CartEmptyState } from "@/components/molecules/CartEmptyState";
 import { CartItemRow } from "@/components/organisms/CartItemRow";
 import { CartSummaryPanel } from "@/components/organisms/CartSummaryPanel";
+import { useCartRows } from "@/hooks/useCartRows";
 import { ROUTES } from "@/routes/paths";
-import type { CartRow } from "@/types/cart";
-import { formatPrice, normalizeId } from "@/utils/formatters";
-import { readStoredCartRows } from "@/utils/cartStorage";
+import { formatPrice } from "@/utils/formatters";
 import "./index.scss";
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
-  const [cartRows] = useState<CartRow[]>(() => readStoredCartRows());
+  const { cartItems, summary, isEmpty } = useCartRows();
 
-  const cartItems = useMemo(() => {
-    return cartRows
-      .map((row) => {
-        const product = products.find((item) =>
-          normalizeId(String(item.id), row.productId),
-        );
-        if (!product) {
-          return null;
-        }
-
-        return {
-          ...product,
-          quantity: row.quantity,
-          color: row.color,
-          size: row.size,
-        };
-      })
-      .filter((item) => item !== null);
-  }, [cartRows]);
-
-  const summary = useMemo(() => {
-    const subtotal = cartItems.reduce((acc, item) => {
-      const basePrice =
-        item.pricing.original && item.pricing.original > item.pricing.current
-          ? item.pricing.original
-          : item.pricing.current;
-      return acc + basePrice * item.quantity;
-    }, 0);
-
-    const discount = cartItems.reduce((acc, item) => {
-      const original = item.pricing.original;
-      if (!original || original <= item.pricing.current) {
-        return acc;
-      }
-
-      return acc + (original - item.pricing.current) * item.quantity;
-    }, 0);
-
-    const delivery = 0;
-    const total = subtotal - discount + delivery;
-
-    return { subtotal, discount, delivery, total };
-  }, [cartItems]);
-
-  const isEmpty = cartItems.length === 0;
   const handleCheckout = () => {
     if (isEmpty) {
       return;

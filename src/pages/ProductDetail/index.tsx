@@ -15,9 +15,8 @@ import { getProductById, getProducts } from "@/api/Product";
 import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/formatters";
 import { Text } from "@/components/atoms/Text";
+import { useCartRows } from "@/hooks/useCartRows";
 import { useProductReviews } from "@/hooks/useProductReviews";
-import type { CartRow } from "@/types/cart";
-import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import "./index.scss";
 
 const DEFAULT_QUANTITY = 1;
@@ -64,6 +63,7 @@ const ProductDetail: React.FC = () => {
     loadMore,
     reloadReviews,
   } = useProductReviews(product?.id);
+  const { addItem } = useCartRows();
 
   useEffect(() => {
     return () => {
@@ -264,7 +264,7 @@ const ProductDetail: React.FC = () => {
         setReviewStatusMessage(
           error instanceof ApiError
             ? error.uiMessage
-            : "Failed to submit review. Please try again."
+            : "Failed to submit review. Please try again.",
         );
       } finally {
         if (
@@ -316,33 +316,12 @@ const ProductDetail: React.FC = () => {
     const safeSizeId = getSafeSelectedSizeId();
     const safeQuantity = normalizeQuantity(quantity);
 
-    const existingRows = readStoredCartRows();
-    const nextRows: CartRow[] = [...existingRows];
-    const existingIndex = nextRows.findIndex((row) => {
-      return (
-        row.productId === String(product.id) &&
-        (row.color ?? null) === safeColorId &&
-        (row.size ?? null) === safeSizeId
-      );
+    addItem({
+      productId: String(product.id),
+      quantity: safeQuantity,
+      color: safeColorId,
+      size: safeSizeId,
     });
-
-    if (existingIndex >= 0) {
-      nextRows[existingIndex] = {
-        ...nextRows[existingIndex],
-        quantity: normalizeQuantity(
-          nextRows[existingIndex].quantity + safeQuantity,
-        ),
-      };
-    } else {
-      nextRows.push({
-        productId: String(product.id),
-        quantity: safeQuantity,
-        color: safeColorId,
-        size: safeSizeId,
-      });
-    }
-
-    writeStoredCartRows(nextRows);
   };
 
   if (isLoading) {
