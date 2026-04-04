@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createOrder } from "@/api/Order";
-import { ApiError } from "@/utils/apiError";
+import {
+  isApiError,
+  mapApiErrorToMessage,
+  mapApiValidationErrors,
+} from "@/utils/apiErrorMapper";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
@@ -61,23 +65,20 @@ const Checkout: React.FC = () => {
       reset();
       clearErrors();
     } catch (error) {
-      if (error instanceof ApiError) {
-        if (
-          error.validationErrors &&
-          Object.keys(error.validationErrors).length > 0
-        ) {
-          Object.entries(error.validationErrors).forEach(
-            ([field, messages]) => {
-              setError(field as keyof CheckoutFormValues, {
-                type: "server",
-                message: messages[0],
-              });
-            },
-          );
-        } else {
-          // Global error fallback, do not introduce new UI blocks
-          window.alert(error.uiMessage);
-        }
+      const validationErrors = mapApiValidationErrors(error);
+
+      if (validationErrors) {
+        Object.entries(validationErrors).forEach(([field, messages]) => {
+          setError(field as keyof CheckoutFormValues, {
+            type: "server",
+            message: messages[0],
+          });
+        });
+      } else if (isApiError(error)) {
+        // Global error fallback, do not introduce new UI blocks
+        window.alert(
+          mapApiErrorToMessage(error, "An unexpected error occurred."),
+        );
       }
     } finally {
       setIsSubmitting(false);

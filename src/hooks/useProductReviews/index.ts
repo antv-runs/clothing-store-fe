@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { getReviewsByProductId } from "@/api/Review";
-import { ApiError } from "@/utils/apiError";
+import { mapApiErrorToMessage } from "@/utils/apiErrorMapper";
 import type { Review } from "@/types/review";
 
 const REVIEW_ACTION = {
@@ -185,7 +185,7 @@ export const useProductReviews = (
         console.error("Failed to load reviews", error);
         dispatch({
           type: REVIEW_ACTION.REQUEST_ERROR,
-          message: error instanceof ApiError ? error.uiMessage : DEFAULT_ERROR_MESSAGE,
+          message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),
         });
       }
     },
@@ -266,7 +266,7 @@ export const useProductReviews = (
       console.error("Failed to load reviews", error);
       dispatch({
         type: REVIEW_ACTION.REQUEST_ERROR,
-        message: error instanceof ApiError ? error.uiMessage : DEFAULT_ERROR_MESSAGE,
+        message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),
       });
     }
   }, [
