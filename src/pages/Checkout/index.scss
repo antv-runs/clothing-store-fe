@@ -33,7 +33,7 @@
     gap: 8px;
 
     span {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       color: v.$color-black;
     }
@@ -57,7 +57,7 @@
 
   &__message {
     margin-top: 12px;
-    font-size: 14px;
+    font-size: 16px;
     color: v.$color-muted;
   }
 }
@@ -83,6 +83,12 @@
       grid-template-columns: 1fr;
       gap: 14px;
       margin-bottom: 18px;
+    }
+
+    &__field {
+      span {
+        font-size: 14px;
+      }
     }
 
     &__submit {

@@ -1,48 +1,49 @@
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createOrder } from "@/api/Order";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import type { CreateOrderPayload } from "@/types/api/order";
+import { checkoutSchema, type CheckoutFormValues } from "@/types/checkout";
 import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import "./index.scss";
 
 const Checkout: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState("");
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
-    event,
-  ) => {
-    event.preventDefault();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    clearErrors,
+  } = useForm<CheckoutFormValues>({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      address: "",
+    },
+  });
 
+  const onSubmit = async (values: CheckoutFormValues) => {
     if (isSubmitting) {
-      return;
-    }
-
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const customerName = String(formData.get("fullName") ?? "").trim();
-    const customerEmail = String(formData.get("email") ?? "").trim();
-    const address = String(formData.get("address") ?? "").trim();
-
-    if (!customerName || !customerEmail || !address) {
-      setFeedbackMessage("Please fill in all required checkout fields.");
       return;
     }
 
     const cartRows = readStoredCartRows();
 
     if (cartRows.length === 0) {
-      setFeedbackMessage("Your cart is empty.");
       return;
     }
 
     const payload: CreateOrderPayload = {
-      customer_name: customerName,
-      customer_email: customerEmail,
-      address,
+      customer_name: values.fullName,
+      customer_email: values.email,
+      address: values.address,
       items: cartRows.map((row) => ({
         product_id: row.productId,
         quantity: row.quantity,
@@ -50,15 +51,12 @@ const Checkout: React.FC = () => {
     };
 
     setIsSubmitting(true);
-    setFeedbackMessage("Placing your order...");
 
     try {
       await createOrder(payload);
       writeStoredCartRows([]);
-      form.reset();
-      setFeedbackMessage("Order placed successfully.");
-    } catch {
-      setFeedbackMessage("Failed to place order. Please try again.");
+      reset();
+      clearErrors();
     } finally {
       setIsSubmitting(false);
     }
@@ -78,27 +76,82 @@ const Checkout: React.FC = () => {
 
         <form
           className="checkout-page__form js-checkout-form"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
           <div className="checkout-page__grid">
             <label className="checkout-page__field">
               <span>Full Name</span>
-              <Input type="text" name="fullName" autoComplete="name" required />
+              <Controller
+                name="fullName"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Input
+                      {...field}
+                      type="text"
+                      autoComplete="name"
+                      required
+                      aria-invalid={Boolean(errors.fullName)}
+                      onChange={(event) => {
+                        field.onChange(event);
+                      }}
+                    />
+                    {errors.fullName?.message && (
+                      <p role="alert">{errors.fullName.message}</p>
+                    )}
+                  </>
+                )}
+              />
             </label>
 
             <label className="checkout-page__field">
               <span>Email</span>
-              <Input type="email" name="email" autoComplete="email" required />
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Input
+                      {...field}
+                      type="email"
+                      autoComplete="email"
+                      required
+                      aria-invalid={Boolean(errors.email)}
+                      onChange={(event) => {
+                        field.onChange(event);
+                      }}
+                    />
+                    {errors.email?.message && (
+                      <p role="alert">{errors.email.message}</p>
+                    )}
+                  </>
+                )}
+              />
             </label>
 
             <label className="checkout-page__field checkout-page__field--full">
               <span>Address</span>
-              <Input
-                type="text"
+              <Controller
                 name="address"
-                autoComplete="street-address"
-                required
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Input
+                      {...field}
+                      type="text"
+                      autoComplete="street-address"
+                      required
+                      aria-invalid={Boolean(errors.address)}
+                      onChange={(event) => {
+                        field.onChange(event);
+                      }}
+                    />
+                    {errors.address?.message && (
+                      <p role="alert">{errors.address.message}</p>
+                    )}
+                  </>
+                )}
               />
             </label>
           </div>
@@ -115,14 +168,6 @@ const Checkout: React.FC = () => {
             Place Order
           </Button>
         </form>
-
-        <p
-          className="checkout-page__message js-checkout-message"
-          aria-live="polite"
-          hidden={!feedbackMessage}
-        >
-          {feedbackMessage}
-        </p>
       </section>
     </div>
   );

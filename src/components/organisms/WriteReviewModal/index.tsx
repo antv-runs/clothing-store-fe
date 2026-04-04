@@ -1,4 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import "./index.scss";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Star } from "@/components/atoms/Star";
@@ -16,8 +19,17 @@ interface WriteReviewModalProps {
   onSubmit: (values: ReviewSubmission) => void;
 }
 
-const DEFAULT_USERNAME = "Guest";
 const DEFAULT_RATING = 5;
+
+const getGuestUsername = () => `Guest-${Date.now()}`;
+
+const reviewModalSchema = z.object({
+  username: z.string().trim().min(1, "Username is required."),
+  comment: z.string().trim().min(1, "Comment is required."),
+  stars: z.number().min(0.5).max(5),
+});
+
+type ReviewModalFormValues = z.infer<typeof reviewModalSchema>;
 
 /**
  * WriteReviewModal - Static review modal markup.
@@ -29,8 +41,24 @@ export const WriteReviewModal = ({
   onClose,
   onSubmit,
 }: WriteReviewModalProps) => {
-  const [comment, setComment] = useState("");
-  const [stars, setStars] = useState(DEFAULT_RATING);
+  const { control, handleSubmit, reset } = useForm<ReviewModalFormValues>({
+    resolver: zodResolver(reviewModalSchema),
+    defaultValues: {
+      username: "",
+      comment: "",
+      stars: DEFAULT_RATING,
+    },
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        username: getGuestUsername(),
+        comment: "",
+        stars: DEFAULT_RATING,
+      });
+    }
+  }, [isOpen, reset]);
 
   const handleClose = () => {
     if (isSubmitting) {
@@ -40,18 +68,12 @@ export const WriteReviewModal = ({
     onClose();
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleModalSubmit = (values: ReviewModalFormValues) => {
     if (isSubmitting) {
       return;
     }
 
-    onSubmit({
-      username: DEFAULT_USERNAME,
-      comment,
-      stars,
-    });
+    onSubmit(values);
   };
 
   return (
@@ -87,32 +109,45 @@ export const WriteReviewModal = ({
 
         <form
           className="review-modal__form js-review-modal-form"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(handleModalSubmit)}
         >
           <label className="review-modal__field">
             <span>Username</span>
-            <input
-              type="text"
-              className="js-review-username"
+            <Controller
               name="username"
-              autoComplete="name"
-              defaultValue={DEFAULT_USERNAME}
-              readOnly
-              disabled
+              control={control}
+              render={({ field }) => (
+                <input
+                  type="text"
+                  className="js-review-username"
+                  name={field.name}
+                  autoComplete="name"
+                  value={field.value}
+                  readOnly
+                  disabled
+                />
+              )}
             />
           </label>
 
           <label className="review-modal__field">
             <span>Comment</span>
-            <textarea
-              className="js-review-comment"
+            <Controller
               name="comment"
-              rows={4}
-              placeholder="Share your thoughts about this product"
-              required
-              value={comment}
-              onChange={(event) => setComment(event.target.value)}
-            ></textarea>
+              control={control}
+              render={({ field }) => (
+                <textarea
+                  className="js-review-comment"
+                  name={field.name}
+                  rows={4}
+                  placeholder="Share your thoughts about this product"
+                  required
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                ></textarea>
+              )}
+            />
           </label>
 
           <div className="review-modal__field review-modal__field--rating">
@@ -121,31 +156,45 @@ export const WriteReviewModal = ({
               className="review-modal__rating-picker js-review-rating-picker"
               aria-label="Select a rating from 1 to 5 stars"
             >
-              <div className="review-modal__rating-stars js-review-rating-stars">
-                <Star rating={stars} className="review-modal__star" />
-              </div>
-              <div
-                className="review-modal__rating-hitzones js-review-rating-hitzones"
-                aria-hidden="false"
-              >
-                {Array.from({ length: 10 }, (_, index) => {
-                  const nextRating = (index + 1) / 2;
+              <Controller
+                name="stars"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <div className="review-modal__rating-stars js-review-rating-stars">
+                      <Star rating={field.value} className="review-modal__star" />
+                    </div>
+                    <div
+                      className="review-modal__rating-hitzones js-review-rating-hitzones"
+                      aria-hidden="false"
+                    >
+                      {Array.from({ length: 10 }, (_, index) => {
+                        const nextRating = (index + 1) / 2;
 
-                  return (
-                    <button
-                      key={nextRating}
-                      type="button"
-                      className="review-modal__rating-hit"
-                      aria-label={`Set rating to ${nextRating.toFixed(1)} stars`}
-                      onClick={() => setStars(nextRating)}
-                    />
-                  );
-                })}
-              </div>
+                        return (
+                          <button
+                            key={nextRating}
+                            type="button"
+                            className="review-modal__rating-hit"
+                            aria-label={`Set rating to ${nextRating.toFixed(1)} stars`}
+                            onClick={() => field.onChange(nextRating)}
+                          />
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              />
             </div>
-            <p className="review-modal__rating-value js-review-rating-value">
-              {stars.toFixed(1)}/5
-            </p>
+            <Controller
+              name="stars"
+              control={control}
+              render={({ field }) => (
+                <p className="review-modal__rating-value js-review-rating-value">
+                  {Number(field.value).toFixed(1)}/5
+                </p>
+              )}
+            />
           </div>
 
           <div className="review-modal__actions">
