@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { submitReview } from "@/api/Review";
+import { ApiError } from "@/utils/apiError";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { ProductGallery } from "@/components/organisms/ProductGallery";
 import { ProductInfo } from "@/components/organisms/ProductInfo";
@@ -260,7 +261,11 @@ const ProductDetail: React.FC = () => {
         }
 
         console.error("Failed to submit review.", error);
-        setReviewStatusMessage("Failed to submit review. Please try again.");
+        setReviewStatusMessage(
+          error instanceof ApiError
+            ? error.uiMessage
+            : "Failed to submit review. Please try again."
+        );
       } finally {
         if (
           isMountedRef.current &&

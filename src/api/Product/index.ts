@@ -1,6 +1,3 @@
-// Product API module
-// Moved from services/productService.ts
-
 import { get } from "@/lib/axios";
 import type { PaginatedApiResponse, ApiResponse } from "@/types/pagination";
 import type { Product, ProductListResult } from "@/types/product";

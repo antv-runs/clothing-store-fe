@@ -1,0 +1,83 @@
+import { Component } from "react";
+import type { ErrorInfo, ReactNode } from "react";
+import { Heading } from "@/components/atoms/Heading";
+import { Button } from "@/components/atoms/Button";
+import "./index.scss";
+
+interface Props {
+  children?: ReactNode;
+  fallbackMessage?: string;
+}
+
+interface State {
+  hasError: boolean;
+  error: Error | null;
+}
+
+export class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+    error: null,
+  };
+
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Uncaught rendering error:", error, errorInfo);
+  }
+
+  private handleRetry = () => {
+    this.setState({ hasError: false, error: null });
+  };
+
+  private handleGoHome = () => {
+    // We use window.location because the router might be broken
+    window.location.href = "/";
+  };
+
+  public render() {
+    if (this.state.hasError) {
+      return (
+        <div className="container u-mt-25">
+          <section className="error-boundary-page" aria-label="Application Error">
+            <div className="error-boundary-page__content">
+              <Heading as="h1" className="error-boundary-page__title">
+                {this.props.fallbackMessage || "Something went wrong"}
+              </Heading>
+              
+              <p className="error-boundary-page__message">
+                We're sorry, an unexpected error occurred while loading this page.
+              </p>
+
+              <div className="error-boundary-page__actions">
+                <Button
+                  className="error-boundary-page__action"
+                  type="button"
+                  variant="primary"
+                  onClick={this.handleRetry}
+                  unstyled
+                >
+                  Try Again
+                </Button>
+                <div className="error-boundary-page__spacer" />
+                <Button
+                  className="error-boundary-page__action"
+                  type="button"
+                  variant="secondary"
+                  onClick={this.handleGoHome}
+                  unstyled
+                >
+                  Go back to Home
+                </Button>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}

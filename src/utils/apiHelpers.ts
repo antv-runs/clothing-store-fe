@@ -7,13 +7,18 @@ import type {
   PaginationMeta,
   PaginationLinks,
 } from "@/types/pagination";
+import { ApiError } from "@/utils/apiError";
 
 export function unwrapApiResponse<T>(
   response: ApiResponse<T>,
   fallbackMessage: string = "API request failed",
 ): T {
   if (!response.success) {
-    throw new Error(response.message || fallbackMessage);
+    throw new ApiError({
+      message: response.message || fallbackMessage,
+      uiMessage: response.message || fallbackMessage,
+      status: 400,
+    });
   }
   return response.data;
 }
@@ -27,7 +32,11 @@ export function unwrapPaginatedResponse<T>(
   links?: PaginationLinks;
 } {
   if (!response.success) {
-    throw new Error(response.message || fallbackMessage);
+    throw new ApiError({
+      message: response.message || fallbackMessage,
+      uiMessage: response.message || fallbackMessage,
+      status: 400,
+    });
   }
   return {
     data: response.data,

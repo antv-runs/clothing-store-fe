@@ -1,6 +1,3 @@
-// Review API module
-// Moved from services/reviewService.ts
-
 import { get, post } from "@/lib/axios";
 import type { ApiResponse, PaginatedApiResponse } from "@/types/pagination";
 import type { ProductReviewsResult, Review } from "@/types/review";

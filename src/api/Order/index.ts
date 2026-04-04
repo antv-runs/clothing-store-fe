@@ -1,6 +1,3 @@
-// Order API module
-// Moved from services/orderService.ts
-
 import { post } from "@/lib/axios";
 import type { ApiResponse } from "@/types/pagination";
 import type { CreateOrderPayload, OrderResponse } from "@/types/api/order";

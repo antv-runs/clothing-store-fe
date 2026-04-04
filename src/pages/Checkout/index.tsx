@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createOrder } from "@/api/Order";
+import { ApiError } from "@/utils/apiError";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
@@ -20,6 +21,7 @@ const Checkout: React.FC = () => {
     formState: { errors },
     reset,
     clearErrors,
+    setError,
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -57,10 +59,31 @@ const Checkout: React.FC = () => {
       writeStoredCartRows([]);
       reset();
       clearErrors();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (
+          error.validationErrors &&
+          Object.keys(error.validationErrors).length > 0
+        ) {
+          Object.entries(error.validationErrors).forEach(
+            ([field, messages]) => {
+              setError(field as keyof CheckoutFormValues, {
+                type: "server",
+                message: messages[0],
+              });
+            },
+          );
+        } else {
+          // Global error fallback, do not introduce new UI blocks
+          window.alert(error.uiMessage);
+        }
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // throw new Error("Test boundary");
 
   return (
     <div className="container u-mt-25">

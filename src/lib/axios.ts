@@ -2,6 +2,7 @@
 import axios from "axios";
 import type { AxiosResponse } from "axios";
 import type { HttpClientOptions } from "@/types/common";
+import { handleApiError } from "@/utils/apiError";
 
 const BASE_URL = "https://api.vanannek.blog";
 
@@ -12,6 +13,11 @@ const httpClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+httpClient.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(handleApiError(error)),
+);
 
 export async function get<T>(
   url: string,

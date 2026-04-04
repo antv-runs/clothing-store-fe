@@ -1,6 +1,3 @@
-// Category API module
-// Moved from services/categoryService.ts
-
 import { get } from "@/lib/axios";
 import type { PaginatedApiResponse } from "@/types/pagination";
 import type { CategoryListResult } from "@/types/category";
