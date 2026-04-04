@@ -11,11 +11,10 @@ import { ProductTabsSection } from "@/components/organisms/ProductTabsSection";
 import { RelatedProductsSection } from "@/components/organisms/RelatedProductsSection";
 import { WriteReviewModal } from "@/components/organisms/WriteReviewModal";
 import { ProductDetailSkeleton } from "@/components/organisms/ProductDetailSkeleton";
-import { getProductById, getProducts } from "@/api/Product";
-import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/formatters";
 import { Text } from "@/components/atoms/Text";
 import { useCartRows } from "@/hooks/useCartRows";
+import { useProductDetailData } from "@/hooks/useProductDetailData";
 import { useProductReviews } from "@/hooks/useProductReviews";
 import "./index.scss";
 
@@ -33,15 +32,13 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const normalizedRouteId = String(id || "").trim();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [product, setProduct] = useState<Product | null>(null);
+  const { product, isLoading, relatedProducts, relatedLoading } =
+    useProductDetailData(normalizedRouteId);
 
   // Track selected color and size for add-to-cart functionality
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(DEFAULT_QUANTITY);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [relatedLoading, setRelatedLoading] = useState(false);
   const [isWriteReviewModalOpen, setIsWriteReviewModalOpen] =
     useState<boolean>(false);
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
@@ -72,95 +69,14 @@ const ProductDetail: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    let isActive = true;
-
-    if (!normalizedRouteId) {
-      setProduct(null);
-      setIsLoading(false);
-      setRelatedProducts([]);
-      setRelatedLoading(false);
-      return () => {
-        isActive = false;
-      };
+    if (isLoading) {
+      return;
     }
 
-    async function loadProductDetail() {
-      setIsLoading(true);
-      setProduct(null);
-      setRelatedProducts([]);
-      setRelatedLoading(false);
-
-      try {
-        const productResult = await getProductById(normalizedRouteId);
-
-        if (!isActive) {
-          return;
-        }
-
-        if (!productResult) {
-          setProduct(null);
-          setSelectedColorId(null);
-          setSelectedSizeId(null);
-          setQuantity(DEFAULT_QUANTITY);
-          return;
-        }
-
-        setProduct(productResult);
-        // Reset variant selections when product changes
-        setSelectedColorId(null);
-        setSelectedSizeId(null);
-        setQuantity(DEFAULT_QUANTITY);
-
-        // Fetch related products
-        setRelatedLoading(true);
-        try {
-          const relatedResult = await getProducts({
-            page: 1,
-            per_page: 8,
-          });
-
-          if (!isActive) {
-            return;
-          }
-
-          setRelatedProducts(relatedResult.data);
-        } catch (relatedError) {
-          if (!isActive) {
-            return;
-          }
-
-          console.error("Failed to load related products.", relatedError);
-          setRelatedProducts([]);
-        } finally {
-          if (isActive) {
-            setRelatedLoading(false);
-          }
-        }
-      } catch (error) {
-        if (!isActive) {
-          return;
-        }
-
-        console.error("Failed to load product detail data.", error);
-        setProduct(null);
-        setSelectedColorId(null);
-        setSelectedSizeId(null);
-        setQuantity(DEFAULT_QUANTITY);
-        setRelatedProducts([]);
-        setRelatedLoading(false);
-      } finally {
-        if (isActive) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    loadProductDetail();
-
-    return () => {
-      isActive = false;
-    };
-  }, [normalizedRouteId]);
+    setSelectedColorId(null);
+    setSelectedSizeId(null);
+    setQuantity(DEFAULT_QUANTITY);
+  }, [isLoading, normalizedRouteId]);
 
   useEffect(() => {
     if (isWriteReviewModalOpen) {
