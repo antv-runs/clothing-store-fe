@@ -1,0 +1,60 @@
+@use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/variables" as v;
+
+.checkout-summary {
+  @include m.panel();
+  padding: 24px;
+  background-color: v.$color-white;
+
+  &__title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  &__items {
+    margin-bottom: 24px;
+  }
+
+  &__rows {
+    margin-bottom: 22px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    dt {
+      color: v.$color-muted;
+      font-size: 16px;
+    }
+
+    dd {
+      font-size: 16px;
+      font-weight: 700;
+    }
+  }
+
+  &__discount {
+    color: v.$color-danger;
+  }
+
+  &__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 16px;
+
+    p:first-child {
+      font-size: 16px;
+    }
+
+    p:last-child {
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+}

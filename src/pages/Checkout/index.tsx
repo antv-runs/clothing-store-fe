@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 import { createOrder } from "@/api/Order";
 import {
   isApiError,
@@ -12,13 +13,25 @@ import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { useCartRows } from "@/hooks/useCartRows";
+import { CheckoutSummaryPanel } from "@/components/organisms/CheckoutSummaryPanel";
+import { ROUTES } from "@/routes/paths";
+import { formatPrice } from "@/utils/formatters";
 import type { CreateOrderPayload } from "@/types/api/order";
 import { checkoutSchema, type CheckoutFormValues } from "@/types/checkout";
 import "./index.scss";
 
+type SubmitStatus = "idle" | "submitting" | "success" | "error";
 const Checkout: React.FC = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { getCartRows, clearCart } = useCartRows();
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const { getCartRows, clearCart, cartItems, summary, isEmpty } = useCartRows();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isEmpty && submitStatus !== "success" && submitStatus !== "error") {
+      navigate(ROUTES.CART, { replace: true });
+    }
+  }, [isEmpty, submitStatus, navigate]);
 
   const {
     control,
@@ -37,7 +50,7 @@ const Checkout: React.FC = () => {
   });
 
   const onSubmit = async (values: CheckoutFormValues) => {
-    if (isSubmitting) {
+    if (submitStatus === "submitting") {
       return;
     }
 
@@ -57,17 +70,20 @@ const Checkout: React.FC = () => {
       })),
     };
 
-    setIsSubmitting(true);
+    setSubmitStatus("submitting");
+    setErrorMessage("");
 
     try {
       await createOrder(payload);
       clearCart();
       reset();
       clearErrors();
+      setSubmitStatus("success");
     } catch (error) {
       const validationErrors = mapApiValidationErrors(error);
 
       if (validationErrors) {
+        setSubmitStatus("idle");
         Object.entries(validationErrors).forEach(([field, messages]) => {
           setError(field as keyof CheckoutFormValues, {
             type: "server",
@@ -75,13 +91,18 @@ const Checkout: React.FC = () => {
           });
         });
       } else if (isApiError(error)) {
-        // Global error fallback, do not introduce new UI blocks
-        window.alert(
-          mapApiErrorToMessage(error, "An unexpected error occurred."),
+        const msg = mapApiErrorToMessage(
+          error,
+          "An unexpected error occurred while placing your order."
         );
+        setErrorMessage(msg);
+        setSubmitStatus("error");
+      } else {
+        setErrorMessage(
+          "An unexpected error occurred. Please try again or contact support."
+        );
+        setSubmitStatus("error");
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -99,7 +120,25 @@ const Checkout: React.FC = () => {
           Checkout
         </Heading>
 
-        <form
+        {submitStatus === "success" ? (
+          <div className="checkout-page__status">
+            <Heading as="h2" className="checkout-page__status-title">
+              Order Placed Successfully!
+            </Heading>
+            <p className="checkout-page__status-message">
+              Thank you for your purchase. Your order has been placed and is being processed.
+            </p>
+            <Button
+              className="checkout-page__status-btn"
+              onClick={() => navigate(ROUTES.HOME)}
+              unstyled
+            >
+              Back to Home
+            </Button>
+          </div>
+        ) : isEmpty ? null : (
+          <div className="checkout-page__layout">
+            <form
           className="checkout-page__form js-checkout-form"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
@@ -181,18 +220,36 @@ const Checkout: React.FC = () => {
             </label>
           </div>
 
+          {submitStatus === "error" && errorMessage && (
+            <div
+              className="checkout-page__message checkout-page__message--error js-checkout-error"
+              aria-live="polite"
+              role="alert"
+            >
+              {errorMessage}
+            </div>
+          )}
+
           <Button
             className="checkout-page__submit js-checkout-submit"
             type="submit"
-            disabled={isSubmitting}
-            aria-disabled={isSubmitting}
-            isLoading={isSubmitting}
+            disabled={submitStatus === "submitting"}
+            aria-disabled={submitStatus === "submitting"}
+            isLoading={submitStatus === "submitting"}
             loadingText="Placing order..."
             unstyled
           >
             Place Order
           </Button>
-        </form>
+            </form>
+
+            <CheckoutSummaryPanel
+              items={cartItems}
+              summary={summary}
+              formatPrice={formatPrice}
+            />
+          </div>
+        )}
       </section>
     </div>
   );
