@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -14,24 +14,34 @@ import { Input } from "@/components/atoms/Input";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { useCartRows } from "@/hooks/useCartRows";
 import { CheckoutSummaryPanel } from "@/components/organisms/CheckoutSummaryPanel";
+import { mapCartToOrderRequest } from "@/utils/orderMapper";
 import { ROUTES } from "@/routes/paths";
 import { formatPrice } from "@/utils/formatters";
-import type { CreateOrderPayload } from "@/types/api/order";
+import type { CreateOrderRequest } from "@/types/api/order";
 import { checkoutSchema, type CheckoutFormValues } from "@/types/checkout";
 import "./index.scss";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 const Checkout: React.FC = () => {
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { getCartRows, clearCart, cartItems, summary, isEmpty } = useCartRows();
+  const submissionLockRef = useRef(false);
+  const { getCartRows, clearCart, cartItems, summary, isEmpty, isLoading } =
+    useCartRows();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isEmpty && submitStatus !== "success" && submitStatus !== "error") {
+    if (
+      isEmpty &&
+      !isLoading &&
+      submitStatus !== "success" &&
+      submitStatus !== "error"
+    ) {
       navigate(ROUTES.CART, { replace: true });
     }
-  }, [isEmpty, submitStatus, navigate]);
+  }, [isEmpty, isLoading, submitStatus, navigate]);
 
   const {
     control,
@@ -45,12 +55,13 @@ const Checkout: React.FC = () => {
     defaultValues: {
       fullName: "",
       email: "",
+      phone: "",
       address: "",
     },
   });
 
   const onSubmit = async (values: CheckoutFormValues) => {
-    if (submitStatus === "submitting") {
+    if (submissionLockRef.current || isSubmittingOrder || isLoading) {
       return;
     }
 
@@ -60,49 +71,71 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    const payload: CreateOrderPayload = {
-      customer_name: values.fullName,
-      customer_email: values.email,
-      address: values.address,
-      items: cartRows.map((row) => ({
-        product_id: row.productId,
-        quantity: row.quantity,
-      })),
-    };
-
-    setSubmitStatus("submitting");
+    clearErrors();
     setErrorMessage("");
+    setSuccessMessage("");
+    setSubmitStatus("idle");
+
+    let payload: CreateOrderRequest;
+    try {
+      payload = mapCartToOrderRequest(cartRows, values);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Invalid order data. Please review your information and cart.",
+      );
+      setSubmitStatus("error");
+      return;
+    }
+
+    submissionLockRef.current = true;
+    setSubmitStatus("submitting");
+    setIsSubmittingOrder(true);
 
     try {
       await createOrder(payload);
       clearCart();
       reset();
       clearErrors();
+      setSuccessMessage(
+        "Your order has been placed successfully. We will process it shortly.",
+      );
       setSubmitStatus("success");
     } catch (error) {
       const validationErrors = mapApiValidationErrors(error);
 
       if (validationErrors) {
-        setSubmitStatus("idle");
         Object.entries(validationErrors).forEach(([field, messages]) => {
           setError(field as keyof CheckoutFormValues, {
             type: "server",
             message: messages[0],
           });
         });
-      } else if (isApiError(error)) {
-        const msg = mapApiErrorToMessage(
-          error,
-          "An unexpected error occurred while placing your order."
+        setErrorMessage(
+          mapApiErrorToMessage(
+            error,
+            "Please review the highlighted fields and try again.",
+          ),
         );
-        setErrorMessage(msg);
+        setSubmitStatus("error");
+      } else if (isApiError(error)) {
+        setErrorMessage(
+          mapApiErrorToMessage(
+            error,
+            "An unexpected error occurred while placing your order.",
+          ),
+        );
         setSubmitStatus("error");
       } else {
         setErrorMessage(
-          "An unexpected error occurred. Please try again or contact support."
+          "An unexpected error occurred. Please try again or contact support.",
         );
         setSubmitStatus("error");
       }
+    } finally {
+      submissionLockRef.current = false;
+      setIsSubmittingOrder(false);
     }
   };
 
@@ -125,8 +158,12 @@ const Checkout: React.FC = () => {
             <Heading as="h2" className="checkout-page__status-title">
               Order Placed Successfully!
             </Heading>
-            <p className="checkout-page__status-message">
-              Thank you for your purchase. Your order has been placed and is being processed.
+            <p
+              className="checkout-page__status-message checkout-page__message checkout-page__message--success"
+              role="status"
+              aria-live="polite"
+            >
+              {successMessage}
             </p>
             <Button
               className="checkout-page__status-btn"
@@ -136,111 +173,143 @@ const Checkout: React.FC = () => {
               Back to Home
             </Button>
           </div>
+        ) : isLoading ? (
+          <div
+            aria-busy="true"
+            style={{ padding: "4rem 0", textAlign: "center" }}
+          >
+            Loading checkout data...
+          </div>
         ) : isEmpty ? null : (
           <div className="checkout-page__layout">
             <form
-          className="checkout-page__form js-checkout-form"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-        >
-          <div className="checkout-page__grid">
-            <label className="checkout-page__field">
-              <span>Full Name</span>
-              <Controller
-                name="fullName"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Input
-                      {...field}
-                      type="text"
-                      autoComplete="name"
-                      required
-                      aria-invalid={Boolean(errors.fullName)}
-                      onChange={(event) => {
-                        field.onChange(event);
-                      }}
-                    />
-                    {errors.fullName?.message && (
-                      <p role="alert">{errors.fullName.message}</p>
-                    )}
-                  </>
-                )}
-              />
-            </label>
-
-            <label className="checkout-page__field">
-              <span>Email</span>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Input
-                      {...field}
-                      type="email"
-                      autoComplete="email"
-                      required
-                      aria-invalid={Boolean(errors.email)}
-                      onChange={(event) => {
-                        field.onChange(event);
-                      }}
-                    />
-                    {errors.email?.message && (
-                      <p role="alert">{errors.email.message}</p>
-                    )}
-                  </>
-                )}
-              />
-            </label>
-
-            <label className="checkout-page__field checkout-page__field--full">
-              <span>Address</span>
-              <Controller
-                name="address"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Input
-                      {...field}
-                      type="text"
-                      autoComplete="street-address"
-                      required
-                      aria-invalid={Boolean(errors.address)}
-                      onChange={(event) => {
-                        field.onChange(event);
-                      }}
-                    />
-                    {errors.address?.message && (
-                      <p role="alert">{errors.address.message}</p>
-                    )}
-                  </>
-                )}
-              />
-            </label>
-          </div>
-
-          {submitStatus === "error" && errorMessage && (
-            <div
-              className="checkout-page__message checkout-page__message--error js-checkout-error"
-              aria-live="polite"
-              role="alert"
+              className="checkout-page__form js-checkout-form"
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
             >
-              {errorMessage}
-            </div>
-          )}
+              <div className="checkout-page__grid">
+                <label className="checkout-page__field">
+                  <span>Full Name</span>
+                  <Controller
+                    name="fullName"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input
+                          {...field}
+                          type="text"
+                          autoComplete="name"
+                          required
+                          aria-invalid={Boolean(errors.fullName)}
+                          onChange={(event) => {
+                            field.onChange(event);
+                          }}
+                        />
+                        {errors.fullName?.message && (
+                          <p role="alert">{errors.fullName.message}</p>
+                        )}
+                      </>
+                    )}
+                  />
+                </label>
 
-          <Button
-            className="checkout-page__submit js-checkout-submit"
-            type="submit"
-            disabled={submitStatus === "submitting"}
-            aria-disabled={submitStatus === "submitting"}
-            isLoading={submitStatus === "submitting"}
-            loadingText="Placing order..."
-            unstyled
-          >
-            Place Order
-          </Button>
+                <label className="checkout-page__field">
+                  <span>Email</span>
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input
+                          {...field}
+                          type="email"
+                          autoComplete="email"
+                          required
+                          aria-invalid={Boolean(errors.email)}
+                          onChange={(event) => {
+                            field.onChange(event);
+                          }}
+                        />
+                        {errors.email?.message && (
+                          <p role="alert">{errors.email.message}</p>
+                        )}
+                      </>
+                    )}
+                  />
+                </label>
+
+                <label className="checkout-page__field">
+                  <span>Phone</span>
+                  <Controller
+                    name="phone"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input
+                          {...field}
+                          type="tel"
+                          autoComplete="tel"
+                          required
+                          aria-invalid={Boolean(errors.phone)}
+                          onChange={(event) => {
+                            field.onChange(event);
+                          }}
+                        />
+                        {errors.phone?.message && (
+                          <p role="alert">{errors.phone.message}</p>
+                        )}
+                      </>
+                    )}
+                  />
+                </label>
+
+                <label className="checkout-page__field checkout-page__field--full">
+                  <span>Address</span>
+                  <Controller
+                    name="address"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input
+                          {...field}
+                          type="text"
+                          autoComplete="street-address"
+                          required
+                          aria-invalid={Boolean(errors.address)}
+                          onChange={(event) => {
+                            field.onChange(event);
+                          }}
+                        />
+                        {errors.address?.message && (
+                          <p role="alert">{errors.address.message}</p>
+                        )}
+                      </>
+                    )}
+                  />
+                </label>
+              </div>
+
+              {submitStatus === "error" && errorMessage && (
+                <div
+                  className="checkout-page__message checkout-page__message--error js-checkout-error"
+                  aria-live="polite"
+                  role="alert"
+                >
+                  {errorMessage}
+                </div>
+              )}
+
+              <Button
+                className="checkout-page__submit js-checkout-submit"
+                type="submit"
+                disabled={isSubmittingOrder}
+                aria-disabled={isSubmittingOrder}
+                isLoading={isSubmittingOrder}
+                loadingText="Placing order..."
+                unstyled
+              >
+                Place Order
+              </Button>
             </form>
 
             <CheckoutSummaryPanel

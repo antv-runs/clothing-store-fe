@@ -2,7 +2,9 @@
  * Shared utility functions for formatting and data manipulation
  */
 
-export function formatPrice(amount: number, currency = "USD"): string {
+import { DEFAULT_CURRENCY } from "@/const/pricing";
+
+export function formatPrice(amount: number, currency = DEFAULT_CURRENCY): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,

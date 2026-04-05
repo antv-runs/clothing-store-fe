@@ -67,6 +67,14 @@
     font-size: 16px;
     color: v.$color-muted;
 
+    &--success {
+      color: #1b7f3a;
+      background-color: rgba(27, 127, 58, 0.1);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
     &--error {
       color: v.$color-danger;
       background-color: rgba(255, 51, 51, 0.1);
@@ -82,20 +90,24 @@
     text-align: center;
     max-width: 600px;
     margin: 0 auto;
-    
+
     &-title {
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 16px;
     }
-  
+
     &-message {
       font-size: 16px;
       color: v.$color-muted;
       margin-bottom: 32px;
       line-height: 1.5;
+
+      &.checkout-page__message--success {
+        margin-top: 0;
+      }
     }
-  
+
     &-btn {
       @include m.button-native-reset($transparent-bg: false);
       border-radius: v.$radius-pill;

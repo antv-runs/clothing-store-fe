@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Price } from "@/components/atoms/Price";
 import type { ProductPricing } from "@/types/product";
 import { Text } from "@/components/atoms/Text";
+import { DEFAULT_CURRENCY } from "@/const/pricing";
 import "./index.scss";
 
 interface ProductPriceProps {
@@ -41,7 +42,7 @@ export const ProductPrice: React.FC<ProductPriceProps> = ({
     return null;
   }
 
-  const resolvedCurrency = currency ?? pricing?.currency ?? "USD";
+  const resolvedCurrency = currency ?? pricing?.currency ?? DEFAULT_CURRENCY;
   const resolvedOriginal = originalAmount ?? pricing?.original;
   const resolvedDiscount = discountPercent ?? pricing?.discountPercent;
   const isOnSale = Boolean(

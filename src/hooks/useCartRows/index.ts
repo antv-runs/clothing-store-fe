@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-import { products } from "@/const/products";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { getProductById } from "@/api/Product";
 import type { CartRow } from "@/types/cart";
 import type { Product } from "@/types/product";
 import { normalizeId } from "@/utils/formatters";
@@ -23,6 +23,7 @@ type UseCartRowsResult = {
   cartItems: CartItem[];
   summary: CartSummary;
   isEmpty: boolean;
+  isLoading: boolean;
   getCartRows: () => CartRow[];
   addItem: (item: CartRow) => void;
   clearCart: () => void;
@@ -42,6 +43,63 @@ export const useCartRows = (): UseCartRowsResult => {
   const [cartRows, setCartRows] = useState<CartRow[]>(() =>
     readStoredCartRows(),
   );
+
+  const [fetchedProducts, setFetchedProducts] = useState<Record<string, Product>>({});
+  const [isLoading, setIsLoading] = useState(() => readStoredCartRows().length > 0);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const hydrateProducts = async () => {
+      const uniqueIds = Array.from(new Set(cartRows.map((row) => row.productId)));
+      const missingIds = uniqueIds.filter((id) => !fetchedProducts[id]);
+
+      if (missingIds.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+
+      try {
+        const results = await Promise.all(
+          missingIds.map((id) => getProductById(id)),
+        );
+
+        if (!isActive) {
+          return;
+        }
+
+        const newProducts: Record<string, Product> = {};
+        missingIds.forEach((id, index) => {
+          const product = results[index];
+          if (product) {
+            newProducts[id] = product;
+          }
+        });
+
+        setFetchedProducts((prev) => ({
+          ...prev,
+          ...newProducts,
+        }));
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+        console.error("Failed to load cart product details", error);
+      } finally {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void hydrateProducts();
+
+    return () => {
+      isActive = false;
+    };
+  }, [cartRows, fetchedProducts]);
 
   const getCartRows = useCallback(() => {
     return readStoredCartRows();
@@ -92,9 +150,11 @@ export const useCartRows = (): UseCartRowsResult => {
   const cartItems = useMemo(() => {
     return cartRows
       .map((row) => {
-        const product = products.find((item) =>
-          normalizeId(String(item.id), row.productId),
-        );
+        const productKey = Object.keys(fetchedProducts).find((key) =>
+          normalizeId(String(key), row.productId)
+        ) || row.productId;
+        
+        const product = fetchedProducts[productKey];
         if (!product) {
           return null;
         }
@@ -107,7 +167,7 @@ export const useCartRows = (): UseCartRowsResult => {
         };
       })
       .filter((item): item is CartItem => item !== null);
-  }, [cartRows]);
+  }, [cartRows, fetchedProducts]);
 
   const summary = useMemo(() => {
     const subtotal = cartItems.reduce((acc, item) => {
@@ -133,13 +193,14 @@ export const useCartRows = (): UseCartRowsResult => {
     return { subtotal, discount, delivery, total };
   }, [cartItems]);
 
-  const isEmpty = cartItems.length === 0;
+  const isEmpty = cartRows.length === 0 || (!isLoading && cartItems.length === 0);
 
   return {
     cartRows,
     cartItems,
     summary,
     isEmpty,
+    isLoading,
     getCartRows,
     addItem,
     clearCart,

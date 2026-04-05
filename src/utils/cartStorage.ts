@@ -1,6 +1,6 @@
 import type { CartRow, CartStorageRow } from "@/types/cart";
 
-export const CART_STORAGE_KEY = "app_cart";
+import { CART_STORAGE_KEY } from "@/const/storageKeys";
 
 type StorageLike = Pick<Storage, "getItem" | "setItem">;
 

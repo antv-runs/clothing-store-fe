@@ -11,7 +11,7 @@ import "./index.scss";
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
-  const { cartItems, summary, isEmpty } = useCartRows();
+  const { cartItems, summary, isEmpty, isLoading } = useCartRows();
 
   const handleCheckout = () => {
     if (isEmpty) {
@@ -34,12 +34,18 @@ const Cart: React.FC = () => {
           Your Cart
         </Heading>
 
-        <CartEmptyState isVisible={isEmpty} />
+        {isLoading && (
+          <div aria-busy="true" style={{ padding: "4rem 0", textAlign: "center" }}>
+            Loading your cart...
+          </div>
+        )}
+
+        <CartEmptyState isVisible={isEmpty && !isLoading} />
 
         <section
           className="cart-page__layout js-cart-layout"
           aria-label="Cart summary"
-          style={{ display: isEmpty ? "none" : "" }}
+          style={{ display: isEmpty || isLoading ? "none" : "" }}
         >
           <div
             className="cart-items js-cart-items"

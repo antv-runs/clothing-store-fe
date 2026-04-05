@@ -1,32 +1,69 @@
-/**
- * Order API types
- * Raw API request/response types for order endpoints
- */
+import type { ApiProduct } from "@/types/api/product";
+import type { Product } from "@/types/product";
 
-export interface CreateOrderPayload {
+export interface CreateOrderRequest {
+  customer: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
   items: Array<{
-    product_id: string | number;
+    product_id: number;
     quantity: number;
+    color: string;
+    size: string;
   }>;
-  customer_name: string;
-  customer_email: string;
-  address: string;
-  phone?: string;
-  [key: string]: unknown;
 }
 
-export interface OrderResponse {
-  id: string | number;
-  order_number: string;
-  customer_name: string;
-  customer_email: string;
+export interface CreateOrderResponse {
+  success: boolean;
+  message: string;
+  data: ApiOrder;
+}
+
+export interface ApiOrder {
+  id: number;
+  user_id: number | null;
+  name: string;
+  email: string;
+  phone: string;
   address: string;
-  phone?: string;
-  items: Array<{
-    product_id: string | number;
-    quantity: number;
-  }>;
-  status: string;
+  status: string | null;
+  total_amount: number;
+  items: ApiOrderItem[];
   created_at: string;
-  [key: string]: unknown;
+}
+
+export interface ApiOrderItem {
+  id: number;
+  product: ApiProduct;
+  quantity: number;
+  price: number;
+  total: number;
+  color: string;
+  size: string;
+}
+
+export interface Order {
+  id: number;
+  userId: number | null;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  status: string | null;
+  totalAmount: number;
+  items: OrderItem[];
+  createdAt: string;
+}
+
+export interface OrderItem {
+  id: number;
+  product: Product;
+  quantity: number;
+  price: number;
+  total: number;
+  color: string;
+  size: string;
 }

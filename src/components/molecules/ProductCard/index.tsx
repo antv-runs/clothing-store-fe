@@ -5,6 +5,7 @@ import { Image } from "@/components/atoms/Image";
 import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
 import { ProductPrice } from "@/components/molecules/ProductPrice";
+import { DEFAULT_CURRENCY } from "@/const/pricing";
 import "./index.scss";
 
 type ProductCardData = {
@@ -50,7 +51,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const {
     current: currentPrice,
     original: originalPrice,
-    currency = "USD",
+    currency = DEFAULT_CURRENCY,
     discountPercent,
   } = pricing;
 

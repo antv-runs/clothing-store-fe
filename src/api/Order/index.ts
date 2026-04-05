@@ -1,11 +1,23 @@
 import { post } from "@/lib/axios";
-import type { ApiResponse } from "@/types/pagination";
-import type { CreateOrderPayload, OrderResponse } from "@/types/api/order";
+import { mapApiOrderToOrder } from "@/utils/orderMapper";
 import { unwrapApiResponse } from "@/utils/apiHelpers";
+import type {
+  ApiOrder,
+  CreateOrderRequest,
+  CreateOrderResponse,
+  Order,
+} from "@/types/api/order";
 
-export async function createOrder(
-  payload: CreateOrderPayload,
-): Promise<OrderResponse> {
-  const res = await post<ApiResponse<OrderResponse>>("/api/orders", payload);
-  return unwrapApiResponse(res, "Failed to create order");
+export async function createOrder(payload: CreateOrderRequest): Promise<Order> {
+  const response = await post<CreateOrderResponse>("/api/orders", payload);
+
+  if (!response.success) {
+    throw new Error(response.message || "Failed to create order");
+  }
+
+  const orderData = unwrapApiResponse<ApiOrder>(
+    response,
+    "Failed to create order",
+  );
+  return mapApiOrderToOrder(orderData);
 }

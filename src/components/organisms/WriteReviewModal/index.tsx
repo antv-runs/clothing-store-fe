@@ -5,6 +5,7 @@ import { z } from "zod";
 import "./index.scss";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Star } from "@/components/atoms/Star";
+import { DEFAULT_GUEST_USERNAME } from "@/const/user";
 
 type ReviewSubmission = {
   username: string;
@@ -21,7 +22,7 @@ interface WriteReviewModalProps {
 
 const DEFAULT_RATING = 5;
 
-const getGuestUsername = () => `Guest-${Date.now()}`;
+const getGuestUsername = () => `${DEFAULT_GUEST_USERNAME}-${Date.now()}`;
 
 const reviewModalSchema = z.object({
   username: z.string().trim().min(1, "Username is required."),

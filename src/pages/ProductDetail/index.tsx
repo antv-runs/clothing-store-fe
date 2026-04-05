@@ -16,6 +16,7 @@ import { Text } from "@/components/atoms/Text";
 import { useCartRows } from "@/hooks/useCartRows";
 import { useProductDetailData } from "@/hooks/useProductDetailData";
 import { useProductReviews } from "@/hooks/useProductReviews";
+import { DEFAULT_GUEST_USERNAME } from "@/const/user";
 import "./index.scss";
 
 const DEFAULT_QUANTITY = 1;
@@ -138,7 +139,7 @@ const ProductDetail: React.FC = () => {
         return;
       }
 
-      const normalizedUsername = String(username || "Guest").trim() || "Guest";
+      const normalizedUsername = String(username || DEFAULT_GUEST_USERNAME).trim() || DEFAULT_GUEST_USERNAME;
       const normalizedComment = String(comment || "").trim();
       const normalizedStars = Math.max(1, Math.min(5, Number(stars) || 5));
 

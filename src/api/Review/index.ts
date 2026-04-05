@@ -15,6 +15,7 @@ import {
   unwrapPaginatedResponse,
   buildQueryString,
 } from "@/utils/apiHelpers";
+import { DEFAULT_GUEST_USERNAME } from "@/const/user";
 
 export async function getReviewsByProductId(
   productId: string | number,
@@ -58,7 +59,7 @@ export async function submitReview(
       Math.max(1, Math.min(5, Number.isFinite(stars) ? stars : 1)) * 2,
     ) / 2;
   const normalizedComment = String(payload?.comment || "").trim();
-  const normalizedUsername = String(payload?.username || "").trim() || "Guest";
+  const normalizedUsername = String(payload?.username || "").trim() || DEFAULT_GUEST_USERNAME;
   const body = {
     username: normalizedUsername,
     comment: normalizedComment,
