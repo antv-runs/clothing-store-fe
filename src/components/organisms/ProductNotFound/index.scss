@@ -1,0 +1,18 @@
+.product-not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  flex-direction: column;
+  gap: 16px;
+
+  &__action {
+    margin-top: 8px;
+    width: 100%;
+
+    @media (min-width: 576px) {
+      width: auto;
+      min-width: 200px;
+    }
+  }
+}

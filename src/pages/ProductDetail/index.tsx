@@ -11,7 +11,7 @@ import { WriteReviewModal } from "@/components/organisms/WriteReviewModal";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { ProductDetailSkeleton } from "@/components/organisms/ProductDetailSkeleton";
 import { formatPrice } from "@/utils/formatters";
-import { Text } from "@/components/atoms/Text";
+import { ProductNotFound } from "@/components/organisms/ProductNotFound";
 import { useCartRows } from "@/hooks/useCartRows";
 import { useProductDetailData } from "@/hooks/useProductDetailData";
 import { useProductReviews } from "@/hooks/useProductReviews";
@@ -186,18 +186,7 @@ const ProductDetail: React.FC = () => {
   }
 
   if (!product) {
-    return (
-      <div className="container u-mt-25">
-        <section
-          className="product-overview"
-          aria-label="Product overview"
-        >
-          <Text as="p" className="product-overview__description">
-            Product not found.
-          </Text>
-        </section>
-      </div>
-    );
+    return <ProductNotFound />;
   }
 
   return (
