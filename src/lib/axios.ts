@@ -4,7 +4,8 @@ import type { AxiosResponse } from "axios";
 import type { HttpClientOptions } from "@/types/common";
 import { handleApiError } from "@/utils/apiError";
 
-const BASE_URL = "https://api.vanannek.blog";
+// const BASE_URL = "https://api.vanannek.blog";
+const BASE_URL = "";
 
 const httpClient = axios.create({
   baseURL: BASE_URL,

@@ -3,12 +3,25 @@ import { HomeBrands } from "@/components/organisms/HomeBrands";
 import { HomeProductSection } from "@/components/organisms/HomeProductSection";
 import { HomeStyleGrid } from "@/components/organisms/HomeStyleGrid";
 import { HomeReviews } from "@/components/organisms/HomeReviews";
-import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
+import { RetryState } from "@/components/molecules/RetryState";
 import { useHomeData } from "@/hooks/useHomeData";
 import "./index.scss";
 
 const Home: React.FC = () => {
-  const { newArrivals, topSelling, reviews, isLoading } = useHomeData();
+  const {
+    newArrivals,
+    topSelling,
+    reviews,
+    isNewArrivalsLoading,
+    isTopSellingLoading,
+    isReviewsLoading,
+    newArrivalsError,
+    topSellingError,
+    reviewsError,
+    retryNewArrivals,
+    retryTopSelling,
+    retryReviews,
+  } = useHomeData();
 
   return (
     <div className="container">
@@ -16,33 +29,61 @@ const Home: React.FC = () => {
         <HomeHero />
         <HomeBrands />
 
-        <HomeProductSection
-          title="NEW ARRIVALS"
-          productsList={newArrivals}
-          className="home-page__product-section home-page__product-section--new-arrivals"
-          isLoading={isLoading}
-          skeletonCount={4}
-        />
-        <HomeProductSection
-          title="TOP SELLING"
-          productsList={topSelling}
-          className="home-page__product-section home-page__product-section--top-selling"
-          withTopBorder
-          isLoading={isLoading}
-          skeletonCount={4}
-        />
+        {newArrivalsError ? (
+          <section
+            className="home-products home-page__product-section home-page__product-section--new-arrivals"
+            aria-labelledby="home-new-arrivals-title"
+          >
+            <h2 id="home-new-arrivals-title" className="home-products__title">
+              NEW ARRIVALS
+            </h2>
+            <RetryState message={newArrivalsError} onRetry={retryNewArrivals} />
+          </section>
+        ) : (
+          <HomeProductSection
+            title="NEW ARRIVALS"
+            productsList={newArrivals}
+            className="home-page__product-section home-page__product-section--new-arrivals"
+            isLoading={isNewArrivalsLoading}
+            skeletonCount={4}
+          />
+        )}
+
+        {topSellingError ? (
+          <section
+            className="home-products home-products--bordered home-page__product-section home-page__product-section--top-selling"
+            aria-labelledby="home-top-selling-title"
+          >
+            <h2 id="home-top-selling-title" className="home-products__title">
+              TOP SELLING
+            </h2>
+            <RetryState message={topSellingError} onRetry={retryTopSelling} />
+          </section>
+        ) : (
+          <HomeProductSection
+            title="TOP SELLING"
+            productsList={topSelling}
+            className="home-page__product-section home-page__product-section--top-selling"
+            withTopBorder
+            isLoading={isTopSellingLoading}
+            skeletonCount={4}
+          />
+        )}
 
         <HomeStyleGrid />
-        <ErrorBoundary
-          resetKeys={[reviews, isLoading]}
-          fallback={
-            <p className="home-page__section-fallback" role="status">
-              Customer reviews are temporarily unavailable.
-            </p>
-          }
-        >
-          <HomeReviews reviews={reviews} isLoading={isLoading} />
-        </ErrorBoundary>
+        {reviewsError ? (
+          <section
+            className="home-reviews"
+            aria-labelledby="home-reviews-title"
+          >
+            <div className="home-reviews__head">
+              <h2 id="home-reviews-title">OUR HAPPY CUSTOMERS</h2>
+            </div>
+            <RetryState message={reviewsError} onRetry={retryReviews} />
+          </section>
+        ) : (
+          <HomeReviews reviews={reviews} isLoading={isReviewsLoading} />
+        )}
       </section>
     </div>
   );

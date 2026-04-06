@@ -13,6 +13,7 @@ import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { CheckoutPageSkeleton } from "@/components/organisms/CheckoutPageSkeleton";
+import { RetryState } from "@/components/molecules/RetryState";
 import { useCartRows } from "@/hooks/useCartRows";
 import { CheckoutSummaryPanel } from "@/components/organisms/CheckoutSummaryPanel";
 import { mapCartToOrderRequest } from "@/utils/orderMapper";
@@ -29,8 +30,16 @@ const Checkout: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const submissionLockRef = useRef(false);
-  const { getCartRows, clearCart, cartItems, summary, isEmpty, isLoading, hasError, retryHydration } =
-    useCartRows();
+  const {
+    getCartRows,
+    clearCart,
+    cartItems,
+    summary,
+    isEmpty,
+    isLoading,
+    hasError,
+    retryHydration,
+  } = useCartRows();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -63,7 +72,12 @@ const Checkout: React.FC = () => {
   });
 
   const onSubmit = async (values: CheckoutFormValues) => {
-    if (submissionLockRef.current || isSubmittingOrder || isLoading || hasError) {
+    if (
+      submissionLockRef.current ||
+      isSubmittingOrder ||
+      isLoading ||
+      hasError
+    ) {
       return;
     }
 
@@ -176,22 +190,10 @@ const Checkout: React.FC = () => {
             </Button>
           </div>
         ) : hasError ? (
-          <div className="checkout-page__error checkout-page__status" role="alert">
-            <Heading as="h2" className="checkout-page__status-title">
-              Failed to load checkout data
-            </Heading>
-            <p className="checkout-page__status-message checkout-page__message checkout-page__message--error">
-              We couldn't securely load your checkout data right now.
-            </p>
-            <Button
-              className="checkout-page__status-btn"
-              type="button"
-              onClick={retryHydration}
-              unstyled
-            >
-              Retry
-            </Button>
-          </div>
+          <RetryState
+            message="We couldn't securely load your checkout data right now."
+            onRetry={retryHydration}
+          />
         ) : isLoading && !hasError ? (
           <CheckoutPageSkeleton />
         ) : isEmpty ? null : (
