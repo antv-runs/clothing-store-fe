@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { submitReview } from "@/api/Review";
-import { mapApiErrorToMessage } from "@/utils/apiErrorMapper";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { ProductGallery } from "@/components/organisms/ProductGallery";
 import { ProductInfo } from "@/components/organisms/ProductInfo";
@@ -17,7 +15,7 @@ import { Text } from "@/components/atoms/Text";
 import { useCartRows } from "@/hooks/useCartRows";
 import { useProductDetailData } from "@/hooks/useProductDetailData";
 import { useProductReviews } from "@/hooks/useProductReviews";
-import { DEFAULT_GUEST_USERNAME } from "@/const/user";
+import { useReviewSubmit } from "@/hooks/useReviewSubmit";
 import "./index.scss";
 
 const DEFAULT_QUANTITY = 1;
@@ -43,10 +41,6 @@ const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(DEFAULT_QUANTITY);
   const [isWriteReviewModalOpen, setIsWriteReviewModalOpen] =
     useState<boolean>(false);
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
-  const [reviewStatusMessage, setReviewStatusMessage] = useState("");
-  const reviewSubmitRequestIdRef = useRef(0);
-  const isMountedRef = useRef(true);
 
   const {
     reviews,
@@ -64,20 +58,35 @@ const ProductDetail: React.FC = () => {
   } = useProductReviews(product?.id);
   const { addItem } = useCartRows();
 
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
+  const handleReviewSubmitSuccess = useCallback(async () => {
+    setIsWriteReviewModalOpen(false);
+    await reloadReviews();
+  }, [reloadReviews]);
+
+  const {
+    isSubmittingReview,
+    reviewStatusMessage,
+    clearReviewStatusMessage,
+    handleReviewSubmit,
+  } = useReviewSubmit({
+    productId: product?.id,
+    onSuccess: handleReviewSubmitSuccess,
+  });
 
   useEffect(() => {
     if (isLoading) {
       return;
     }
 
-    setSelectedColorId(null);
-    setSelectedSizeId(null);
-    setQuantity(DEFAULT_QUANTITY);
+    const resetSelectionTimeout = window.setTimeout(() => {
+      setSelectedColorId(null);
+      setSelectedSizeId(null);
+      setQuantity(DEFAULT_QUANTITY);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(resetSelectionTimeout);
+    };
   }, [isLoading, normalizedRouteId]);
 
   useEffect(() => {
@@ -114,9 +123,9 @@ const ProductDetail: React.FC = () => {
       return;
     }
 
-    setReviewStatusMessage("");
+    clearReviewStatusMessage();
     setIsWriteReviewModalOpen(true);
-  }, [isSubmittingReview]);
+  }, [clearReviewStatusMessage, isSubmittingReview]);
 
   const handleCloseReviewModal = useCallback(() => {
     if (isSubmittingReview) {
@@ -125,76 +134,6 @@ const ProductDetail: React.FC = () => {
 
     setIsWriteReviewModalOpen(false);
   }, [isSubmittingReview]);
-
-  const handleReviewSubmit = useCallback(
-    async ({
-      username,
-      comment,
-      stars,
-    }: {
-      username: string;
-      comment: string;
-      stars: number;
-    }) => {
-      if (!product?.id || isSubmittingReview) {
-        return;
-      }
-
-      const normalizedUsername =
-        String(username || DEFAULT_GUEST_USERNAME).trim() ||
-        DEFAULT_GUEST_USERNAME;
-      const normalizedComment = String(comment || "").trim();
-      const normalizedStars = Math.max(1, Math.min(5, Number(stars) || 5));
-
-      if (!normalizedComment) {
-        setReviewStatusMessage("Please write a comment before submitting.");
-        return;
-      }
-
-      const requestId = ++reviewSubmitRequestIdRef.current;
-      setIsSubmittingReview(true);
-      setReviewStatusMessage("Submitting review...");
-
-      try {
-        await submitReview(product.id, {
-          username: normalizedUsername,
-          comment: normalizedComment,
-          stars: normalizedStars,
-        });
-
-        if (
-          !isMountedRef.current ||
-          requestId !== reviewSubmitRequestIdRef.current
-        ) {
-          return;
-        }
-
-        setIsWriteReviewModalOpen(false);
-        setReviewStatusMessage("Review submitted successfully.");
-        await reloadReviews();
-      } catch (error) {
-        if (
-          !isMountedRef.current ||
-          requestId !== reviewSubmitRequestIdRef.current
-        ) {
-          return;
-        }
-
-        console.error("Failed to submit review.", error);
-        setReviewStatusMessage(
-          mapApiErrorToMessage(
-            error,
-            "Failed to submit review. Please try again.",
-          ),
-        );
-      } finally {
-        if (isMountedRef.current) {
-          setIsSubmittingReview(false);
-        }
-      }
-    },
-    [isSubmittingReview, product?.id, reloadReviews],
-  );
 
   const getSafeSelectedColorId = () => {
     if (selectedColorId) {
