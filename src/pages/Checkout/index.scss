@@ -35,6 +35,13 @@
     align-items: start;
   }
 
+  &__fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
   &__field {
     display: flex;
     flex-direction: column;

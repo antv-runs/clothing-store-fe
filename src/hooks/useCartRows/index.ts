@@ -25,12 +25,22 @@ type UseCartRowsResult = {
   summary: CartSummary;
   isEmpty: boolean;
   isLoading: boolean;
+  isRetryingHydration: boolean;
   hasError: boolean;
   retryHydration: () => void;
   getCartRows: () => CartRow[];
   addItem: (item: CartRow) => void;
-  updateItemQuantity: (productId: string, color: string | null, size: string | null, quantity: number) => void;
-  removeItem: (productId: string, color: string | null, size: string | null) => void;
+  updateItemQuantity: (
+    productId: string,
+    color: string | null,
+    size: string | null,
+    quantity: number,
+  ) => void;
+  removeItem: (
+    productId: string,
+    color: string | null,
+    size: string | null,
+  ) => void;
   clearCart: () => void;
 };
 
@@ -49,13 +59,18 @@ export const useCartRows = (): UseCartRowsResult => {
     readStoredCartRows(),
   );
 
-  const [fetchedProducts, setFetchedProducts] = useState<Record<string, Product>>({});
-  const [isLoading, setIsLoading] = useState(() => readStoredCartRows().length > 0);
+  const [fetchedProducts, setFetchedProducts] = useState<
+    Record<string, Product>
+  >({});
+  const [isLoading, setIsLoading] = useState(
+    () => readStoredCartRows().length > 0,
+  );
+  const [isRetryingHydration, setIsRetryingHydration] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [retryTrigger, setRetryTrigger] = useState(0);
 
   const retryHydration = useCallback(() => {
-    setHasError(false);
+    setIsRetryingHydration(true);
     setRetryTrigger((prev) => prev + 1);
   }, []);
 
@@ -63,17 +78,22 @@ export const useCartRows = (): UseCartRowsResult => {
     let isActive = true;
 
     const hydrateProducts = async () => {
-      const uniqueIds = Array.from(new Set(cartRows.map((row) => row.productId)));
+      const uniqueIds = Array.from(
+        new Set(cartRows.map((row) => row.productId)),
+      );
       const missingIds = uniqueIds.filter((id) => !fetchedProducts[id]);
 
       if (missingIds.length === 0) {
         setIsLoading(false);
         setHasError(false);
+        setIsRetryingHydration(false);
         return;
       }
 
-      setIsLoading(true);
-      setHasError(false);
+      if (!isRetryingHydration) {
+        setIsLoading(true);
+        setHasError(false);
+      }
 
       try {
         const results = await Promise.all(
@@ -96,6 +116,7 @@ export const useCartRows = (): UseCartRowsResult => {
           ...prev,
           ...newProducts,
         }));
+        setHasError(false);
       } catch (error) {
         if (!isActive) {
           return;
@@ -105,6 +126,7 @@ export const useCartRows = (): UseCartRowsResult => {
       } finally {
         if (isActive) {
           setIsLoading(false);
+          setIsRetryingHydration(false);
         }
       }
     };
@@ -114,7 +136,7 @@ export const useCartRows = (): UseCartRowsResult => {
     return () => {
       isActive = false;
     };
-  }, [cartRows, fetchedProducts, retryTrigger]);
+  }, [cartRows, fetchedProducts, isRetryingHydration, retryTrigger]);
 
   const getCartRows = useCallback(() => {
     return readStoredCartRows();
@@ -218,10 +240,11 @@ export const useCartRows = (): UseCartRowsResult => {
   const cartItems = useMemo(() => {
     return cartRows
       .map((row) => {
-        const productKey = Object.keys(fetchedProducts).find((key) =>
-          normalizeId(String(key), row.productId)
-        ) || row.productId;
-        
+        const productKey =
+          Object.keys(fetchedProducts).find((key) =>
+            normalizeId(String(key), row.productId),
+          ) || row.productId;
+
         const product = fetchedProducts[productKey];
         if (!product) {
           return null;
@@ -257,12 +280,15 @@ export const useCartRows = (): UseCartRowsResult => {
 
     const delivery = 0;
     const total = subtotal - discount + delivery;
-    const discountPercent = subtotal > 0 ? Math.round((discount / subtotal) * 100) : 0;
+    const discountPercent =
+      subtotal > 0 ? Math.round((discount / subtotal) * 100) : 0;
 
     return { subtotal, discount, discountPercent, delivery, total };
   }, [cartItems]);
 
-  const isEmpty = cartRows.length === 0 || (!isLoading && !hasError && cartItems.length === 0);
+  const isEmpty =
+    cartRows.length === 0 ||
+    (!isLoading && !hasError && cartItems.length === 0);
 
   return {
     cartRows,
@@ -270,6 +296,7 @@ export const useCartRows = (): UseCartRowsResult => {
     summary,
     isEmpty,
     isLoading,
+    isRetryingHydration,
     hasError,
     retryHydration,
     getCartRows,

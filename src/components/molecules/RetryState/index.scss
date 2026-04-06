@@ -9,6 +9,7 @@
   max-width: 520px;
   margin: 16px auto 0;
   padding: 18px 20px;
+  min-height: 136px;
   border: 1px solid v.$color-border;
   border-radius: 20px;
   background: v.$color-white;
@@ -23,6 +24,13 @@
 
   &__button {
     min-width: 180px;
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+      pointer-events: none;
+    }
   }
 }
 

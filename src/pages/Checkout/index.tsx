@@ -37,6 +37,7 @@ const Checkout: React.FC = () => {
     summary,
     isEmpty,
     isLoading,
+    isRetryingHydration,
     hasError,
     retryHydration,
   } = useCartRows();
@@ -193,6 +194,7 @@ const Checkout: React.FC = () => {
           <RetryState
             message="We couldn't securely load your checkout data right now."
             onRetry={retryHydration}
+            isRetrying={isRetryingHydration}
           />
         ) : isLoading && !hasError ? (
           <CheckoutPageSkeleton />
@@ -203,107 +205,112 @@ const Checkout: React.FC = () => {
               onSubmit={handleSubmit(onSubmit)}
               noValidate
             >
-              <div className="checkout-page__grid">
-                <label className="checkout-page__field">
-                  <span>Full Name</span>
-                  <Controller
-                    name="fullName"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Input
-                          {...field}
-                          type="text"
-                          autoComplete="name"
-                          required
-                          aria-invalid={Boolean(errors.fullName)}
-                          onChange={(event) => {
-                            field.onChange(event);
-                          }}
-                        />
-                        {errors.fullName?.message && (
-                          <p role="alert">{errors.fullName.message}</p>
-                        )}
-                      </>
-                    )}
-                  />
-                </label>
+              <fieldset
+                className="checkout-page__fieldset"
+                disabled={isSubmittingOrder}
+              >
+                <div className="checkout-page__grid">
+                  <label className="checkout-page__field">
+                    <span>Full Name</span>
+                    <Controller
+                      name="fullName"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <Input
+                            {...field}
+                            type="text"
+                            autoComplete="name"
+                            required
+                            aria-invalid={Boolean(errors.fullName)}
+                            onChange={(event) => {
+                              field.onChange(event);
+                            }}
+                          />
+                          {errors.fullName?.message && (
+                            <p role="alert">{errors.fullName.message}</p>
+                          )}
+                        </>
+                      )}
+                    />
+                  </label>
 
-                <label className="checkout-page__field">
-                  <span>Email</span>
-                  <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Input
-                          {...field}
-                          type="email"
-                          autoComplete="email"
-                          required
-                          aria-invalid={Boolean(errors.email)}
-                          onChange={(event) => {
-                            field.onChange(event);
-                          }}
-                        />
-                        {errors.email?.message && (
-                          <p role="alert">{errors.email.message}</p>
-                        )}
-                      </>
-                    )}
-                  />
-                </label>
+                  <label className="checkout-page__field">
+                    <span>Email</span>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <Input
+                            {...field}
+                            type="email"
+                            autoComplete="email"
+                            required
+                            aria-invalid={Boolean(errors.email)}
+                            onChange={(event) => {
+                              field.onChange(event);
+                            }}
+                          />
+                          {errors.email?.message && (
+                            <p role="alert">{errors.email.message}</p>
+                          )}
+                        </>
+                      )}
+                    />
+                  </label>
 
-                <label className="checkout-page__field checkout-page__field--full">
-                  <span>Phone</span>
-                  <Controller
-                    name="phone"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Input
-                          {...field}
-                          type="tel"
-                          autoComplete="tel"
-                          required
-                          aria-invalid={Boolean(errors.phone)}
-                          onChange={(event) => {
-                            field.onChange(event);
-                          }}
-                        />
-                        {errors.phone?.message && (
-                          <p role="alert">{errors.phone.message}</p>
-                        )}
-                      </>
-                    )}
-                  />
-                </label>
+                  <label className="checkout-page__field checkout-page__field--full">
+                    <span>Phone</span>
+                    <Controller
+                      name="phone"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <Input
+                            {...field}
+                            type="tel"
+                            autoComplete="tel"
+                            required
+                            aria-invalid={Boolean(errors.phone)}
+                            onChange={(event) => {
+                              field.onChange(event);
+                            }}
+                          />
+                          {errors.phone?.message && (
+                            <p role="alert">{errors.phone.message}</p>
+                          )}
+                        </>
+                      )}
+                    />
+                  </label>
 
-                <label className="checkout-page__field checkout-page__field--full">
-                  <span>Address</span>
-                  <Controller
-                    name="address"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Input
-                          {...field}
-                          type="text"
-                          autoComplete="street-address"
-                          required
-                          aria-invalid={Boolean(errors.address)}
-                          onChange={(event) => {
-                            field.onChange(event);
-                          }}
-                        />
-                        {errors.address?.message && (
-                          <p role="alert">{errors.address.message}</p>
-                        )}
-                      </>
-                    )}
-                  />
-                </label>
-              </div>
+                  <label className="checkout-page__field checkout-page__field--full">
+                    <span>Address</span>
+                    <Controller
+                      name="address"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <Input
+                            {...field}
+                            type="text"
+                            autoComplete="street-address"
+                            required
+                            aria-invalid={Boolean(errors.address)}
+                            onChange={(event) => {
+                              field.onChange(event);
+                            }}
+                          />
+                          {errors.address?.message && (
+                            <p role="alert">{errors.address.message}</p>
+                          )}
+                        </>
+                      )}
+                    />
+                  </label>
+                </div>
+              </fieldset>
 
               {submitStatus === "error" && errorMessage && (
                 <div

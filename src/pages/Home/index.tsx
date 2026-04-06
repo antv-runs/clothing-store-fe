@@ -15,6 +15,9 @@ const Home: React.FC = () => {
     isNewArrivalsLoading,
     isTopSellingLoading,
     isReviewsLoading,
+    isRetryingNewArrivals,
+    isRetryingTopSelling,
+    isRetryingReviews,
     newArrivalsError,
     topSellingError,
     reviewsError,
@@ -37,7 +40,11 @@ const Home: React.FC = () => {
             <h2 id="home-new-arrivals-title" className="home-products__title">
               NEW ARRIVALS
             </h2>
-            <RetryState message={newArrivalsError} onRetry={retryNewArrivals} />
+            <RetryState
+              message={newArrivalsError}
+              onRetry={retryNewArrivals}
+              isRetrying={isRetryingNewArrivals}
+            />
           </section>
         ) : (
           <HomeProductSection
@@ -57,7 +64,11 @@ const Home: React.FC = () => {
             <h2 id="home-top-selling-title" className="home-products__title">
               TOP SELLING
             </h2>
-            <RetryState message={topSellingError} onRetry={retryTopSelling} />
+            <RetryState
+              message={topSellingError}
+              onRetry={retryTopSelling}
+              isRetrying={isRetryingTopSelling}
+            />
           </section>
         ) : (
           <HomeProductSection
@@ -79,7 +90,11 @@ const Home: React.FC = () => {
             <div className="home-reviews__head">
               <h2 id="home-reviews-title">OUR HAPPY CUSTOMERS</h2>
             </div>
-            <RetryState message={reviewsError} onRetry={retryReviews} />
+            <RetryState
+              message={reviewsError}
+              onRetry={retryReviews}
+              isRetrying={isRetryingReviews}
+            />
           </section>
         ) : (
           <HomeReviews reviews={reviews} isLoading={isReviewsLoading} />

@@ -21,6 +21,7 @@ const Cart: React.FC = () => {
     summary,
     isEmpty,
     isLoading,
+    isRetryingHydration,
     hasError,
     retryHydration,
     updateItemQuantity,
@@ -68,6 +69,7 @@ const Cart: React.FC = () => {
           <RetryState
             message="We couldn't securely load your cart data right now."
             onRetry={retryHydration}
+            isRetrying={isRetryingHydration}
           />
         )}
 
