@@ -3,6 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import "./index.scss";
+import { Button } from "@/components/atoms/Button";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Star } from "@/components/atoms/Star";
 import { DEFAULT_GUEST_USERNAME } from "@/const/user";
@@ -208,22 +209,23 @@ export const WriteReviewModal = ({
           </fieldset>
 
           <div className="review-modal__actions">
-            <button
+            <Button
               type="button"
+              unstyled
               className="review-modal__button review-modal__button--cancel js-review-modal-close"
               onClick={handleClose}
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className={`review-modal__button js-review-modal-submit${
-                isSubmitting ? " is-loading" : ""
-              }`}
-              disabled={isSubmitting}
+              unstyled
+              className="review-modal__button js-review-modal-submit"
+              isLoading={isSubmitting}
+              loadingText="Submitting..."
             >
               Submit Review
-            </button>
+            </Button>
           </div>
         </form>
       </div>
