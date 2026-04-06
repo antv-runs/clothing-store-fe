@@ -184,15 +184,6 @@
   &__qty-btn {
     width: 32px;
     height: 32px;
-    flex-shrink: 0;
-    color: #000;
-
-    &:disabled,
-    &.is-disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
 
     @include m.focus-ring(2px, 4px);
   }
@@ -200,23 +191,14 @@
   &__quantity {
     width: 126px;
     flex: 0 0 auto;
-    @include m.flex-between-center;
+    justify-content: space-between;
     white-space: nowrap;
-    background-color: v.$color-surface;
-    border-radius: v.$radius-pill;
     padding: 8px 14px;
 
     input {
       width: 26px;
-      text-align: center;
-      @include m.button-native-reset($with-cursor: false);
       font-size: 14px;
-      font-weight: 500;
       flex-shrink: 0;
-
-      &:focus {
-        outline: none;
-      }
     }
   }
 

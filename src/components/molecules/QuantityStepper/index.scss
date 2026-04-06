@@ -1,0 +1,53 @@
+@use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/mixins" as m;
+
+.quantity-stepper {
+  display: flex;
+  align-items: center;
+  background-color: v.$color-surface;
+  border-radius: v.$radius-pill;
+
+  &__input {
+    text-align: center;
+    @include m.button-native-reset($with-cursor: false);
+    font-weight: 500;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    min-width: 0;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__button {
+    @include m.button-native-reset;
+    @include m.flex-center;
+    flex-shrink: 0;
+    color: #000;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1);
+
+    /* Animation feedback for press */
+    &:active:not(:disabled) {
+      transform: scale(0.85);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+}

@@ -28,38 +28,18 @@
     flex: 0 0 var(--quantity-control-width);
     width: var(--quantity-control-width);
     height: 52px;
-    display: flex;
     align-items: stretch;
     background-color: #f0f0f0;
-    border-radius: v.$radius-pill;
     padding: 0 10px;
     overflow: hidden;
 
     input {
       flex: 1 1 auto;
-      min-width: 0;
       width: auto;
-      text-align: center;
-      @include m.button-native-reset($with-cursor: false);
       font-size: 16px;
-      font-weight: 500;
-      -webkit-appearance: none;
-      -moz-appearance: textfield;
-      appearance: textfield;
-
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      &:focus {
-        outline: none;
-      }
 
       &:disabled {
         opacity: 0.65;
-        cursor: not-allowed;
       }
     }
 
@@ -67,16 +47,8 @@
     .quantity-button-plus {
       flex: 0 0 var(--quantity-button-width);
       width: var(--quantity-button-width);
-      @include m.button-native-reset;
-      @include m.flex-center;
-      color: #000;
       --icon-width: var(--quantity-icon-width);
       --icon-height: var(--quantity-icon-height);
-
-      &:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-      }
     }
 
     .quantity-button-minus--aligned .icon svg {
@@ -105,8 +77,13 @@
       background-color: #333;
     }
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: #333;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.97);
     }
 
     &.is-added {

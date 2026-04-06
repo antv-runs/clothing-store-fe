@@ -1,5 +1,7 @@
 import React from "react";
+import clsx from "clsx";
 import { IconButton } from "@/components/atoms/IconButton";
+import "./index.scss";
 
 interface QuantityStepperProps {
   className?: string;
@@ -12,6 +14,7 @@ interface QuantityStepperProps {
   value?: number;
   defaultValue?: number;
   min?: number;
+  max?: number;
   step?: number;
   readOnly?: boolean;
   disabled?: boolean;
@@ -22,10 +25,6 @@ interface QuantityStepperProps {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-/**
- * QuantityStepper - shared quantity control structure.
- * Keeps layout styling in the parent while owning the repeated stepper markup.
- */
 export const QuantityStepper: React.FC<QuantityStepperProps> = ({
   className,
   ariaLabel,
@@ -37,6 +36,7 @@ export const QuantityStepper: React.FC<QuantityStepperProps> = ({
   value,
   defaultValue,
   min = 1,
+  max,
   step = 1,
   readOnly = false,
   disabled = false,
@@ -46,34 +46,52 @@ export const QuantityStepper: React.FC<QuantityStepperProps> = ({
   onIncrease,
   onChange,
 }) => {
+  const currentValue = value !== undefined ? value : (defaultValue !== undefined ? defaultValue : min);
+
+  const isMinusDisabled = disabled || currentValue <= min;
+  const isPlusDisabled = disabled || (max !== undefined && currentValue >= max);
+
+  const handleDecrease: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    if (!isMinusDisabled) {
+      onDecrease?.(e);
+    }
+  };
+
+  const handleIncrease: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    if (!isPlusDisabled) {
+      onIncrease?.(e);
+    }
+  };
+
   const handleSubmit = readOnly
     ? (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-      }
+      event.preventDefault();
+    }
     : undefined;
 
   return (
     <form
       action={action}
-      className={className}
+      className={clsx("quantity-stepper", className)}
       aria-label={ariaLabel}
       onSubmit={handleSubmit}
     >
       <IconButton
         svgName="icn_minus"
-        className={decrementButtonClassName}
+        className={clsx("quantity-stepper__button", decrementButtonClassName)}
         ariaLabel="Decrease quantity"
         iconWidth={iconWidth}
         iconHeight={iconHeight}
         type="button"
-        disabled={disabled}
-        onClick={onDecrease}
+        disabled={isMinusDisabled}
+        onClick={handleDecrease}
       />
       <input
         id={inputId}
-        className={inputClassName}
+        className={clsx("quantity-stepper__input", inputClassName)}
         type="number"
         min={min}
+        max={max}
         step={step}
         value={value}
         defaultValue={defaultValue}
@@ -83,13 +101,13 @@ export const QuantityStepper: React.FC<QuantityStepperProps> = ({
       />
       <IconButton
         svgName="icn_plus"
-        className={incrementButtonClassName}
+        className={clsx("quantity-stepper__button", incrementButtonClassName)}
         ariaLabel="Increase quantity"
         iconWidth={iconWidth}
         iconHeight={iconHeight}
         type="button"
-        disabled={disabled}
-        onClick={onIncrease}
+        disabled={isPlusDisabled}
+        onClick={handleIncrease}
       />
     </form>
   );
