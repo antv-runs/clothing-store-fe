@@ -189,7 +189,7 @@ const ProductDetail: React.FC = () => {
     return (
       <div className="container u-mt-25">
         <section
-          className="product-overview js-product-overview"
+          className="product-overview"
           aria-label="Product overview"
         >
           <Text as="p" className="product-overview__description">
@@ -203,7 +203,7 @@ const ProductDetail: React.FC = () => {
   return (
     <div className="container u-mt-25 product-detail-page">
       {/* Product Overview Section */}
-      <section className="product-overview js-product-overview">
+      <section className="product-overview">
         <Breadcrumb
           items={product.breadcrumb || ["Home", "Shop", product.name]}
           className="u-mb-40 breadcrumb__list--truncate"
@@ -308,7 +308,7 @@ const ProductDetail: React.FC = () => {
       </ErrorBoundary>
 
       {/* Screen reader announcer */}
-      <div aria-live="polite" className="sr-only js-sr-announcer">
+      <div aria-live="polite" className="sr-only">
         {reviewStatusMessage}
       </div>
     </div>

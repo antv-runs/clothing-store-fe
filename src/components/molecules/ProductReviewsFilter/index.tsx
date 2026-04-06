@@ -90,7 +90,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
       <div className="reviews__filter">
         <IconButton
           id="btn-filter-by-stars"
-          className="reviews__action reviews__action--filter js-btn-filter-by-stars"
+          className="reviews__action reviews__action--filter"
           svgName="icn_filter"
           ariaLabel="Filter reviews by star rating"
           aria-haspopup="listbox"
@@ -104,7 +104,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
 
         <div
           id="dropdown-filter-by-stars"
-          className={`reviews__filter-dropdown js-dropdown-filter-by-stars${
+          className={`reviews__filter-dropdown${
             isOpen ? " reviews__filter-dropdown--show" : ""
           }`}
           role="listbox"
@@ -117,7 +117,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
               <button
                 key={option.value}
                 type="button"
-                className={`reviews__filter-option js-reviews__filter-option${
+                className={`reviews__filter-option${
                   isActive ? " reviews__filter-option--active" : ""
                 }`}
                 data-stars={option.value}
@@ -135,7 +135,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
 
       <ReviewSortSelect
         id="reviews-sort-select"
-        className="reviews__action reviews__action--sort js-reviews-sort-select"
+        className="reviews__action reviews__action--sort"
         value={selectedSort}
         options={REVIEW_SORT_OPTIONS}
         disabled={isDisabled}
@@ -145,7 +145,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
 
       <button
         type="button"
-        className="reviews__action reviews__action--write js-write-review-button"
+        className="reviews__action reviews__action--write"
         aria-label="Write a review"
         disabled={isDisabled}
         onClick={onWriteReview}

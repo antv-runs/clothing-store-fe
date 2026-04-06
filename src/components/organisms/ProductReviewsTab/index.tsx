@@ -6,6 +6,7 @@ import { ProductReviewsHeader } from "@/components/molecules/ProductReviewsHeade
 import { ProductReviewsList } from "@/components/molecules/ProductReviewsList";
 
 interface ProductReviewsTabProps {
+  panelRef?: (el: HTMLElement | null) => void;
   reviews: Review[];
   reviewCount: number;
   isActive: boolean;
@@ -25,6 +26,7 @@ interface ProductReviewsTabProps {
  * ProductReviewsTab - Reviews tab content section.
  */
 export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
+  panelRef,
   reviews,
   reviewCount,
   isActive,
@@ -42,13 +44,12 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
   return (
     <section
       id="tc-reviews"
+      ref={panelRef}
       data-tab-content="tc-reviews"
       role="tabpanel"
       aria-labelledby="tab-tc-reviews"
       aria-hidden={!isActive}
-      className={`reviews products-tabs__content js-products-tabs__content${
-        isActive ? " products-tabs__content--active" : ""
-      }`}
+      className={`reviews products-tabs__content${isActive ? " products-tabs__content--active" : ""}`}
     >
       <ProductReviewsHeader
         reviewCount={reviewCount}
@@ -71,8 +72,7 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
       <div className="reviews__load-more-wrapper">
         <Button
           unstyled
-          id="reviews-load-more"
-          className="reviews__load-more js-reviews-load-more"
+          className="reviews__load-more"
           type="button"
           onClick={onLoadMore}
           isLoading={isLoadingMore}

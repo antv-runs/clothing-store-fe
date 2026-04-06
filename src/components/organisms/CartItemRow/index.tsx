@@ -36,11 +36,11 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
     >
       <a
         href={`/product/${encodeURIComponent(item.id)}`}
-        className="cart-item__image-link js-cart-item-link"
+        className="cart-item__image-link"
         aria-label={`View product details for ${item.name}`}
       >
         <div
-          className="cart-item__image-shell cart-item__image-shell--loaded js-cart-image-shell"
+          className="cart-item__image-shell cart-item__image-shell--loaded"
           aria-busy="false"
         >
           <span
@@ -48,7 +48,7 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
             aria-hidden="true"
           ></span>
           <img
-            className="cart-item__image js-cart-item-image"
+            className="cart-item__image"
             src={item.thumbnail || item.images?.[0]?.url}
             alt={item.thumbnailAlt || item.name}
             loading="lazy"
@@ -61,14 +61,14 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
         <div className="cart-item__head">
           <h2 className="cart-item__name">
             <a
-              className="cart-item__name-link js-cart-item-link"
+              className="cart-item__name-link"
               href={`/product/${encodeURIComponent(item.id)}`}
             >
               {item.name}
             </a>
           </h2>
           <button
-            className="cart-item__remove js-cart-item-remove"
+            className="cart-item__remove"
             type="button"
             aria-label="Remove item"
             disabled
@@ -98,9 +98,8 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
           <QuantityStepper
             className="cart-item__quantity"
             ariaLabel="Quantity controls"
-            inputClassName="js-cart-item-qty-input"
-            decrementButtonClassName="cart-item__qty-btn js-cart-item-qty-minus"
-            incrementButtonClassName="cart-item__qty-btn js-cart-item-qty-plus"
+            decrementButtonClassName="cart-item__qty-btn"
+            incrementButtonClassName="cart-item__qty-btn"
             value={item.quantity}
             min={1}
             readOnly

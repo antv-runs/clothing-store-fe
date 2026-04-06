@@ -205,7 +205,6 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
       <div className="product-gallery__main">
         <div className="product-gallery__main-wrapper">
           <Image
-            id="product-main-image"
             src={fallbackPlaceholder}
             alt={productName}
             renderWrapper={false}
@@ -226,7 +225,6 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
       {/* Thumbnail Gallery */}
       <div
         ref={thumbnailsContainerRef}
-        id="product-thumbnails"
         className={clsx(
           "product-gallery__thumbnails",
           { "product-gallery__thumbnails--scroll-top": hasScrollTop },
@@ -296,7 +294,6 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           )}
 
           <Image
-            id="product-main-image"
             src={mainImageSrc || fallbackPlaceholder}
             alt={
               mainImageError

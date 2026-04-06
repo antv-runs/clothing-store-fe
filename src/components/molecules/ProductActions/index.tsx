@@ -30,9 +30,9 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
       <QuantityStepper
         action="#"
         inputId="quantity-input"
-        inputClassName="quantity-input js-quantity-input"
-        decrementButtonClassName="quantity-button-minus quantity-button-minus--aligned js-quantity-button-minus"
-        incrementButtonClassName="quantity-button-plus js-quantity-button-plus"
+        inputClassName="quantity-input"
+        decrementButtonClassName="quantity-button-minus quantity-button-minus--aligned"
+        incrementButtonClassName="quantity-button-plus"
         value={quantity}
         min={1}
         step={1}
@@ -43,7 +43,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         onChange={(event) => onQuantityChange(event.target.value)}
       />
       <button
-        className="add-to-cart-button js-add-to-cart"
+        className="add-to-cart-button"
         type="button"
         data-color-id={selectedColorId}
         data-size-id={selectedSizeId}

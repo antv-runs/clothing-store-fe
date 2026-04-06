@@ -29,7 +29,7 @@ export const ProductReviewsHeader: React.FC<ProductReviewsHeaderProps> = ({
     <div className="reviews__header">
       <Heading as="h2" className="reviews__title">
         All Reviews
-        <span id="reviews-count" className="js-reviews-count">
+        <span>
           ({reviewCount})
         </span>
       </Heading>

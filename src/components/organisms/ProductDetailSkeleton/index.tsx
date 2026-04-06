@@ -295,7 +295,7 @@ export const ProductDetailSkeleton: React.FC = () => {
   return (
     <div className="container u-mt-25 product-detail-page product-detail-skeleton">
       <section
-        className="product-overview js-product-overview"
+        className="product-overview"
         aria-label="Product overview loading"
       >
         <BreadcrumbSkeleton />

@@ -47,7 +47,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
 
   if (!isLoading && products.length === 0) {
     return (
-      <section className="other-products js-related-products">
+      <section className="other-products">
         <Heading as="h2" className="other-products__title">
           {title}
         </Heading>
@@ -57,7 +57,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   }
 
   return (
-    <section className="other-products js-related-products u-mb-85">
+    <section className="other-products u-mb-85">
       <Heading as="h2" className="other-products__title">
         {title}
       </Heading>

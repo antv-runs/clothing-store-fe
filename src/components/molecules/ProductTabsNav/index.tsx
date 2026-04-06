@@ -29,7 +29,7 @@ export const ProductTabsNav: React.FC<ProductTabsNavProps> = ({
           <button
             key={tab.key}
             id={`tab-${tab.key}`}
-            className={`tabs__tab js-tabs__tab${
+            className={`tabs__tab${
               isActive ? " tabs__tab--active" : ""
             }`}
             role="tab"

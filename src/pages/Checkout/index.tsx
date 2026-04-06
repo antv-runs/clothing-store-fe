@@ -143,7 +143,7 @@ const Checkout: React.FC = () => {
 
   return (
     <div className="container u-mt-25">
-      <section className="checkout-page js-checkout-page" aria-label="Checkout">
+      <section className="checkout-page" aria-label="Checkout">
         <Breadcrumb
           items={["Home", "Cart", "Checkout"]}
           className="checkout-page__breadcrumb"
@@ -183,7 +183,7 @@ const Checkout: React.FC = () => {
         ) : isEmpty ? null : (
           <div className="checkout-page__layout">
             <form
-              className="checkout-page__form js-checkout-form"
+              className="checkout-page__form"
               onSubmit={handleSubmit(onSubmit)}
               noValidate
             >
@@ -291,7 +291,7 @@ const Checkout: React.FC = () => {
 
               {submitStatus === "error" && errorMessage && (
                 <div
-                  className="checkout-page__message checkout-page__message--error js-checkout-error"
+                  className="checkout-page__message checkout-page__message--error"
                   aria-live="polite"
                   role="alert"
                 >
@@ -300,7 +300,7 @@ const Checkout: React.FC = () => {
               )}
 
               <Button
-                className="checkout-page__submit js-checkout-submit"
+                className="checkout-page__submit"
                 type="submit"
                 disabled={isSubmittingOrder}
                 aria-disabled={isSubmittingOrder}

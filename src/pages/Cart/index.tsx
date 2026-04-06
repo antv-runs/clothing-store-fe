@@ -23,10 +23,9 @@ const Cart: React.FC = () => {
 
   return (
     <div className="container u-mt-25">
-      <section className="cart-page js-cart-page" aria-label="Shopping cart">
+      <section className="cart-page" aria-label="Shopping cart">
         <Breadcrumb
           items={["Home", "Cart"]}
-          id="cart-breadcrumb-list"
           className="cart-page__breadcrumb"
         />
 
@@ -43,12 +42,12 @@ const Cart: React.FC = () => {
         <CartEmptyState isVisible={isEmpty && !isLoading} />
 
         <section
-          className="cart-page__layout js-cart-layout"
+          className="cart-page__layout"
           aria-label="Cart summary"
           style={{ display: isEmpty || isLoading ? "none" : "" }}
         >
           <div
-            className="cart-items js-cart-items"
+            className="cart-items"
             aria-busy="false"
             aria-live="polite"
           >

@@ -411,7 +411,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
         <IconButton
           variant="ghost"
           svgName="icn_back"
-          className="product-card-list__nav product-card-list__nav--prev js-other-products__prev"
+          className="product-card-list__nav product-card-list__nav--prev"
           ariaLabel="Previous products"
           iconWidth={50}
           iconHeight={50}
@@ -422,12 +422,11 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
 
       <div
         ref={viewportRef}
-        className="product-card-list__viewport js-related-viewport"
+        className="product-card-list__viewport"
       >
         <ul
           ref={trackRef}
-          id="product-card-list"
-          className="product-card-list__track js-other-products__list js-related-track"
+          className="product-card-list__track"
           aria-live="polite"
           aria-busy={loading}
           onClick={handleTrackClick}
@@ -436,7 +435,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
             ? skeletonItems.map((index) => (
                 <li
                   key={`skeleton-${index}`}
-                  className="product-card-list__item product-card-list__item--skeleton js-other-products__item js-related-item"
+                  className="product-card-list__item product-card-list__item--skeleton"
                   data-is-clone="false"
                 >
                   <article className="product-card" aria-hidden="true">
@@ -484,7 +483,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
                         ? `clone-${item.clonePosition}-${item.id}-${index}`
                         : item.id
                     }
-                    className="product-card-list__item js-other-products__item js-related-item"
+                    className="product-card-list__item"
                     data-product-id={displayId}
                     data-is-clone={item.isClone ? "true" : "false"}
                   >
@@ -510,7 +509,7 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
         <IconButton
           variant="ghost"
           svgName="icn_next"
-          className="product-card-list__nav product-card-list__nav--next js-other-products__next"
+          className="product-card-list__nav product-card-list__nav--next"
           ariaLabel="Next products"
           iconWidth={50}
           iconHeight={50}

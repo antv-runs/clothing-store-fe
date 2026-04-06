@@ -17,7 +17,7 @@ export const ProductReviewsList: React.FC<ProductReviewsListProps> = ({
   isLoading = false,
 }) => {
   return (
-    <ul id="reviews-list" className="reviews__list js-reviews-list">
+    <ul className="reviews__list">
       {isLoading ? (
         <ProductReviewsListSkeleton />
       ) : reviews.length === 0 ? (

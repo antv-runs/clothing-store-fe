@@ -73,17 +73,14 @@ export const WriteReviewModal = ({
 
   return (
     <div
-      id="write-review-modal"
-      className={`review-modal js-review-modal${
-        isOpen ? " review-modal--open" : ""
-      }`}
+      className={`review-modal${isOpen ? " review-modal--open" : ""}`}
       aria-hidden={!isOpen}
       role="dialog"
       aria-modal="true"
       aria-labelledby="write-review-title"
     >
       <div
-        className="review-modal__backdrop js-review-modal-close"
+        className="review-modal__backdrop"
         onClick={handleClose}
       ></div>
       <div className="review-modal__dialog" role="document">
@@ -93,7 +90,7 @@ export const WriteReviewModal = ({
           </h3>
           <IconButton
             svgName="icn_close"
-            className="review-modal__close js-review-modal-close"
+            className="review-modal__close"
             ariaLabel="Close review form"
             iconWidth={16}
             iconHeight={16}
@@ -102,7 +99,7 @@ export const WriteReviewModal = ({
         </div>
 
         <form
-          className="review-modal__form js-review-modal-form"
+          className="review-modal__form"
           onSubmit={handleSubmit(handleModalSubmit)}
           aria-busy={isSubmitting}
         >
@@ -115,7 +112,6 @@ export const WriteReviewModal = ({
                 render={({ field }) => (
                   <input
                     type="text"
-                    className="js-review-username"
                     name={field.name}
                     autoComplete="name"
                     value={field.value}
@@ -133,7 +129,6 @@ export const WriteReviewModal = ({
                 control={control}
                 render={({ field }) => (
                   <textarea
-                    className="js-review-comment"
                     name={field.name}
                     rows={4}
                     placeholder="Share your thoughts about this product"
@@ -153,9 +148,9 @@ export const WriteReviewModal = ({
                   name="stars"
                   control={control}
                   render={({ field }) => (
-                    <div className="review-modal__rating-picker js-review-rating-picker">
+                    <div className="review-modal__rating-picker">
                       <div
-                        className="review-modal__rating-stars js-review-rating-stars"
+                        className="review-modal__rating-stars"
                         aria-label="Select a rating from 1 to 5 stars"
                       >
                         {Array.from({ length: 5 }, (_, index) => {
@@ -199,7 +194,7 @@ export const WriteReviewModal = ({
                   name="stars"
                   control={control}
                   render={({ field }) => (
-                    <p className="review-modal__rating-value js-review-rating-value">
+                    <p className="review-modal__rating-value">
                       {Number(field.value).toFixed(1)}/5
                     </p>
                   )}
@@ -212,7 +207,7 @@ export const WriteReviewModal = ({
             <Button
               type="button"
               unstyled
-              className="review-modal__button review-modal__button--cancel js-review-modal-close"
+              className="review-modal__button review-modal__button--cancel"
               onClick={handleClose}
             >
               Cancel
@@ -220,9 +215,8 @@ export const WriteReviewModal = ({
             <Button
               type="submit"
               unstyled
-              className="review-modal__button js-review-modal-submit"
+              className={`review-modal__button${isSubmitting ? " is-loading" : ""}`}
               isLoading={isSubmitting}
-              loadingText="Submitting..."
             >
               Submit Review
             </Button>

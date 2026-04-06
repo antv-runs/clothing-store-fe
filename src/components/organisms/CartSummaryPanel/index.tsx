@@ -28,7 +28,7 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
 }) => {
   return (
     <aside
-      className="cart-summary js-cart-summary"
+      className="cart-summary"
       aria-label="Order summary"
       aria-busy="false"
     >
@@ -39,32 +39,31 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
       <dl className="cart-summary__rows">
         <div className="cart-summary__row u-mb-28">
           <dt>Subtotal</dt>
-          <dd className="js-cart-subtotal">{formatPrice(summary.subtotal)}</dd>
+          <dd>{formatPrice(summary.subtotal)}</dd>
         </div>
         <div className="cart-summary__row u-mb-28">
           <dt>Discount (-20%)</dt>
-          <dd className="cart-summary__discount js-cart-discount">
+          <dd className="cart-summary__discount">
             -{formatPrice(summary.discount)}
           </dd>
         </div>
         <div className="cart-summary__row">
           <dt>Delivery Fee</dt>
-          <dd className="js-cart-delivery">{formatPrice(summary.delivery)}</dd>
+          <dd>{formatPrice(summary.delivery)}</dd>
         </div>
       </dl>
 
       <div className="cart-summary__total">
         <p>Total</p>
-        <p className="js-cart-total">{formatPrice(summary.total)}</p>
+        <p>{formatPrice(summary.total)}</p>
       </div>
 
-      <form className="cart-summary__coupon js-cart-promo-form" action="#">
+      <form className="cart-summary__coupon" action="#">
         <div className="coupon-input">
           <figure>
             <img src="/images/icn_promo_code.svg" alt="Promo code" />
           </figure>
           <input
-            className="js-cart-coupon-input"
             type="text"
             placeholder="Add promo code"
             aria-label="Promo code"
@@ -73,7 +72,6 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
           />
         </div>
         <Button
-          className="js-cart-coupon-apply"
           type="button"
           disabled
           aria-disabled="true"
@@ -83,13 +81,13 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
         </Button>
       </form>
       <p
-        className="cart-summary__coupon-msg js-cart-coupon-msg"
+        className="cart-summary__coupon-msg"
         aria-live="polite"
         hidden
       ></p>
 
       <Button
-        className="cart-summary__checkout js-cart-checkout"
+        className="cart-summary__checkout"
         type="button"
         disabled={isCheckoutDisabled}
         aria-disabled={isCheckoutDisabled}

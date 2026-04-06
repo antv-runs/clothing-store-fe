@@ -6,7 +6,6 @@ import "./index.scss";
 interface RatingDisplayProps {
   rating: number;
   maxStars?: number;
-  starClassName?: string;
   showEmpty?: boolean;
 }
 
@@ -17,7 +16,6 @@ interface RatingDisplayProps {
 export const RatingDisplay: React.FC<RatingDisplayProps> = ({
   rating,
   maxStars = 5,
-  starClassName = "product-info__star",
   showEmpty = false,
 }) => {
   const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || 5));
@@ -76,18 +74,17 @@ export const RatingDisplay: React.FC<RatingDisplayProps> = ({
 
   return (
     <div
-      className="product-info__rating js-product-rating-section"
+      className="product-info__rating"
       aria-label={`${safeRating.toFixed(1)} out of ${normalizedMaxStars} stars`}
     >
       <div
-        id="product-rating-stars"
-        className="rating-display__stars js-product-rating-stars"
+        className="rating-display__stars"
       >
         {renderStars()}
       </div>
       <Text
         as="p"
-        className="rating-display__text product-info__rating-text js-product-rating-text"
+        className="rating-display__text product-info__rating-text"
       >
         <Rating rating={safeRating} />
       </Text>

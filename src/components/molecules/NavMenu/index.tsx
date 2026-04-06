@@ -18,7 +18,7 @@ const NAV_ITEMS: NavMenuItem[] = [
 export const NavMenu: React.FC = () => {
   return (
     <nav className="header-links" aria-label="Main navigation">
-      <ul id="nav-categories">
+      <ul>
         {NAV_ITEMS.map((item) => (
           <li key={item.label}>
             <TextLink href={item.href}>

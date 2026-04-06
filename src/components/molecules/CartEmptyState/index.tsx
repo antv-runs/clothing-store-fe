@@ -15,7 +15,7 @@ export const CartEmptyState: React.FC<CartEmptyStateProps> = ({
 }) => {
   return (
     <div
-      className="cart-empty js-cart-empty"
+      className="cart-empty"
       style={{ display: isVisible ? "flex" : "none" }}
       aria-live="polite"
     >

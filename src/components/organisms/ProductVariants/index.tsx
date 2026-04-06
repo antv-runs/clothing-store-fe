@@ -151,10 +151,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
     <>
       <div className="product-overview__choose">
         <Text as="p">Select Colors</Text>
-        <div
-          id="product-color-options"
-          className="product-overview__choose-colors"
-        >
+        <div className="product-overview__choose-colors">
           {variants?.colors?.length ? (
             variants.colors.map((color) => {
               const isSelected = color.id === selectedColorId;
@@ -190,16 +187,13 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
 
       <div className="product-overview__size">
         <Text as="p">Choose Size</Text>
-        <div
-          id="product-size-options"
-          className="product-overview__size-options js-product-size-options"
-        >
+        <div className="product-overview__size-options">
           {variants?.sizes?.length ? (
             variants.sizes.map((size) => (
               <button
                 key={size.id}
                 type="button"
-                className={`size-option js-size-option${size.id === selectedSizeId ? " is-active" : ""}`}
+                className={`size-option${size.id === selectedSizeId ? " is-active" : ""}`}
                 disabled={size.inStock === false}
                 aria-pressed={
                   size.id === selectedSizeId && size.inStock !== false

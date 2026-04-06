@@ -32,12 +32,12 @@ export const CheckoutSummaryPanel: React.FC<CheckoutSummaryPanelProps> = ({
   formatPrice,
 }) => {
   return (
-    <aside className="checkout-summary js-checkout-summary" aria-label="Order summary">
+    <aside className="checkout-summary" aria-label="Order summary">
       <Heading as="h2" className="checkout-summary__title">
         Order Summary
       </Heading>
 
-      <div className="checkout-summary__items js-checkout-items">
+      <div className="checkout-summary__items">
         {items.map((item) => (
           <CheckoutItemRow
             key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
