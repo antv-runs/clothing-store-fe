@@ -1,24 +1,52 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { CartEmptyState } from "@/components/molecules/CartEmptyState";
 import { CartItemRow } from "@/components/organisms/CartItemRow";
 import { CartSummaryPanel } from "@/components/organisms/CartSummaryPanel";
+import { CartPageSkeleton } from "@/components/organisms/CartPageSkeleton";
 import { useCartRows } from "@/hooks/useCartRows";
 import { ROUTES } from "@/routes/paths";
 import { formatPrice } from "@/utils/formatters";
+import { useToast } from "@/contexts/ToastContext";
 import "./index.scss";
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
-  const { cartItems, summary, isEmpty, isLoading } = useCartRows();
+  const { showToast } = useToast();
+  const { 
+    cartItems, 
+    summary, 
+    isEmpty, 
+    isLoading, 
+    hasError, 
+    retryHydration,
+    updateItemQuantity,
+    removeItem
+  } = useCartRows();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleApplyCoupon = () => {
+    return new Promise<void>((_, reject) => {
+      setIsProcessing(true);
+      setTimeout(() => {
+        setIsProcessing(false);
+        reject(new Error("Simulated failure"));
+      }, 600);
+    });
+  };
 
   const handleCheckout = () => {
     if (isEmpty) {
       return;
     }
 
-    navigate(ROUTES.CHECKOUT);
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      navigate(ROUTES.CHECKOUT);
+    }, 600);
   };
 
   return (
@@ -33,18 +61,28 @@ const Cart: React.FC = () => {
           Your Cart
         </Heading>
 
-        {isLoading && (
-          <div aria-busy="true" style={{ padding: "4rem 0", textAlign: "center" }}>
-            Loading your cart...
+        {isLoading && !hasError && <CartPageSkeleton />}
+
+        {hasError && (
+          <div className="cart-page__error" style={{ padding: "4rem 0", textAlign: "center" }}>
+            <p>We couldn't securely load your cart data right now.</p>
+            <button
+              onClick={retryHydration}
+              className="btn btn--primary"
+              style={{ padding: "10px 24px", marginTop: "16px" }}
+              type="button"
+            >
+              Retry Connection
+            </button>
           </div>
         )}
 
-        <CartEmptyState isVisible={isEmpty && !isLoading} />
+        <CartEmptyState isVisible={isEmpty && !isLoading && !hasError} />
 
         <section
           className="cart-page__layout"
           aria-label="Cart summary"
-          style={{ display: isEmpty || isLoading ? "none" : "" }}
+          style={{ display: isEmpty || isLoading || hasError ? "none" : "" }}
         >
           <div
             className="cart-items"
@@ -56,6 +94,12 @@ const Cart: React.FC = () => {
                 key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
                 item={item}
                 formatPrice={formatPrice}
+                isLocked={isProcessing}
+                onRemove={() => {
+                  removeItem(item.id, item.color, item.size);
+                  showToast({ message: "Item removed from cart", variant: "success" });
+                }}
+                onUpdateQuantity={(newQty) => updateItemQuantity(item.id, item.color, item.size, newQty)}
               />
             ))}
           </div>
@@ -64,7 +108,9 @@ const Cart: React.FC = () => {
             summary={summary}
             formatPrice={formatPrice}
             isCheckoutDisabled={isEmpty}
+            isLocked={isProcessing}
             onCheckout={handleCheckout}
+            onApplyCoupon={handleApplyCoupon}
           />
         </section>
       </section>

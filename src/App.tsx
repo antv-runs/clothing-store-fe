@@ -1,5 +1,6 @@
 import AppRoutes from "@/routes";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 /**
  * Main App component
@@ -8,7 +9,9 @@ import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 function App() {
   return (
     <ErrorBoundary>
-      <AppRoutes />
+      <ToastProvider>
+        <AppRoutes />
+      </ToastProvider>
     </ErrorBoundary>
   );
 }

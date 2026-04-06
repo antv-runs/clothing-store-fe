@@ -23,6 +23,8 @@ interface QuantityStepperProps {
   onDecrease?: React.MouseEventHandler<HTMLButtonElement>;
   onIncrease?: React.MouseEventHandler<HTMLButtonElement>;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
 
 export const QuantityStepper: React.FC<QuantityStepperProps> = ({
@@ -45,6 +47,8 @@ export const QuantityStepper: React.FC<QuantityStepperProps> = ({
   onDecrease,
   onIncrease,
   onChange,
+  onBlur,
+  onKeyDown,
 }) => {
   const currentValue = value !== undefined ? value : (defaultValue !== undefined ? defaultValue : min);
 
@@ -98,6 +102,8 @@ export const QuantityStepper: React.FC<QuantityStepperProps> = ({
         readOnly={readOnly}
         aria-label="Quantity"
         onChange={onChange}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
       />
       <IconButton
         svgName="icn_plus"

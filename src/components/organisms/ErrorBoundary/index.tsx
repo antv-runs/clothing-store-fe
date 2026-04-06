@@ -4,10 +4,23 @@ import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import "./index.scss";
 
+/**
+ * Centralized error reporter for production telemetry integration (Sentry, Datadog, etc).
+ */
+export const reportError = (error: Error, errorInfo?: ErrorInfo) => {
+  console.error("Reported Error:", error, errorInfo);
+};
+
+export interface FallbackProps {
+  error: Error;
+  resetErrorBoundary: () => void;
+}
+
 interface Props {
   children?: ReactNode;
   fallbackMessage?: string;
   fallback?: ReactNode;
+  fallbackRender?: (props: FallbackProps) => ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
   resetKeys?: ReadonlyArray<unknown>;
 }
@@ -28,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Uncaught rendering error:", error, errorInfo);
+    reportError(error, errorInfo);
     this.props.onError?.(error, errorInfo);
   }
 
@@ -63,6 +76,13 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      if (this.props.fallbackRender) {
+        return this.props.fallbackRender({
+          error: this.state.error || new Error("Unknown error"),
+          resetErrorBoundary: this.handleRetry,
+        });
+      }
+
       if (this.props.fallback) {
         return this.props.fallback;
       }
@@ -74,7 +94,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <Heading as="h1" className="error-boundary-page__title">
                 {this.props.fallbackMessage || "Something went wrong"}
               </Heading>
-              
+
               <p className="error-boundary-page__message">
                 We're sorry, an unexpected error occurred while loading this page.
               </p>

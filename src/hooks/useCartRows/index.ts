@@ -14,6 +14,7 @@ type CartItem = Product & {
 type CartSummary = {
   subtotal: number;
   discount: number;
+  discountPercent: number;
   delivery: number;
   total: number;
 };
@@ -24,8 +25,12 @@ type UseCartRowsResult = {
   summary: CartSummary;
   isEmpty: boolean;
   isLoading: boolean;
+  hasError: boolean;
+  retryHydration: () => void;
   getCartRows: () => CartRow[];
   addItem: (item: CartRow) => void;
+  updateItemQuantity: (productId: string, color: string | null, size: string | null, quantity: number) => void;
+  removeItem: (productId: string, color: string | null, size: string | null) => void;
   clearCart: () => void;
 };
 
@@ -46,6 +51,13 @@ export const useCartRows = (): UseCartRowsResult => {
 
   const [fetchedProducts, setFetchedProducts] = useState<Record<string, Product>>({});
   const [isLoading, setIsLoading] = useState(() => readStoredCartRows().length > 0);
+  const [hasError, setHasError] = useState(false);
+  const [retryTrigger, setRetryTrigger] = useState(0);
+
+  const retryHydration = useCallback(() => {
+    setHasError(false);
+    setRetryTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     let isActive = true;
@@ -56,10 +68,12 @@ export const useCartRows = (): UseCartRowsResult => {
 
       if (missingIds.length === 0) {
         setIsLoading(false);
+        setHasError(false);
         return;
       }
 
       setIsLoading(true);
+      setHasError(false);
 
       try {
         const results = await Promise.all(
@@ -87,6 +101,7 @@ export const useCartRows = (): UseCartRowsResult => {
           return;
         }
         console.error("Failed to load cart product details", error);
+        setHasError(true);
       } finally {
         if (isActive) {
           setIsLoading(false);
@@ -99,7 +114,7 @@ export const useCartRows = (): UseCartRowsResult => {
     return () => {
       isActive = false;
     };
-  }, [cartRows, fetchedProducts]);
+  }, [cartRows, fetchedProducts, retryTrigger]);
 
   const getCartRows = useCallback(() => {
     return readStoredCartRows();
@@ -141,6 +156,59 @@ export const useCartRows = (): UseCartRowsResult => {
     writeStoredCartRows(nextRows);
     setCartRows(nextRows);
   }, []);
+
+  const updateItemQuantity = useCallback(
+    (
+      productId: string,
+      color: string | null = null,
+      size: string | null = null,
+      quantity: number,
+    ) => {
+      const existingRows = readStoredCartRows();
+      const normalizedProductId = String(productId || "").trim();
+      const newQuantity = normalizeQuantity(quantity);
+
+      if (newQuantity < 1) return;
+
+      const nextRows = existingRows.map((row) => {
+        if (
+          row.productId === normalizedProductId &&
+          (row.color ?? null) === color &&
+          (row.size ?? null) === size
+        ) {
+          return { ...row, quantity: newQuantity };
+        }
+        return row;
+      });
+
+      writeStoredCartRows(nextRows);
+      setCartRows(nextRows);
+    },
+    [],
+  );
+
+  const removeItem = useCallback(
+    (
+      productId: string,
+      color: string | null = null,
+      size: string | null = null,
+    ) => {
+      const existingRows = readStoredCartRows();
+      const normalizedProductId = String(productId || "").trim();
+
+      const nextRows = existingRows.filter((row) => {
+        return !(
+          row.productId === normalizedProductId &&
+          (row.color ?? null) === color &&
+          (row.size ?? null) === size
+        );
+      });
+
+      writeStoredCartRows(nextRows);
+      setCartRows(nextRows);
+    },
+    [],
+  );
 
   const clearCart = useCallback(() => {
     writeStoredCartRows([]);
@@ -189,11 +257,12 @@ export const useCartRows = (): UseCartRowsResult => {
 
     const delivery = 0;
     const total = subtotal - discount + delivery;
+    const discountPercent = subtotal > 0 ? Math.round((discount / subtotal) * 100) : 0;
 
-    return { subtotal, discount, delivery, total };
+    return { subtotal, discount, discountPercent, delivery, total };
   }, [cartItems]);
 
-  const isEmpty = cartRows.length === 0 || (!isLoading && cartItems.length === 0);
+  const isEmpty = cartRows.length === 0 || (!isLoading && !hasError && cartItems.length === 0);
 
   return {
     cartRows,
@@ -201,8 +270,12 @@ export const useCartRows = (): UseCartRowsResult => {
     summary,
     isEmpty,
     isLoading,
+    hasError,
+    retryHydration,
     getCartRows,
     addItem,
+    updateItemQuantity,
+    removeItem,
     clearCart,
   };
 };

@@ -45,7 +45,7 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
       </Heading>
 
       <ErrorBoundary
-        resetKeys={[title, productsList.length, isLoading]}
+        resetKeys={[title, productsList, isLoading]}
         fallback={
           <div className="home-products__list-fallback" role="status">
             This product list is temporarily unavailable.

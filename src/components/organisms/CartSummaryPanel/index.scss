@@ -114,6 +114,7 @@
     min-height: 48px;
 
     padding: 0 28px;
+    border: none;
     border-radius: v.$radius-pill;
 
     background-color: v.$color-black;
@@ -121,6 +122,19 @@
 
     font-size: 16px;
     font-weight: 500;
+
+    transition: transform 150ms ease, opacity 150ms ease;
+
+    @media (hover: hover) {
+      &:not(:disabled):not(.is-disabled):hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+    }
+
+    &:not(:disabled):not(.is-disabled):active {
+      transform: scale(0.97);
+    }
 
     &:disabled,
     &.is-disabled {
@@ -149,6 +163,7 @@
 
     width: 100%;
     padding: 16px 20px;
+    border: none;
 
     border-radius: v.$radius-pill;
     background: v.$color-black;
@@ -156,6 +171,19 @@
 
     font-size: 14px;
     font-weight: 500;
+
+    transition: transform 180ms ease, opacity 150ms ease;
+
+    @media (hover: hover) {
+      &:not(:disabled):hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+    }
+
+    &:not(:disabled):active {
+      transform: scale(0.98);
+    }
 
     &:disabled {
       opacity: 0.6;
@@ -177,7 +205,17 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+
+  .cart-summary__coupon button,
+  .cart-summary__checkout {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 .cart-summary[aria-busy="true"] {
+
   .cart-summary__row dd,
   .cart-summary__total p:last-child {
     display: inline-flex;
@@ -193,6 +231,7 @@
     min-width: 0;
 
     &__row {
+
       dt,
       dd {
         font-size: 16px;
@@ -204,6 +243,7 @@
 @media (max-width: 768px) {
   .cart-summary {
     &__row {
+
       dt,
       dd {
         font-size: 16px;

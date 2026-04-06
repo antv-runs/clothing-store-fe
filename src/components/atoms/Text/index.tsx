@@ -7,6 +7,7 @@ type TextProps = {
   children: ReactNode;
   className?: string;
   lineClamp?: number;
+  hidden?: boolean;
 };
 
 export const Text = ({
@@ -14,6 +15,7 @@ export const Text = ({
   children,
   className,
   lineClamp,
+  hidden,
 }: TextProps) => {
   return (
     <Component
@@ -22,6 +24,7 @@ export const Text = ({
         lineClamp && `text--clamp-${lineClamp}`,
         className,
       )}
+      hidden={hidden}
     >
       {children}
     </Component>

@@ -34,7 +34,7 @@ const Home: React.FC = () => {
 
         <HomeStyleGrid />
         <ErrorBoundary
-          resetKeys={[reviews.length, isLoading]}
+          resetKeys={[reviews, isLoading]}
           fallback={
             <p className="home-page__section-fallback" role="status">
               Customer reviews are temporarily unavailable.

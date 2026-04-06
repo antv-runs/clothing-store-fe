@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import "./index.scss";
+import { Text } from "@/components/atoms/Text";
 
 interface CartSummary {
   subtotal: number;
   discount: number;
+  discountPercent: number;
   delivery: number;
   total: number;
 }
@@ -14,7 +17,9 @@ interface CartSummaryPanelProps {
   summary: CartSummary;
   formatPrice: (amount: number, currency?: string) => string;
   isCheckoutDisabled?: boolean;
+  isLocked?: boolean;
   onCheckout?: () => void;
+  onApplyCoupon?: () => Promise<void> | void;
 }
 
 /**
@@ -24,8 +29,23 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
   summary,
   formatPrice,
   isCheckoutDisabled = true,
+  isLocked = false,
   onCheckout,
+  onApplyCoupon,
 }) => {
+  const [couponError, setCouponError] = useState<string | null>(null);
+
+  const handleApply = async () => {
+    setCouponError(null);
+    if (onApplyCoupon) {
+      try {
+        await onApplyCoupon();
+      } catch (err) {
+        setCouponError("Failed to apply coupon");
+      }
+    }
+  };
+
   return (
     <aside
       className="cart-summary"
@@ -42,7 +62,7 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
           <dd>{formatPrice(summary.subtotal)}</dd>
         </div>
         <div className="cart-summary__row u-mb-28">
-          <dt>Discount (-20%)</dt>
+          <dt>Discount (-{summary.discountPercent}%)</dt>
           <dd className="cart-summary__discount">
             -{formatPrice(summary.discount)}
           </dd>
@@ -67,30 +87,32 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
             type="text"
             placeholder="Add promo code"
             aria-label="Promo code"
-            disabled
-            aria-disabled="true"
+            disabled={isLocked}
           />
         </div>
         <Button
           type="button"
-          disabled
-          aria-disabled="true"
+          disabled={isLocked}
+          onClick={handleApply}
           unstyled
         >
           Apply
         </Button>
       </form>
-      <p
-        className="cart-summary__coupon-msg"
+      <Text as="p"
+        className={clsx("cart-summary__coupon-msg", {
+          "cart-summary__coupon-msg--error": couponError,
+        })}
         aria-live="polite"
-        hidden
-      ></p>
+        hidden={!couponError}
+      >
+        {couponError}
+      </Text>
 
       <Button
         className="cart-summary__checkout"
         type="button"
-        disabled={isCheckoutDisabled}
-        aria-disabled={isCheckoutDisabled}
+        disabled={isCheckoutDisabled || isLocked}
         onClick={onCheckout}
         unstyled
       >

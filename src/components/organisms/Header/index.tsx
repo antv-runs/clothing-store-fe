@@ -6,7 +6,6 @@ import { NavMenu } from "@/components/molecules/NavMenu";
 import { SearchBox } from "@/components/molecules/SearchBox";
 import { AnnouncementBar } from "@/components/organisms/AnnouncementBar";
 import "./index.scss";
-import { Text } from "@/components/atoms/Text";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
 

@@ -213,7 +213,7 @@ const ProductDetail: React.FC = () => {
           <ErrorBoundary
             resetKeys={[
               product.id,
-              (product.images || []).length,
+              product.images,
               product.thumbnail,
             ]}
             fallback={

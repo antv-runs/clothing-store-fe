@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ProductPrice } from "@/components/molecules/ProductPrice";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
+import { Button } from "@/components/atoms/Button";
+import { ConfirmModal } from "@/components/organisms/ConfirmModal";
 import "./index.scss";
 import type { Product } from "@/types/product";
 
@@ -11,16 +13,40 @@ interface CartItemRowProps {
     size: string | null;
   };
   formatPrice: (amount: number, currency?: string) => string;
+  isLocked?: boolean;
+  onRemove?: () => void;
+  onUpdateQuantity?: (val: number) => void;
 }
 
-/**
- * CartItemRow - Cart row item presentation.
- * Keeps current cart layout and price presentation.
- */
 export const CartItemRow: React.FC<CartItemRowProps> = ({
   item,
   formatPrice,
+  isLocked = false,
+  onRemove,
+  onUpdateQuantity,
 }) => {
+  const [inputValue, setInputValue] = useState(String(item.quantity));
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    setInputValue(String(item.quantity));
+  }, [item.quantity]);
+
+  const commitQuantity = () => {
+    let parsed = parseInt(inputValue, 10);
+    if (isNaN(parsed) || parsed < 1) {
+      parsed = 1;
+    }
+    setInputValue(String(parsed));
+    if (parsed !== item.quantity) {
+      onUpdateQuantity?.(parsed);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
   const currentPrice = item.pricing.current * item.quantity;
   const lineOriginalPrice =
     item.pricing.original && item.pricing.original > item.pricing.current
@@ -67,12 +93,16 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
               {item.name}
             </a>
           </h2>
-          <button
+          <Button
+            unstyled
             className="cart-item__remove"
             type="button"
             aria-label="Remove item"
-            disabled
-          ></button>
+            disabled={isLocked}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <span className="u-sr-only"></span>
+          </Button>
         </div>
 
         {item.size ? (
@@ -100,15 +130,35 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
             ariaLabel="Quantity controls"
             decrementButtonClassName="cart-item__qty-btn"
             incrementButtonClassName="cart-item__qty-btn"
-            value={item.quantity}
+            value={inputValue as unknown as number}
             min={1}
-            readOnly
-            disabled
+            disabled={isLocked}
+            onChange={handleInputChange}
+            onBlur={commitQuantity}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                commitQuantity();
+              }
+            }}
+            onDecrease={() => onUpdateQuantity?.(item.quantity - 1)}
+            onIncrease={() => onUpdateQuantity?.(item.quantity + 1)}
             iconWidth={16}
             iconHeight={16}
           />
         </div>
       </div>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          setIsModalOpen(false);
+          onRemove?.();
+        }}
+        title="Remove item?"
+        message={`Are you sure you want to remove "${item.name}" from your cart?`}
+        confirmText="Remove"
+      />
     </article>
   );
 };
