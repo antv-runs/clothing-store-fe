@@ -9,6 +9,7 @@ interface CartSummary {
   discount: number;
   delivery: number;
   total: number;
+  discountPercent?: number;
 }
 
 type CheckoutItemType = Product & {
@@ -53,7 +54,12 @@ export const CheckoutSummaryPanel: React.FC<CheckoutSummaryPanelProps> = ({
           <dd>{formatPrice(summary.subtotal)}</dd>
         </div>
         <div className="checkout-summary__row u-mb-28">
-          <dt>Discount</dt>
+          <dt>
+            Discount{" "}
+            {summary.discountPercent && summary.discountPercent > 0
+              ? `(-${summary.discountPercent}%)`
+              : ""}
+          </dt>
           <dd className="checkout-summary__discount">
             -{formatPrice(summary.discount)}
           </dd>

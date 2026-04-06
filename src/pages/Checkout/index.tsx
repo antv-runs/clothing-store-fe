@@ -12,6 +12,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
+import { CheckoutPageSkeleton } from "@/components/organisms/CheckoutPageSkeleton";
 import { useCartRows } from "@/hooks/useCartRows";
 import { CheckoutSummaryPanel } from "@/components/organisms/CheckoutSummaryPanel";
 import { mapCartToOrderRequest } from "@/utils/orderMapper";
@@ -28,7 +29,7 @@ const Checkout: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const submissionLockRef = useRef(false);
-  const { getCartRows, clearCart, cartItems, summary, isEmpty, isLoading } =
+  const { getCartRows, clearCart, cartItems, summary, isEmpty, isLoading, hasError, retryHydration } =
     useCartRows();
   const navigate = useNavigate();
 
@@ -36,12 +37,13 @@ const Checkout: React.FC = () => {
     if (
       isEmpty &&
       !isLoading &&
+      !hasError &&
       submitStatus !== "success" &&
       submitStatus !== "error"
     ) {
       navigate(ROUTES.CART, { replace: true });
     }
-  }, [isEmpty, isLoading, submitStatus, navigate]);
+  }, [isEmpty, isLoading, hasError, submitStatus, navigate]);
 
   const {
     control,
@@ -61,7 +63,7 @@ const Checkout: React.FC = () => {
   });
 
   const onSubmit = async (values: CheckoutFormValues) => {
-    if (submissionLockRef.current || isSubmittingOrder || isLoading) {
+    if (submissionLockRef.current || isSubmittingOrder || isLoading || hasError) {
       return;
     }
 
@@ -173,12 +175,19 @@ const Checkout: React.FC = () => {
               Back to Home
             </Button>
           </div>
-        ) : isLoading ? (
-          <div
-            aria-busy="true"
-            style={{ padding: "4rem 0", textAlign: "center" }}
-          >
-            Loading checkout data...
+        ) : isLoading && !hasError ? (
+          <CheckoutPageSkeleton />
+        ) : hasError ? (
+          <div className="checkout-page__error" style={{ padding: "4rem 0", textAlign: "center" }}>
+            <p>We couldn't securely load your checkout data right now.</p>
+            <button
+              onClick={retryHydration}
+              className="btn btn--primary"
+              style={{ padding: "10px 24px", marginTop: "16px" }}
+              type="button"
+            >
+              Retry Connection
+            </button>
           </div>
         ) : isEmpty ? null : (
           <div className="checkout-page__layout">
@@ -238,7 +247,7 @@ const Checkout: React.FC = () => {
                   />
                 </label>
 
-                <label className="checkout-page__field">
+                <label className="checkout-page__field checkout-page__field--full">
                   <span>Phone</span>
                   <Controller
                     name="phone"
