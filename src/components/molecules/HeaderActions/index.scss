@@ -10,6 +10,17 @@
   &__profile {
     color: v.$color-black;
     flex-shrink: 0;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), opacity 0.15s ease;
+
+    &:hover:not(:disabled) {
+      opacity: 0.8;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.94);
+      opacity: 1;
+    }
   }
 }
 

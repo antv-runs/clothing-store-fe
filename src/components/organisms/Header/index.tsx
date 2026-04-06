@@ -7,6 +7,8 @@ import { SearchBox } from "@/components/molecules/SearchBox";
 import { AnnouncementBar } from "@/components/organisms/AnnouncementBar";
 import "./index.scss";
 import { Text } from "@/components/atoms/Text";
+import { Link } from "react-router-dom";
+import { ROUTES } from "@/routes/paths";
 
 export const Header: React.FC = () => {
   return (
@@ -21,9 +23,9 @@ export const Header: React.FC = () => {
           iconWidth={19}
           iconHeight={15}
         />
-        <Text as="p" className="logo">
+        <Link to={ROUTES.HOME} className="logo">
           SHOP.CO
-        </Text>
+        </Link>
 
         <NavMenu />
 
