@@ -64,15 +64,17 @@ const Cart: React.FC = () => {
         {isLoading && !hasError && <CartPageSkeleton />}
 
         {hasError && (
-          <div className="cart-page__error" style={{ padding: "4rem 0", textAlign: "center" }}>
-            <p>We couldn't securely load your cart data right now.</p>
+          <div className="cart-page__error cart-fetch-state" role="alert">
+            <h2 className="cart-fetch-state__title">Failed to load cart data</h2>
+            <p className="cart-fetch-state__description">
+              We couldn't securely load your cart data right now.
+            </p>
             <button
               onClick={retryHydration}
-              className="btn btn--primary"
-              style={{ padding: "10px 24px", marginTop: "16px" }}
+              className="cart-fetch-state__retry"
               type="button"
             >
-              Retry Connection
+              Retry
             </button>
           </div>
         )}

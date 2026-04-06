@@ -4,7 +4,13 @@ import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
 
-export const ProductNotFound = () => {
+type ProductNotFoundProps = {
+  message?: string;
+};
+
+export const ProductNotFound = ({
+  message = "Product not found.",
+}: ProductNotFoundProps) => {
   const navigate = useNavigate();
 
   const handleBackHome = () => {
@@ -18,7 +24,7 @@ export const ProductNotFound = () => {
         aria-label="Product overview"
       >
         <Text as="p" className="product-overview__description">
-          Product not found.
+          {message}
         </Text>
 
         <Button

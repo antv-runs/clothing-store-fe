@@ -19,6 +19,10 @@ import { useReviewSubmit } from "@/hooks/useReviewSubmit";
 import "./index.scss";
 
 const DEFAULT_QUANTITY = 1;
+const NETWORK_ERROR_MESSAGE =
+  "Failed to load product. Please check your connection and try again.";
+const SYSTEM_ERROR_MESSAGE =
+  "Something went wrong while loading this product.";
 
 const normalizeQuantity = (value: number | string): number => {
   const parsed = Number(value);
@@ -32,7 +36,7 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const normalizedRouteId = String(id || "").trim();
 
-  const { product, isLoading, relatedProducts, relatedLoading } =
+  const { product, isLoading, errorType, relatedProducts, relatedLoading } =
     useProductDetailData(normalizedRouteId);
 
   // Track selected color and size for add-to-cart functionality
@@ -186,7 +190,16 @@ const ProductDetail: React.FC = () => {
   }
 
   if (!product) {
-    return <ProductNotFound />;
+    const message =
+      errorType === "network_error"
+        ? NETWORK_ERROR_MESSAGE
+        : errorType === "system_error"
+          ? SYSTEM_ERROR_MESSAGE
+          : undefined;
+
+    return (
+      <ProductNotFound message={message} />
+    );
   }
 
   return (
@@ -253,22 +266,31 @@ const ProductDetail: React.FC = () => {
         </div>
       </section>
 
-      <ProductTabsSection
-        details={product.details}
-        reviews={reviews}
-        reviewCount={reviewCount}
-        faqs={product.faqs || []}
-        isLoadingReviews={isLoadingReviews}
-        isLoadingMoreReviews={isLoadingMoreReviews}
-        hasMoreReviews={hasMore}
-        selectedRating={selectedRating}
-        selectedSort={selectedSort}
-        onRatingChange={setFilter}
-        onSortChange={setSort}
-        onLoadMore={loadMore}
-        reviewError={reviewError}
-        onWriteReview={handleOpenReviewModal}
-      />
+      <ErrorBoundary
+        resetKeys={[product.id]}
+        fallback={
+          <div className="product-detail-page__tabs-fallback" role="status">
+            Product details and reviews are temporarily unavailable.
+          </div>
+        }
+      >
+        <ProductTabsSection
+          details={product.details}
+          reviews={reviews}
+          reviewCount={reviewCount}
+          faqs={product.faqs || []}
+          isLoadingReviews={isLoadingReviews}
+          isLoadingMoreReviews={isLoadingMoreReviews}
+          hasMoreReviews={hasMore}
+          selectedRating={selectedRating}
+          selectedSort={selectedSort}
+          onRatingChange={setFilter}
+          onSortChange={setSort}
+          onLoadMore={loadMore}
+          reviewError={reviewError}
+          onWriteReview={handleOpenReviewModal}
+        />
+      </ErrorBoundary>
 
       <RelatedProductsSection
         products={relatedProducts}

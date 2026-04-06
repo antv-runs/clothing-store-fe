@@ -46,6 +46,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   reviewError,
   onWriteReview,
 }) => {
+
   const [activeTab, setActiveTab] = useState<TabKey>(DEFAULT_ACTIVE_TAB);
 
   const panelRefs = useRef<Map<TabKey, HTMLElement>>(new Map());

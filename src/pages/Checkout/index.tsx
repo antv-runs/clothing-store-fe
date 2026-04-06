@@ -175,20 +175,25 @@ const Checkout: React.FC = () => {
               Back to Home
             </Button>
           </div>
+        ) : hasError ? (
+          <div className="checkout-page__error checkout-page__status" role="alert">
+            <Heading as="h2" className="checkout-page__status-title">
+              Failed to load checkout data
+            </Heading>
+            <p className="checkout-page__status-message checkout-page__message checkout-page__message--error">
+              We couldn't securely load your checkout data right now.
+            </p>
+            <Button
+              className="checkout-page__status-btn"
+              type="button"
+              onClick={retryHydration}
+              unstyled
+            >
+              Retry
+            </Button>
+          </div>
         ) : isLoading && !hasError ? (
           <CheckoutPageSkeleton />
-        ) : hasError ? (
-          <div className="checkout-page__error" style={{ padding: "4rem 0", textAlign: "center" }}>
-            <p>We couldn't securely load your checkout data right now.</p>
-            <button
-              onClick={retryHydration}
-              className="btn btn--primary"
-              style={{ padding: "10px 24px", marginTop: "16px" }}
-              type="button"
-            >
-              Retry Connection
-            </button>
-          </div>
         ) : isEmpty ? null : (
           <div className="checkout-page__layout">
             <form
