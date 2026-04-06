@@ -6,6 +6,7 @@ interface StarProps {
   showEmpty?: boolean;
   maxStars?: number;
   size?: number | string;
+  halfStarMode?: "path" | "clip";
 }
 
 export const Star: React.FC<StarProps> = ({
@@ -14,7 +15,9 @@ export const Star: React.FC<StarProps> = ({
   showEmpty = true,
   maxStars = 5,
   size,
+  halfStarMode = "path",
 }) => {
+  const clipIdPrefix = React.useId();
   const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || 5));
   const safeRating = Math.max(
     0,
@@ -50,6 +53,7 @@ export const Star: React.FC<StarProps> = ({
 
         const stateClass =
           isFull || isHalf ? `${className}--active` : `${className}--empty`;
+        const clipId = `${clipIdPrefix}-${index}-half-clip`;
 
         return (
           <span
@@ -58,7 +62,20 @@ export const Star: React.FC<StarProps> = ({
             style={starSizeStyle}
             aria-hidden="true"
           >
-            {isHalf ? (
+            {isHalf && halfStarMode === "clip" ? (
+              <svg
+                className={[className, stateClass].filter(Boolean).join(" ")}
+                viewBox="0 0 24 23"
+                focusable="false"
+              >
+                <defs>
+                  <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                    <rect x="0" y="0" width="12" height="23" />
+                  </clipPath>
+                </defs>
+                <path d={fullPath} clipPath={`url(#${clipId})`} />
+              </svg>
+            ) : isHalf ? (
               <svg
                 className={[className, stateClass].filter(Boolean).join(" ")}
                 viewBox="0 0 12 23"

@@ -60,10 +60,6 @@ export const WriteReviewModal = ({
   }, [isOpen, reset]);
 
   const handleClose = () => {
-    if (isSubmitting) {
-      return;
-    }
-
     onClose();
   };
 
@@ -71,7 +67,6 @@ export const WriteReviewModal = ({
     if (isSubmitting) {
       return;
     }
-
     await onSubmit(values);
   };
 
@@ -102,109 +97,121 @@ export const WriteReviewModal = ({
             iconWidth={16}
             iconHeight={16}
             onClick={handleClose}
-            disabled={isSubmitting}
           />
         </div>
 
         <form
           className="review-modal__form js-review-modal-form"
           onSubmit={handleSubmit(handleModalSubmit)}
+          aria-busy={isSubmitting}
         >
-          <label className="review-modal__field">
-            <span>Username</span>
-            <Controller
-              name="username"
-              control={control}
-              render={({ field }) => (
-                <input
-                  type="text"
-                  className="js-review-username"
-                  name={field.name}
-                  autoComplete="name"
-                  value={field.value}
-                  readOnly
-                  disabled
-                />
-              )}
-            />
-          </label>
-
-          <label className="review-modal__field">
-            <span>Comment</span>
-            <Controller
-              name="comment"
-              control={control}
-              render={({ field }) => (
-                <textarea
-                  className="js-review-comment"
-                  name={field.name}
-                  rows={4}
-                  placeholder="Share your thoughts about this product"
-                  required
-                  value={field.value}
-                  onChange={field.onChange}
-                  onBlur={field.onBlur}
-                ></textarea>
-              )}
-            />
-          </label>
-
-          <div className="review-modal__field review-modal__field--rating">
-            <span>Star Rating</span>
-            <div
-              className="review-modal__rating-picker js-review-rating-picker"
-              aria-label="Select a rating from 1 to 5 stars"
-            >
+          <fieldset className="review-modal__form-body" disabled={isSubmitting}>
+            <label className="review-modal__field">
+              <span>Username</span>
               <Controller
-                name="stars"
+                name="username"
                 control={control}
                 render={({ field }) => (
-                  <>
-                    <div className="review-modal__rating-stars js-review-rating-stars">
-                      <Star
-                        rating={field.value}
-                        className="review-modal__star"
-                      />
-                    </div>
-                    <div
-                      className="review-modal__rating-hitzones js-review-rating-hitzones"
-                      aria-hidden="false"
-                    >
-                      {Array.from({ length: 10 }, (_, index) => {
-                        const nextRating = (index + 1) / 2;
-
-                        return (
-                          <button
-                            key={nextRating}
-                            type="button"
-                            className="review-modal__rating-hit"
-                            aria-label={`Set rating to ${nextRating.toFixed(1)} stars`}
-                            onClick={() => field.onChange(nextRating)}
-                          />
-                        );
-                      })}
-                    </div>
-                  </>
+                  <input
+                    type="text"
+                    className="js-review-username"
+                    name={field.name}
+                    autoComplete="name"
+                    value={field.value}
+                    readOnly
+                    disabled
+                  />
                 )}
               />
+            </label>
+
+            <label className="review-modal__field">
+              <span>Comment</span>
+              <Controller
+                name="comment"
+                control={control}
+                render={({ field }) => (
+                  <textarea
+                    className="js-review-comment"
+                    name={field.name}
+                    rows={4}
+                    placeholder="Share your thoughts about this product"
+                    required
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  ></textarea>
+                )}
+              />
+            </label>
+
+            <div className="review-modal__field review-modal__field--rating">
+              <span>Star Rating</span>
+              <div className="review-modal__rating-row">
+                <Controller
+                  name="stars"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="review-modal__rating-picker js-review-rating-picker">
+                      <div
+                        className="review-modal__rating-stars js-review-rating-stars"
+                        aria-label="Select a rating from 1 to 5 stars"
+                      >
+                        {Array.from({ length: 5 }, (_, index) => {
+                          const starIndex = index + 1;
+                          const starValue = Math.max(
+                            0,
+                            Math.min(1, field.value - index),
+                          );
+
+                          return (
+                            <button
+                              key={starIndex}
+                              type="button"
+                              className="review-modal__rating-hit"
+                              aria-label={`Set rating to ${starIndex} stars`}
+                              aria-pressed={field.value >= starIndex}
+                              onClick={(event) => {
+                                const button = event.currentTarget;
+                                const rect = button.getBoundingClientRect();
+                                const isLeftHalf =
+                                  event.clientX - rect.left < rect.width / 2;
+                                field.onChange(
+                                  isLeftHalf ? starIndex - 0.5 : starIndex,
+                                );
+                              }}
+                            >
+                              <Star
+                                rating={starValue}
+                                maxStars={1}
+                                className="review-modal__star"
+                                halfStarMode="clip"
+                              />
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                />
+                <Controller
+                  name="stars"
+                  control={control}
+                  render={({ field }) => (
+                    <p className="review-modal__rating-value js-review-rating-value">
+                      {Number(field.value).toFixed(1)}/5
+                    </p>
+                  )}
+                />
+              </div>
             </div>
-            <Controller
-              name="stars"
-              control={control}
-              render={({ field }) => (
-                <p className="review-modal__rating-value js-review-rating-value">
-                  {Number(field.value).toFixed(1)}/5
-                </p>
-              )}
-            />
-          </div>
+          </fieldset>
 
           <div className="review-modal__actions">
             <button
               type="button"
               className="review-modal__button review-modal__button--cancel js-review-modal-close"
               onClick={handleClose}
-              disabled={isSubmitting}
             >
               Cancel
             </button>

@@ -58,6 +58,19 @@
     gap: 16px;
   }
 
+  &__form-body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+    display: grid;
+    gap: 16px;
+
+    &:disabled {
+      opacity: 0.78;
+    }
+  }
+
   &__field {
     display: grid;
     gap: 8px;
@@ -87,26 +100,44 @@
     margin-top: 4px;
   }
 
-  &__rating-picker {
-    position: relative;
-    width: 220px;
+  &__rating-row {
     display: inline-flex;
     align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  &__rating-picker {
+    position: relative;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
   }
 
   &__rating-stars {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px;
-    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 0;
+    flex: 0 0 auto;
+  }
+
+  &__star__item {
+    display: flex;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    align-items: center;
+    justify-content: center;
   }
 
   &__star {
-    width: 100%;
-    max-width: 22px;
-    aspect-ratio: 22/21;
-    justify-self: center;
+    display: block;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
 
     path {
       fill: none;
@@ -120,21 +151,38 @@
     }
   }
 
-  &__rating-hitzones {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-  }
-
   &__rating-hit {
     @include button-native-reset($padding-zero: true);
+    display: inline-flex;
+    justify-content: center;
+    width: 30px;
+    // height: 44px;
+    // flex: 0 0 44px;
+    // border-radius: 10px;
+
+    &:hover {
+      background-color: rgba(255, 198, 51, 0.08);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 198, 51, 0.65);
+      outline-offset: 2px;
+    }
+
+    .review-modal__star__item {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 22px;
+    }
   }
 
   &__rating-value {
-    margin-top: 6px;
+    margin: 0;
     font-size: 14px;
     color: v.$color-muted;
+    white-space: nowrap;
+    line-height: 1;
+    flex-shrink: 0;
   }
 
   &__actions {
