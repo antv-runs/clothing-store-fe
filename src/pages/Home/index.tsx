@@ -3,6 +3,7 @@ import { HomeBrands } from "@/components/organisms/HomeBrands";
 import { HomeProductSection } from "@/components/organisms/HomeProductSection";
 import { HomeStyleGrid } from "@/components/organisms/HomeStyleGrid";
 import { HomeReviews } from "@/components/organisms/HomeReviews";
+import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { useHomeData } from "@/hooks/useHomeData";
 import "./index.scss";
 
@@ -32,7 +33,16 @@ const Home: React.FC = () => {
         />
 
         <HomeStyleGrid />
-        <HomeReviews reviews={reviews} isLoading={isLoading} />
+        <ErrorBoundary
+          resetKeys={[reviews.length, isLoading]}
+          fallback={
+            <p className="home-page__section-fallback" role="status">
+              Customer reviews are temporarily unavailable.
+            </p>
+          }
+        >
+          <HomeReviews reviews={reviews} isLoading={isLoading} />
+        </ErrorBoundary>
       </section>
     </div>
   );

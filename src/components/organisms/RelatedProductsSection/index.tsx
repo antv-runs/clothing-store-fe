@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./index.scss";
 import { ProductCardList } from "@/components/organisms/ProductCardList";
+import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { Heading } from "@/components/atoms/Heading";
 import type { Product } from "@/types/product";
 
@@ -61,18 +62,27 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
         {title}
       </Heading>
 
-      <ProductCardList
-        products={products}
-        formatPrice={formatPrice}
-        showNavigation={true}
-        loading={isLoading}
-        skeletonCount={8}
-        linkMode="overlay"
-        imageLoaded={loadedImageIds}
-        imageError={errorImageIds}
-        onImageLoad={handleImageLoad}
-        onImageError={handleImageError}
-      />
+      <ErrorBoundary
+        resetKeys={[products.length, isLoading]}
+        fallback={
+          <p className="other-products__fallback" role="status">
+            This product list is temporarily unavailable.
+          </p>
+        }
+      >
+        <ProductCardList
+          products={products}
+          formatPrice={formatPrice}
+          showNavigation={true}
+          loading={isLoading}
+          skeletonCount={8}
+          linkMode="overlay"
+          imageLoaded={loadedImageIds}
+          imageError={errorImageIds}
+          onImageLoad={handleImageLoad}
+          onImageError={handleImageError}
+        />
+      </ErrorBoundary>
     </section>
   );
 };

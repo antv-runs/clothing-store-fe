@@ -12,6 +12,15 @@
  */
 
 .other-products {
+  &__fallback {
+    margin-top: 20px;
+    padding: 24px 20px;
+    border: 1px solid v.$color-border;
+    border-radius: 20px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
   &__empty {
     margin-top: 24px;
     text-align: center;

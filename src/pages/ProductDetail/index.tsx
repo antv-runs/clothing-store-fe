@@ -10,6 +10,7 @@ import { ProductActions } from "@/components/molecules/ProductActions";
 import { ProductTabsSection } from "@/components/organisms/ProductTabsSection";
 import { RelatedProductsSection } from "@/components/organisms/RelatedProductsSection";
 import { WriteReviewModal } from "@/components/organisms/WriteReviewModal";
+import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { ProductDetailSkeleton } from "@/components/organisms/ProductDetailSkeleton";
 import { formatPrice } from "@/utils/formatters";
 import { Text } from "@/components/atoms/Text";
@@ -139,7 +140,9 @@ const ProductDetail: React.FC = () => {
         return;
       }
 
-      const normalizedUsername = String(username || DEFAULT_GUEST_USERNAME).trim() || DEFAULT_GUEST_USERNAME;
+      const normalizedUsername =
+        String(username || DEFAULT_GUEST_USERNAME).trim() ||
+        DEFAULT_GUEST_USERNAME;
       const normalizedComment = String(comment || "").trim();
       const normalizedStars = Math.max(1, Math.min(5, Number(stars) || 5));
 
@@ -185,10 +188,7 @@ const ProductDetail: React.FC = () => {
           ),
         );
       } finally {
-        if (
-          isMountedRef.current &&
-          requestId === reviewSubmitRequestIdRef.current
-        ) {
+        if (isMountedRef.current) {
           setIsSubmittingReview(false);
         }
       }
@@ -271,11 +271,37 @@ const ProductDetail: React.FC = () => {
         />
 
         <div className="product-overview__details">
-          <ProductGallery
-            images={product.images || []}
-            productName={product.name}
-            thumbnail={product.thumbnail}
-          />
+          <ErrorBoundary
+            resetKeys={[
+              product.id,
+              (product.images || []).length,
+              product.thumbnail,
+            ]}
+            fallback={
+              <div
+                className="product-gallery product-gallery--fallback"
+                aria-label="Product gallery unavailable"
+              >
+                <div className="product-gallery__thumbnails product-gallery__thumbnails--empty" />
+                <div className="product-gallery__main">
+                  <div className="product-gallery__main-wrapper">
+                    <div
+                      className="product-detail-page__local-fallback"
+                      role="status"
+                    >
+                      Product gallery is temporarily unavailable.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          >
+            <ProductGallery
+              images={product.images || []}
+              productName={product.name}
+              thumbnail={product.thumbnail}
+            />
+          </ErrorBoundary>
 
           <div className="product-info">
             <ProductInfo product={product} />
@@ -323,15 +349,24 @@ const ProductDetail: React.FC = () => {
         title="You Might Also Like"
       />
 
-      <WriteReviewModal
-        key={
-          isWriteReviewModalOpen ? "write-review-open" : "write-review-closed"
+      <ErrorBoundary
+        resetKeys={[isWriteReviewModalOpen, product.id]}
+        fallback={
+          <p className="product-detail-page__modal-fallback" role="status">
+            Review form is temporarily unavailable.
+          </p>
         }
-        isOpen={isWriteReviewModalOpen}
-        isSubmitting={isSubmittingReview}
-        onClose={handleCloseReviewModal}
-        onSubmit={handleReviewSubmit}
-      />
+      >
+        <WriteReviewModal
+          key={
+            isWriteReviewModalOpen ? "write-review-open" : "write-review-closed"
+          }
+          isOpen={isWriteReviewModalOpen}
+          isSubmitting={isSubmittingReview}
+          onClose={handleCloseReviewModal}
+          onSubmit={handleReviewSubmit}
+        />
+      </ErrorBoundary>
 
       {/* Screen reader announcer */}
       <div aria-live="polite" className="sr-only js-sr-announcer">

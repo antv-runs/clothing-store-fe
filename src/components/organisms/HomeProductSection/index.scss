@@ -36,6 +36,15 @@
       cursor: default;
     }
   }
+
+  &__list-fallback {
+    margin-top: 12px;
+    padding: 28px 20px;
+    border: 1px solid v.$color-border;
+    border-radius: 20px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.65);
+  }
 }
 
 @media (max-width: 768px) {

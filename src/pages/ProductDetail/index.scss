@@ -25,6 +25,32 @@
 }
 
 .product-detail-page {
+  &__local-fallback {
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  &__modal-fallback {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    z-index: 1001;
+    margin: 0;
+    padding: 10px 14px;
+    background-color: #fff;
+    border: 1px solid v.$color-border;
+    border-radius: 999px;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
   .review-card__header--verified::after {
     width: 19.5px;
     height: 19.5px;
@@ -94,6 +120,18 @@
   }
 
   .product-detail-page {
+    &__local-fallback {
+      min-height: 180px;
+      font-size: 14px;
+    }
+
+    &__modal-fallback {
+      width: calc(100% - 32px);
+      max-width: 360px;
+      text-align: center;
+      bottom: 16px;
+    }
+
     .reviews__list {
       gap: 14px;
     }

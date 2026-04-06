@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
 import { ProductCardList } from "@/components/organisms/ProductCardList";
+import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import type { Product } from "@/types/product";
 import { formatPrice } from "@/utils/formatters";
 import "./index.scss";
@@ -43,13 +44,22 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
         {title}
       </Heading>
 
-      <ProductCardList
-        products={productsList}
-        formatPrice={formatPrice}
-        showNavigation={false}
-        loading={isLoading}
-        skeletonCount={skeletonCount}
-      />
+      <ErrorBoundary
+        resetKeys={[title, productsList.length, isLoading]}
+        fallback={
+          <div className="home-products__list-fallback" role="status">
+            This product list is temporarily unavailable.
+          </div>
+        }
+      >
+        <ProductCardList
+          products={productsList}
+          formatPrice={formatPrice}
+          showNavigation={false}
+          loading={isLoading}
+          skeletonCount={skeletonCount}
+        />
+      </ErrorBoundary>
 
       <Link
         to="/"

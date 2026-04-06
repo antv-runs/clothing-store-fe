@@ -17,12 +17,10 @@ interface WriteReviewModalProps {
   isOpen: boolean;
   isSubmitting?: boolean;
   onClose: () => void;
-  onSubmit: (values: ReviewSubmission) => void;
+  onSubmit: (values: ReviewSubmission) => void | Promise<void>;
 }
 
 const DEFAULT_RATING = 5;
-
-const getGuestUsername = () => `${DEFAULT_GUEST_USERNAME}-${Date.now()}`;
 
 const reviewModalSchema = z.object({
   username: z.string().trim().min(1, "Username is required."),
@@ -54,7 +52,7 @@ export const WriteReviewModal = ({
   useEffect(() => {
     if (isOpen) {
       reset({
-        username: getGuestUsername(),
+        username: DEFAULT_GUEST_USERNAME,
         comment: "",
         stars: DEFAULT_RATING,
       });
@@ -69,12 +67,12 @@ export const WriteReviewModal = ({
     onClose();
   };
 
-  const handleModalSubmit = (values: ReviewModalFormValues) => {
+  const handleModalSubmit = async (values: ReviewModalFormValues) => {
     if (isSubmitting) {
       return;
     }
 
-    onSubmit(values);
+    await onSubmit(values);
   };
 
   return (
@@ -163,7 +161,10 @@ export const WriteReviewModal = ({
                 render={({ field }) => (
                   <>
                     <div className="review-modal__rating-stars js-review-rating-stars">
-                      <Star rating={field.value} className="review-modal__star" />
+                      <Star
+                        rating={field.value}
+                        className="review-modal__star"
+                      />
                     </div>
                     <div
                       className="review-modal__rating-hitzones js-review-rating-hitzones"

@@ -27,7 +27,6 @@ export interface CreateReviewPayload {
 
 export interface SubmitReviewPayload extends Partial<CreateReviewPayload> {
   rating?: number;
-  stars?: number;
   comment?: string;
   username?: string;
 }

@@ -7,6 +7,9 @@ import "./index.scss";
 interface Props {
   children?: ReactNode;
   fallbackMessage?: string;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  resetKeys?: ReadonlyArray<unknown>;
 }
 
 interface State {
@@ -26,6 +29,27 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught rendering error:", error, errorInfo);
+    this.props.onError?.(error, errorInfo);
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    if (!this.state.hasError) {
+      return;
+    }
+
+    const prevResetKeys = prevProps.resetKeys;
+    const nextResetKeys = this.props.resetKeys;
+
+    if (!prevResetKeys || !nextResetKeys) {
+      return;
+    }
+
+    if (
+      prevResetKeys.length !== nextResetKeys.length ||
+      nextResetKeys.some((value, index) => !Object.is(value, prevResetKeys[index]))
+    ) {
+      this.setState({ hasError: false, error: null });
+    }
   }
 
   private handleRetry = () => {
@@ -39,6 +63,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
       return (
         <div className="container u-mt-25">
           <section className="error-boundary-page" aria-label="Application Error">
