@@ -2,6 +2,7 @@ import React from "react";
 import "./index.scss";
 import type { Review } from "@/types/review";
 import { Button } from "@/components/atoms/Button";
+import { RetryState } from "@/components/molecules/RetryState";
 import { ProductReviewsHeader } from "@/components/molecules/ProductReviewsHeader";
 import { ProductReviewsList } from "@/components/molecules/ProductReviewsList";
 
@@ -12,12 +13,14 @@ interface ProductReviewsTabProps {
   isActive: boolean;
   isLoading: boolean;
   isLoadingMore: boolean;
+  isRetrying: boolean;
   hasMore: boolean;
   selectedRating: string;
   selectedSort: "latest" | "oldest" | "highest";
   onRatingChange: (value: string) => void;
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   onLoadMore: () => void;
+  onRetry: () => void;
   error?: string | null;
   onWriteReview: () => void;
 }
@@ -32,12 +35,14 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
   isActive,
   isLoading,
   isLoadingMore,
+  isRetrying,
   hasMore,
   selectedRating,
   selectedSort,
   onRatingChange,
   onSortChange,
   onLoadMore,
+  onRetry,
   error,
   onWriteReview,
 }) => {
@@ -61,28 +66,32 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
         onWriteReview={onWriteReview}
       />
 
-      {error && !isLoading && (
-        <div className="reviews__status reviews__status--error" role="alert">
-          {error}
-        </div>
+      {error && !isLoading ? (
+        <RetryState
+          message={error}
+          onRetry={onRetry}
+          isRetrying={isRetrying}
+        />
+      ) : (
+        <>
+          <ProductReviewsList reviews={reviews} isLoading={isLoading} />
+
+          <div className="reviews__load-more-wrapper">
+            <Button
+              unstyled
+              className="reviews__load-more"
+              type="button"
+              onClick={onLoadMore}
+              isLoading={isLoadingMore}
+              loadingText="Loading..."
+              disabled={!hasMore || isLoading || reviews.length === 0}
+              aria-label="Load more reviews"
+            >
+              Load More Reviews
+            </Button>
+          </div>
+        </>
       )}
-
-      <ProductReviewsList reviews={reviews} isLoading={isLoading} />
-
-      <div className="reviews__load-more-wrapper">
-        <Button
-          unstyled
-          className="reviews__load-more"
-          type="button"
-          onClick={onLoadMore}
-          isLoading={isLoadingMore}
-          loadingText="Loading..."
-          disabled={!hasMore || isLoading || reviews.length === 0}
-          aria-label="Load more reviews"
-        >
-          Load More Reviews
-        </Button>
-      </div>
     </section>
   );
 };

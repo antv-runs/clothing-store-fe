@@ -54,6 +54,7 @@ const ProductDetail: React.FC = () => {
     hasMore,
     isLoading: isLoadingReviews,
     isLoadingMore: isLoadingMoreReviews,
+    isRetrying: isRetryingReviews,
     error: reviewError,
     setFilter,
     setSort,
@@ -281,12 +282,14 @@ const ProductDetail: React.FC = () => {
           faqs={product.faqs || []}
           isLoadingReviews={isLoadingReviews}
           isLoadingMoreReviews={isLoadingMoreReviews}
+          isRetrying={isRetryingReviews}
           hasMoreReviews={hasMore}
           selectedRating={selectedRating}
           selectedSort={selectedSort}
           onRatingChange={setFilter}
           onSortChange={setSort}
           onLoadMore={loadMore}
+          onRetry={reloadReviews}
           reviewError={reviewError}
           onWriteReview={handleOpenReviewModal}
         />

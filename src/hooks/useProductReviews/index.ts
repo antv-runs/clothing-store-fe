@@ -6,6 +6,7 @@ import type { Review } from "@/types/review";
 const REVIEW_ACTION = {
   RESET: "RESET",
   REQUEST_START: "REQUEST_START",
+  REQUEST_RETRY_START: "REQUEST_RETRY_START",
   REQUEST_SUCCESS: "REQUEST_SUCCESS",
   REQUEST_ERROR: "REQUEST_ERROR",
   SET_FILTER: "SET_FILTER",
@@ -29,7 +30,9 @@ type State = {
   sort: ReviewSort;
   isLoading: boolean;
   isLoadingMore: boolean;
+  isRetrying: boolean;
   error: string | null;
+  loadMoreError: string | null;
 };
 
 type Action =
@@ -44,6 +47,7 @@ type Action =
       page: number;
     }
   | { type: typeof REVIEW_ACTION.REQUEST_ERROR; message: string }
+  | { type: typeof REVIEW_ACTION.REQUEST_RETRY_START }
   | { type: typeof REVIEW_ACTION.SET_FILTER; value: string }
   | { type: typeof REVIEW_ACTION.SET_SORT; value: ReviewSort };
 
@@ -61,7 +65,9 @@ const initialState: State = {
   sort: DEFAULT_SORT,
   isLoading: false,
   isLoadingMore: false,
+  isRetrying: false,
   error: null,
+  loadMoreError: null,
 };
 
 const queryRating = (rating: string) => {
@@ -78,7 +84,18 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         isLoading: !action.append,
         isLoadingMore: action.append,
+        isRetrying: false,
+        loadMoreError: null,
         error: null,
+      };
+
+    case REVIEW_ACTION.REQUEST_RETRY_START:
+      return {
+        ...state,
+        isLoading: false,
+        isLoadingMore: false,
+        isRetrying: true,
+        loadMoreError: null,
       };
 
     case REVIEW_ACTION.REQUEST_SUCCESS:
@@ -92,13 +109,28 @@ const reducer = (state: State, action: Action): State => {
         page: action.page,
         isLoading: false,
         isLoadingMore: false,
+        isRetrying: false,
+        loadMoreError: null,
+        error: null,
       };
 
     case REVIEW_ACTION.REQUEST_ERROR:
+      if (state.isLoadingMore) {
+        return {
+          ...state,
+          isLoading: false,
+          isLoadingMore: false,
+          isRetrying: false,
+          loadMoreError: action.message,
+        };
+      }
+
       return {
         ...state,
         isLoading: false,
         isLoadingMore: false,
+        isRetrying: false,
+        loadMoreError: null,
         error: action.message,
       };
 
@@ -143,6 +175,7 @@ export const useProductReviews = (
       targetFilter: string,
       targetSort: ReviewSort,
       force = false,
+      isRetry = false,
     ) => {
       if (!targetProductId) {
         return;
@@ -154,7 +187,11 @@ export const useProductReviews = (
       }
 
       lastPageOneRequestKeyRef.current = pageOneRequestKey;
-      dispatch({ type: REVIEW_ACTION.REQUEST_START, append: false });
+      if (isRetry) {
+        dispatch({ type: REVIEW_ACTION.REQUEST_RETRY_START });
+      } else {
+        dispatch({ type: REVIEW_ACTION.REQUEST_START, append: false });
+      }
       const currentRequestId = ++requestIdRef.current;
 
       try {
@@ -228,6 +265,7 @@ export const useProductReviews = (
       !productId ||
       state.isLoading ||
       state.isLoadingMore ||
+      state.isRetrying ||
       state.page >= state.lastPage
     ) {
       return;
@@ -274,6 +312,7 @@ export const useProductReviews = (
     state.filter,
     state.isLoading,
     state.isLoadingMore,
+    state.isRetrying,
     state.lastPage,
     state.page,
     state.sort,
@@ -284,7 +323,7 @@ export const useProductReviews = (
       return;
     }
 
-    await requestPageOne(productId, state.filter, state.sort, true);
+    await requestPageOne(productId, state.filter, state.sort, true, true);
   }, [productId, requestPageOne, state.filter, state.sort]);
 
   return {
@@ -295,7 +334,9 @@ export const useProductReviews = (
     hasMore: state.page < state.lastPage,
     isLoading: state.isLoading,
     isLoadingMore: state.isLoadingMore,
+    isRetrying: state.isRetrying,
     error: state.error,
+    loadMoreError: state.loadMoreError,
     setFilter,
     setSort,
     loadMore,

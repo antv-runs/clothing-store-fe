@@ -14,12 +14,14 @@ interface ProductTabsSectionProps {
   reviewCount: number;
   isLoadingReviews: boolean;
   isLoadingMoreReviews: boolean;
+  isRetrying: boolean;
   hasMoreReviews: boolean;
   selectedRating: string;
   selectedSort: "latest" | "oldest" | "highest";
   onRatingChange: (value: string) => void;
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   onLoadMore: () => void;
+  onRetry: () => void;
   reviewError?: string | null;
   onWriteReview: () => void;
 }
@@ -37,12 +39,14 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   reviewCount,
   isLoadingReviews,
   isLoadingMoreReviews,
+  isRetrying,
   hasMoreReviews,
   selectedRating,
   selectedSort,
   onRatingChange,
   onSortChange,
   onLoadMore,
+  onRetry,
   reviewError,
   onWriteReview,
 }) => {
@@ -101,12 +105,14 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         isActive={activeTab === "tc-reviews"}
         isLoading={isLoadingReviews}
         isLoadingMore={isLoadingMoreReviews}
+        isRetrying={isRetrying}
         hasMore={hasMoreReviews}
         selectedRating={selectedRating}
         selectedSort={selectedSort}
         onRatingChange={onRatingChange}
         onSortChange={onSortChange}
         onLoadMore={onLoadMore}
+        onRetry={onRetry}
         error={reviewError}
         onWriteReview={onWriteReview}
       />
