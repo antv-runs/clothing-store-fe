@@ -17,6 +17,8 @@ type UseHomeDataResult = {
   newArrivalsError: string | null;
   topSellingError: string | null;
   reviewsError: string | null;
+  isNewArrivalsEmpty: boolean;
+  isTopSellingEmpty: boolean;
   retryNewArrivals: () => void;
   retryTopSelling: () => void;
   retryReviews: () => void;
@@ -194,16 +196,33 @@ export const useHomeData = (): UseHomeDataResult => {
   }, []);
 
   const retryNewArrivals = useCallback(() => {
+    if (isRetryingNewArrivals || !newArrivalsError) {
+      return;
+    }
+
     void loadNewArrivals(true);
-  }, [loadNewArrivals]);
+  }, [isRetryingNewArrivals, loadNewArrivals, newArrivalsError]);
 
   const retryTopSelling = useCallback(() => {
+    if (isRetryingTopSelling || !topSellingError) {
+      return;
+    }
+
     void loadTopSelling(true);
-  }, [loadTopSelling]);
+  }, [isRetryingTopSelling, loadTopSelling, topSellingError]);
 
   const retryReviews = useCallback(() => {
+    if (isRetryingReviews || !reviewsError) {
+      return;
+    }
+
     void loadReviews(true);
-  }, [loadReviews]);
+  }, [isRetryingReviews, loadReviews, reviewsError]);
+
+  const isNewArrivalsEmpty =
+    !isNewArrivalsLoading && !newArrivalsError && newArrivals.length === 0;
+  const isTopSellingEmpty =
+    !isTopSellingLoading && !topSellingError && topSelling.length === 0;
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -226,6 +245,8 @@ export const useHomeData = (): UseHomeDataResult => {
     newArrivalsError,
     topSellingError,
     reviewsError,
+    isNewArrivalsEmpty,
+    isTopSellingEmpty,
     retryNewArrivals,
     retryTopSelling,
     retryReviews,

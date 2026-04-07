@@ -21,6 +21,8 @@ const Home: React.FC = () => {
     newArrivalsError,
     topSellingError,
     reviewsError,
+    isNewArrivalsEmpty,
+    isTopSellingEmpty,
     retryNewArrivals,
     retryTopSelling,
     retryReviews,
@@ -52,6 +54,8 @@ const Home: React.FC = () => {
             productsList={newArrivals}
             className="home-page__product-section home-page__product-section--new-arrivals"
             isLoading={isNewArrivalsLoading}
+            isEmpty={isNewArrivalsEmpty}
+            emptyMessage="No new arrivals available right now."
             skeletonCount={4}
           />
         )}
@@ -77,6 +81,8 @@ const Home: React.FC = () => {
             className="home-page__product-section home-page__product-section--top-selling"
             withTopBorder
             isLoading={isTopSellingLoading}
+            isEmpty={isTopSellingEmpty}
+            emptyMessage="No top selling products available right now."
             skeletonCount={4}
           />
         )}

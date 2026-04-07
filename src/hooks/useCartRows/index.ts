@@ -70,9 +70,14 @@ export const useCartRows = (): UseCartRowsResult => {
   const [retryTrigger, setRetryTrigger] = useState(0);
 
   const retryHydration = useCallback(() => {
+    if (isRetryingHydration || !hasError) {
+      return;
+    }
+
+    setIsLoading(false);
     setIsRetryingHydration(true);
     setRetryTrigger((prev) => prev + 1);
-  }, []);
+  }, [hasError, isRetryingHydration]);
 
   useEffect(() => {
     let isActive = true;

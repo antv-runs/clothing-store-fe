@@ -13,6 +13,8 @@ type HomeProductSectionProps = {
   className?: string;
   withTopBorder?: boolean;
   isLoading?: boolean;
+  isEmpty?: boolean;
+  emptyMessage?: string;
   skeletonCount?: number;
 };
 
@@ -22,6 +24,8 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
   className,
   withTopBorder = false,
   isLoading = false,
+  isEmpty = false,
+  emptyMessage = "No products available in this section.",
   skeletonCount = 4,
 }) => {
   const sectionSlug = title.toLowerCase().replace(/\s+/g, "-");
@@ -52,27 +56,35 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
           </div>
         }
       >
-        <ProductCardList
-          products={productsList}
-          formatPrice={formatPrice}
-          showNavigation={false}
-          loading={isLoading}
-          skeletonCount={skeletonCount}
-        />
+        {isEmpty ? (
+          <p className="home-products__empty" role="status">
+            {emptyMessage}
+          </p>
+        ) : (
+          <ProductCardList
+            products={productsList}
+            formatPrice={formatPrice}
+            showNavigation={false}
+            loading={isLoading}
+            skeletonCount={skeletonCount}
+          />
+        )}
       </ErrorBoundary>
 
-      <Link
-        to="/"
-        className={clsx(
-          "btn btn--light home-products__cta",
-          isLoading && "home-products__cta--disabled",
-        )}
-        aria-disabled={isLoading || undefined}
-        tabIndex={isLoading ? -1 : undefined}
-        onClick={isLoading ? (e) => e.preventDefault() : undefined}
-      >
-        View All
-      </Link>
+      {!isEmpty && (
+        <Link
+          to="/"
+          className={clsx(
+            "btn btn--light home-products__cta",
+            isLoading && "home-products__cta--disabled",
+          )}
+          aria-disabled={isLoading || undefined}
+          tabIndex={isLoading ? -1 : undefined}
+          onClick={isLoading ? (e) => e.preventDefault() : undefined}
+        >
+          View All
+        </Link>
+      )}
     </section>
   );
 };
