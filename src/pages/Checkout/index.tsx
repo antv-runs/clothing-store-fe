@@ -7,7 +7,7 @@ import {
   isApiError,
   mapApiErrorToMessage,
   mapApiValidationErrors,
-} from "@/utils/apiErrorMapper";
+} from "@/utils/apiErrorList";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";

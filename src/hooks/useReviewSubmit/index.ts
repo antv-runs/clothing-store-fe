@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { submitReview } from "@/api/Review";
-import { mapApiErrorToMessage } from "@/utils/apiErrorMapper";
+import { mapApiErrorToMessage } from "@/utils/apiErrorList";
 import { DEFAULT_GUEST_USERNAME } from "@/const/user";
 
 type ReviewSubmission = {

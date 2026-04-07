@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
-import axios from "axios";
 import { getReviewsByProductId } from "@/api/Review";
-import { mapApiErrorToMessage } from "@/utils/apiErrorMapper";
+import {
+  isRetryableListErrorKind,
+  mapApiErrorToListErrorKind,
+  mapApiErrorToMessage,
+} from "@/utils/apiErrorList";
 import type { Review } from "@/types/review";
 import type { ListCoreState, ListErrorKind } from "@/types/listState";
 
@@ -76,39 +79,6 @@ const initialState: State = {
   error: null,
   errorKind: null,
   loadMoreError: null,
-};
-
-const mapListErrorKind = (error: unknown): ListErrorKind => {
-  if (axios.isAxiosError(error)) {
-    if (
-      !error.response ||
-      error.code === "ERR_NETWORK" ||
-      error.code === "ECONNABORTED" ||
-      error.code === "ETIMEDOUT"
-    ) {
-      return "network";
-    }
-
-    if (error.response.status === 404) {
-      return "not_found";
-    }
-
-    if (error.response.status === 422) {
-      return "validation";
-    }
-
-    if (error.response.status >= 500) {
-      return "system";
-    }
-
-    return "unknown";
-  }
-
-  if (!navigator.onLine) {
-    return "network";
-  }
-
-  return "unknown";
 };
 
 const queryRating = (rating: string) => {
@@ -269,7 +239,7 @@ export const useProductReviews = (
         dispatch({
           type: REVIEW_ACTION.REQUEST_ERROR,
           message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),
-          errorKind: mapListErrorKind(error),
+          errorKind: mapApiErrorToListErrorKind(error),
         });
       }
     },
@@ -352,7 +322,7 @@ export const useProductReviews = (
       dispatch({
         type: REVIEW_ACTION.REQUEST_ERROR,
         message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),
-        errorKind: mapListErrorKind(error),
+        errorKind: mapApiErrorToListErrorKind(error),
       });
     }
   }, [
@@ -377,16 +347,25 @@ export const useProductReviews = (
   const invalidParams = !productId
     ? "A valid product id is required to load reviews."
     : null;
+  const resolvedErrorKind: ListErrorKind | null = invalidParams
+    ? "invalid_params"
+    : state.errorKind;
+  const isRetryable = isRetryableListErrorKind(resolvedErrorKind);
   const isEmpty =
     !invalidParams && !state.isLoading && !state.error && state.reviews.length === 0;
   const listState: ListCoreState<Review> = {
     data: state.reviews,
     isLoading: state.isLoading,
     isRetrying: state.isRetrying,
+    isRetryable,
     isEmpty,
     error: state.error,
-    errorKind: state.errorKind,
+    errorKind: resolvedErrorKind,
     retry: () => {
+      if (!isRetryable) {
+        return;
+      }
+
       void reloadReviews();
     },
     invalidParams,
@@ -404,9 +383,14 @@ export const useProductReviews = (
     isRetrying: state.isRetrying,
     isEmpty,
     error: state.error,
-    errorKind: state.errorKind,
+    errorKind: resolvedErrorKind,
     loadMoreError: state.loadMoreError,
+    isRetryable,
     retry: () => {
+      if (!isRetryable) {
+        return;
+      }
+
       void reloadReviews();
     },
     invalidParams,

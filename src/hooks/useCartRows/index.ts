@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { getProductById } from "@/api/Product";
 import type { CartRow } from "@/types/cart";
 import type { Product } from "@/types/product";
 import { normalizeId } from "@/utils/formatters";
 import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import type { ListCoreState, ListErrorKind } from "@/types/listState";
+import {
+  isRetryableListErrorKind,
+  mapApiErrorToListErrorKind,
+} from "@/utils/apiErrorList";
 
 type CartItem = Product & {
   quantity: number;
@@ -56,39 +59,6 @@ const DEFAULT_QUANTITY = 1;
 const HYDRATION_ERROR_MESSAGE =
   "We couldn't securely load your cart data right now.";
 
-const mapListErrorKind = (error: unknown): ListErrorKind => {
-  if (axios.isAxiosError(error)) {
-    if (
-      !error.response ||
-      error.code === "ERR_NETWORK" ||
-      error.code === "ECONNABORTED" ||
-      error.code === "ETIMEDOUT"
-    ) {
-      return "network";
-    }
-
-    if (error.response.status === 404) {
-      return "not_found";
-    }
-
-    if (error.response.status === 422) {
-      return "validation";
-    }
-
-    if (error.response.status >= 500) {
-      return "system";
-    }
-
-    return "unknown";
-  }
-
-  if (!navigator.onLine) {
-    return "network";
-  }
-
-  return "unknown";
-};
-
 const normalizeQuantity = (value: number | string): number => {
   const parsed = Number(value);
   return Math.max(
@@ -116,14 +86,18 @@ export const useCartRows = (): UseCartRowsResult => {
   const [retryTrigger, setRetryTrigger] = useState(0);
 
   const retryHydration = useCallback(() => {
-    if (isRetryingHydration || !hasError) {
+    if (
+      isRetryingHydration ||
+      !hasError ||
+      !isRetryableListErrorKind(hydrationErrorKind)
+    ) {
       return;
     }
 
     setIsLoading(false);
     setIsRetryingHydration(true);
     setRetryTrigger((prev) => prev + 1);
-  }, [hasError, isRetryingHydration]);
+  }, [hasError, hydrationErrorKind, isRetryingHydration]);
 
   useEffect(() => {
     let isActive = true;
@@ -181,7 +155,7 @@ export const useCartRows = (): UseCartRowsResult => {
         console.error("Failed to load cart product details", error);
         setHasError(true);
         setHydrationError(HYDRATION_ERROR_MESSAGE);
-        setHydrationErrorKind(mapListErrorKind(error));
+        setHydrationErrorKind(mapApiErrorToListErrorKind(error));
       } finally {
         if (isActive) {
           setIsLoading(false);
@@ -353,6 +327,7 @@ export const useCartRows = (): UseCartRowsResult => {
     data: cartItems,
     isLoading,
     isRetrying: isRetryingHydration,
+    isRetryable: isRetryableListErrorKind(hydrationErrorKind),
     isEmpty,
     error: hydrationError,
     errorKind: hydrationErrorKind,

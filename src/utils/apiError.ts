@@ -72,11 +72,20 @@ export function handleApiError(error: unknown): ApiError {
       uiMessage = "Server error. Please try again later.";
     }
 
+    const normalizedCode =
+      !error.response
+        ? code || "NETWORK_ERROR"
+        : status === 400 || status === 422
+          ? "INVALID_PARAMS"
+          : status && status >= 500
+            ? "SERVER_ERROR"
+            : code || (status ? `HTTP_${status}` : "UNKNOWN_ERROR");
+
     return new ApiError({
       message,
       uiMessage,
       status,
-      code,
+      code: normalizedCode,
       validationErrors,
     });
   }

@@ -1,7 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { getProductById, getProducts } from "@/api/Product";
-import { mapApiErrorToMessage } from "@/utils/apiErrorMapper";
+import {
+  isRetryableListErrorKind,
+  mapApiErrorToListErrorKind,
+  mapApiErrorToMessage,
+} from "@/utils/apiErrorList";
 import type { Product } from "@/types/product";
 import type { ListCoreState, ListErrorKind } from "@/types/listState";
 
@@ -16,6 +20,7 @@ type UseProductDetailDataResult = {
   relatedError: string | null;
   relatedErrorKind: ListErrorKind | null;
   isRetryingRelated: boolean;
+  isRetryableRelated: boolean;
   relatedIsEmpty: boolean;
   retryRelatedProducts: () => void;
   relatedList: ListCoreState<Product>;
@@ -24,39 +29,6 @@ type UseProductDetailDataResult = {
 
 const DEFAULT_RELATED_ERROR_MESSAGE =
   "Unable to load related products. Please try again.";
-
-const mapListErrorKind = (error: unknown): ListErrorKind => {
-  if (axios.isAxiosError(error)) {
-    if (
-      !error.response ||
-      error.code === "ERR_NETWORK" ||
-      error.code === "ECONNABORTED" ||
-      error.code === "ETIMEDOUT"
-    ) {
-      return "network";
-    }
-
-    if (error.response.status === 404) {
-      return "not_found";
-    }
-
-    if (error.response.status === 422) {
-      return "validation";
-    }
-
-    if (error.response.status >= 500) {
-      return "system";
-    }
-
-    return "unknown";
-  }
-
-  if (!navigator.onLine) {
-    return "network";
-  }
-
-  return "unknown";
-};
 
 export const useProductDetailData = (
   productId: string,
@@ -81,13 +53,18 @@ export const useProductDetailData = (
   }, []);
 
   const retryRelatedProducts = useCallback(() => {
-    if (!product?.id || isRetryingRelated || !relatedError) {
+    if (
+      !product?.id ||
+      isRetryingRelated ||
+      !relatedError ||
+      !isRetryableListErrorKind(relatedErrorKind)
+    ) {
       return;
     }
 
     setRelatedRetryProductId(product.id);
     setRelatedRetryTrigger((prev) => prev + 1);
-  }, [isRetryingRelated, product?.id, relatedError]);
+  }, [isRetryingRelated, product?.id, relatedError, relatedErrorKind]);
 
   const isNetworkFailure = (error: unknown) => {
     if (!axios.isAxiosError(error)) {
@@ -234,7 +211,7 @@ export const useProductDetailData = (
         setRelatedError(
           mapApiErrorToMessage(error, DEFAULT_RELATED_ERROR_MESSAGE),
         );
-        setRelatedErrorKind(mapListErrorKind(error));
+        setRelatedErrorKind(mapApiErrorToListErrorKind(error));
       } finally {
         if (isActive) {
           setRelatedLoading(false);
@@ -250,19 +227,29 @@ export const useProductDetailData = (
     };
   }, [product?.id, relatedRetryProductId, relatedRetryTrigger]);
 
+  const relatedInvalidState = !product?.id
+    ? "Related products are unavailable until product detail is loaded."
+    : null;
+  const resolvedRelatedErrorKind: ListErrorKind | null = relatedInvalidState
+    ? "invalid_state"
+    : relatedErrorKind;
+  const isRelatedRetryable = isRetryableListErrorKind(resolvedRelatedErrorKind);
   const relatedIsEmpty =
-    !relatedLoading && !isRetryingRelated && !relatedError && relatedProducts.length === 0;
+    Boolean(product?.id) &&
+    !relatedLoading &&
+    !isRetryingRelated &&
+    !relatedError &&
+    relatedProducts.length === 0;
   const relatedList: ListCoreState<Product> = {
     data: relatedProducts,
     isLoading: relatedLoading,
     isRetrying: isRetryingRelated,
+    isRetryable: isRelatedRetryable,
     isEmpty: relatedIsEmpty,
     error: relatedError,
-    errorKind: relatedErrorKind,
+    errorKind: resolvedRelatedErrorKind,
     retry: retryRelatedProducts,
-    invalidState: !product?.id
-      ? "Related products are unavailable until product detail is loaded."
-      : null,
+    invalidState: relatedInvalidState,
   };
 
   return {
@@ -272,8 +259,9 @@ export const useProductDetailData = (
     relatedProducts,
     relatedLoading,
     relatedError,
-    relatedErrorKind,
+    relatedErrorKind: resolvedRelatedErrorKind,
     isRetryingRelated,
+    isRetryableRelated: isRelatedRetryable,
     relatedIsEmpty,
     retryRelatedProducts,
     relatedList,
