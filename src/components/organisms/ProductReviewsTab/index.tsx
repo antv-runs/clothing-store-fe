@@ -5,6 +5,7 @@ import type { ListErrorKind } from "@/types/listState";
 import { Button } from "@/components/atoms/Button";
 import { ProductReviewsHeader } from "@/components/molecules/ProductReviewsHeader";
 import { ProductReviewsList } from "@/components/molecules/ProductReviewsList";
+import { ProductReviewsListSkeleton } from "@/components/molecules/ProductReviewsListSkeleton";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 
 interface ProductReviewsTabProps {
@@ -50,6 +51,18 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
   onWriteReview,
 }) => {
   const isEmpty = !isLoading && !error && reviews.length === 0;
+  const loadingContent = (
+    <ul className="reviews__list" aria-busy="true" aria-live="polite">
+      <ProductReviewsListSkeleton />
+    </ul>
+  );
+  const emptyContent = (
+    <ul className="reviews__list" aria-live="polite">
+      <li className="reviews__item review-card">
+        <p className="review-card__content">No reviews yet.</p>
+      </li>
+    </ul>
+  );
 
   return (
     <section
@@ -78,11 +91,11 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
         error={error || null}
         errorKind={errorKind || null}
         onRetry={onRetry}
-        loadingContent={<ProductReviewsList reviews={reviews} isLoading={true} />}
-        emptyContent={<ProductReviewsList reviews={[]} isLoading={false} />}
+        loadingContent={loadingContent}
+        emptyContent={emptyContent}
       >
         <>
-          <ProductReviewsList reviews={reviews} isLoading={isLoading} />
+          <ProductReviewsList reviews={reviews} />
 
           <div className="reviews__load-more-wrapper">
             <Button

@@ -63,6 +63,8 @@ const Cart: React.FC = () => {
           Your Cart
         </Heading>
 
+        {/* Classification boundary: Cart is a hybrid hydration + domain flow,
+            so it must keep local skeleton/retry rendering and not use ListStateWrapper. */}
         {isLoading && !hasError && <CartPageSkeleton />}
 
         {hasError && (
@@ -78,6 +80,7 @@ const Cart: React.FC = () => {
         <section
           className="cart-page__layout"
           aria-label="Cart summary"
+          // Keep the layout mounted during retry to prevent skeleton flash/flicker.
           style={{ display: isEmpty || isLoading || hasError ? "none" : "" }}
         >
           <div className="cart-items" aria-busy="false" aria-live="polite">

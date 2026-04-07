@@ -323,6 +323,8 @@ export const useCartRows = (): UseCartRowsResult => {
     cartRows.length === 0 ||
     (!isLoading && !hasError && cartItems.length === 0);
 
+  // Expose hydration lifecycle as structured state for domain pages,
+  // but Cart/Checkout remain local hybrid/derived consumers (no ListStateWrapper).
   const hydrationList: ListCoreState<CartItem> = {
     data: cartItems,
     isLoading,

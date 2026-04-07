@@ -34,6 +34,13 @@ Do not use the shared wrapper by default when one or more are true:
 2. The flow primarily represents business transforms (totals, discounts, grouping, eligibility) rather than API list lifecycle.
 3. The "list" state is a side effect of another domain concern (form submission, checkout orchestration, cart mutation logic).
 
+## Boundary Enforcement (Cart and Checkout)
+
+1. Cart and Checkout must not import or render `ListStateWrapper`.
+2. Preserve local branch rendering for hydration retry/skeleton states to keep layout stable and avoid retry flicker.
+3. Keep checkout submit lifecycle (`idle/submitting/success/error`) independent from list-state abstractions.
+4. If duplication grows, extract only a hydration-focused helper (hook/util) and do not promote Cart/Checkout to a generic list wrapper consumer.
+
 ## Exceptions and Special Cases
 
 1. Cart hydration is allowed as a limited special-case consumer.
@@ -54,3 +61,11 @@ Do not use the shared wrapper by default when one or more are true:
 1. Migrate true API lists first: Home sections, ProductReviews, RelatedProducts.
 2. Keep checkout summary excluded unless its source-of-truth changes to a direct API list lifecycle.
 3. For hybrid flows, wrap only the API-facing slice and leave domain logic local.
+
+## Proof-of-Fit Adoption Note
+
+The first low-risk consumer for the shared wrapper is the Home product section flow.
+
+- Use [src/components/organisms/HomeProductSection/index.tsx](src/components/organisms/HomeProductSection/index.tsx) as the baseline adoption pattern.
+- Keep the same success rendering path and only replace duplicated loading/empty/error/retry chrome.
+- Do not use this proof-of-fit as a reason to pull derived flows like checkout summary into the generic wrapper.

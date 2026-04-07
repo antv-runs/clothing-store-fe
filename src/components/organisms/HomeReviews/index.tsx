@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
-import { RetryState } from "@/components/molecules/RetryState";
 import { ReviewCard } from "@/components/molecules/ReviewCard";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 import type { ListErrorKind } from "@/types/listState";
@@ -109,6 +108,7 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
       </div>
 
       <ListStateWrapper
+        className="home-reviews__retry"
         isLoading={isLoading}
         isRetrying={isRetrying}
         isEmpty={isEmpty}
@@ -124,15 +124,6 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
           <div className="home-reviews__state" role="status">
             No reviews available.
           </div>
-        }
-        errorContent={
-          <RetryState
-            className="home-reviews__retry"
-            message={error || "Unable to load customer reviews right now."}
-            onRetry={onRetry || (() => undefined)}
-            isRetrying={isRetrying}
-            disabled={!onRetry}
-          />
         }
       >
         <div className={`home-reviews__viewport${viewportStateClass}`}>

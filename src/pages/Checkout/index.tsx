@@ -170,6 +170,8 @@ const Checkout: React.FC = () => {
           Checkout
         </Heading>
 
+        {/* Classification boundary: Checkout summary is derived business state.
+            Keep local retry/skeleton branches here; do not use ListStateWrapper. */}
         {submitStatus === "success" ? (
           <div className="checkout-page__status">
             <Heading as="h2" className="checkout-page__status-title">

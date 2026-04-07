@@ -14,7 +14,6 @@ type ListStateWrapperProps = {
   isRetryable?: boolean;
   loadingContent?: ReactNode;
   emptyContent?: ReactNode;
-  errorContent?: ReactNode;
   className?: string;
   children: ReactNode;
 };
@@ -32,15 +31,10 @@ export const ListStateWrapper = ({
   isRetryable = true,
   loadingContent,
   emptyContent,
-  errorContent,
   className,
   children,
 }: ListStateWrapperProps) => {
   if (error || isRetrying) {
-    if (errorContent) {
-      return <>{errorContent}</>;
-    }
-
     return (
       <RetryState
         className={clsx("list-state-wrapper__retry", className)}
