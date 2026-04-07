@@ -4,7 +4,9 @@ import { Heading } from "@/components/atoms/Heading";
 import { ProductCardList } from "@/components/organisms/ProductCardList";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import type { Product } from "@/types/product";
+import type { ListErrorKind } from "@/types/listState";
 import { formatPrice } from "@/utils/formatters";
+import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 import "./index.scss";
 
 type HomeProductSectionProps = {
@@ -14,6 +16,10 @@ type HomeProductSectionProps = {
   withTopBorder?: boolean;
   isLoading?: boolean;
   isEmpty?: boolean;
+  isRetrying?: boolean;
+  error?: string | null;
+  errorKind?: ListErrorKind | null;
+  onRetry?: () => void;
   emptyMessage?: string;
   skeletonCount?: number;
 };
@@ -25,10 +31,15 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
   withTopBorder = false,
   isLoading = false,
   isEmpty = false,
+  isRetrying = false,
+  error = null,
+  errorKind = null,
+  onRetry,
   emptyMessage = "No products available in this section.",
   skeletonCount = 4,
 }) => {
   const sectionSlug = title.toLowerCase().replace(/\s+/g, "-");
+  const hasRetryState = Boolean(error) || isRetrying;
 
   return (
     <section
@@ -56,22 +67,39 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
           </div>
         }
       >
-        {isEmpty ? (
-          <p className="home-products__empty" role="status">
-            {emptyMessage}
-          </p>
-        ) : (
+        <ListStateWrapper
+          isLoading={isLoading}
+          isRetrying={isRetrying}
+          isEmpty={isEmpty}
+          error={error}
+          errorKind={errorKind}
+          onRetry={onRetry}
+          loadingContent={
+            <ProductCardList
+              products={productsList}
+              formatPrice={formatPrice}
+              showNavigation={false}
+              loading={true}
+              skeletonCount={skeletonCount}
+            />
+          }
+          emptyContent={
+            <p className="home-products__empty" role="status">
+              {emptyMessage}
+            </p>
+          }
+        >
           <ProductCardList
             products={productsList}
             formatPrice={formatPrice}
             showNavigation={false}
-            loading={isLoading}
+            loading={false}
             skeletonCount={skeletonCount}
           />
-        )}
+        </ListStateWrapper>
       </ErrorBoundary>
 
-      {!isEmpty && (
+      {!isEmpty && !hasRetryState && (
         <Link
           to="/"
           className={clsx(

@@ -1,10 +1,11 @@
 import React from "react";
 import "./index.scss";
 import type { Review } from "@/types/review";
+import type { ListErrorKind } from "@/types/listState";
 import { Button } from "@/components/atoms/Button";
-import { RetryState } from "@/components/molecules/RetryState";
 import { ProductReviewsHeader } from "@/components/molecules/ProductReviewsHeader";
 import { ProductReviewsList } from "@/components/molecules/ProductReviewsList";
+import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 
 interface ProductReviewsTabProps {
   panelRef?: (el: HTMLElement | null) => void;
@@ -22,6 +23,7 @@ interface ProductReviewsTabProps {
   onLoadMore: () => void;
   onRetry: () => void;
   error?: string | null;
+  errorKind?: ListErrorKind | null;
   onWriteReview: () => void;
 }
 
@@ -44,8 +46,11 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
   onLoadMore,
   onRetry,
   error,
+  errorKind,
   onWriteReview,
 }) => {
+  const isEmpty = !isLoading && !error && reviews.length === 0;
+
   return (
     <section
       id="tc-reviews"
@@ -66,13 +71,16 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
         onWriteReview={onWriteReview}
       />
 
-      {error && !isLoading ? (
-        <RetryState
-          message={error}
-          onRetry={onRetry}
-          isRetrying={isRetrying}
-        />
-      ) : (
+      <ListStateWrapper
+        isLoading={isLoading}
+        isRetrying={isRetrying}
+        isEmpty={isEmpty}
+        error={error || null}
+        errorKind={errorKind || null}
+        onRetry={onRetry}
+        loadingContent={<ProductReviewsList reviews={reviews} isLoading={true} />}
+        emptyContent={<ProductReviewsList reviews={[]} isLoading={false} />}
+      >
         <>
           <ProductReviewsList reviews={reviews} isLoading={isLoading} />
 
@@ -91,7 +99,7 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
             </Button>
           </div>
         </>
-      )}
+      </ListStateWrapper>
     </section>
   );
 };

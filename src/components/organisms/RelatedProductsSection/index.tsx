@@ -3,13 +3,15 @@ import "./index.scss";
 import { ProductCardList } from "@/components/organisms/ProductCardList";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { Heading } from "@/components/atoms/Heading";
-import { RetryState } from "@/components/molecules/RetryState";
+import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
+import type { ListErrorKind } from "@/types/listState";
 import type { Product } from "@/types/product";
 
 interface RelatedProductsSectionProps {
   products: Product[];
   isLoading: boolean;
   error: string | null;
+  errorKind?: ListErrorKind | null;
   isRetrying: boolean;
   onRetry: () => void;
   title?: string;
@@ -28,6 +30,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   products,
   isLoading,
   error,
+  errorKind,
   isRetrying,
   onRetry,
   title = "You Might Also Like",
@@ -52,34 +55,6 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
     });
   };
 
-  if (error || isRetrying) {
-    return (
-      <section className="other-products">
-        <Heading as="h2" className="other-products__title">
-          {title}
-        </Heading>
-        <RetryState
-          className="other-products__retry-state"
-          message={error || "Unable to load related products. Please try again."}
-          onRetry={onRetry}
-          isRetrying={isRetrying}
-          retryingLabel="Retrying..."
-        />
-      </section>
-    );
-  }
-
-  if (!isLoading && products.length === 0) {
-    return (
-      <section className="other-products">
-        <Heading as="h2" className="other-products__title">
-          {title}
-        </Heading>
-        <p className="other-products__empty">No related products available.</p>
-      </section>
-    );
-  }
-
   return (
     <section className="other-products u-mb-85">
       <Heading as="h2" className="other-products__title">
@@ -94,18 +69,40 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
           </p>
         }
       >
-        <ProductCardList
-          products={products}
-          formatPrice={formatPrice}
-          showNavigation={true}
-          loading={isLoading}
-          skeletonCount={8}
-          linkMode="overlay"
-          imageLoaded={loadedImageIds}
-          imageError={errorImageIds}
-          onImageLoad={handleImageLoad}
-          onImageError={handleImageError}
-        />
+        <ListStateWrapper
+          isLoading={isLoading}
+          isRetrying={isRetrying}
+          isEmpty={!isLoading && !error && products.length === 0}
+          error={error}
+          errorKind={errorKind || null}
+          onRetry={onRetry}
+          loadingContent={
+            <ProductCardList
+              products={products}
+              formatPrice={formatPrice}
+              showNavigation={true}
+              loading={true}
+              skeletonCount={8}
+              linkMode="overlay"
+            />
+          }
+          emptyContent={
+            <p className="other-products__empty">No related products available.</p>
+          }
+        >
+          <ProductCardList
+            products={products}
+            formatPrice={formatPrice}
+            showNavigation={true}
+            loading={false}
+            skeletonCount={8}
+            linkMode="overlay"
+            imageLoaded={loadedImageIds}
+            imageError={errorImageIds}
+            onImageLoad={handleImageLoad}
+            onImageError={handleImageError}
+          />
+        </ListStateWrapper>
       </ErrorBoundary>
     </section>
   );

@@ -3,7 +3,6 @@ import { HomeBrands } from "@/components/organisms/HomeBrands";
 import { HomeProductSection } from "@/components/organisms/HomeProductSection";
 import { HomeStyleGrid } from "@/components/organisms/HomeStyleGrid";
 import { HomeReviews } from "@/components/organisms/HomeReviews";
-import { RetryState } from "@/components/molecules/RetryState";
 import { useHomeData } from "@/hooks/useHomeData";
 import "./index.scss";
 
@@ -21,6 +20,9 @@ const Home: React.FC = () => {
     newArrivalsError,
     topSellingError,
     reviewsError,
+    newArrivalsErrorKind,
+    topSellingErrorKind,
+    reviewsErrorKind,
     isNewArrivalsEmpty,
     isTopSellingEmpty,
     retryNewArrivals,
@@ -34,77 +36,44 @@ const Home: React.FC = () => {
         <HomeHero />
         <HomeBrands />
 
-        {newArrivalsError ? (
-          <section
-            className="home-products home-page__product-section home-page__product-section--new-arrivals"
-            aria-labelledby="home-new-arrivals-title"
-          >
-            <h2 id="home-new-arrivals-title" className="home-products__title">
-              NEW ARRIVALS
-            </h2>
-            <RetryState
-              message={newArrivalsError}
-              onRetry={retryNewArrivals}
-              isRetrying={isRetryingNewArrivals}
-            />
-          </section>
-        ) : (
-          <HomeProductSection
-            title="NEW ARRIVALS"
-            productsList={newArrivals}
-            className="home-page__product-section home-page__product-section--new-arrivals"
-            isLoading={isNewArrivalsLoading}
-            isEmpty={isNewArrivalsEmpty}
-            emptyMessage="No new arrivals available right now."
-            skeletonCount={4}
-          />
-        )}
+        <HomeProductSection
+          title="NEW ARRIVALS"
+          productsList={newArrivals}
+          className="home-page__product-section home-page__product-section--new-arrivals"
+          isLoading={isNewArrivalsLoading}
+          isRetrying={isRetryingNewArrivals}
+          isEmpty={isNewArrivalsEmpty}
+          error={newArrivalsError}
+          errorKind={newArrivalsErrorKind}
+          onRetry={retryNewArrivals}
+          emptyMessage="No new arrivals available right now."
+          skeletonCount={4}
+        />
 
-        {topSellingError ? (
-          <section
-            className="home-products home-products--bordered home-page__product-section home-page__product-section--top-selling"
-            aria-labelledby="home-top-selling-title"
-          >
-            <h2 id="home-top-selling-title" className="home-products__title">
-              TOP SELLING
-            </h2>
-            <RetryState
-              message={topSellingError}
-              onRetry={retryTopSelling}
-              isRetrying={isRetryingTopSelling}
-            />
-          </section>
-        ) : (
-          <HomeProductSection
-            title="TOP SELLING"
-            productsList={topSelling}
-            className="home-page__product-section home-page__product-section--top-selling"
-            withTopBorder
-            isLoading={isTopSellingLoading}
-            isEmpty={isTopSellingEmpty}
-            emptyMessage="No top selling products available right now."
-            skeletonCount={4}
-          />
-        )}
+        <HomeProductSection
+          title="TOP SELLING"
+          productsList={topSelling}
+          className="home-page__product-section home-page__product-section--top-selling"
+          withTopBorder
+          isLoading={isTopSellingLoading}
+          isRetrying={isRetryingTopSelling}
+          isEmpty={isTopSellingEmpty}
+          error={topSellingError}
+          errorKind={topSellingErrorKind}
+          onRetry={retryTopSelling}
+          emptyMessage="No top selling products available right now."
+          skeletonCount={4}
+        />
 
         <HomeStyleGrid />
-        {reviewsError ? (
-          <section
-            className="home-reviews"
-            aria-labelledby="home-reviews-title"
-          >
-            <div className="home-reviews__head">
-              <h2 id="home-reviews-title">OUR HAPPY CUSTOMERS</h2>
-            </div>
-            <RetryState
-              message={reviewsError}
-              onRetry={retryReviews}
-              isRetrying={isRetryingReviews}
-            />
-          </section>
-        ) : (
-          <HomeReviews reviews={reviews} isLoading={isReviewsLoading} />
-        )}
+        <HomeReviews
+          reviews={reviews}
+          isLoading={isReviewsLoading}
+          isRetrying={isRetryingReviews}
+          error={reviewsError}
+          errorKind={reviewsErrorKind}
+          onRetry={retryReviews}
+        />
       </section>
     </div>
   );

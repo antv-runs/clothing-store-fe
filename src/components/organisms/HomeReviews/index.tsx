@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
+import { RetryState } from "@/components/molecules/RetryState";
 import { ReviewCard } from "@/components/molecules/ReviewCard";
+import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
+import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import { getFirstItemScrollStep } from "@/utils/carousel";
 import "./index.scss";
@@ -9,11 +12,19 @@ import "./index.scss";
 interface HomeReviewsProps {
   reviews: Review[];
   isLoading: boolean;
+  isRetrying?: boolean;
+  error?: string | null;
+  errorKind?: ListErrorKind | null;
+  onRetry?: () => void;
 }
 
 export const HomeReviews: React.FC<HomeReviewsProps> = ({
   reviews,
   isLoading,
+  isRetrying = false,
+  error = null,
+  errorKind,
+  onRetry,
 }) => {
   const reviewsTrackRef = useRef<HTMLUListElement | null>(null);
   const [hasOverflow, setHasOverflow] = useState(false);
@@ -62,26 +73,10 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
   const viewportStateClass = `${hasOverflow ? " has-overflow" : ""}${canScrollPrev ? " is-not-at-start" : ""}${canScrollNext ? " is-not-at-end" : ""}`;
 
   const renderReviews = () => {
-    if (isLoading) {
-      return (
-        <li className="reviews__item review-card" style={{ opacity: 0.5 }}>
-          <p>Loading reviews...</p>
-        </li>
-      );
-    }
-
-    if (reviews.length === 0) {
-      return (
-        <li className="reviews__item review-card" style={{ opacity: 0.6 }}>
-          <p>No reviews available</p>
-        </li>
-      );
-    }
-
-    return reviews.map((review) => (
-      <ReviewCard key={review.id} review={review} />
-    ));
+    return reviews.map((review) => <ReviewCard key={review.id} review={review} />);
   };
+
+  const isEmpty = !isLoading && !error && reviews.length === 0;
 
   return (
     <section className="home-reviews" aria-labelledby="home-reviews-title">
@@ -113,17 +108,45 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
         </div>
       </div>
 
-      <div className={`home-reviews__viewport${viewportStateClass}`}>
-        <ul
-          ref={reviewsTrackRef}
-          className={`home-reviews__track reviews__list${isFew ? " home-reviews__track--few" : ""}`}
-          aria-label="Customer reviews"
-          aria-live="polite"
-          aria-busy={isLoading}
-        >
-          {renderReviews()}
-        </ul>
-      </div>
+      <ListStateWrapper
+        isLoading={isLoading}
+        isRetrying={isRetrying}
+        isEmpty={isEmpty}
+        error={error}
+        errorKind={errorKind || null}
+        onRetry={onRetry}
+        loadingContent={
+          <div className="home-reviews__state" role="status">
+            Loading reviews...
+          </div>
+        }
+        emptyContent={
+          <div className="home-reviews__state" role="status">
+            No reviews available.
+          </div>
+        }
+        errorContent={
+          <RetryState
+            className="home-reviews__retry"
+            message={error || "Unable to load customer reviews right now."}
+            onRetry={onRetry || (() => undefined)}
+            isRetrying={isRetrying}
+            disabled={!onRetry}
+          />
+        }
+      >
+        <div className={`home-reviews__viewport${viewportStateClass}`}>
+          <ul
+            ref={reviewsTrackRef}
+            className={`home-reviews__track reviews__list${isFew ? " home-reviews__track--few" : ""}`}
+            aria-label="Customer reviews"
+            aria-live="polite"
+            aria-busy={isLoading}
+          >
+            {renderReviews()}
+          </ul>
+        </div>
+      </ListStateWrapper>
     </section>
   );
 };

@@ -42,6 +42,7 @@ const ProductDetail: React.FC = () => {
     relatedProducts,
     relatedLoading,
     relatedError,
+    relatedErrorKind,
     isRetryingRelated,
     retryRelatedProducts,
   } = useProductDetailData(normalizedRouteId);
@@ -63,6 +64,7 @@ const ProductDetail: React.FC = () => {
     isLoadingMore: isLoadingMoreReviews,
     isRetrying: isRetryingReviews,
     error: reviewError,
+    errorKind: reviewErrorKind,
     setFilter,
     setSort,
     loadMore,
@@ -292,6 +294,7 @@ const ProductDetail: React.FC = () => {
           onLoadMore={loadMore}
           onRetry={reloadReviews}
           reviewError={reviewError}
+          reviewErrorKind={reviewErrorKind}
           onWriteReview={handleOpenReviewModal}
         />
       </ErrorBoundary>
@@ -300,6 +303,7 @@ const ProductDetail: React.FC = () => {
         products={relatedProducts}
         isLoading={relatedLoading}
         error={relatedError}
+        errorKind={relatedErrorKind}
         isRetrying={isRetryingRelated}
         onRetry={retryRelatedProducts}
         formatPrice={formatPrice}

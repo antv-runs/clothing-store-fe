@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useRef } from "react";
 import "./index.scss";
+import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import type { ProductFaq } from "@/types/product";
 import { ProductTabsNav } from "@/components/molecules/ProductTabsNav";
@@ -23,6 +24,7 @@ interface ProductTabsSectionProps {
   onLoadMore: () => void;
   onRetry: () => void;
   reviewError?: string | null;
+  reviewErrorKind?: ListErrorKind | null;
   onWriteReview: () => void;
 }
 
@@ -48,6 +50,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   onLoadMore,
   onRetry,
   reviewError,
+  reviewErrorKind,
   onWriteReview,
 }) => {
 
@@ -114,6 +117,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         onLoadMore={onLoadMore}
         onRetry={onRetry}
         error={reviewError}
+        errorKind={reviewErrorKind}
         onWriteReview={onWriteReview}
       />
 
