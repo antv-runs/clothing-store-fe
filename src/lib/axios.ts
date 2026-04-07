@@ -15,9 +15,39 @@ const httpClient = axios.create({
   },
 });
 
+let lastGlobalErrorTime = 0;
+const GLOBAL_ERROR_THROTTLE_MS = 3000;
+
 httpClient.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(handleApiError(error)),
+  (error) => {
+    const method = error.config?.method?.toUpperCase() || "";
+    const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
+
+    if (isMutation) {
+      const isNetworkError = !error.response;
+      const isServerError = error.response && error.response.status >= 500;
+
+      if (isNetworkError || isServerError) {
+        const now = Date.now();
+        if (now - lastGlobalErrorTime > GLOBAL_ERROR_THROTTLE_MS) {
+          lastGlobalErrorTime = now;
+
+          const message = isNetworkError
+            ? "Unable to connect. Please check your connection and try again."
+            : "Server error. Please try again in a moment.";
+
+          window.dispatchEvent(
+            new CustomEvent("global-api-error", {
+              detail: { message },
+            })
+          );
+        }
+      }
+    }
+
+    return Promise.reject(handleApiError(error));
+  },
 );
 
 export async function get<T>(

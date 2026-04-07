@@ -4,7 +4,7 @@ import { legacy_createStore as createStore, combineReducers } from "redux";
 import { cartReducer } from "@/reducers/cartReducer";
 
 const rootReducer = combineReducers({
-  cart: cartReducer,
+    cart: cartReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

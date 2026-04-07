@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback } from "react";
+import { createContext, useState, useCallback, useEffect } from "react";
 import type { ReactNode } from "react";
 import { ToastContainer } from "@/components/organisms/ToastContainer";
 import type { ToastData, ToastContextValue } from "@/types/toast";
@@ -30,6 +30,24 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
     },
     [dismissToast]
   );
+
+  useEffect(() => {
+    const handleGlobalError = (event: Event) => {
+      const customEvent = event as CustomEvent<{ message: string }>;
+      if (customEvent.detail?.message) {
+        showToast({
+          message: customEvent.detail.message,
+          variant: "error",
+          duration: 5000,
+        });
+      }
+    };
+
+    window.addEventListener("global-api-error", handleGlobalError);
+    return () => {
+      window.removeEventListener("global-api-error", handleGlobalError);
+    };
+  }, [showToast]);
 
   return (
     <ToastContext.Provider value={{ showToast, dismissToast }}>
