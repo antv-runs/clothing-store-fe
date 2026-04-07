@@ -79,10 +79,7 @@ export const WriteReviewModal = ({
       aria-modal="true"
       aria-labelledby="write-review-title"
     >
-      <div
-        className="review-modal__backdrop"
-        onClick={handleClose}
-      ></div>
+      <div className="review-modal__backdrop" onClick={handleClose}></div>
       <div className="review-modal__dialog" role="document">
         <div className="review-modal__header">
           <h3 id="write-review-title" className="review-modal__title">

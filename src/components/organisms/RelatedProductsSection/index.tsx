@@ -3,11 +3,15 @@ import "./index.scss";
 import { ProductCardList } from "@/components/organisms/ProductCardList";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { Heading } from "@/components/atoms/Heading";
+import { RetryState } from "@/components/molecules/RetryState";
 import type { Product } from "@/types/product";
 
 interface RelatedProductsSectionProps {
   products: Product[];
   isLoading: boolean;
+  error: string | null;
+  isRetrying: boolean;
+  onRetry: () => void;
   title?: string;
   formatPrice: (amount: number, currency?: string) => string;
 }
@@ -23,6 +27,9 @@ interface RelatedProductsSectionProps {
 export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   products,
   isLoading,
+  error,
+  isRetrying,
+  onRetry,
   title = "You Might Also Like",
   formatPrice,
 }) => {
@@ -44,6 +51,23 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
       return next;
     });
   };
+
+  if (error || isRetrying) {
+    return (
+      <section className="other-products">
+        <Heading as="h2" className="other-products__title">
+          {title}
+        </Heading>
+        <RetryState
+          className="other-products__retry-state"
+          message={error || "Unable to load related products. Please try again."}
+          onRetry={onRetry}
+          isRetrying={isRetrying}
+          retryingLabel="Retrying..."
+        />
+      </section>
+    );
+  }
 
   if (!isLoading && products.length === 0) {
     return (
