@@ -10,7 +10,7 @@ import { RetryState } from "@/components/molecules/RetryState";
 import { useCartRows } from "@/hooks/useCartRows";
 import { ROUTES } from "@/routes/paths";
 import { formatPrice } from "@/utils/formatters";
-import { useToast } from "@/contexts/ToastContext";
+import { useToast } from "@/hooks/useToast";
 import "./index.scss";
 
 const Cart: React.FC = () => {

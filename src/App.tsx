@@ -1,6 +1,6 @@
 import AppRoutes from "@/routes";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
-import { ToastProvider } from "@/contexts/ToastContext";
+import { ToastProvider } from "@/providers/ToastContext";
 
 /**
  * Main App component

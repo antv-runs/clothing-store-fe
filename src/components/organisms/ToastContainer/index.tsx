@@ -1,5 +1,5 @@
 import { Toast } from "@/components/molecules/Toast";
-import type { ToastData } from "@/contexts/ToastContext";
+import type { ToastData } from "@/types/toast";
 import "./index.scss";
 
 interface ToastContainerProps {

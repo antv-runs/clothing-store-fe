@@ -1,22 +1,9 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useState, useCallback } from "react";
 import type { ReactNode } from "react";
 import { ToastContainer } from "@/components/organisms/ToastContainer";
+import type { ToastData, ToastContextValue } from "@/types/toast";
 
-export type ToastVariant = "success" | "error" | "info";
-
-export interface ToastData {
-  id: string;
-  message: ReactNode;
-  variant?: ToastVariant;
-  duration?: number;
-}
-
-interface ToastContextValue {
-  showToast: (toast: Omit<ToastData, "id">) => string;
-  dismissToast: (id: string) => void;
-}
-
-const ToastContext = createContext<ToastContextValue | null>(null);
+export const ToastContext = createContext<ToastContextValue | null>(null);
 
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<ToastData[]>([]);
@@ -50,12 +37,4 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </ToastContext.Provider>
   );
-};
-
-export const useToast = () => {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
-  }
-  return context;
 };
