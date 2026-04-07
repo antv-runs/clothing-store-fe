@@ -3,6 +3,7 @@ import axios from "axios";
 import { getProductById, getProducts } from "@/api/Product";
 import { mapApiErrorToMessage } from "@/utils/apiErrorMapper";
 import type { Product } from "@/types/product";
+import type { ListCoreState, ListErrorKind } from "@/types/listState";
 
 export type DetailErrorType = "not_found" | "network_error" | "system_error" | null;
 
@@ -13,13 +14,49 @@ type UseProductDetailDataResult = {
   relatedProducts: Product[];
   relatedLoading: boolean;
   relatedError: string | null;
+  relatedErrorKind: ListErrorKind | null;
   isRetryingRelated: boolean;
+  relatedIsEmpty: boolean;
   retryRelatedProducts: () => void;
+  relatedList: ListCoreState<Product>;
   retry: () => void;
 };
 
 const DEFAULT_RELATED_ERROR_MESSAGE =
   "Unable to load related products. Please try again.";
+
+const mapListErrorKind = (error: unknown): ListErrorKind => {
+  if (axios.isAxiosError(error)) {
+    if (
+      !error.response ||
+      error.code === "ERR_NETWORK" ||
+      error.code === "ECONNABORTED" ||
+      error.code === "ETIMEDOUT"
+    ) {
+      return "network";
+    }
+
+    if (error.response.status === 404) {
+      return "not_found";
+    }
+
+    if (error.response.status === 422) {
+      return "validation";
+    }
+
+    if (error.response.status >= 500) {
+      return "system";
+    }
+
+    return "unknown";
+  }
+
+  if (!navigator.onLine) {
+    return "network";
+  }
+
+  return "unknown";
+};
 
 export const useProductDetailData = (
   productId: string,
@@ -30,6 +67,8 @@ export const useProductDetailData = (
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [relatedLoading, setRelatedLoading] = useState(false);
   const [relatedError, setRelatedError] = useState<string | null>(null);
+  const [relatedErrorKind, setRelatedErrorKind] =
+    useState<ListErrorKind | null>(null);
   const [isRetryingRelated, setIsRetryingRelated] = useState(false);
   const [retryTrigger, setRetryTrigger] = useState(0);
   const [relatedRetryTrigger, setRelatedRetryTrigger] = useState(0);
@@ -42,13 +81,13 @@ export const useProductDetailData = (
   }, []);
 
   const retryRelatedProducts = useCallback(() => {
-    if (!product?.id) {
+    if (!product?.id || isRetryingRelated || !relatedError) {
       return;
     }
 
     setRelatedRetryProductId(product.id);
     setRelatedRetryTrigger((prev) => prev + 1);
-  }, [product?.id]);
+  }, [isRetryingRelated, product?.id, relatedError]);
 
   const isNetworkFailure = (error: unknown) => {
     if (!axios.isAxiosError(error)) {
@@ -73,6 +112,7 @@ export const useProductDetailData = (
       setRelatedProducts([]);
       setRelatedLoading(false);
       setRelatedError(null);
+      setRelatedErrorKind(null);
       setIsRetryingRelated(false);
       setRelatedRetryProductId(null);
       return () => {
@@ -87,6 +127,7 @@ export const useProductDetailData = (
       setRelatedProducts([]);
       setRelatedLoading(false);
       setRelatedError(null);
+      setRelatedErrorKind(null);
       setIsRetryingRelated(false);
       setRelatedRetryProductId(null);
 
@@ -128,6 +169,7 @@ export const useProductDetailData = (
         setRelatedProducts([]);
         setRelatedLoading(false);
         setRelatedError(null);
+        setRelatedErrorKind(null);
         setIsRetryingRelated(false);
         setRelatedRetryProductId(null);
       } finally {
@@ -151,6 +193,7 @@ export const useProductDetailData = (
       setRelatedProducts([]);
       setRelatedLoading(false);
       setRelatedError(null);
+      setRelatedErrorKind(null);
       setIsRetryingRelated(false);
       setRelatedRetryProductId(null);
       return () => {
@@ -180,6 +223,7 @@ export const useProductDetailData = (
 
         setRelatedProducts(relatedResult.data);
         setRelatedError(null);
+        setRelatedErrorKind(null);
       } catch (error) {
         if (!isActive) {
           return;
@@ -190,6 +234,7 @@ export const useProductDetailData = (
         setRelatedError(
           mapApiErrorToMessage(error, DEFAULT_RELATED_ERROR_MESSAGE),
         );
+        setRelatedErrorKind(mapListErrorKind(error));
       } finally {
         if (isActive) {
           setRelatedLoading(false);
@@ -205,6 +250,21 @@ export const useProductDetailData = (
     };
   }, [product?.id, relatedRetryProductId, relatedRetryTrigger]);
 
+  const relatedIsEmpty =
+    !relatedLoading && !isRetryingRelated && !relatedError && relatedProducts.length === 0;
+  const relatedList: ListCoreState<Product> = {
+    data: relatedProducts,
+    isLoading: relatedLoading,
+    isRetrying: isRetryingRelated,
+    isEmpty: relatedIsEmpty,
+    error: relatedError,
+    errorKind: relatedErrorKind,
+    retry: retryRelatedProducts,
+    invalidState: !product?.id
+      ? "Related products are unavailable until product detail is loaded."
+      : null,
+  };
+
   return {
     product,
     isLoading,
@@ -212,8 +272,11 @@ export const useProductDetailData = (
     relatedProducts,
     relatedLoading,
     relatedError,
+    relatedErrorKind,
     isRetryingRelated,
+    relatedIsEmpty,
     retryRelatedProducts,
+    relatedList,
     retry,
   };
 };

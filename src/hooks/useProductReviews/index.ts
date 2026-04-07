@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
+import axios from "axios";
 import { getReviewsByProductId } from "@/api/Review";
 import { mapApiErrorToMessage } from "@/utils/apiErrorMapper";
 import type { Review } from "@/types/review";
+import type { ListCoreState, ListErrorKind } from "@/types/listState";
 
 const REVIEW_ACTION = {
   RESET: "RESET",
@@ -32,6 +34,7 @@ type State = {
   isLoadingMore: boolean;
   isRetrying: boolean;
   error: string | null;
+  errorKind: ListErrorKind | null;
   loadMoreError: string | null;
 };
 
@@ -46,7 +49,11 @@ type Action =
       lastPage: number;
       page: number;
     }
-  | { type: typeof REVIEW_ACTION.REQUEST_ERROR; message: string }
+  | {
+      type: typeof REVIEW_ACTION.REQUEST_ERROR;
+      message: string;
+      errorKind: ListErrorKind;
+    }
   | { type: typeof REVIEW_ACTION.REQUEST_RETRY_START }
   | { type: typeof REVIEW_ACTION.SET_FILTER; value: string }
   | { type: typeof REVIEW_ACTION.SET_SORT; value: ReviewSort };
@@ -67,7 +74,41 @@ const initialState: State = {
   isLoadingMore: false,
   isRetrying: false,
   error: null,
+  errorKind: null,
   loadMoreError: null,
+};
+
+const mapListErrorKind = (error: unknown): ListErrorKind => {
+  if (axios.isAxiosError(error)) {
+    if (
+      !error.response ||
+      error.code === "ERR_NETWORK" ||
+      error.code === "ECONNABORTED" ||
+      error.code === "ETIMEDOUT"
+    ) {
+      return "network";
+    }
+
+    if (error.response.status === 404) {
+      return "not_found";
+    }
+
+    if (error.response.status === 422) {
+      return "validation";
+    }
+
+    if (error.response.status >= 500) {
+      return "system";
+    }
+
+    return "unknown";
+  }
+
+  if (!navigator.onLine) {
+    return "network";
+  }
+
+  return "unknown";
 };
 
 const queryRating = (rating: string) => {
@@ -85,6 +126,7 @@ const reducer = (state: State, action: Action): State => {
         isLoading: !action.append,
         isLoadingMore: action.append,
         isRetrying: false,
+        errorKind: null,
         loadMoreError: null,
         error: null,
       };
@@ -95,6 +137,7 @@ const reducer = (state: State, action: Action): State => {
         isLoading: false,
         isLoadingMore: false,
         isRetrying: true,
+        errorKind: state.errorKind,
         loadMoreError: null,
       };
 
@@ -110,6 +153,7 @@ const reducer = (state: State, action: Action): State => {
         isLoading: false,
         isLoadingMore: false,
         isRetrying: false,
+        errorKind: null,
         loadMoreError: null,
         error: null,
       };
@@ -121,6 +165,7 @@ const reducer = (state: State, action: Action): State => {
           isLoading: false,
           isLoadingMore: false,
           isRetrying: false,
+          errorKind: state.errorKind,
           loadMoreError: action.message,
         };
       }
@@ -130,6 +175,7 @@ const reducer = (state: State, action: Action): State => {
         isLoading: false,
         isLoadingMore: false,
         isRetrying: false,
+        errorKind: action.errorKind,
         loadMoreError: null,
         error: action.message,
       };
@@ -223,6 +269,7 @@ export const useProductReviews = (
         dispatch({
           type: REVIEW_ACTION.REQUEST_ERROR,
           message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),
+          errorKind: mapListErrorKind(error),
         });
       }
     },
@@ -305,6 +352,7 @@ export const useProductReviews = (
       dispatch({
         type: REVIEW_ACTION.REQUEST_ERROR,
         message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),
+        errorKind: mapListErrorKind(error),
       });
     }
   }, [
@@ -326,7 +374,26 @@ export const useProductReviews = (
     await requestPageOne(productId, state.filter, state.sort, true, true);
   }, [productId, requestPageOne, state.filter, state.sort]);
 
+  const invalidParams = !productId
+    ? "A valid product id is required to load reviews."
+    : null;
+  const isEmpty =
+    !invalidParams && !state.isLoading && !state.error && state.reviews.length === 0;
+  const listState: ListCoreState<Review> = {
+    data: state.reviews,
+    isLoading: state.isLoading,
+    isRetrying: state.isRetrying,
+    isEmpty,
+    error: state.error,
+    errorKind: state.errorKind,
+    retry: () => {
+      void reloadReviews();
+    },
+    invalidParams,
+  };
+
   return {
+    data: state.reviews,
     reviews: state.reviews,
     reviewCount: state.total || state.reviews.length,
     selectedRating: state.filter,
@@ -335,8 +402,15 @@ export const useProductReviews = (
     isLoading: state.isLoading,
     isLoadingMore: state.isLoadingMore,
     isRetrying: state.isRetrying,
+    isEmpty,
     error: state.error,
+    errorKind: state.errorKind,
     loadMoreError: state.loadMoreError,
+    retry: () => {
+      void reloadReviews();
+    },
+    invalidParams,
+    listState,
     setFilter,
     setSort,
     loadMore,

@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { getProductById } from "@/api/Product";
 import type { CartRow } from "@/types/cart";
 import type { Product } from "@/types/product";
 import { normalizeId } from "@/utils/formatters";
 import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
+import type { ListCoreState, ListErrorKind } from "@/types/listState";
 
 type CartItem = Product & {
   quantity: number;
@@ -23,11 +25,17 @@ type UseCartRowsResult = {
   cartRows: CartRow[];
   cartItems: CartItem[];
   summary: CartSummary;
+  data: CartItem[];
   isEmpty: boolean;
   isLoading: boolean;
+  isRetrying: boolean;
   isRetryingHydration: boolean;
+  error: string | null;
+  errorKind: ListErrorKind | null;
   hasError: boolean;
+  retry: () => void;
   retryHydration: () => void;
+  hydrationList: ListCoreState<CartItem>;
   getCartRows: () => CartRow[];
   addItem: (item: CartRow) => void;
   updateItemQuantity: (
@@ -45,6 +53,41 @@ type UseCartRowsResult = {
 };
 
 const DEFAULT_QUANTITY = 1;
+const HYDRATION_ERROR_MESSAGE =
+  "We couldn't securely load your cart data right now.";
+
+const mapListErrorKind = (error: unknown): ListErrorKind => {
+  if (axios.isAxiosError(error)) {
+    if (
+      !error.response ||
+      error.code === "ERR_NETWORK" ||
+      error.code === "ECONNABORTED" ||
+      error.code === "ETIMEDOUT"
+    ) {
+      return "network";
+    }
+
+    if (error.response.status === 404) {
+      return "not_found";
+    }
+
+    if (error.response.status === 422) {
+      return "validation";
+    }
+
+    if (error.response.status >= 500) {
+      return "system";
+    }
+
+    return "unknown";
+  }
+
+  if (!navigator.onLine) {
+    return "network";
+  }
+
+  return "unknown";
+};
 
 const normalizeQuantity = (value: number | string): number => {
   const parsed = Number(value);
@@ -67,6 +110,9 @@ export const useCartRows = (): UseCartRowsResult => {
   );
   const [isRetryingHydration, setIsRetryingHydration] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [hydrationError, setHydrationError] = useState<string | null>(null);
+  const [hydrationErrorKind, setHydrationErrorKind] =
+    useState<ListErrorKind | null>(null);
   const [retryTrigger, setRetryTrigger] = useState(0);
 
   const retryHydration = useCallback(() => {
@@ -91,6 +137,8 @@ export const useCartRows = (): UseCartRowsResult => {
       if (missingIds.length === 0) {
         setIsLoading(false);
         setHasError(false);
+        setHydrationError(null);
+        setHydrationErrorKind(null);
         setIsRetryingHydration(false);
         return;
       }
@@ -98,6 +146,8 @@ export const useCartRows = (): UseCartRowsResult => {
       if (!isRetryingHydration) {
         setIsLoading(true);
         setHasError(false);
+        setHydrationError(null);
+        setHydrationErrorKind(null);
       }
 
       try {
@@ -122,12 +172,16 @@ export const useCartRows = (): UseCartRowsResult => {
           ...newProducts,
         }));
         setHasError(false);
+        setHydrationError(null);
+        setHydrationErrorKind(null);
       } catch (error) {
         if (!isActive) {
           return;
         }
         console.error("Failed to load cart product details", error);
         setHasError(true);
+        setHydrationError(HYDRATION_ERROR_MESSAGE);
+        setHydrationErrorKind(mapListErrorKind(error));
       } finally {
         if (isActive) {
           setIsLoading(false);
@@ -295,15 +349,31 @@ export const useCartRows = (): UseCartRowsResult => {
     cartRows.length === 0 ||
     (!isLoading && !hasError && cartItems.length === 0);
 
+  const hydrationList: ListCoreState<CartItem> = {
+    data: cartItems,
+    isLoading,
+    isRetrying: isRetryingHydration,
+    isEmpty,
+    error: hydrationError,
+    errorKind: hydrationErrorKind,
+    retry: retryHydration,
+  };
+
   return {
     cartRows,
     cartItems,
     summary,
+    data: cartItems,
     isEmpty,
     isLoading,
+    isRetrying: isRetryingHydration,
     isRetryingHydration,
+    error: hydrationError,
+    errorKind: hydrationErrorKind,
     hasError,
+    retry: retryHydration,
     retryHydration,
+    hydrationList,
     getCartRows,
     addItem,
     updateItemQuantity,

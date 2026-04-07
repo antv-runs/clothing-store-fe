@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { getProducts } from "@/api/Product";
 import { getReviewsByProductId } from "@/api/Review";
 import type { Product } from "@/types/product";
 import type { Review } from "@/types/review";
+import type { ListCoreState, ListErrorKind } from "@/types/listState";
 
 type UseHomeDataResult = {
   newArrivals: Product[];
@@ -17,11 +19,18 @@ type UseHomeDataResult = {
   newArrivalsError: string | null;
   topSellingError: string | null;
   reviewsError: string | null;
+  newArrivalsErrorKind: ListErrorKind | null;
+  topSellingErrorKind: ListErrorKind | null;
+  reviewsErrorKind: ListErrorKind | null;
   isNewArrivalsEmpty: boolean;
   isTopSellingEmpty: boolean;
+  isReviewsEmpty: boolean;
   retryNewArrivals: () => void;
   retryTopSelling: () => void;
   retryReviews: () => void;
+  newArrivalsList: ListCoreState<Product>;
+  topSellingList: ListCoreState<Product>;
+  reviewsList: ListCoreState<Review>;
 };
 
 const NEW_ARRIVALS_ERROR = "Failed to load new arrivals. Please try again.";
@@ -29,19 +38,58 @@ const TOP_SELLING_ERROR =
   "Failed to load top selling products. Please try again.";
 const REVIEWS_ERROR = "Failed to load customer reviews. Please try again.";
 
+const mapListErrorKind = (error: unknown): ListErrorKind => {
+  if (axios.isAxiosError(error)) {
+    if (
+      !error.response ||
+      error.code === "ERR_NETWORK" ||
+      error.code === "ECONNABORTED" ||
+      error.code === "ETIMEDOUT"
+    ) {
+      return "network";
+    }
+
+    if (error.response.status === 404) {
+      return "not_found";
+    }
+
+    if (error.response.status === 422) {
+      return "validation";
+    }
+
+    if (error.response.status >= 500) {
+      return "system";
+    }
+
+    return "unknown";
+  }
+
+  if (!navigator.onLine) {
+    return "network";
+  }
+
+  return "unknown";
+};
+
 export const useHomeData = (): UseHomeDataResult => {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [isNewArrivalsLoading, setIsNewArrivalsLoading] = useState(true);
   const [isRetryingNewArrivals, setIsRetryingNewArrivals] = useState(false);
   const [newArrivalsError, setNewArrivalsError] = useState<string | null>(null);
+  const [newArrivalsErrorKind, setNewArrivalsErrorKind] =
+    useState<ListErrorKind | null>(null);
   const [topSelling, setTopSelling] = useState<Product[]>([]);
   const [isTopSellingLoading, setIsTopSellingLoading] = useState(true);
   const [isRetryingTopSelling, setIsRetryingTopSelling] = useState(false);
   const [topSellingError, setTopSellingError] = useState<string | null>(null);
+  const [topSellingErrorKind, setTopSellingErrorKind] =
+    useState<ListErrorKind | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isReviewsLoading, setIsReviewsLoading] = useState(true);
   const [isRetryingReviews, setIsRetryingReviews] = useState(false);
   const [reviewsError, setReviewsError] = useState<string | null>(null);
+  const [reviewsErrorKind, setReviewsErrorKind] =
+    useState<ListErrorKind | null>(null);
   const newArrivalsRequestIdRef = useRef(0);
   const topSellingRequestIdRef = useRef(0);
   const reviewsRequestIdRef = useRef(0);
@@ -61,6 +109,7 @@ export const useHomeData = (): UseHomeDataResult => {
     } else {
       setIsNewArrivalsLoading(true);
       setNewArrivalsError(null);
+      setNewArrivalsErrorKind(null);
     }
 
     try {
@@ -78,6 +127,7 @@ export const useHomeData = (): UseHomeDataResult => {
 
       setNewArrivals(result.data);
       setNewArrivalsError(null);
+      setNewArrivalsErrorKind(null);
     } catch (error) {
       if (
         !isMountedRef.current ||
@@ -89,6 +139,7 @@ export const useHomeData = (): UseHomeDataResult => {
       console.error("Failed to load new arrivals.", error);
       setNewArrivals([]);
       setNewArrivalsError(NEW_ARRIVALS_ERROR);
+      setNewArrivalsErrorKind(mapListErrorKind(error));
     } finally {
       if (
         isMountedRef.current &&
@@ -111,6 +162,7 @@ export const useHomeData = (): UseHomeDataResult => {
     } else {
       setIsTopSellingLoading(true);
       setTopSellingError(null);
+      setTopSellingErrorKind(null);
     }
 
     try {
@@ -128,6 +180,7 @@ export const useHomeData = (): UseHomeDataResult => {
 
       setTopSelling(result.data);
       setTopSellingError(null);
+      setTopSellingErrorKind(null);
     } catch (error) {
       if (
         !isMountedRef.current ||
@@ -139,6 +192,7 @@ export const useHomeData = (): UseHomeDataResult => {
       console.error("Failed to load top selling products.", error);
       setTopSelling([]);
       setTopSellingError(TOP_SELLING_ERROR);
+      setTopSellingErrorKind(mapListErrorKind(error));
     } finally {
       if (
         isMountedRef.current &&
@@ -161,6 +215,7 @@ export const useHomeData = (): UseHomeDataResult => {
     } else {
       setIsReviewsLoading(true);
       setReviewsError(null);
+      setReviewsErrorKind(null);
     }
 
     try {
@@ -176,6 +231,7 @@ export const useHomeData = (): UseHomeDataResult => {
 
       setReviews(result.data);
       setReviewsError(null);
+      setReviewsErrorKind(null);
     } catch (error) {
       if (!isMountedRef.current || requestId !== reviewsRequestIdRef.current) {
         return;
@@ -184,6 +240,7 @@ export const useHomeData = (): UseHomeDataResult => {
       console.error("Failed to load customer reviews.", error);
       setReviews([]);
       setReviewsError(REVIEWS_ERROR);
+      setReviewsErrorKind(mapListErrorKind(error));
     } finally {
       if (isMountedRef.current && requestId === reviewsRequestIdRef.current) {
         if (isRetry) {
@@ -223,6 +280,37 @@ export const useHomeData = (): UseHomeDataResult => {
     !isNewArrivalsLoading && !newArrivalsError && newArrivals.length === 0;
   const isTopSellingEmpty =
     !isTopSellingLoading && !topSellingError && topSelling.length === 0;
+  const isReviewsEmpty = !isReviewsLoading && !reviewsError && reviews.length === 0;
+
+  const newArrivalsList: ListCoreState<Product> = {
+    data: newArrivals,
+    isLoading: isNewArrivalsLoading,
+    isRetrying: isRetryingNewArrivals,
+    isEmpty: isNewArrivalsEmpty,
+    error: newArrivalsError,
+    errorKind: newArrivalsErrorKind,
+    retry: retryNewArrivals,
+  };
+
+  const topSellingList: ListCoreState<Product> = {
+    data: topSelling,
+    isLoading: isTopSellingLoading,
+    isRetrying: isRetryingTopSelling,
+    isEmpty: isTopSellingEmpty,
+    error: topSellingError,
+    errorKind: topSellingErrorKind,
+    retry: retryTopSelling,
+  };
+
+  const reviewsList: ListCoreState<Review> = {
+    data: reviews,
+    isLoading: isReviewsLoading,
+    isRetrying: isRetryingReviews,
+    isEmpty: isReviewsEmpty,
+    error: reviewsError,
+    errorKind: reviewsErrorKind,
+    retry: retryReviews,
+  };
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -245,10 +333,17 @@ export const useHomeData = (): UseHomeDataResult => {
     newArrivalsError,
     topSellingError,
     reviewsError,
+    newArrivalsErrorKind,
+    topSellingErrorKind,
+    reviewsErrorKind,
     isNewArrivalsEmpty,
     isTopSellingEmpty,
+    isReviewsEmpty,
     retryNewArrivals,
     retryTopSelling,
     retryReviews,
+    newArrivalsList,
+    topSellingList,
+    reviewsList,
   };
 };
