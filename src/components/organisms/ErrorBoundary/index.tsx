@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
@@ -28,15 +28,17 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  retryKey: number;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
+    retryKey: 0,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error };
   }
 
@@ -61,12 +63,24 @@ export class ErrorBoundary extends Component<Props, State> {
       prevResetKeys.length !== nextResetKeys.length ||
       nextResetKeys.some((value, index) => !Object.is(value, prevResetKeys[index]))
     ) {
-      this.setState({ hasError: false, error: null });
+      this.setState(prev => ({ hasError: false, error: null, retryKey: prev.retryKey + 1 }));
     }
   }
 
   private handleRetry = () => {
-    this.setState({ hasError: false, error: null });
+    if (this.state.error) {
+      const isChunkError =
+        this.state.error.message.includes("Failed to fetch dynamically imported module") ||
+        this.state.error.message.includes("Importing a module script failed") ||
+        this.state.error.name === "ChunkLoadError";
+
+      if (isChunkError) {
+        window.location.reload();
+        return;
+      }
+    }
+
+    this.setState(prev => ({ hasError: false, error: null, retryKey: prev.retryKey + 1 }));
   };
 
   private handleGoHome = () => {
@@ -96,7 +110,12 @@ export class ErrorBoundary extends Component<Props, State> {
               </Heading>
 
               <p className="error-boundary-page__message">
-                We're sorry, an unexpected error occurred while loading this page.
+                {this.state.error &&
+                  (this.state.error.message.includes("Failed to fetch dynamically imported module") ||
+                    this.state.error.message.includes("Importing a module script failed") ||
+                    this.state.error.name === "ChunkLoadError")
+                  ? "A page resource failed to load. Please retry."
+                  : "We're sorry, an unexpected error occurred while loading this page."}
               </p>
 
               <div className="error-boundary-page__actions">
@@ -126,6 +145,6 @@ export class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return this.props.children;
+    return <Fragment key={this.state.retryKey}>{this.props.children}</Fragment>;
   }
 }
