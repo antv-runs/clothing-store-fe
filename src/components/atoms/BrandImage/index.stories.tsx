@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    src: "https://via.placeholder.com/150",
+    src: "images/icn_visa.svg",
     alt: "Brand Logo",
     width: 150,
     height: 150,
@@ -27,7 +27,7 @@ export const Default: Story = {
 
 export const CustomSize: Story = {
   args: {
-    src: "https://via.placeholder.com/300x100",
+    src: "images/icn_visa.svg",
     alt: "Brand Logo Wide",
     width: 300,
     height: 100,

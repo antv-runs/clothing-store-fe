@@ -1,0 +1,37 @@
+@startuml
+title HomeProductSection - Render Flow
+
+start
+
+:Render section title;
+:Render CTA (outside list wrappers);
+
+if (List subtree throws at render time?) then (Yes)
+  :ErrorBoundary catches error;
+  :Render boundary fallback;
+  stop
+else (No)
+  :Pass control to ListStateWrapper;
+endif
+
+if (error != null OR isRetrying = true?) then (Yes)
+  :Render RetryState / retry fallback;
+  stop
+else (No)
+endif
+
+if (isLoading = true?) then (Yes)
+  :Render loadingContent;
+  stop
+else (No)
+endif
+
+if (isEmpty = true?) then (Yes)
+  :Render emptyContent;
+  stop
+else (No)
+endif
+
+:Render children (success list);
+stop
+@enduml

@@ -12,10 +12,17 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    items: [
-      { src: "https://via.placeholder.com/40x25", alt: "Visa" },
-      { src: "https://via.placeholder.com/40x25", alt: "Mastercard" },
-      { src: "https://via.placeholder.com/40x25", alt: "PayPal" },
-    ],
+    items: [{
+      "src": "/images/icn_visa.svg",
+      "alt": "Visa"
+    }, {
+      "src": "/images/icn_mastercard.svg",
+      "alt": "Mastercard"
+    }, {
+      "src": "/images/icn_paypal.svg",
+      "alt": "PayPal"
+    }],
+
+    className: ""
   },
 };

@@ -1,0 +1,81 @@
+@use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/variables" as v;
+
+.input-with-icon {
+  --input-with-icon-width: 20.25px;
+  --input-with-icon-height: 15.75px;
+  --input-with-icon-inline-start: 16px;
+  --input-with-icon-inline-gap: 10px;
+
+  display: flex;
+  align-items: center;
+  background-color: v.$color-white;
+  gap: 12px;
+  padding: 12px 15px 15px;
+  border-radius: v.$radius-pill;
+
+  &__icon {
+    width: var(--input-with-icon-width);
+    height: var(--input-with-icon-height);
+    @include m.flex-center;
+    margin: 0;
+  }
+
+  &__input {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    background-color: transparent;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &--inline-start {
+    position: relative;
+    gap: 0;
+
+    .input-with-icon__icon {
+      position: absolute;
+      left: var(--input-with-icon-inline-start);
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .input-with-icon__input {
+      padding-left: calc(
+        var(--input-with-icon-inline-start) + var(--input-with-icon-width) +
+          var(--input-with-icon-inline-gap)
+      );
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .input-with-icon {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+
+    &__icon {
+      width: 18px;
+      height: 14px;
+    }
+
+    &__input {
+      font-size: 14px;
+      line-height: 1.2;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+@startuml
+title ListStateWrapper - State Priority
+
+[*] --> Evaluate
+
+state Evaluate {
+  [*] --> RetryOrError
+  RetryOrError : condition = error != null || isRetrying == true
+
+  RetryOrError --> Loading : if false
+  RetryOrError --> [*] : render retry/error UI
+
+  Loading : condition = isLoading == true
+  Loading --> Empty : if false
+  Loading --> [*] : render loadingContent
+
+  Empty : condition = isEmpty == true
+  Empty --> Success : if false
+  Empty --> [*] : render emptyContent
+
+  Success : render children
+  Success --> [*]
+}
+@enduml

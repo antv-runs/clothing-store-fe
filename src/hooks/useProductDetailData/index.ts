@@ -7,7 +7,11 @@ import {
 } from "@/utils/apiErrorList";
 import { ApiError } from "@/utils/apiError";
 import type { Product } from "@/types/product";
-import type { ListCoreState, ListErrorKind } from "@/types/listState";
+import {
+  LIST_ERROR_KIND,
+  type ListCoreState,
+  type ListErrorKind,
+} from "@/types/listState";
 
 export type DetailErrorType = "not_found" | "network_error" | "system_error" | null;
 
@@ -218,7 +222,7 @@ export const useProductDetailData = (
     ? "Related products are unavailable until product detail is loaded."
     : null;
   const resolvedRelatedErrorKind: ListErrorKind | null = relatedInvalidState
-    ? "invalid_state"
+    ? LIST_ERROR_KIND.INVALID_STATE
     : relatedErrorKind;
   const isRelatedRetryable = isRetryableListErrorKind(resolvedRelatedErrorKind);
   const relatedIsEmpty =

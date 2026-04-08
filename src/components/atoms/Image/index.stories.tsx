@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    src: "https://via.placeholder.com/300",
+    src: "images/pic_t_shirt_black.png",
     alt: "Placeholder",
     width: 300,
     height: 300,
@@ -32,7 +32,7 @@ export const Default: Story = {
 
 export const WithPlaceholder: Story = {
   args: {
-    src: "",
+    src: "images/pic_t_shirt_black.png",
     alt: "Placeholder",
     width: 300,
     height: 300,
@@ -42,7 +42,7 @@ export const WithPlaceholder: Story = {
 
 export const LoadedState: Story = {
   args: {
-    src: "https://via.placeholder.com/300",
+    src: "images/pic_t_shirt_black.png",
     alt: "Placeholder",
     width: 300,
     height: 300,
