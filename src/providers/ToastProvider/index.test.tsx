@@ -1,18 +1,41 @@
-import { render, screen, act, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, act, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { ToastProvider } from "./index";
 import httpClient, { __resetGlobalErrorTimeForTesting } from "@/lib/axios";
 import MockAdapter from "axios-mock-adapter";
+
+jest.mock("@/components/organisms/ToastContainer", () => ({
+    ToastContainer: ({ toasts }: { toasts: Array<{ id: string; message: ReactNode }> }) => {
+        if (toasts.length === 0) {
+            return null;
+        }
+
+        return (
+            <div aria-live="polite">
+                {toasts.map((toast) => (
+                    <div key={toast.id}>{toast.message}</div>
+                ))}
+            </div>
+        );
+    },
+}));
 
 describe("ToastProvider", () => {
     let mock: MockAdapter;
 
     beforeEach(() => {
+        jest.useFakeTimers();
         mock = new MockAdapter(httpClient);
         __resetGlobalErrorTimeForTesting();
         jest.restoreAllMocks();
     });
 
     afterEach(() => {
+        act(() => {
+            jest.runOnlyPendingTimers();
+        });
+
+        cleanup();
         mock.restore();
         mock.reset();
         jest.useRealTimers();
@@ -33,7 +56,7 @@ describe("ToastProvider", () => {
             );
         });
 
-        expect(await screen.findByText("Network Failed")).toBeInTheDocument();
+        expect(screen.getByText("Network Failed")).toBeInTheDocument();
     });
 
     it("auto dismisses the toast after the default duration", async () => {
@@ -53,7 +76,7 @@ describe("ToastProvider", () => {
             );
         });
 
-        expect(await screen.findByText("Auto dismiss test")).toBeInTheDocument();
+        expect(screen.getByText("Auto dismiss test")).toBeInTheDocument();
 
         act(() => {
             jest.advanceTimersByTime(5000);
@@ -78,7 +101,7 @@ describe("ToastProvider", () => {
         });
 
         expect(
-            await screen.findByText("Server error. Please try again in a moment."),
+            screen.getByText("Server error. Please try again in a moment."),
         ).toBeInTheDocument();
     });
 
@@ -96,7 +119,7 @@ describe("ToastProvider", () => {
         });
 
         expect(
-            await screen.findByText(
+            screen.getByText(
                 "Unable to connect. Please check your connection and try again.",
             ),
         ).toBeInTheDocument();
