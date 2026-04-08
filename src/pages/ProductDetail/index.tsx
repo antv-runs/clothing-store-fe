@@ -16,6 +16,8 @@ import { useCartRows } from "@/hooks/useCartRows";
 import { useProductDetailData } from "@/hooks/useProductDetailData";
 import { useProductReviews } from "@/hooks/useProductReviews";
 import { useReviewSubmit } from "@/hooks/useReviewSubmit";
+import { Button } from "@/components/atoms/Button";
+import { Text } from "@/components/atoms/Text";
 import "./index.scss";
 
 const DEFAULT_QUANTITY = 1;
@@ -45,6 +47,7 @@ const ProductDetail: React.FC = () => {
     relatedErrorKind,
     isRetryingRelated,
     retryRelatedProducts,
+    retry,
   } = useProductDetailData(normalizedRouteId);
 
   // Track selected color and size for add-to-cart functionality
@@ -199,15 +202,30 @@ const ProductDetail: React.FC = () => {
     return <ProductDetailSkeleton />;
   }
 
-  if (!product) {
+  if (errorType === "network_error" || errorType === "system_error") {
     const message =
-      errorType === "network_error"
-        ? NETWORK_ERROR_MESSAGE
-        : errorType === "system_error"
-          ? SYSTEM_ERROR_MESSAGE
-          : undefined;
+      errorType === "network_error" ? NETWORK_ERROR_MESSAGE : SYSTEM_ERROR_MESSAGE;
 
-    return <ProductNotFound message={message} />;
+    return (
+      <div className="container u-mt-25">
+        <section className="product-overview product-not-found" aria-label="Error loading product">
+          <Text as="p" className="product-overview__description">
+            {message}
+          </Text>
+          <Button
+            variant="primary"
+            className="product-not-found__action"
+            onClick={retry}
+          >
+            Retry
+          </Button>
+        </section>
+      </div>
+    );
+  }
+
+  if (!product || errorType === "not_found") {
+    return <ProductNotFound />;
   }
 
   return (
