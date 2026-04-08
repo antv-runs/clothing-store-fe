@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import clsx from "clsx";
 import { RetryState } from "@/components/molecules/RetryState";
-import type { ListErrorKind } from "@/types/listState";
+import { LIST_ERROR_KIND, type ListErrorKind } from "@/types/listState";
 import "./index.scss";
 
 type ListStateWrapperProps = {
@@ -40,7 +40,11 @@ export const ListStateWrapper = ({
         className={clsx("list-state-wrapper__retry", className)}
         message={error || DEFAULT_ERROR_MESSAGE}
         onRetry={onRetry || (() => undefined)}
-        disabled={!onRetry || !isRetryable || errorKind === "invalid_state"}
+        disabled={
+          !onRetry ||
+          !isRetryable ||
+          errorKind === LIST_ERROR_KIND.INVALID_STATE
+        }
         isRetrying={isRetrying}
       />
     );

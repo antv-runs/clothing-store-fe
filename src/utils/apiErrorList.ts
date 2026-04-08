@@ -1,4 +1,4 @@
-import type { ListErrorKind } from "@/types/listState";
+import { LIST_ERROR_KIND, type ListErrorKind } from "@/types/listState";
 import { ApiError } from "@/utils/apiError";
 
 export type ValidationErrorMap = Record<string, string[]>;
@@ -38,47 +38,53 @@ export const mapApiValidationErrors = (
 const MALFORMED_DATA_PATTERN =
   /malformed|invalid\s+(response|payload|data)|unexpected\s+(shape|structure|format)/i;
 
+const NON_RETRYABLE_LIST_ERROR_KINDS = new Set<ListErrorKind>([
+  LIST_ERROR_KIND.INVALID_PARAMS,
+  LIST_ERROR_KIND.INVALID_STATE,
+  LIST_ERROR_KIND.MALFORMED_DATA,
+]);
+
 export const mapApiErrorToListErrorKind = (error: unknown): ListErrorKind => {
   if (isApiError(error)) {
     if (error.code === "MALFORMED_RESPONSE") {
-      return "malformed_data";
+      return LIST_ERROR_KIND.MALFORMED_DATA;
     }
 
     if (!error.status || error.code === "NETWORK_ERROR") {
-      return "network";
+      return LIST_ERROR_KIND.NETWORK;
     }
 
     if (error.status >= 500) {
-      return "server";
+      return LIST_ERROR_KIND.SERVER;
     }
 
     if (error.status === 400 || error.status === 422) {
-      return "invalid_params";
+      return LIST_ERROR_KIND.INVALID_PARAMS;
     }
 
-    return "unknown";
+    return LIST_ERROR_KIND.UNKNOWN;
   }
 
   if (error instanceof SyntaxError) {
-    return "malformed_data";
+    return LIST_ERROR_KIND.MALFORMED_DATA;
   }
 
   if (
     error instanceof TypeError &&
     MALFORMED_DATA_PATTERN.test(error.message)
   ) {
-    return "malformed_data";
+    return LIST_ERROR_KIND.MALFORMED_DATA;
   }
 
   if (error instanceof Error && MALFORMED_DATA_PATTERN.test(error.message)) {
-    return "malformed_data";
+    return LIST_ERROR_KIND.MALFORMED_DATA;
   }
 
   if (!navigator.onLine) {
-    return "network";
+    return LIST_ERROR_KIND.NETWORK;
   }
 
-  return "unknown";
+  return LIST_ERROR_KIND.UNKNOWN;
 };
 
 export const isRetryableListErrorKind = (
@@ -88,7 +94,5 @@ export const isRetryableListErrorKind = (
     return false;
   }
 
-  return !["invalid_params", "invalid_state", "malformed_data"].includes(
-    errorKind,
-  );
+  return !NON_RETRYABLE_LIST_ERROR_KINDS.has(errorKind);
 };

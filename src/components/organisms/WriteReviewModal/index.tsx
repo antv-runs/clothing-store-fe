@@ -202,16 +202,16 @@ export const WriteReviewModal = ({
 
           <div className="review-modal__actions">
             <Button
+              variant="secondary"
               type="button"
-              unstyled
               className="review-modal__button review-modal__button--cancel"
               onClick={handleClose}
             >
               Cancel
             </Button>
             <Button
+              variant="primary"
               type="submit"
-              unstyled
               className={`review-modal__button${isSubmitting ? " is-loading" : ""}`}
               isLoading={isSubmitting}
             >

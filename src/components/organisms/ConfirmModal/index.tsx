@@ -68,7 +68,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <div className="confirm-modal__actions">
           <Button
             type="button"
-            unstyled
+            variant="secondary"
             className="confirm-modal__button confirm-modal__button--cancel"
             onClick={onClose}
             disabled={isProcessing}
@@ -77,8 +77,8 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </Button>
           <Button
             type="button"
-            unstyled
-            className={`confirm-modal__button confirm-modal__button--confirm${isProcessing ? " is-loading" : ""}`}
+            variant="primary"
+            className="confirm-modal__button confirm-modal__button--confirm"
             onClick={onConfirm}
             isLoading={isProcessing}
           >

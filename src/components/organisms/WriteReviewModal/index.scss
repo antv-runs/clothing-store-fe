@@ -193,14 +193,17 @@
   }
 
   &__button {
-    @include button-native-reset($transparent-bg: false);
-    border-radius: v.$radius-pill;
     padding: 10px 18px;
     min-width: 130px;
+    width: auto;
+    line-height: 1;
     font-weight: 500;
-    background-color: v.$color-black;
-    color: v.$color-white;
     position: relative;
+
+    &:hover {
+      opacity: 1;
+      transform: none;
+    }
 
     &:disabled {
       cursor: not-allowed;
@@ -229,6 +232,10 @@
   &__button--cancel {
     background-color: #efefef;
     color: #222;
+
+    &:hover {
+      background-color: #efefef;
+    }
 
     &:disabled {
       opacity: 0.55;

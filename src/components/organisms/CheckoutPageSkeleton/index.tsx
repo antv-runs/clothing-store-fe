@@ -4,9 +4,9 @@ import { Skeleton } from "@/components/atoms/Skeleton";
 export const CheckoutPageSkeleton: React.FC = () => {
   return (
     <div className="checkout-page__layout" aria-hidden="true">
-      <div className="checkout-page__form">
-        <div className="checkout-page__grid">
-          <div className="checkout-page__field">
+      <div className="checkout-form">
+        <div className="checkout-form__grid">
+          <div className="checkout-form__field">
             <Skeleton variant="line" width="30%" height={20} />
             <Skeleton variant="rect" width="100%" height={48} radius={24} />
           </div>
@@ -14,11 +14,11 @@ export const CheckoutPageSkeleton: React.FC = () => {
             <Skeleton variant="line" width="30%" height={20} />
             <Skeleton variant="rect" width="100%" height={48} radius={24} />
           </div>
-          <div className="checkout-page__field checkout-page__field--full">
+          <div className="checkout-form__field checkout-form__field--full">
             <Skeleton variant="line" width="30%" height={20} />
             <Skeleton variant="rect" width="100%" height={48} radius={24} />
           </div>
-          <div className="checkout-page__field checkout-page__field--full">
+          <div className="checkout-form__field checkout-form__field--full">
             <Skeleton variant="line" width="15%" height={20} />
             <Skeleton variant="rect" width="100%" height={48} radius={24} />
           </div>

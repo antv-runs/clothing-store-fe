@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type ButtonProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: "primary" | "secondary";
   unstyled?: boolean;
   isLoading?: boolean;
@@ -29,7 +29,7 @@ export const Button = ({
       disabled={isDisabled}
       className={clsx(
         !unstyled && "button",
-        !unstyled && variant,
+        !unstyled && `button--${variant}`,
         isLoading && "is-loading",
         className,
       )}

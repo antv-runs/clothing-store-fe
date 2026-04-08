@@ -6,7 +6,11 @@ import {
   mapApiErrorToMessage,
 } from "@/utils/apiErrorList";
 import type { Review } from "@/types/review";
-import type { ListCoreState, ListErrorKind } from "@/types/listState";
+import {
+  LIST_ERROR_KIND,
+  type ListCoreState,
+  type ListErrorKind,
+} from "@/types/listState";
 
 const REVIEW_ACTION = {
   RESET: "RESET",
@@ -348,7 +352,7 @@ export const useProductReviews = (
     ? "A valid product id is required to load reviews."
     : null;
   const resolvedErrorKind: ListErrorKind | null = invalidParams
-    ? "invalid_params"
+    ? LIST_ERROR_KIND.INVALID_PARAMS
     : state.errorKind;
   const isRetryable = isRetryableListErrorKind(resolvedErrorKind);
   const isEmpty =

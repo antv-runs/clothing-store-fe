@@ -4,6 +4,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import "./index.scss";
 import { Text } from "@/components/atoms/Text";
+import { InputWithIcon } from "@/components/molecules/InputWithIcon";
 
 interface CartSummary {
   subtotal: number;
@@ -40,7 +41,7 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
     if (onApplyCoupon) {
       try {
         await onApplyCoupon();
-      } catch (err) {
+      } catch {
         setCouponError("Failed to apply coupon");
       }
     }
@@ -79,27 +80,28 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
       </div>
 
       <form className="cart-summary__coupon" action="#">
-        <div className="coupon-input">
-          <figure>
-            <img src="/images/icn_promo_code.svg" alt="Promo code" />
-          </figure>
-          <input
-            type="text"
-            placeholder="Add promo code"
-            aria-label="Promo code"
-            disabled={isLocked}
-          />
-        </div>
+        <InputWithIcon
+          className="coupon-input"
+          iconName="icn_promo_code"
+          iconPosition="inline-start"
+          iconWidth={22}
+          iconHeight={22}
+          type="text"
+          placeholder="Add promo code"
+          ariaLabel="Promo code"
+          disabled={isLocked}
+        />
         <Button
+          variant="primary"
           type="button"
           disabled={isLocked}
           onClick={handleApply}
-          unstyled
         >
           Apply
         </Button>
       </form>
-      <Text as="p"
+      <Text
+        as="p"
         className={clsx("cart-summary__coupon-msg", {
           "cart-summary__coupon-msg--error": couponError,
         })}
@@ -110,11 +112,11 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
       </Text>
 
       <Button
+        variant="primary"
         className="cart-summary__checkout"
         type="button"
         disabled={isCheckoutDisabled || isLocked}
         onClick={onCheckout}
-        unstyled
       >
         <span className="cart-summary__checkout-text">Go to Checkout</span>
       </Button>

@@ -1,5 +1,5 @@
 import type { CartRow } from "@/types/cart";
-import type { CheckoutFormValues } from "@/types/checkout";
+import type { CheckoutFormValues } from "@/components/organisms/CheckoutForm/index.schema";
 import { mapApiProductToProduct } from "@/utils/productMapper";
 import type {
   ApiOrder,

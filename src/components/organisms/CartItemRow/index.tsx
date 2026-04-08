@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ProductPrice } from "@/components/molecules/ProductPrice";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
-import { Button } from "@/components/atoms/Button";
+import { IconButton } from "@/components/atoms/IconButton";
 import { ConfirmModal } from "@/components/organisms/ConfirmModal";
 import "./index.scss";
 import type { Product } from "@/types/product";
@@ -93,16 +93,16 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
               {item.name}
             </a>
           </h2>
-          <Button
-            unstyled
+          <IconButton
             className="cart-item__remove"
             type="button"
-            aria-label="Remove item"
+            ariaLabel="Remove item"
             disabled={isLocked}
+            svgName="icn_trash"
+            iconWidth={18}
+            iconHeight={19.5}
             onClick={() => setIsModalOpen(true)}
-          >
-            <span className="u-sr-only"></span>
-          </Button>
+          />
         </div>
 
         {item.size ? (

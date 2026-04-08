@@ -6,10 +6,18 @@ import { NavMenu } from "@/components/molecules/NavMenu";
 import { SearchBox } from "@/components/molecules/SearchBox";
 import { AnnouncementBar } from "@/components/organisms/AnnouncementBar";
 import "./index.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/cartStore";
 
 export const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const handleCartClick = () => navigate(ROUTES.CART);
+
   return (
     <>
       <AnnouncementBar />
@@ -30,7 +38,10 @@ export const Header: React.FC = () => {
 
         <SearchBox />
 
-        <HeaderActions />
+        <HeaderActions
+          totalQuantity={totalQuantity}
+          onCartClick={handleCartClick}
+        />
       </header>
     </>
   );

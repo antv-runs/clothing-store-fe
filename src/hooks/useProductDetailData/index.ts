@@ -1,13 +1,17 @@
 import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
 import { getProductById, getProducts } from "@/api/Product";
 import {
   isRetryableListErrorKind,
   mapApiErrorToListErrorKind,
   mapApiErrorToMessage,
 } from "@/utils/apiErrorList";
+import { ApiError } from "@/utils/apiError";
 import type { Product } from "@/types/product";
-import type { ListCoreState, ListErrorKind } from "@/types/listState";
+import {
+  LIST_ERROR_KIND,
+  type ListCoreState,
+  type ListErrorKind,
+} from "@/types/listState";
 
 export type DetailErrorType = "not_found" | "network_error" | "system_error" | null;
 
@@ -66,19 +70,6 @@ export const useProductDetailData = (
     setRelatedRetryTrigger((prev) => prev + 1);
   }, [isRetryingRelated, product?.id, relatedError, relatedErrorKind]);
 
-  const isNetworkFailure = (error: unknown) => {
-    if (!axios.isAxiosError(error)) {
-      return false;
-    }
-
-    return (
-      !error.response ||
-      error.code === "ERR_NETWORK" ||
-      error.code === "ECONNABORTED" ||
-      error.code === "ETIMEDOUT"
-    );
-  };
-
   useEffect(() => {
     let isActive = true;
 
@@ -127,10 +118,10 @@ export const useProductDetailData = (
           return;
         }
 
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 404) {
+        if (error instanceof ApiError) {
+          if (error.status === 404) {
             setErrorType("not_found");
-          } else if (isNetworkFailure(error)) {
+          } else if (error.code === "NETWORK_ERROR") {
             setErrorType("network_error");
           } else {
             setErrorType("system_error");
@@ -231,7 +222,7 @@ export const useProductDetailData = (
     ? "Related products are unavailable until product detail is loaded."
     : null;
   const resolvedRelatedErrorKind: ListErrorKind | null = relatedInvalidState
-    ? "invalid_state"
+    ? LIST_ERROR_KIND.INVALID_STATE
     : relatedErrorKind;
   const isRelatedRetryable = isRetryableListErrorKind(resolvedRelatedErrorKind);
   const relatedIsEmpty =

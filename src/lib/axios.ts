@@ -5,7 +5,7 @@ import type { HttpClientOptions } from "@/types/common";
 import { handleApiError } from "@/utils/apiError";
 
 const BASE_URL = "https://api.vanannek.blog";
-// const BASE_URL = "";
+// const BASE_URL = "http://localhost:3456";
 
 const httpClient = axios.create({
   baseURL: BASE_URL,
@@ -92,5 +92,10 @@ export async function del<T>(
   const response: AxiosResponse<T> = await httpClient.delete(url, config);
   return response.data;
 }
+
+// For testing purposes
+export const __resetGlobalErrorTimeForTesting = () => {
+  lastGlobalErrorTime = 0;
+};
 
 export default httpClient;

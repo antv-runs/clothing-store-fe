@@ -1,10 +1,14 @@
+export const LIST_ERROR_KIND = {
+  INVALID_PARAMS: "invalid_params",
+  INVALID_STATE: "invalid_state",
+  NETWORK: "network",
+  SERVER: "server",
+  MALFORMED_DATA: "malformed_data",
+  UNKNOWN: "unknown",
+} as const;
+
 export type ListErrorKind =
-  | "invalid_params"
-  | "invalid_state"
-  | "network"
-  | "server"
-  | "malformed_data"
-  | "unknown";
+  (typeof LIST_ERROR_KIND)[keyof typeof LIST_ERROR_KIND];
 
 export type ListCoreState<TData> = {
   data: TData[];

@@ -24,13 +24,6 @@
 
   &__button {
     min-width: 180px;
-
-    &:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-      transform: none;
-      pointer-events: none;
-    }
   }
 }
 

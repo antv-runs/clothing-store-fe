@@ -4,6 +4,7 @@ import type { CartRow } from "@/types/cart";
 export const ADD_ITEM = "cart/ADD_ITEM";
 export const INCREASE_QUANTITY = "cart/INCREASE_QUANTITY";
 export const DECREASE_QUANTITY = "cart/DECREASE_QUANTITY";
+export const SET_QUANTITY = "cart/SET_QUANTITY";
 export const REMOVE_ITEM = "cart/REMOVE_ITEM";
 export const CLEAR_CART = "cart/CLEAR_CART";
 export const HYDRATE_CART = "cart/HYDRATE_CART";
@@ -24,6 +25,11 @@ export interface DecreaseQuantityAction {
     payload: { productId: string; color: string | null; size: string | null };
 }
 
+export interface SetQuantityAction {
+    type: typeof SET_QUANTITY;
+    payload: { productId: string; color: string | null; size: string | null; quantity: number };
+}
+
 export interface RemoveItemAction {
     type: typeof REMOVE_ITEM;
     payload: { productId: string; color: string | null; size: string | null };
@@ -42,6 +48,7 @@ export type CartActionTypes =
     | AddItemAction
     | IncreaseQuantityAction
     | DecreaseQuantityAction
+    | SetQuantityAction
     | RemoveItemAction
     | ClearCartAction
     | HydrateCartAction;
@@ -68,6 +75,16 @@ export const decreaseQuantity = (
 ): DecreaseQuantityAction => ({
     type: DECREASE_QUANTITY,
     payload: { productId, color, size },
+});
+
+export const setQuantity = (
+    productId: string,
+    color: string | null = null,
+    size: string | null = null,
+    quantity: number
+): SetQuantityAction => ({
+    type: SET_QUANTITY,
+    payload: { productId, color, size, quantity },
 });
 
 export const removeItem = (

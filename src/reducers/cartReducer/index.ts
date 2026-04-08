@@ -3,6 +3,7 @@ import {
     ADD_ITEM,
     INCREASE_QUANTITY,
     DECREASE_QUANTITY,
+    SET_QUANTITY,
     REMOVE_ITEM,
     CLEAR_CART,
     HYDRATE_CART,
@@ -96,6 +97,24 @@ export const cartReducer = (
                             ...item,
                             quantity: Math.max(DEFAULT_QUANTITY, item.quantity - 1),
                         };
+                    }
+                    return item;
+                }),
+            };
+        }
+
+        case SET_QUANTITY: {
+            const { productId, color, size, quantity } = action.payload;
+            const safeQuantity = Math.max(DEFAULT_QUANTITY, quantity);
+            return {
+                ...state,
+                items: state.items.map((item) => {
+                    if (
+                        item.productId === productId &&
+                        item.color === color &&
+                        item.size === size
+                    ) {
+                        return { ...item, quantity: safeQuantity };
                     }
                     return item;
                 }),

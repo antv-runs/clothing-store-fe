@@ -123,9 +123,9 @@
   &__remove {
     width: 18px;
     height: 19.5px;
-    @include m.button-native-reset($transparent-bg: false);
-    background: url("/images/icn_trash.svg") no-repeat center;
-    background-size: contain;
+    color: #ff3333;
+    --icon-width: 18px;
+    --icon-height: 19.5px;
     flex-shrink: 0;
 
     transition: transform 150ms ease, opacity 150ms ease;
@@ -262,6 +262,10 @@
     }
 
     &__remove {
+      width: 15px;
+      height: 16.25px;
+      --icon-width: 15px;
+      --icon-height: 16.25px;
       align-self: flex-start;
     }
 

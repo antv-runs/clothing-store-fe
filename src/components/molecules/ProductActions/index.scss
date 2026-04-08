@@ -1,9 +1,4 @@
 @use "@/styles/abstracts/variables" as v;
-@use "@/styles/abstracts/mixins" as m;
-
-.add-to-cart-button {
-  @include m.button-base(v.$color-black, v.$color-white);
-}
 
 /**
  * ProductActions Component Styles
@@ -61,11 +56,7 @@
     width: var(--add-to-cart-width);
     height: 52px;
     min-width: 0;
-    background-color: #000;
-    color: #fff;
-    border-radius: v.$radius-pill;
-    font-size: 16px;
-    font-weight: 500;
+    padding: 0;
     white-space: nowrap;
     transition:
       transform 0.2s ease,
@@ -79,7 +70,6 @@
 
     &:hover:not(:disabled) {
       background-color: #333;
-      transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
@@ -140,8 +130,8 @@
 
     .add-to-cart-button {
       flex: 1 1 auto;
+      width: auto;
       height: 44px;
-      font-size: 14px;
     }
 
     form input {

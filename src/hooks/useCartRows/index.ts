@@ -3,12 +3,19 @@ import { getProductById } from "@/api/Product";
 import type { CartRow } from "@/types/cart";
 import type { Product } from "@/types/product";
 import { normalizeId } from "@/utils/formatters";
-import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import type { ListCoreState, ListErrorKind } from "@/types/listState";
 import {
   isRetryableListErrorKind,
   mapApiErrorToListErrorKind,
 } from "@/utils/apiErrorList";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "@/store/cartStore";
+import {
+  addItem as actionAddItem,
+  setQuantity as actionSetQuantity,
+  removeItem as actionRemoveItem,
+  clearCart as actionClearCart,
+} from "@/actions/cartAction";
 
 type CartItem = Product & {
   quantity: number;
@@ -55,29 +62,17 @@ type UseCartRowsResult = {
   clearCart: () => void;
 };
 
-const DEFAULT_QUANTITY = 1;
 const HYDRATION_ERROR_MESSAGE =
   "We couldn't securely load your cart data right now.";
 
-const normalizeQuantity = (value: number | string): number => {
-  const parsed = Number(value);
-  return Math.max(
-    DEFAULT_QUANTITY,
-    Number.isFinite(parsed) ? parsed : DEFAULT_QUANTITY,
-  );
-};
-
 export const useCartRows = (): UseCartRowsResult => {
-  const [cartRows, setCartRows] = useState<CartRow[]>(() =>
-    readStoredCartRows(),
-  );
+  const dispatch = useDispatch<AppDispatch>();
+  const cartRows = useSelector((state: RootState) => state.cart.items);
 
   const [fetchedProducts, setFetchedProducts] = useState<
     Record<string, Product>
   >({});
-  const [isLoading, setIsLoading] = useState(
-    () => readStoredCartRows().length > 0,
-  );
+  const [isLoading, setIsLoading] = useState(cartRows.length > 0);
   const [isRetryingHydration, setIsRetryingHydration] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [hydrationError, setHydrationError] = useState<string | null>(null);
@@ -172,45 +167,15 @@ export const useCartRows = (): UseCartRowsResult => {
   }, [cartRows, fetchedProducts, isRetryingHydration, retryTrigger]);
 
   const getCartRows = useCallback(() => {
-    return readStoredCartRows();
-  }, []);
+    return cartRows;
+  }, [cartRows]);
 
-  const addItem = useCallback((item: CartRow) => {
-    const existingRows = readStoredCartRows();
-    const nextRows: CartRow[] = [...existingRows];
-
-    const normalizedProductId = String(item.productId || "").trim();
-    const normalizedColor = item.color ?? null;
-    const normalizedSize = item.size ?? null;
-    const normalizedQuantity = normalizeQuantity(item.quantity);
-
-    const existingIndex = nextRows.findIndex((row) => {
-      return (
-        row.productId === normalizedProductId &&
-        (row.color ?? null) === normalizedColor &&
-        (row.size ?? null) === normalizedSize
-      );
-    });
-
-    if (existingIndex >= 0) {
-      nextRows[existingIndex] = {
-        ...nextRows[existingIndex],
-        quantity: normalizeQuantity(
-          nextRows[existingIndex].quantity + normalizedQuantity,
-        ),
-      };
-    } else {
-      nextRows.push({
-        productId: normalizedProductId,
-        quantity: normalizedQuantity,
-        color: normalizedColor,
-        size: normalizedSize,
-      });
-    }
-
-    writeStoredCartRows(nextRows);
-    setCartRows(nextRows);
-  }, []);
+  const addItem = useCallback(
+    (item: CartRow) => {
+      dispatch(actionAddItem(item) as any);
+    },
+    [dispatch],
+  );
 
   const updateItemQuantity = useCallback(
     (
@@ -219,27 +184,9 @@ export const useCartRows = (): UseCartRowsResult => {
       size: string | null = null,
       quantity: number,
     ) => {
-      const existingRows = readStoredCartRows();
-      const normalizedProductId = String(productId || "").trim();
-      const newQuantity = normalizeQuantity(quantity);
-
-      if (newQuantity < 1) return;
-
-      const nextRows = existingRows.map((row) => {
-        if (
-          row.productId === normalizedProductId &&
-          (row.color ?? null) === color &&
-          (row.size ?? null) === size
-        ) {
-          return { ...row, quantity: newQuantity };
-        }
-        return row;
-      });
-
-      writeStoredCartRows(nextRows);
-      setCartRows(nextRows);
+      dispatch(actionSetQuantity(productId, color, size, quantity) as any);
     },
-    [],
+    [dispatch],
   );
 
   const removeItem = useCallback(
@@ -248,27 +195,14 @@ export const useCartRows = (): UseCartRowsResult => {
       color: string | null = null,
       size: string | null = null,
     ) => {
-      const existingRows = readStoredCartRows();
-      const normalizedProductId = String(productId || "").trim();
-
-      const nextRows = existingRows.filter((row) => {
-        return !(
-          row.productId === normalizedProductId &&
-          (row.color ?? null) === color &&
-          (row.size ?? null) === size
-        );
-      });
-
-      writeStoredCartRows(nextRows);
-      setCartRows(nextRows);
+      dispatch(actionRemoveItem(productId, color, size) as any);
     },
-    [],
+    [dispatch],
   );
 
   const clearCart = useCallback(() => {
-    writeStoredCartRows([]);
-    setCartRows([]);
-  }, []);
+    dispatch(actionClearCart() as any);
+  }, [dispatch]);
 
   const cartItems = useMemo(() => {
     return cartRows

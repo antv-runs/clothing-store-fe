@@ -55,14 +55,14 @@
   &__button {
     height: 48px;
     padding: 0 24px;
+    width: auto;
     border-radius: 24px;
     font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
     transition: opacity 0.2s ease, transform 0.2s ease;
 
     &:hover {
       opacity: 0.8;
+      transform: none;
     }
 
     &:active {
@@ -72,13 +72,19 @@
     &--cancel {
       background: #f0f0f0;
       color: v.$color-black;
-      border: none;
+
+      &:hover {
+        background: #f0f0f0;
+      }
     }
 
     &--confirm {
       background: v.$color-danger;
       color: v.$color-white;
-      border: none;
+
+      &:hover {
+        background: v.$color-danger;
+      }
     }
 
     &:disabled,
