@@ -51,8 +51,8 @@ const NotFound: React.FC = () => {
           <Button
             className="not-found-page__action"
             type="button"
+            variant="primary"
             onClick={handleGoHome}
-            unstyled
           >
             Go back to Home
           </Button>

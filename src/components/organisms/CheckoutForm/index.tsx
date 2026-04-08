@@ -155,11 +155,11 @@ export const CheckoutForm = ({
       <Button
         className="checkout-form__submit"
         type="submit"
+        variant="primary"
         disabled={isSubmitting}
         aria-disabled={isSubmitting}
         isLoading={isSubmitting}
         loadingText="Placing order..."
-        unstyled
       >
         Place Order
       </Button>

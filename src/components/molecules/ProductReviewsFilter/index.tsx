@@ -5,6 +5,7 @@ import {
   type ReviewSortOption,
 } from "@/components/molecules/ReviewSortSelect";
 import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 
 interface ReviewFilterOption {
   label: string;
@@ -143,7 +144,8 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
         ariaLabel="Sort reviews"
       />
 
-      <button
+      <Button
+        variant="primary"
         type="button"
         className="reviews__action reviews__action--write"
         aria-label="Write a review"
@@ -151,7 +153,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
         onClick={onWriteReview}
       >
         Write a Review
-      </button>
+      </Button>
     </div>
   );
 };

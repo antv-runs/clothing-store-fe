@@ -31,10 +31,12 @@ export const RetryState = ({
         variant="primary"
         className="retry-state__button"
         onClick={onRetry}
-        disabled={isButtonDisabled}
+        disabled={disabled}
+        isLoading={isRetrying}
+        loadingText={retryingLabel}
         aria-disabled={isButtonDisabled}
       >
-        {isRetrying ? retryingLabel : retryLabel}
+        {retryLabel}
       </Button>
     </div>
   );

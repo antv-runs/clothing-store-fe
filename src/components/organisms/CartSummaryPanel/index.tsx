@@ -40,7 +40,7 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
     if (onApplyCoupon) {
       try {
         await onApplyCoupon();
-      } catch (err) {
+      } catch {
         setCouponError("Failed to apply coupon");
       }
     }
@@ -91,10 +91,10 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
           />
         </div>
         <Button
+          variant="primary"
           type="button"
           disabled={isLocked}
           onClick={handleApply}
-          unstyled
         >
           Apply
         </Button>
@@ -110,11 +110,11 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
       </Text>
 
       <Button
+        variant="primary"
         className="cart-summary__checkout"
         type="button"
         disabled={isCheckoutDisabled || isLocked}
         onClick={onCheckout}
-        unstyled
       >
         <span className="cart-summary__checkout-text">Go to Checkout</span>
       </Button>

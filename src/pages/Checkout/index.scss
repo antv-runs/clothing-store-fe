@@ -69,14 +69,16 @@
     }
 
     &-btn {
-      @include m.button-native-reset($transparent-bg: false);
-      border-radius: v.$radius-pill;
-      background-color: v.$color-black;
-      color: v.$color-white;
+      width: auto;
       font-size: 16px;
-      font-weight: 500;
       padding: 16px 32px;
       display: inline-block;
+
+      &:hover {
+        opacity: 1;
+        transform: none;
+        background-color: v.$color-black;
+      }
     }
   }
 }

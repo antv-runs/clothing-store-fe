@@ -124,7 +124,6 @@ export class ErrorBoundary extends Component<Props, State> {
                   type="button"
                   variant="primary"
                   onClick={this.handleRetry}
-                  unstyled
                 >
                   Try Again
                 </Button>
@@ -132,9 +131,8 @@ export class ErrorBoundary extends Component<Props, State> {
                 <Button
                   className="error-boundary-page__action"
                   type="button"
-                  variant="secondary"
+                  variant="primary"
                   onClick={this.handleGoHome}
-                  unstyled
                 >
                   Go back to Home
                 </Button>

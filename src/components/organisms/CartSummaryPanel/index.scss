@@ -114,14 +114,6 @@
     min-height: 48px;
 
     padding: 0 28px;
-    border: none;
-    border-radius: v.$radius-pill;
-
-    background-color: v.$color-black;
-    color: v.$color-white;
-
-    font-size: 16px;
-    font-weight: 500;
 
     transition: transform 150ms ease, opacity 150ms ease;
 
@@ -163,14 +155,8 @@
 
     width: 100%;
     padding: 16px 20px;
-    border: none;
-
-    border-radius: v.$radius-pill;
-    background: v.$color-black;
-    color: v.$color-white;
 
     font-size: 14px;
-    font-weight: 500;
 
     transition: transform 180ms ease, opacity 150ms ease;
 

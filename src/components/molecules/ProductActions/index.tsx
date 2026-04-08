@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@/components/atoms/Button";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
 import "./index.scss";
 
@@ -42,7 +43,8 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         onIncrease={onIncreaseQuantity}
         onChange={(event) => onQuantityChange(event.target.value)}
       />
-      <button
+      <Button
+        variant="primary"
         className="add-to-cart-button"
         type="button"
         data-color-id={selectedColorId}
@@ -50,7 +52,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         onClick={onAddToCart}
       >
         Add to Cart
-      </button>
+      </Button>
     </div>
   );
 };

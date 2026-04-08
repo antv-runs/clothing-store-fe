@@ -99,7 +99,7 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
 
           <div className="reviews__load-more-wrapper">
             <Button
-              unstyled
+              variant="secondary"
               className="reviews__load-more"
               type="button"
               onClick={onLoadMore}

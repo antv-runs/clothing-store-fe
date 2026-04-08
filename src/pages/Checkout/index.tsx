@@ -165,8 +165,9 @@ const Checkout: React.FC = () => {
             </p>
             <Button
               className="checkout-page__status-btn"
+              type="button"
+              variant="primary"
               onClick={() => navigate(ROUTES.HOME)}
-              unstyled
             >
               Back to Home
             </Button>

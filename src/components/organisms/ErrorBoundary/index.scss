@@ -1,5 +1,4 @@
 @use "@/styles/abstracts/variables" as v;
-@use "@/styles/abstracts/mixins" as m;
 
 .error-boundary-page {
   display: flex;
@@ -40,27 +39,12 @@
   }
 
   &__action {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+    width: auto;
+    min-width: 220px;
     padding: 16px 54px;
     border-radius: 62px;
-    background-color: var(--color-primary, v.$color-black);
-    color: var(--color-white, v.$color-white);
     font-size: 16px;
     font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition:
-      background-color 0.3s ease,
-      opacity 0.3s ease;
-    border: none;
-    width: auto;
-
-    &:hover {
-      opacity: 0.8;
-      background-color: var(--color-primary-light, v.$color-black);
-    }
   }
 
   &__spacer {
