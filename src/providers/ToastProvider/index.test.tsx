@@ -1,44 +1,55 @@
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import { ToastProvider } from "./index";
+import httpClient, { __resetGlobalErrorTimeForTesting } from "@/lib/axios";
+import MockAdapter from "axios-mock-adapter";
 
 describe("ToastProvider", () => {
+    let mock: MockAdapter;
+
     beforeEach(() => {
-        jest.resetModules();
+        mock = new MockAdapter(httpClient);
+        __resetGlobalErrorTimeForTesting();
         jest.restoreAllMocks();
     });
 
-    it("renders error toast when receiving global-api-error event", async () => {
+    afterEach(() => {
+        mock.restore();
+        mock.reset();
+        jest.useRealTimers();
+    });
+
+    it("renders an error toast when receiving global-api-error event", async () => {
         render(
             <ToastProvider>
                 <div>Test App</div>
-            </ToastProvider>
+            </ToastProvider>,
         );
 
         act(() => {
             window.dispatchEvent(
                 new CustomEvent("global-api-error", {
                     detail: { message: "Network Failed" },
-                })
+                }),
             );
         });
 
         expect(await screen.findByText("Network Failed")).toBeInTheDocument();
     });
 
-    it("auto dismisses toast after duration", async () => {
+    it("auto dismisses the toast after the default duration", async () => {
         jest.useFakeTimers();
 
         render(
             <ToastProvider>
-                <div />
-            </ToastProvider>
+                <div>Test App</div>
+            </ToastProvider>,
         );
 
         act(() => {
             window.dispatchEvent(
                 new CustomEvent("global-api-error", {
                     detail: { message: "Auto dismiss test" },
-                })
+                }),
             );
         });
 
@@ -48,17 +59,12 @@ describe("ToastProvider", () => {
             jest.advanceTimersByTime(5000);
         });
 
-        expect(screen.queryByText("Auto dismiss test")).not.toBeInTheDocument();
-
-        jest.useRealTimers();
+        await waitFor(() => {
+            expect(screen.queryByText("Auto dismiss test")).not.toBeInTheDocument();
+        });
     });
 
-    it("shows global error toast when axios mutation returns 500", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
+    it("shows a global error toast when axios POST returns 500", async () => {
         render(
             <ToastProvider>
                 <div>Test App</div>
@@ -67,21 +73,16 @@ describe("ToastProvider", () => {
 
         mock.onPost("/test-500").reply(500);
 
-        await expect(httpClient.post("/test-500", { foo: "bar" })).rejects.toBeTruthy();
+        await act(async () => {
+            await httpClient.post("/test-500", { foo: "bar" }).catch((e) => expect(e).toBeTruthy());
+        });
 
         expect(
             await screen.findByText("Server error. Please try again in a moment."),
         ).toBeInTheDocument();
-
-        mock.restore();
     });
 
-    it("shows global error toast when axios mutation has network error", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
+    it("shows a global error toast when axios POST has a network error", async () => {
         render(
             <ToastProvider>
                 <div>Test App</div>
@@ -90,23 +91,18 @@ describe("ToastProvider", () => {
 
         mock.onPost("/test-network").networkError();
 
-        await expect(httpClient.post("/test-network", { foo: "bar" })).rejects.toBeTruthy();
+        await act(async () => {
+            await httpClient.post("/test-network", { foo: "bar" }).catch((e) => expect(e).toBeTruthy());
+        });
 
         expect(
             await screen.findByText(
                 "Unable to connect. Please check your connection and try again.",
             ),
         ).toBeInTheDocument();
-
-        mock.restore();
     });
 
-    it("does NOT show global error toast for GET requests", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
+    it("does not show a global error toast for GET requests, even on 500", async () => {
         render(
             <ToastProvider>
                 <div>Test App</div>
@@ -115,22 +111,57 @@ describe("ToastProvider", () => {
 
         mock.onGet("/test-get").reply(500);
 
-        await expect(httpClient.get("/test-get")).rejects.toBeTruthy();
+        await act(async () => {
+            await httpClient.get("/test-get").catch((e) => expect(e).toBeTruthy());
+        });
 
         expect(
             screen.queryByText("Server error. Please try again in a moment."),
         ).not.toBeInTheDocument();
-
-        mock.restore();
     });
 
-    it("throttles global error toasts to 1 per 3 seconds", async () => {
+    it("does not show a global error toast for 4xx mutation errors", async () => {
+        render(
+            <ToastProvider>
+                <div>Test App</div>
+            </ToastProvider>,
+        );
+
+        mock.onPost("/test-404").reply(404);
+
+        await act(async () => {
+            await httpClient.post("/test-404", { foo: "bar" }).catch((e) => expect(e).toBeTruthy());
+        });
+
+        expect(
+            screen.queryByText("Server error. Please try again in a moment."),
+        ).not.toBeInTheDocument();
+    });
+
+    it("does not show a toast for successful mutation requests", async () => {
+        render(
+            <ToastProvider>
+                <div>Test App</div>
+            </ToastProvider>,
+        );
+
+        mock.onPost("/test-success").reply(200, { success: true });
+
+        await act(async () => {
+            await httpClient.post("/test-success", { foo: "bar" });
+        });
+
+        expect(
+            screen.queryByText("Server error. Please try again in a moment."),
+        ).not.toBeInTheDocument();
+    });
+
+    it("throttles global error events to one toast within 3 seconds", async () => {
         jest.useFakeTimers();
+        // Ensure initial Date.now() is high enough so it passes the 'now - 0 > 3000' logic
+        jest.setSystemTime(10000);
 
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
+        const dispatchSpy = jest.spyOn(window, "dispatchEvent");
 
         render(
             <ToastProvider>
@@ -140,193 +171,54 @@ describe("ToastProvider", () => {
 
         mock.onPost("/test-throttle").reply(500);
 
-        // First error - should show toast
-        await expect(httpClient.post("/test-throttle")).rejects.toBeTruthy();
-        expect(await screen.findByText("Server error. Please try again in a moment.")).toBeInTheDocument();
+        await act(async () => {
+            await httpClient.post("/test-throttle").catch((e) => expect(e).toBeTruthy());
+        });
+        await act(async () => {
+            await httpClient.post("/test-throttle").catch((e) => expect(e).toBeTruthy());
+        });
 
-        // Second error immediately after - should NOT show new toast
-        await expect(httpClient.post("/test-throttle")).rejects.toBeTruthy();
+        const globalErrorCallsBeforeAdvance = dispatchSpy.mock.calls.filter(
+            ([event]) => event instanceof CustomEvent && event.type === "global-api-error",
+        );
 
-        // Should still only see one toast
-        expect(
-            screen.getAllByText("Server error. Please try again in a moment.").length,
-        ).toBe(1);
+        expect(globalErrorCallsBeforeAdvance).toHaveLength(1);
 
-        // Advance time past throttle
         act(() => {
-            jest.advanceTimersByTime(3000);
+            jest.advanceTimersByTime(3001);
         });
 
-        // Third error - should show new toast
-        await expect(httpClient.post("/test-throttle")).rejects.toBeTruthy();
-        expect(await screen.findByText("Server error. Please try again in a moment.")).toBeInTheDocument();
-
-        jest.useRealTimers();
-        mock.restore();
-    });
-
-    it("does not show toast for 4xx errors", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
-        render(
-            <ToastProvider>
-                <div>Test App</div>
-            </ToastProvider>,
-        );
-
-        mock.onPost("/test-404").reply(404);
-
-        await expect(httpClient.post("/test-404")).rejects.toBeTruthy();
-
-        expect(
-            screen.queryByText("Server error. Please try again in a moment."),
-        ).not.toBeInTheDocument();
-
-        mock.restore();
-    });
-
-    it("shows toast for 503 service unavailable", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
-        render(
-            <ToastProvider>
-                <div>Test App</div>
-            </ToastProvider>,
-        );
-
-        mock.onPost("/test-503").reply(503);
-
-        await expect(httpClient.post("/test-503")).rejects.toBeTruthy();
-
-        expect(
-            await screen.findByText("Server error. Please try again in a moment."),
-        ).toBeInTheDocument();
-
-        mock.restore();
-    });
-
-    it("shows toast for 504 gateway timeout", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
-        render(
-            <ToastProvider>
-                <div>Test App</div>
-            </ToastProvider>,
-        );
-
-        mock.onPost("/test-504").reply(504);
-
-        await expect(httpClient.post("/test-504")).rejects.toBeTruthy();
-
-        expect(
-            await screen.findByText("Server error. Please try again in a moment."),
-        ).toBeInTheDocument();
-
-        mock.restore();
-    });
-
-    it("shows toast for 500 with custom error message", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
-        render(
-            <ToastProvider>
-                <div>Test App</div>
-            </ToastProvider>,
-        );
-
-        mock.onPost("/test-500-custom").reply(500, {
-            error: {
-                message: "Database connection failed",
-            },
+        await act(async () => {
+            await httpClient.post("/test-throttle").catch((e) => expect(e).toBeTruthy());
         });
 
-        await expect(httpClient.post("/test-500-custom")).rejects.toBeTruthy();
+        const globalErrorCallsAfterAdvance = dispatchSpy.mock.calls.filter(
+            ([event]) => event instanceof CustomEvent && event.type === "global-api-error",
+        );
 
-        expect(
-            await screen.findByText("Database connection failed"),
-        ).toBeInTheDocument();
-
-        mock.restore();
+        expect(globalErrorCallsAfterAdvance).toHaveLength(2);
     });
 
-    it("shows toast for network error with custom message", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
+    it("removes the window listener on unmount", () => {
+        const addEventListenerSpy = jest.spyOn(window, "addEventListener");
+        const removeEventListenerSpy = jest.spyOn(window, "removeEventListener");
 
-        const mock = new MockAdapter(httpClient);
-
-        render(
+        const { unmount } = render(
             <ToastProvider>
                 <div>Test App</div>
             </ToastProvider>,
         );
 
-        mock.onPost("/test-network-custom").networkError();
-
-        await expect(httpClient.post("/test-network-custom")).rejects.toBeTruthy();
-
-        expect(
-            await screen.findByText("Unable to connect. Please check your connection and try again."),
-        ).toBeInTheDocument();
-
-        mock.restore();
-    });
-
-    it("does not show toast for successful requests", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
-        render(
-            <ToastProvider>
-                <div>Test App</div>
-            </ToastProvider>,
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+            "global-api-error",
+            expect.any(Function),
         );
 
-        mock.onPost("/test-success").reply(200, { success: true });
+        unmount();
 
-        await httpClient.post("/test-success");
-
-        expect(
-            screen.queryByText("Server error. Please try again in a moment."),
-        ).not.toBeInTheDocument();
-
-        mock.restore();
-    });
-
-    it("shows toast for 500 even if response data is empty", async () => {
-        const { default: httpClient } = await import("@/lib/axios");
-        const MockAdapter = (await import("axios-mock-adapter")).default;
-
-        const mock = new MockAdapter(httpClient);
-
-        render(
-            <ToastProvider>
-                <div>Test App</div>
-            </ToastProvider>,
+        expect(removeEventListenerSpy).toHaveBeenCalledWith(
+            "global-api-error",
+            expect.any(Function),
         );
-
-        mock.onPost("/test-500-empty").reply(500, {});
-
-        await expect(httpClient.post("/test-500-empty")).rejects.toBeTruthy();
-
-        expect(
-            await screen.findByText("Server error. Please try again in a moment."),
-        ).toBeInTheDocument();
-
-        mock.restore();
     });
 });

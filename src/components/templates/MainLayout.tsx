@@ -8,8 +8,12 @@ import { Outlet } from "react-router-dom";
 import { Header } from "@/components/organisms/Header";
 import { Footer } from "@/components/organisms/Footer";
 import { Spinner } from "@/components/atoms/Spinner";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 export const MainLayout = () => {
+  // Scroll to top on pathname changes (real navigation)
+  useScrollToTop();
+
   return (
     <>
       <Header />

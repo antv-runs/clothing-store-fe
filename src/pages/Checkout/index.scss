@@ -22,54 +22,6 @@
     align-items: start;
   }
 
-  &__form {
-    @include m.panel();
-    padding: 24px;
-  }
-
-  &__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
-    align-items: start;
-  }
-
-  &__fieldset {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    min-width: 0;
-  }
-
-  &__field {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    span {
-      font-size: 16px;
-      font-weight: 500;
-      color: v.$color-black;
-    }
-
-    &--full {
-      grid-column: 1 / -1;
-    }
-  }
-
-  &__submit {
-    @include m.button-native-reset($transparent-bg: false);
-    width: 100%;
-    border-radius: v.$radius-pill;
-    background-color: v.$color-black;
-    color: v.$color-white;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1;
-    padding: 16px;
-  }
-
   &__message {
     margin-top: 12px;
     font-size: 16px;
@@ -149,27 +101,6 @@
     &__title {
       font-size: 32px;
       margin-top: 0;
-    }
-
-    &__form {
-      padding: 20px;
-    }
-
-    &__grid {
-      grid-template-columns: 1fr;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    &__field {
-      span {
-        font-size: 14px;
-      }
-    }
-
-    &__submit {
-      font-size: 14px;
-      padding: 14px;
     }
   }
 }

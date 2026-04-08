@@ -93,4 +93,9 @@ export async function del<T>(
   return response.data;
 }
 
+// For testing purposes
+export const __resetGlobalErrorTimeForTesting = () => {
+  lastGlobalErrorTime = 0;
+};
+
 export default httpClient;
