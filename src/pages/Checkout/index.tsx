@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "@/api/Order";
+import { useToast } from "@/hooks/useToast";
 import {
   isApiError,
   mapApiErrorToMessage,
@@ -24,12 +25,12 @@ import "./index.scss";
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 const Checkout: React.FC = () => {
+  const { showToast } = useToast();
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
-  
+
   const submissionLockRef = useRef(false);
   const {
     getCartRows,
@@ -73,7 +74,6 @@ const Checkout: React.FC = () => {
     }
 
     setServerErrors({});
-    setErrorMessage("");
     setSuccessMessage("");
     setSubmitStatus("idle");
 
@@ -81,12 +81,16 @@ const Checkout: React.FC = () => {
     try {
       payload = mapCartToOrderRequest(cartRows, values);
     } catch (error) {
-      setErrorMessage(
+      const errorMsg =
         error instanceof Error
           ? error.message
-          : "Invalid order data. Please review your information and cart.",
-      );
+          : "Invalid order data. Please review your information and cart.";
       setSubmitStatus("error");
+      showToast({
+        message: errorMsg,
+        variant: "error",
+        duration: 5000,
+      });
       return;
     }
 
@@ -102,7 +106,12 @@ const Checkout: React.FC = () => {
         "Your order has been placed successfully. We will process it shortly.",
       );
       setSubmitStatus("success");
-    } catch (error) {
+      showToast({
+        message: "Order placed successfully. We will process it shortly.",
+        variant: "success",
+        duration: 5000,
+      });
+    } catch (error: unknown) {
       const validationErrors = mapApiValidationErrors(error);
 
       if (validationErrors) {
@@ -110,28 +119,51 @@ const Checkout: React.FC = () => {
         Object.entries(validationErrors).forEach(([field, messages]) => {
           newServerErrors[field] = messages[0];
         });
+
         setServerErrors(newServerErrors);
-        
-        setErrorMessage(
-          mapApiErrorToMessage(
-            error,
-            "Please review the highlighted fields and try again.",
-          ),
+
+        const errorMsg = mapApiErrorToMessage(
+          error,
+          "Please review the highlighted fields and try again.",
         );
+
         setSubmitStatus("error");
+
+        showToast({
+          message: errorMsg,
+          variant: "error",
+          duration: 5000,
+        });
       } else if (isApiError(error)) {
-        setErrorMessage(
-          mapApiErrorToMessage(
-            error,
-            "An unexpected error occurred while placing your order.",
-          ),
+        const errorMsg = mapApiErrorToMessage(
+          error,
+          "An unexpected error occurred while placing your order.",
         );
+
         setSubmitStatus("error");
+
+        const status = error.status;
+        const isServerError = typeof status === "number" && status >= 500;
+        const isNetworkError = status === undefined;
+
+        if (!isServerError && !isNetworkError) {
+          showToast({
+            message: errorMsg,
+            variant: "error",
+            duration: 5000,
+          });
+        }
       } else {
-        setErrorMessage(
-          "An unexpected error occurred. Please try again or contact support.",
-        );
+        const errorMsg =
+          "An unexpected error occurred. Please try again or contact support.";
+
         setSubmitStatus("error");
+
+        showToast({
+          message: errorMsg,
+          variant: "error",
+          duration: 5000,
+        });
       }
     } finally {
       submissionLockRef.current = false;
@@ -182,11 +214,10 @@ const Checkout: React.FC = () => {
           <CheckoutPageSkeleton />
         ) : isEmpty ? null : (
           <div className="checkout-page__layout">
-            <CheckoutForm 
+            <CheckoutForm
               onSubmit={handleCheckoutSubmit}
               isSubmitting={isSubmittingOrder}
               serverErrors={serverErrors}
-              globalError={submitStatus === "error" ? errorMessage : undefined}
             />
 
             <CheckoutSummaryPanel

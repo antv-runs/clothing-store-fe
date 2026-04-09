@@ -75,11 +75,17 @@ const ProductDetail: React.FC = () => {
     reloadReviews,
   } = useProductReviews(product?.id);
   const { addItem } = useCartRows();
+  const { showToast } = useToast();
 
   const handleReviewSubmitSuccess = useCallback(async () => {
     setIsWriteReviewModalOpen(false);
+    showToast({
+      message: "Review submitted successfully. Thank you for your feedback!",
+      variant: "success",
+      duration: 5000,
+    });
     await reloadReviews();
-  }, [reloadReviews]);
+  }, [reloadReviews, showToast]);
 
   const {
     isSubmittingReview,
@@ -90,7 +96,6 @@ const ProductDetail: React.FC = () => {
     productId: product?.id,
     onSuccess: handleReviewSubmitSuccess,
   });
-  const { showToast } = useToast();
 
   useEffect(() => {
     if (isLoading) {
