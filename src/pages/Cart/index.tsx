@@ -36,6 +36,12 @@ const Cart: React.FC = () => {
         setIsProcessing(false);
         reject(new Error("Simulated failure"));
       }, 600);
+    }).catch(() => {
+      showToast({
+        message: "Unable to apply coupon. Please try again.",
+        variant: "error",
+        duration: 5000,
+      });
     });
   };
 

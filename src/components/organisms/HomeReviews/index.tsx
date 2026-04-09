@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
+import { HomeReviewsSkeleton } from "@/components/molecules/HomeReviewsSkeleton";
 import { ReviewCard } from "@/components/molecules/ReviewCard";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import { getFirstItemScrollStep } from "@/utils/carousel";
 import "./index.scss";
+import { EmptyState } from "@/components/molecules/EmptyState";
 
 interface HomeReviewsProps {
   reviews: Review[];
@@ -45,15 +47,16 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
       setCanScrollNext(currentScrollLeft < maxScrollLeft - 1);
     };
 
-    syncReviewState();
+    const frameId = requestAnimationFrame(syncReviewState);
     track.addEventListener("scroll", syncReviewState, { passive: true });
     window.addEventListener("resize", syncReviewState);
 
     return () => {
+      cancelAnimationFrame(frameId);
       track.removeEventListener("scroll", syncReviewState);
       window.removeEventListener("resize", syncReviewState);
     };
-  }, []);
+  }, [reviews.length]);
 
   const handleScrollReviews = (direction: "prev" | "next") => {
     const track = reviewsTrackRef.current;
@@ -72,10 +75,13 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
   const viewportStateClass = `${hasOverflow ? " has-overflow" : ""}${canScrollPrev ? " is-not-at-start" : ""}${canScrollNext ? " is-not-at-end" : ""}`;
 
   const renderReviews = () => {
-    return reviews.map((review) => <ReviewCard key={review.id} review={review} />);
+    return reviews.map((review) => (
+      <ReviewCard key={review.id} review={review} />
+    ));
   };
 
   const isEmpty = !isLoading && !error && reviews.length === 0;
+  const loadingContent = <HomeReviewsSkeleton />;
 
   return (
     <section className="home-reviews" aria-labelledby="home-reviews-title">
@@ -115,16 +121,8 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
         error={error}
         errorKind={errorKind || null}
         onRetry={onRetry}
-        loadingContent={
-          <div className="home-reviews__state" role="status">
-            Loading reviews...
-          </div>
-        }
-        emptyContent={
-          <div className="home-reviews__state" role="status">
-            No reviews available.
-          </div>
-        }
+        loadingContent={loadingContent}
+        emptyContent={<EmptyState message="No reviews available." />}
       >
         <div className={`home-reviews__viewport${viewportStateClass}`}>
           <ul

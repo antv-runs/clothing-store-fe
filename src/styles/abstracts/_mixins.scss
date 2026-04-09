@@ -8,6 +8,7 @@
 
   -webkit-line-clamp: $lines;
   overflow: hidden;
+
 }
 
 @mixin flex-center {
@@ -19,6 +20,7 @@
 @mixin flex-between-center {
   display: flex;
   align-items: center;
+
   justify-content: space-between;
 }
 
@@ -114,6 +116,80 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+}
+
+@mixin primary-lift-hover(
+  $hover-opacity: null,
+  $hover-selector: "&:hover",
+  $active-opacity: null,
+  $active-selector: "&:active"
+) {
+  #{$hover-selector} {
+    @if $hover-opacity != null {
+      opacity: $hover-opacity;
+    }
+  }
+
+  @if $active-opacity != null {
+    #{$active-selector} {
+      @if $active-opacity != null {
+        opacity: $active-opacity;
+      }
+    }
+  }
+}
+
+@mixin primary-static-hover(
+  $hover-opacity: null,
+  $hover-background-color: null,
+  $hover-selector: "&:hover",
+  $active-background-color: null,
+  $active-box-shadow: null,
+  $active-selector: "&:active"
+) {
+  #{$hover-selector} {
+    @if $hover-opacity != null {
+      opacity: $hover-opacity;
+    }
+
+    @if $hover-background-color != null {
+      background-color: $hover-background-color;
+    }
+  }
+
+  @if $active-background-color != null or $active-box-shadow != null {
+    #{$active-selector} {
+      @if $active-background-color != null {
+        background-color: $active-background-color;
+      }
+
+      @if $active-box-shadow != null {
+        box-shadow: $active-box-shadow;
+      }
+    }
+  }
+}
+
+@mixin icon-subtle-hover($hover-opacity: null, $hover-selector: "&:hover") {
+  #{$hover-selector} {
+    @if $hover-opacity != null {
+      opacity: $hover-opacity;
+    }
+  }
+}
+
+@mixin icon-lift-hover(
+  $hover-opacity: null,
+  $hover-selector: "&:hover",
+  $active-opacity: null,
+  $active-selector: "&:active"
+) {
+  @include primary-lift-hover(
+    $hover-opacity: $hover-opacity,
+    $hover-selector: $hover-selector,
+    $active-opacity: $active-opacity,
+    $active-selector: $active-selector
+  );
 }
 
 @mixin hover-darken($color: #1a1a1a) {

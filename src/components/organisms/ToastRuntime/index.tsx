@@ -1,0 +1,33 @@
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { ToastContainer } from "@/components/organisms/ToastContainer";
+import { useToast } from "@/hooks/useToast";
+import type { RootState } from "@/store/cartStore";
+
+/**
+ * Redux-backed runtime bridge for global toast rendering and global API error events.
+ */
+export const ToastRuntime = () => {
+  const { showToast, dismissToast } = useToast();
+  const toasts = useSelector((state: RootState) => state.toast.items);
+
+  useEffect(() => {
+    const handleGlobalError = (event: Event) => {
+      const customEvent = event as CustomEvent<{ message: string }>;
+      if (customEvent.detail?.message) {
+        showToast({
+          message: customEvent.detail.message,
+          variant: "error",
+          duration: 5000,
+        });
+      }
+    };
+
+    window.addEventListener("global-api-error", handleGlobalError);
+    return () => {
+      window.removeEventListener("global-api-error", handleGlobalError);
+    };
+  }, [showToast]);
+
+  return <ToastContainer toasts={toasts} onDismiss={dismissToast} />;
+};

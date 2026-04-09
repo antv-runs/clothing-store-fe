@@ -1,4 +1,5 @@
 @use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/mixins" as m;
 
 .confirm-modal {
   position: fixed;
@@ -58,33 +59,24 @@
     width: auto;
     border-radius: 24px;
     font-size: 16px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
 
-    &:hover {
-      opacity: 0.8;
-      transform: none;
-    }
-
-    &:active {
-      transform: scale(0.97);
-    }
+    @include m.primary-lift-hover($hover-opacity: 0.8);
 
     &--cancel {
       background: #f0f0f0;
       color: v.$color-black;
 
-      &:hover {
-        background: #f0f0f0;
-      }
+      @include m.primary-static-hover($hover-background-color: #f0f0f0);
     }
 
     &--confirm {
       background: v.$color-danger;
       color: v.$color-white;
 
-      &:hover {
-        background: v.$color-danger;
-      }
+      @include m.primary-static-hover($hover-background-color: v.$color-danger);
     }
 
     &:disabled,
@@ -98,7 +90,6 @@
 
 @media (max-width: 576px) {
   .confirm-modal {
-
     &__title {
       font-size: 16px;
     }

@@ -16,6 +16,7 @@ import { useCartRows } from "@/hooks/useCartRows";
 import { useProductDetailData } from "@/hooks/useProductDetailData";
 import { useProductReviews } from "@/hooks/useProductReviews";
 import { useReviewSubmit } from "@/hooks/useReviewSubmit";
+import { useToast } from "@/hooks/useToast";
 import { Button } from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
 import "./index.scss";
@@ -74,11 +75,17 @@ const ProductDetail: React.FC = () => {
     reloadReviews,
   } = useProductReviews(product?.id);
   const { addItem } = useCartRows();
+  const { showToast } = useToast();
 
   const handleReviewSubmitSuccess = useCallback(async () => {
     setIsWriteReviewModalOpen(false);
+    showToast({
+      message: "Review submitted successfully. Thank you for your feedback!",
+      variant: "success",
+      duration: 5000,
+    });
     await reloadReviews();
-  }, [reloadReviews]);
+  }, [reloadReviews, showToast]);
 
   const {
     isSubmittingReview,
@@ -183,6 +190,10 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = () => {
     if (!product?.id) {
+      showToast({
+        message: "Unable to add item to cart",
+        variant: "error",
+      });
       return;
     }
 
@@ -190,12 +201,24 @@ const ProductDetail: React.FC = () => {
     const safeSizeId = getSafeSelectedSizeId();
     const safeQuantity = normalizeQuantity(quantity);
 
-    addItem({
-      productId: String(product.id),
-      quantity: safeQuantity,
-      color: safeColorId,
-      size: safeSizeId,
-    });
+    try {
+      addItem({
+        productId: String(product.id),
+        quantity: safeQuantity,
+        color: safeColorId,
+        size: safeSizeId,
+      });
+
+      showToast({
+        message: "Item added to cart",
+        variant: "success",
+      });
+    } catch {
+      showToast({
+        message: "Unable to add item to cart",
+        variant: "error",
+      });
+    }
   };
 
   if (isLoading) {
@@ -204,11 +227,16 @@ const ProductDetail: React.FC = () => {
 
   if (errorType === "network_error" || errorType === "system_error") {
     const message =
-      errorType === "network_error" ? NETWORK_ERROR_MESSAGE : SYSTEM_ERROR_MESSAGE;
+      errorType === "network_error"
+        ? NETWORK_ERROR_MESSAGE
+        : SYSTEM_ERROR_MESSAGE;
 
     return (
       <div className="container u-mt-25">
-        <section className="product-overview product-not-found" aria-label="Error loading product">
+        <section
+          className="product-overview product-not-found"
+          aria-label="Error loading product"
+        >
           <Text as="p" className="product-overview__description">
             {message}
           </Text>

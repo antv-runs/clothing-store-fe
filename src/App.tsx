@@ -1,7 +1,7 @@
 import AppRoutes from "@/routes";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
-import { ToastProvider } from "@/providers/ToastProvider";
-import { Provider } from 'react-redux';
+import { ToastRuntime } from "@/components/organisms/ToastRuntime";
+import { Provider } from "react-redux";
 import { store } from "@/store/cartStore";
 
 /**
@@ -12,9 +12,8 @@ function App() {
   return (
     <Provider store={store}>
       <ErrorBoundary>
-        <ToastProvider>
-          <AppRoutes />
-        </ToastProvider>
+        <AppRoutes />
+        <ToastRuntime />
       </ErrorBoundary>
     </Provider>
   );

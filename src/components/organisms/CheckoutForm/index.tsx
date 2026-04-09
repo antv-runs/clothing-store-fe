@@ -11,7 +11,6 @@ export type CheckoutFormProps = {
   isSubmitting: boolean;
   defaultValues?: Partial<CheckoutFormValues>;
   serverErrors?: Record<string, string>;
-  globalError?: string;
 };
 
 export const CheckoutForm = ({
@@ -19,7 +18,6 @@ export const CheckoutForm = ({
   isSubmitting,
   defaultValues,
   serverErrors,
-  globalError,
 }: CheckoutFormProps) => {
   const {
     control,
@@ -141,16 +139,6 @@ export const CheckoutForm = ({
           </label>
         </div>
       </fieldset>
-
-      {globalError && (
-        <div
-          className="checkout-form__message checkout-form__message--error"
-          aria-live="polite"
-          role="alert"
-        >
-          {globalError}
-        </div>
-      )}
 
       <Button
         className="checkout-form__submit"

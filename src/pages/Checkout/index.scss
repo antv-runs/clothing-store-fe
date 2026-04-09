@@ -74,11 +74,10 @@
       padding: 16px 32px;
       display: inline-block;
 
-      &:hover {
-        opacity: 1;
-        transform: none;
-        background-color: v.$color-black;
-      }
+      @include m.primary-static-hover(
+        $hover-opacity: 1,
+        $hover-background-color: v.$color-black
+      );
     }
   }
 }

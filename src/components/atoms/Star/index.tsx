@@ -27,6 +27,7 @@ export const Star: React.FC<StarProps> = ({
   const displayRating = Math.round(safeRating * 2) / 2;
   const fullStars = Math.floor(displayRating);
   const hasHalfStar = displayRating - fullStars >= 0.5;
+  const isZeroRating = safeRating === 0;
 
   const starSizeStyle =
     size !== undefined
@@ -44,10 +45,10 @@ export const Star: React.FC<StarProps> = ({
   return (
     <>
       {Array.from({ length: normalizedMaxStars }, (_, index) => {
-        const isFull = index < fullStars;
-        const isHalf = index === fullStars && hasHalfStar;
+        const isFull = !isZeroRating && index < fullStars;
+        const isHalf = !isZeroRating && index === fullStars && hasHalfStar;
 
-        if (!isFull && !isHalf && !showEmpty) {
+        if (!isZeroRating && !isFull && !isHalf && !showEmpty) {
           return null;
         }
 

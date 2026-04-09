@@ -9,7 +9,11 @@ export interface ToastData {
   duration?: number;
 }
 
-export interface ToastContextValue {
+export interface ToastState {
+  items: ToastData[];
+}
+
+export interface ToastControls {
   showToast: (toast: Omit<ToastData, "id">) => string;
   dismissToast: (id: string) => void;
 }

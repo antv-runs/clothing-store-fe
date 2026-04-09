@@ -14,6 +14,10 @@
 
   margin-top: 85px;
 
+  .review-card__content {
+    padding-right: 0;
+  }
+
   &__head {
     display: flex;
     align-items: flex-end;
@@ -35,15 +39,6 @@
     align-items: center;
     gap: 12px;
     flex: 0 0 auto;
-  }
-
-  &__state {
-    margin-top: 8px;
-    padding: 18px 20px;
-    border: 1px solid v.$color-border;
-    border-radius: 20px;
-    text-align: center;
-    color: rgba(0, 0, 0, 0.65);
   }
 
   &__retry {
@@ -88,8 +83,8 @@
       left: 0;
       background: linear-gradient(
         to right,
-        rgba(v.$color-white, 0.88) 0%,
-        rgba(v.$color-white, 0.45) 58%,
+        rgba(v.$color-white, 0.2) 0%,
+        rgba(v.$color-white, 0.08) 15%,
         transparent 100%
       );
     }
@@ -98,8 +93,8 @@
       right: 0;
       background: linear-gradient(
         to left,
-        rgba(v.$color-white, 0.88) 0%,
-        rgba(v.$color-white, 0.45) 58%,
+        rgba(v.$color-white, 0.2) 0%,
+        rgba(v.$color-white, 0.08) 15%,
         transparent 100%
       );
     }

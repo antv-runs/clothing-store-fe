@@ -4,6 +4,8 @@
   justify-content: center;
   text-decoration: none;
   color: inherit;
+  line-height: 1;
+  flex-shrink: 0;
 
   &:visited,
   &:active {
@@ -14,17 +16,6 @@
     outline: 2px solid currentColor;
     outline-offset: 3px;
   }
-}
-
-// Dedicated icon wrapper for robust centering
-.icon-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  color: inherit;
-  line-height: 1;
-  flex-shrink: 0;
 }
 
 .icon-link .icon {

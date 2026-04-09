@@ -45,6 +45,11 @@ export async function getReviewsByProductId(
     meta,
     links,
   };
+
+  // submitReview API is returned empty data to avoid breaking the UI
+  // return {
+  //   data: [],
+  // };
 }
 
 export async function submitReview(
@@ -62,7 +67,11 @@ export async function submitReview(
     rating: normalizedRating,
     comment: normalizedComment,
   };
-  const url = `/api/products/${encodeURIComponent(normalizedProductId)}/reviews`;
+  // const url = `/api/products/${encodeURIComponent(normalizedProductId)}/reviews`;
+
+  // Simulate a server error for testing error handling
+  const url = `https://httpbin.org/status/500`;
+
   const res = await post<ApiResponse<ApiReview>>(url, body);
   const apiReview = unwrapApiResponse(res, "Failed to submit review");
   return mapApiReviewToReview(apiReview, normalizedProductId);

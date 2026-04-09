@@ -1,4 +1,5 @@
 @use "../../../styles/abstracts/variables" as v;
+@use "../../../styles/abstracts/mixins" as m;
 
 .header-icon {
   display: flex;
@@ -35,17 +36,16 @@
   &__profile {
     color: v.$color-black;
     flex-shrink: 0;
-    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), opacity 0.15s ease;
+    transition:
+      transform 0.15s cubic-bezier(0.2, 0, 0, 1),
+      opacity 0.15s ease;
 
-    &:hover:not(:disabled) {
-      opacity: 0.8;
-      transform: translateY(-1px);
-    }
-
-    &:active:not(:disabled) {
-      transform: scale(0.94);
-      opacity: 1;
-    }
+    @include m.icon-lift-hover(
+      $hover-opacity: 0.8,
+      $hover-selector: "&:hover:not(:disabled)",
+      $active-opacity: 1,
+      $active-selector: "&:active:not(:disabled)"
+    );
   }
 }
 

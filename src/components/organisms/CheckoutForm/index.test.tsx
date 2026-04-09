@@ -50,17 +50,15 @@ describe("CheckoutForm", () => {
     });
   });
 
-  it("displays server errors and global error", () => {
+  it("displays server field errors", () => {
     render(
       <CheckoutForm
         onSubmit={jest.fn()}
         isSubmitting={false}
-        globalError="Something went wrong"
         serverErrors={{ email: "Email already taken" }}
       />
     );
 
-    expect(screen.getByText("Something went wrong")).toBeInTheDocument();
     expect(screen.getByText("Email already taken")).toBeInTheDocument();
   });
 });
