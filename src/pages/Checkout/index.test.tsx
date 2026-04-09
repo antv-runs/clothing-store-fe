@@ -1,11 +1,15 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
 import Checkout from "@/pages/Checkout";
 import { createOrder } from "@/api/Order";
 import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import { ApiError } from "@/utils/apiError";
+import { store } from "@/store/cartStore";
+import * as toastHook from "@/hooks/useToast";
 
 const mockNavigate = jest.fn();
 const mockUseCartRows = jest.fn();
+const mockShowToast = jest.fn();
 
 jest.mock("@/api/Order", () => ({
   createOrder: jest.fn(),
@@ -38,9 +42,22 @@ const mockedWriteStoredCartRows = writeStoredCartRows as jest.MockedFunction<
   typeof writeStoredCartRows
 >;
 
+const renderCheckout = () => {
+  return render(
+    <Provider store={store}>
+      <Checkout />
+    </Provider>,
+  );
+};
+
 describe("Checkout", () => {
   beforeEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
+    jest.spyOn(toastHook, "useToast").mockReturnValue({
+      showToast: mockShowToast,
+      dismissToast: jest.fn(),
+    });
     mockNavigate.mockReset();
     mockUseCartRows.mockReturnValue({
       cartRows: [],
@@ -59,7 +76,7 @@ describe("Checkout", () => {
     it("cart empty -> API not called", async () => {
       mockedReadStoredCartRows.mockReturnValue([]);
 
-      render(<Checkout />);
+      renderCheckout();
 
       fireEvent.change(screen.getByLabelText("Full Name"), {
         target: { value: "John Doe" },
@@ -88,7 +105,7 @@ describe("Checkout", () => {
       ]);
       mockedCreateOrder.mockResolvedValue({} as never);
 
-      render(<Checkout />);
+      renderCheckout();
 
       fireEvent.change(screen.getByLabelText("Full Name"), {
         target: { value: "John Doe" },
@@ -127,7 +144,7 @@ describe("Checkout", () => {
       ]);
       mockedCreateOrder.mockResolvedValue({} as never);
 
-      render(<Checkout />);
+      renderCheckout();
 
       fireEvent.change(screen.getByLabelText("Full Name"), {
         target: { value: "John Doe" },
@@ -161,7 +178,7 @@ describe("Checkout", () => {
       expect(mockNavigate).toHaveBeenCalledWith("/");
     });
 
-    it("failure -> shows error message and allows retry", async () => {
+    it("failure -> allows retry without duplicate local error toast", async () => {
       mockedReadStoredCartRows.mockReturnValue([
         { productId: "1", quantity: 1, color: "black", size: "L" },
       ]);
@@ -173,7 +190,7 @@ describe("Checkout", () => {
         }),
       );
 
-      render(<Checkout />);
+      renderCheckout();
 
       fireEvent.change(screen.getByLabelText("Full Name"), {
         target: { value: "John Doe" },
@@ -194,9 +211,7 @@ describe("Checkout", () => {
         expect(mockedCreateOrder).toHaveBeenCalledTimes(1);
       });
 
-      expect(await screen.findByRole("alert")).toHaveTextContent(
-        "Please check your payment details and try again.",
-      );
+      expect(mockShowToast).not.toHaveBeenCalled();
 
       const submitButton = screen.getByRole("button", { name: "Place Order" });
       expect(submitButton).toBeEnabled();
@@ -218,7 +233,7 @@ describe("Checkout", () => {
         return new Promise(() => undefined) as never;
       });
 
-      render(<Checkout />);
+      renderCheckout();
 
       fireEvent.change(screen.getByLabelText("Full Name"), {
         target: { value: "John Doe" },
@@ -251,7 +266,7 @@ describe("Checkout", () => {
         { productId: "bad-id", quantity: 1, color: "black", size: "L" },
       ]);
 
-      render(<Checkout />);
+      renderCheckout();
 
       fireEvent.change(screen.getByLabelText("Full Name"), {
         target: { value: "John Doe" },
@@ -268,9 +283,14 @@ describe("Checkout", () => {
 
       fireEvent.click(screen.getByRole("button", { name: "Place Order" }));
 
-      expect(await screen.findByRole("alert")).toHaveTextContent(
-        "Invalid product selected in cart item #1.",
-      );
+      await waitFor(() => {
+        expect(mockShowToast).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: "Invalid product selected in cart item #1.",
+            variant: "error",
+          }),
+        );
+      });
       expect(mockedCreateOrder).not.toHaveBeenCalled();
     });
   });

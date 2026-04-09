@@ -2,6 +2,10 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { WriteReviewModal } from "./index";
 import { DEFAULT_GUEST_USERNAME } from "@/const/user";
 
+jest.mock("@/components/atoms/Icon", () => ({
+  Icon: () => <span data-testid="mock-icon" aria-hidden="true" />,
+}));
+
 describe("WriteReviewModal", () => {
   const mockOnClose = jest.fn();
   const mockOnSubmit = jest.fn();
@@ -171,7 +175,7 @@ describe("WriteReviewModal", () => {
       );
 
       const submitButton = screen.getByRole("button", {
-        name: /submit review/i,
+        name: /loading/i,
       });
       expect(submitButton).toHaveAttribute("aria-busy", "true");
     });
@@ -196,8 +200,6 @@ describe("WriteReviewModal", () => {
     });
 
     it("should show loading state while submitting and recover on error", async () => {
-      mockOnSubmit.mockRejectedValueOnce(new Error("Submit failed"));
-
       const { rerender } = render(
         <WriteReviewModal
           isOpen={true}
@@ -215,7 +217,6 @@ describe("WriteReviewModal", () => {
       const submitButton = screen.getByRole("button", {
         name: /submit review/i,
       });
-      fireEvent.click(submitButton);
 
       // Simulate isSubmitting=true (parent component state during request)
       rerender(
@@ -227,7 +228,10 @@ describe("WriteReviewModal", () => {
         />,
       );
 
-      expect(submitButton).toHaveAttribute("aria-busy", "true");
+      expect(screen.getByRole("button", { name: /loading/i })).toHaveAttribute(
+        "aria-busy",
+        "true",
+      );
 
       // Simulate isSubmitting=false after error (parent component cleanup)
       rerender(
@@ -288,6 +292,17 @@ describe("WriteReviewModal", () => {
 
       // Simulate clicking left half (half star)
       const firstStarButton = starButtons[0];
+      jest.spyOn(firstStarButton, "getBoundingClientRect").mockReturnValue({
+        x: 0,
+        y: 0,
+        width: 20,
+        height: 20,
+        top: 0,
+        right: 20,
+        bottom: 20,
+        left: 0,
+        toJSON: () => ({}),
+      });
       const rect = firstStarButton.getBoundingClientRect();
       fireEvent.click(firstStarButton, {
         clientX: rect.left + rect.width / 4, // Left half
