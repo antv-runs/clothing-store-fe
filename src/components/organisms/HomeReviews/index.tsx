@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
+import { HomeReviewsSkeleton } from "@/components/molecules/HomeReviewsSkeleton";
 import { ReviewCard } from "@/components/molecules/ReviewCard";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
-import { ProductReviewsListSkeleton } from "@/components/molecules/ProductReviewsListSkeleton";
 import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import { getFirstItemScrollStep } from "@/utils/carousel";
@@ -47,15 +47,16 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
       setCanScrollNext(currentScrollLeft < maxScrollLeft - 1);
     };
 
-    syncReviewState();
+    const frameId = requestAnimationFrame(syncReviewState);
     track.addEventListener("scroll", syncReviewState, { passive: true });
     window.addEventListener("resize", syncReviewState);
 
     return () => {
+      cancelAnimationFrame(frameId);
       track.removeEventListener("scroll", syncReviewState);
       window.removeEventListener("resize", syncReviewState);
     };
-  }, []);
+  }, [reviews.length]);
 
   const handleScrollReviews = (direction: "prev" | "next") => {
     const track = reviewsTrackRef.current;
@@ -80,11 +81,7 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
   };
 
   const isEmpty = !isLoading && !error && reviews.length === 0;
-  const loadingContent = (
-    <ul className="reviews__list" aria-busy="true" aria-live="polite">
-      <ProductReviewsListSkeleton />
-    </ul>
-  );
+  const loadingContent = <HomeReviewsSkeleton />;
 
   return (
     <section className="home-reviews" aria-labelledby="home-reviews-title">
