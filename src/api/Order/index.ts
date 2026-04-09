@@ -9,10 +9,10 @@ import type {
 } from "@/types/api/order";
 
 export async function createOrder(payload: CreateOrderRequest): Promise<Order> {
-  // const url = "/api/orders";
+  const url = "/api/orders";
 
   // Simulate a server error for testing error handling
-  const url = `https://httpbin.org/status/500`;
+  // const url = `https://httpbin.org/status/500`;
 
   const response = await post<CreateOrderResponse>(url, payload);
 

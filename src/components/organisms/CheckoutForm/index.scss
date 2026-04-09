@@ -34,6 +34,13 @@
     &--full {
       grid-column: 1 / -1;
     }
+
+    p[role="alert"] {
+      color: v.$color-danger;
+      font-size: 14px;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
   }
 
   &__submit {
@@ -48,8 +55,6 @@
       $hover-background-color: v.$color-black
     );
   }
-
-
 }
 
 @media (max-width: 768px) {
