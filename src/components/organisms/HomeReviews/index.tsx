@@ -3,6 +3,7 @@ import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
 import { ReviewCard } from "@/components/molecules/ReviewCard";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
+import { ProductReviewsListSkeleton } from "@/components/molecules/ProductReviewsListSkeleton";
 import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import { getFirstItemScrollStep } from "@/utils/carousel";
@@ -79,6 +80,11 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
   };
 
   const isEmpty = !isLoading && !error && reviews.length === 0;
+  const loadingContent = (
+    <ul className="reviews__list" aria-busy="true" aria-live="polite">
+      <ProductReviewsListSkeleton />
+    </ul>
+  );
 
   return (
     <section className="home-reviews" aria-labelledby="home-reviews-title">
@@ -118,11 +124,7 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
         error={error}
         errorKind={errorKind || null}
         onRetry={onRetry}
-        loadingContent={
-          <div className="home-reviews__state" role="status">
-            Loading reviews...
-          </div>
-        }
+        loadingContent={loadingContent}
         emptyContent={<EmptyState message="No reviews available." />}
       >
         <div className={`home-reviews__viewport${viewportStateClass}`}>
