@@ -4,6 +4,7 @@ import { ProductCardList } from "@/components/organisms/ProductCardList";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { Heading } from "@/components/atoms/Heading";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
+import { EmptyState } from "@/components/molecules/EmptyState";
 import type { ListErrorKind } from "@/types/listState";
 import type { Product } from "@/types/product";
 
@@ -86,9 +87,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
               linkMode="overlay"
             />
           }
-          emptyContent={
-            <p className="other-products__empty">No related products available.</p>
-          }
+          emptyContent={<EmptyState message="No related products available." />}
         >
           <ProductCardList
             products={products}

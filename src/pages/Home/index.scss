@@ -14,18 +14,14 @@
     background-color: v.$color-black;
     color: v.$color-white;
 
-    &:hover {
-      background-color: #1a1a1a;
-    }
+    @include m.primary-static-hover($hover-background-color: #1a1a1a);
   }
 
   &--light {
     background-color: v.$color-white;
     color: v.$color-black;
 
-    &:hover {
-      background-color: #e0e0e0;
-    }
+    @include m.primary-static-hover($hover-background-color: #e0e0e0);
   }
 
   &--cta {

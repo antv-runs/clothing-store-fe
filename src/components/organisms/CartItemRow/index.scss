@@ -128,17 +128,15 @@
     --icon-height: 19.5px;
     flex-shrink: 0;
 
-    transition: transform 150ms ease, opacity 150ms ease;
+    transition:
+      transform 150ms ease,
+      opacity 150ms ease;
 
     @media (hover: hover) {
-      &:not(:disabled):hover {
-        opacity: 0.7;
-        transform: scale(1.1);
-      }
-    }
-
-    &:not(:disabled):active {
-      transform: scale(0.95);
+      @include m.icon-lift-hover(
+        $hover-opacity: 0.7,
+        $hover-selector: "&:not(:disabled):hover"
+      );
     }
 
     &:disabled {

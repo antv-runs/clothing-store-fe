@@ -8,6 +8,7 @@ import type { ListErrorKind } from "@/types/listState";
 import { formatPrice } from "@/utils/formatters";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 import "./index.scss";
+import { EmptyState } from "@/components/molecules/EmptyState";
 
 type HomeProductSectionProps = {
   title: string;
@@ -83,11 +84,7 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
               skeletonCount={skeletonCount}
             />
           }
-          emptyContent={
-            <p className="home-products__empty" role="status">
-              {emptyMessage}
-            </p>
-          }
+          emptyContent={<EmptyState message={emptyMessage} />}
         >
           <ProductCardList
             products={productsList}

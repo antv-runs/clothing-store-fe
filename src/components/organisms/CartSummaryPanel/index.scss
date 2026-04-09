@@ -110,13 +110,10 @@
       opacity 150ms ease;
 
     @media (hover: hover) {
-      &:not(:disabled):not(.is-disabled):hover {
-        opacity: 0.9;
-      }
-    }
-
-    &:not(:disabled):not(.is-disabled):active {
-      transform: scale(0.97);
+      @include m.primary-lift-hover(
+        $hover-opacity: 0.9,
+        $hover-selector: "&:not(:disabled):not(.is-disabled):hover"
+      );
     }
 
     &:disabled,
@@ -154,14 +151,10 @@
       opacity 150ms ease;
 
     @media (hover: hover) {
-      &:not(:disabled):hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
-      }
-    }
-
-    &:not(:disabled):active {
-      transform: scale(0.98);
+      @include m.primary-lift-hover(
+        $hover-opacity: 0.9,
+        $hover-selector: "&:not(:disabled):hover"
+      );
     }
 
     &:disabled {

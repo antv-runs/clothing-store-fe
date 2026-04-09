@@ -43,11 +43,10 @@
     line-height: 1;
     padding: 16px;
 
-    &:hover {
-      opacity: 1;
-      transform: none;
-      background-color: v.$color-black;
-    }
+    @include m.primary-static-hover(
+      $hover-opacity: 1,
+      $hover-background-color: v.$color-black
+    );
   }
 
   &__message {

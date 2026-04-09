@@ -7,6 +7,7 @@ import { ProductReviewsHeader } from "@/components/molecules/ProductReviewsHeade
 import { ProductReviewsList } from "@/components/molecules/ProductReviewsList";
 import { ProductReviewsListSkeleton } from "@/components/molecules/ProductReviewsListSkeleton";
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
+import { EmptyState } from "@/components/molecules/EmptyState";
 
 interface ProductReviewsTabProps {
   panelRef?: (el: HTMLElement | null) => void;
@@ -56,13 +57,6 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
       <ProductReviewsListSkeleton />
     </ul>
   );
-  const emptyContent = (
-    <ul className="reviews__list" aria-live="polite">
-      <li className="reviews__item review-card">
-        <p className="review-card__content">No reviews yet.</p>
-      </li>
-    </ul>
-  );
 
   return (
     <section
@@ -92,7 +86,9 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
         errorKind={errorKind || null}
         onRetry={onRetry}
         loadingContent={loadingContent}
-        emptyContent={emptyContent}
+        emptyContent={
+          <EmptyState message="No reviews available for this product." />
+        }
       >
         <>
           <ProductReviewsList reviews={reviews} />

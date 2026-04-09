@@ -45,6 +45,11 @@ export async function getReviewsByProductId(
     meta,
     links,
   };
+
+  // submitReview API is returned empty data to avoid breaking the UI
+  // return {
+  //   data: [],
+  // };
 }
 
 export async function submitReview(

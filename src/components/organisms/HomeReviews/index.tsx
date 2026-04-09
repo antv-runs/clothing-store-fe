@@ -7,6 +7,7 @@ import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import { getFirstItemScrollStep } from "@/utils/carousel";
 import "./index.scss";
+import { EmptyState } from "@/components/molecules/EmptyState";
 
 interface HomeReviewsProps {
   reviews: Review[];
@@ -72,7 +73,9 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
   const viewportStateClass = `${hasOverflow ? " has-overflow" : ""}${canScrollPrev ? " is-not-at-start" : ""}${canScrollNext ? " is-not-at-end" : ""}`;
 
   const renderReviews = () => {
-    return reviews.map((review) => <ReviewCard key={review.id} review={review} />);
+    return reviews.map((review) => (
+      <ReviewCard key={review.id} review={review} />
+    ));
   };
 
   const isEmpty = !isLoading && !error && reviews.length === 0;
@@ -120,11 +123,7 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
             Loading reviews...
           </div>
         }
-        emptyContent={
-          <div className="home-reviews__state" role="status">
-            No reviews available.
-          </div>
-        }
+        emptyContent={<EmptyState message="No reviews available." />}
       >
         <div className={`home-reviews__viewport${viewportStateClass}`}>
           <ul
