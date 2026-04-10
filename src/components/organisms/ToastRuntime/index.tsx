@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "@/components/organisms/ToastContainer";
 import { useToast } from "@/hooks/useToast";
-import type { RootState } from "@/store/cartStore";
+import type { RootState } from "@/store/rootStore";
 
 /**
  * Redux-backed runtime bridge for global toast rendering and global API error events.

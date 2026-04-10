@@ -1,0 +1,37 @@
+@startuml Redux_Cart_Remove_Item
+title Redux Cart - Remove Item Flow
+
+skinparam backgroundColor white
+skinparam ParticipantPadding 18
+skinparam BoxPadding 10
+
+box "UI Layer" #F8F9FA
+participant "React Component" as UI
+end box
+
+box "Redux Layer" #E8F6F3
+participant "cartAction" as Action
+participant "cartStore" as Store
+participant "cartReducer" as Reducer
+end box
+
+box "Persistence" #FCF3CF
+participant "cartStorage" as Storage
+end box
+
+autonumber 1
+
+UI -> Action : removeItem(productId, color, size)
+Action --> UI : { type: \"cart/REMOVE_ITEM\", payload: {...} }
+
+UI -> Store : dispatch(action)
+Store -> Reducer : cartReducer(state, action)
+
+Reducer -> Reducer : filter items
+Reducer -> Reducer : remove exact match\n(productId, color, size)
+
+Reducer --> Store : new CartState
+Store -> Storage : writeStoredCartRows(state.cart.items)
+Store --> UI : subscribed state update\n-> re-render
+
+@enduml

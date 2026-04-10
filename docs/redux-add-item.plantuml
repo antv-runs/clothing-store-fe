@@ -1,0 +1,42 @@
+@startuml Redux_Cart_Add_Item
+title Redux Cart - Add Item Flow
+
+skinparam backgroundColor white
+skinparam ParticipantPadding 18
+skinparam BoxPadding 10
+
+box "UI Layer" #F8F9FA
+participant "React Component" as UI
+end box
+
+box "Redux Layer" #E8F6F3
+participant "cartAction" as Action
+participant "cartStore" as Store
+participant "cartReducer" as Reducer
+end box
+
+box "Persistence" #FCF3CF
+participant "cartStorage" as Storage
+end box
+
+autonumber 1
+
+UI -> Action : addItem(item: CartRow)
+Action --> UI : { type: \"cart/ADD_ITEM\", payload: item }
+
+UI -> Store : dispatch(action)
+Store -> Reducer : cartReducer(state, action)
+
+alt item already exists\n(match by productId, color, size)
+  Reducer -> Reducer : find existing item
+  Reducer -> Reducer : increase quantity
+else new item
+  Reducer -> Reducer : append new item
+  Reducer -> Reducer : normalize quantity
+end
+
+Reducer --> Store : new CartState
+Store -> Storage : writeStoredCartRows(state.cart.items)
+Store --> UI : subscribed state update\n-> re-render
+
+@enduml

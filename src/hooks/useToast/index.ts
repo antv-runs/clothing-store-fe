@@ -4,7 +4,7 @@ import {
   addToast,
   dismissToast as dismissToastAction,
 } from "@/actions/toastAction";
-import type { AppDispatch } from "@/store/cartStore";
+import type { AppDispatch } from "@/store/rootStore";
 import type { ToastControls, ToastData } from "@/types/toast";
 
 export const useToast = (): ToastControls => {

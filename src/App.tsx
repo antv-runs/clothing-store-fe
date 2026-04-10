@@ -2,7 +2,7 @@ import AppRoutes from "@/routes";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
 import { ToastRuntime } from "@/components/organisms/ToastRuntime";
 import { Provider } from "react-redux";
-import { store } from "@/store/cartStore";
+import { store } from "@/store/rootStore";
 
 /**
  * Main App component

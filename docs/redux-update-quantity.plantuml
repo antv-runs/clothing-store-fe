@@ -1,0 +1,45 @@
+@startuml Redux_Cart_Update_Quantity
+title Redux Cart - Update Quantity Flow
+
+skinparam backgroundColor white
+skinparam ParticipantPadding 18
+skinparam BoxPadding 10
+
+box "UI Layer" #F8F9FA
+participant "React Component" as UI
+end box
+
+box "Redux Layer" #E8F6F3
+participant "cartAction" as Action
+participant "cartStore" as Store
+participant "cartReducer" as Reducer
+end box
+
+box "Persistence" #FCF3CF
+participant "cartStorage" as Storage
+end box
+
+autonumber 1
+
+UI -> Action : increaseQuantity(...) \nor decreaseQuantity(...) \nor setQuantity(..., quantity)
+Action --> UI : quantity action object
+
+UI -> Store : dispatch(action)
+Store -> Reducer : cartReducer(state, action)
+
+Reducer -> Reducer : map items
+Reducer -> Reducer : find exact match\n(productId, color, size)
+
+alt INCREASE_QUANTITY
+  Reducer -> Reducer : quantity = item.quantity + 1
+else DECREASE_QUANTITY
+  Reducer -> Reducer : quantity = max(1, item.quantity - 1)
+else SET_QUANTITY
+  Reducer -> Reducer : quantity = max(1, payload.quantity)
+end
+
+Reducer --> Store : new CartState
+Store -> Storage : writeStoredCartRows(state.cart.items)
+Store --> UI : subscribed state update\n-> re-render
+
+@enduml

@@ -10,7 +10,7 @@ import {
   mapApiErrorToListErrorKind,
 } from "@/utils/apiErrorList";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/cartStore";
+import type { RootState, AppDispatch } from "@/store/rootStore";
 import {
   addItem as actionAddItem,
   setQuantity as actionSetQuantity,

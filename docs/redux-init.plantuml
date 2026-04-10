@@ -1,0 +1,39 @@
+@startuml Redux_Cart_Init
+title Redux Cart - Store Initialization & Hydration
+
+skinparam backgroundColor white
+skinparam ParticipantPadding 18
+skinparam BoxPadding 10
+
+box "Redux Store" #E8F6F3
+participant "cartStore" as Store
+participant "rootReducer\n(combineReducers)" as RootReducer
+participant "cartReducer" as CartReducer
+end box
+
+box "Persistence" #FCF3CF
+participant "cartStorage" as Storage
+end box
+
+autonumber 1
+
+Store -> Storage : readStoredCartRows()
+Storage --> Store : CartRow[]
+
+Store -> Store : build preloadedState\n{ cart: { items: [...] } }
+
+Store -> RootReducer : create store with preloadedState
+RootReducer -> CartReducer : initialize cart slice
+CartReducer --> RootReducer : CartState
+RootReducer --> Store : store ready
+
+note over Store
+combineReducers includes:
+- cart: cartReducer
+- toast: toastReducer
+end note
+
+Store -> Store : subscribe()
+Store -> Storage : on every state change,\nwriteStoredCartRows(state.cart.items)
+
+@enduml
