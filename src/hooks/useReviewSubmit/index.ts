@@ -33,6 +33,9 @@ export const useReviewSubmit = ({
   const isMountedRef = useRef(true);
 
   useEffect(() => {
+    // StrictMode runs effect cleanup+setup on mount in development.
+    // Reset mount flag on each setup so guarded state updates are not blocked.
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
