@@ -1,11 +1,10 @@
 @use "@/styles/abstracts/variables" as v;
 
 .not-found-page {
-  min-height: 70vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 80px;
 
   &__content {
     display: flex;
