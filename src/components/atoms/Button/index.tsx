@@ -103,7 +103,7 @@ export const Button = ({
         !unstyled && `button--${variant}`,
         className,
       )}
-      style={{ ...style, ...loadingLockStyle }}
+      style={{ ...style, ...loadingLockStyle }} // remove
       {...buttonProps}
     >
       <span
