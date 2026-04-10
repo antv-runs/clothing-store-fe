@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
@@ -41,6 +42,25 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
 }) => {
   const sectionSlug = title.toLowerCase().replace(/\s+/g, "-");
   const hasRetryState = Boolean(error) || isRetrying;
+
+  const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set());
+  const [errorImageIds, setErrorImageIds] = useState<Set<string>>(new Set());
+
+  const handleImageLoad = (productId: string) => {
+    setLoadedImageIds((previous) => {
+      const next = new Set(previous);
+      next.add(productId);
+      return next;
+    });
+  };
+
+  const handleImageError = (productId: string) => {
+    setErrorImageIds((previous) => {
+      const next = new Set(previous);
+      next.add(productId);
+      return next;
+    });
+  };
 
   return (
     <section
@@ -92,6 +112,10 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
             showNavigation={false}
             loading={false}
             skeletonCount={skeletonCount}
+            imageLoaded={loadedImageIds}
+            imageError={errorImageIds}
+            onImageLoad={handleImageLoad}
+            onImageError={handleImageError}
           />
         </ListStateWrapper>
       </ErrorBoundary>
