@@ -19,8 +19,10 @@ interface CartSummaryPanelProps {
   formatPrice: (amount: number, currency?: string) => string;
   isCheckoutDisabled?: boolean;
   isLocked?: boolean;
+  isCheckoutLoading?: boolean;
+  isCouponLoading?: boolean;
   onCheckout?: () => void;
-  onApplyCoupon?: () => Promise<void> | void;
+  onApplyCoupon?: (code: string) => Promise<void> | void;
 }
 
 /**
@@ -31,16 +33,24 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
   formatPrice,
   isCheckoutDisabled = true,
   isLocked = false,
+  isCheckoutLoading = false,
+  isCouponLoading = false,
   onCheckout,
   onApplyCoupon,
 }) => {
+  const [promoCode, setPromoCode] = useState("");
   const [couponError, setCouponError] = useState<string | null>(null);
 
   const handleApply = async () => {
+    const trimmedCode = promoCode.trim();
+    if (!trimmedCode || isLocked || isCouponLoading) {
+      return;
+    }
+
     setCouponError(null);
     if (onApplyCoupon) {
       try {
-        await onApplyCoupon();
+        await onApplyCoupon(trimmedCode);
       } catch {
         setCouponError("Failed to apply coupon");
       }
@@ -90,11 +100,14 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
           placeholder="Add promo code"
           ariaLabel="Promo code"
           disabled={isLocked}
+          value={promoCode}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPromoCode(e.target.value)}
         />
         <Button
           variant="primary"
           type="button"
-          disabled={isLocked}
+          disabled={isLocked || !promoCode.trim()}
+          isLoading={isCouponLoading}
           onClick={handleApply}
         >
           Apply
@@ -116,6 +129,7 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
         className="cart-summary__checkout"
         type="button"
         disabled={isCheckoutDisabled || isLocked}
+        isLoading={isCheckoutLoading}
         onClick={onCheckout}
       >
         <span className="cart-summary__checkout-text">Go to Checkout</span>

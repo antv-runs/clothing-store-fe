@@ -7,6 +7,7 @@ interface ProductActionsProps {
   selectedColorId?: string | null;
   selectedSizeId?: string | null;
   quantity: number;
+  isAddingToCart?: boolean;
   onDecreaseQuantity: () => void;
   onIncreaseQuantity: () => void;
   onQuantityChange: (value: string) => void;
@@ -21,6 +22,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   selectedColorId,
   selectedSizeId,
   quantity,
+  isAddingToCart = false,
   onDecreaseQuantity,
   onIncreaseQuantity,
   onQuantityChange,
@@ -50,6 +52,8 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         data-color-id={selectedColorId}
         data-size-id={selectedSizeId}
         onClick={onAddToCart}
+        disabled={isAddingToCart}
+        isLoading={isAddingToCart}
       >
         Add to Cart
       </Button>

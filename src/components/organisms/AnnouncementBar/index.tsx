@@ -3,7 +3,11 @@ import { Text } from "@/components/atoms/Text";
 import { TextLink } from "@/components/atoms/TextLink";
 import "./index.scss";
 
-export const AnnouncementBar: React.FC = () => {
+type AnnouncementBarProps = {
+  onClose?: () => void;
+};
+
+export const AnnouncementBar: React.FC<AnnouncementBarProps> = ({ onClose }) => {
   return (
     <div className="announcement-bar">
       <div className="announcement-bar__container">
@@ -20,6 +24,7 @@ export const AnnouncementBar: React.FC = () => {
           ariaLabel="Close announcement"
           iconWidth={14}
           iconHeight={14}
+          onClick={onClose}
         />
       </div>
     </div>

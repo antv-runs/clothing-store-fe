@@ -55,6 +55,7 @@ const ProductDetail: React.FC = () => {
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(DEFAULT_QUANTITY);
+  const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [isWriteReviewModalOpen, setIsWriteReviewModalOpen] =
     useState<boolean>(false);
 
@@ -189,6 +190,10 @@ const ProductDetail: React.FC = () => {
   };
 
   const handleAddToCart = () => {
+    if (isAddingToCart) {
+      return;
+    }
+
     if (!product?.id) {
       showToast({
         message: "Unable to add item to cart",
@@ -200,6 +205,8 @@ const ProductDetail: React.FC = () => {
     const safeColorId = getSafeSelectedColorId();
     const safeSizeId = getSafeSelectedSizeId();
     const safeQuantity = normalizeQuantity(quantity);
+
+    setIsAddingToCart(true);
 
     try {
       addItem({
@@ -218,6 +225,10 @@ const ProductDetail: React.FC = () => {
         message: "Unable to add item to cart",
         variant: "error",
       });
+    } finally {
+      setTimeout(() => {
+        setIsAddingToCart(false);
+      }, 300);
     }
   };
 
@@ -307,6 +318,7 @@ const ProductDetail: React.FC = () => {
               selectedColorId={getSafeSelectedColorId()}
               selectedSizeId={getSafeSelectedSizeId()}
               quantity={quantity}
+              isAddingToCart={isAddingToCart}
               onDecreaseQuantity={handleDecreaseQuantity}
               onIncreaseQuantity={handleIncreaseQuantity}
               onQuantityChange={handleQuantityChange}

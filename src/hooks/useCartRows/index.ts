@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getProductById } from "@/api/Product";
 import type { CartRow } from "@/types/cart";
@@ -147,7 +148,7 @@ export const useCartRows = (): UseCartRowsResult => {
         if (!isActive) {
           return;
         }
-        console.error("Failed to load cart product details", error);
+        logger.error("Failed to load cart product details", error);
         setHasError(true);
         setHydrationError(HYDRATION_ERROR_MESSAGE);
         setHydrationErrorKind(mapApiErrorToListErrorKind(error));

@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ProductTabsNav } from "./index";
 
@@ -19,13 +20,13 @@ type Story = StoryObj<typeof meta>;
 export const DetailsActive: Story = {
   args: {
     activeTab: "tc-details",
-    onTabSelect: (tab) => console.log("selected", tab),
+    onTabSelect: (tab) => logger.log("selected", tab),
   },
 };
 
 export const ReviewsActive: Story = {
   args: {
     activeTab: "tc-reviews",
-    onTabSelect: (tab) => console.log("selected", tab),
+    onTabSelect: (tab) => logger.log("selected", tab),
   },
 };

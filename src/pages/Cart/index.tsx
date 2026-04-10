@@ -13,6 +13,8 @@ import { formatPrice } from "@/utils/formatters";
 import { useToast } from "@/hooks/useToast";
 import "./index.scss";
 
+export type ProcessingAction = "idle" | "checkout" | "coupon";
+
 const Cart: React.FC = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -27,16 +29,20 @@ const Cart: React.FC = () => {
     updateItemQuantity,
     removeItem,
   } = useCartRows();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingAction, setProcessingAction] = useState<ProcessingAction>("idle");
+  const isProcessing = processingAction !== "idle";
 
   const handleApplyCoupon = () => {
+    if (isProcessing) return Promise.resolve();
+
     return new Promise<void>((_, reject) => {
-      setIsProcessing(true);
+      setProcessingAction("coupon");
       setTimeout(() => {
-        setIsProcessing(false);
+        setProcessingAction("idle");
         reject(new Error("Simulated failure"));
-      }, 600);
+      }, 1000);
     }).catch(() => {
+      setProcessingAction("idle");
       showToast({
         message: "Unable to apply coupon. Please try again.",
         variant: "error",
@@ -46,13 +52,13 @@ const Cart: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    if (isEmpty) {
+    if (isProcessing || isEmpty) {
       return;
     }
 
-    setIsProcessing(true);
+    setProcessingAction("checkout");
     setTimeout(() => {
-      setIsProcessing(false);
+      setProcessingAction("idle");
       navigate(ROUTES.CHECKOUT);
     }, 600);
   };
@@ -115,6 +121,8 @@ const Cart: React.FC = () => {
             formatPrice={formatPrice}
             isCheckoutDisabled={isEmpty}
             isLocked={isProcessing}
+            isCheckoutLoading={processingAction === "checkout"}
+            isCouponLoading={processingAction === "coupon"}
             onCheckout={handleCheckout}
             onApplyCoupon={handleApplyCoupon}
           />

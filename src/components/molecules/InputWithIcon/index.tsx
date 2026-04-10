@@ -18,6 +18,8 @@ type InputWithIconProps = {
   iconPosition?: IconPosition;
   iconWidth?: number | string;
   iconHeight?: number | string;
+  value?: string | number | readonly string[];
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 function toCssDimension(value?: number | string) {
@@ -40,6 +42,8 @@ export const InputWithIcon = ({
   iconPosition = "outside-start",
   iconWidth = 20.25,
   iconHeight = 15.75,
+  value,
+  onChange,
 }: InputWithIconProps) => {
   const style = {
     "--input-with-icon-width": toCssDimension(iconWidth),
@@ -64,6 +68,8 @@ export const InputWithIcon = ({
         placeholder={placeholder}
         aria-label={ariaLabel}
         disabled={disabled}
+        value={value}
+        onChange={onChange}
         unstyled
       />
     </div>

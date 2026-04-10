@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ProductTabsSection } from "./index";
 
@@ -37,10 +38,10 @@ export const Default: Story = {
     hasMoreReviews: false,
     selectedRating: "All",
     selectedSort: "latest",
-    onRatingChange: (val) => console.log("rating", val),
-    onSortChange: (val) => console.log("sort", val),
-    onLoadMore: () => console.log("load more"),
-    onRetry: () => console.log("retry"),
-    onWriteReview: () => console.log("write review"),
+    onRatingChange: (val) => logger.log("rating", val),
+    onSortChange: (val) => logger.log("sort", val),
+    onLoadMore: () => logger.log("load more"),
+    onRetry: () => logger.log("retry"),
+    onWriteReview: () => logger.log("write review"),
   },
 };

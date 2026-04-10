@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ProductActions } from "./index";
 
@@ -18,10 +19,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     quantity: 1,
-    onDecreaseQuantity: () => console.log("decrease"),
-    onIncreaseQuantity: () => console.log("increase"),
-    onQuantityChange: (val) => console.log("change", val),
-    onAddToCart: () => console.log("add to cart"),
+    onDecreaseQuantity: () => logger.log("decrease"),
+    onIncreaseQuantity: () => logger.log("increase"),
+    onQuantityChange: (val) => logger.log("change", val),
+    onAddToCart: () => logger.log("add to cart"),
   },
 };
 
@@ -30,9 +31,9 @@ export const WithSelections: Story = {
     quantity: 2,
     selectedColorId: "color-red",
     selectedSizeId: "size-m",
-    onDecreaseQuantity: () => console.log("decrease"),
-    onIncreaseQuantity: () => console.log("increase"),
-    onQuantityChange: (val) => console.log("change", val),
-    onAddToCart: () => console.log("add to cart"),
+    onDecreaseQuantity: () => logger.log("decrease"),
+    onIncreaseQuantity: () => logger.log("increase"),
+    onQuantityChange: (val) => logger.log("change", val),
+    onAddToCart: () => logger.log("add to cart"),
   },
 };

@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ToastContainer } from "./index";
 
@@ -17,6 +18,6 @@ export const Default: Story = {
       { id: "t2", message: "Could not apply promotional code.", variant: "error" },
       { id: "t3", message: "Your session will expire soon.", variant: "info" },
     ],
-    onDismiss: (id) => console.log("Dismiss toast:", id),
+    onDismiss: (id) => logger.log("Dismiss toast:", id),
   },
 };

@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { WriteReviewModal } from "./index";
 
@@ -18,7 +19,7 @@ export const Default: Story = {
   args: {
     isOpen: true,
     isSubmitting: false,
-    onClose: () => console.log("close"),
-    onSubmit: (values) => console.log("submit", values),
+    onClose: () => logger.log("close"),
+    onSubmit: (values) => logger.log("submit", values),
   },
 };

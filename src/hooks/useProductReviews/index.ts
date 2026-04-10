@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { getReviewsByProductId } from "@/api/Review";
 import {
@@ -239,7 +240,7 @@ export const useProductReviews = (
           return;
         }
 
-        console.error("Failed to load reviews", error);
+        logger.error("Failed to load reviews", error);
         dispatch({
           type: REVIEW_ACTION.REQUEST_ERROR,
           message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),
@@ -322,7 +323,7 @@ export const useProductReviews = (
         return;
       }
 
-      console.error("Failed to load reviews", error);
+      logger.error("Failed to load reviews", error);
       dispatch({
         type: REVIEW_ACTION.REQUEST_ERROR,
         message: mapApiErrorToMessage(error, DEFAULT_ERROR_MESSAGE),

@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ProductReviewsFilter } from "./index";
 
@@ -22,9 +23,9 @@ export const Default: Story = {
   args: {
     selectedRating: "All",
     selectedSort: "latest",
-    onRatingChange: (val) => console.log("rating change", val),
-    onSortChange: (val) => console.log("sort change", val),
-    onWriteReview: () => console.log("write review"),
+    onRatingChange: (val) => logger.log("rating change", val),
+    onSortChange: (val) => logger.log("sort change", val),
+    onWriteReview: () => logger.log("write review"),
   },
 };
 
@@ -33,8 +34,8 @@ export const Disabled: Story = {
     selectedRating: "4",
     selectedSort: "highest",
     isDisabled: true,
-    onRatingChange: (val) => console.log("rating change", val),
-    onSortChange: (val) => console.log("sort change", val),
-    onWriteReview: () => console.log("write review"),
+    onRatingChange: (val) => logger.log("rating change", val),
+    onSortChange: (val) => logger.log("sort change", val),
+    onWriteReview: () => logger.log("write review"),
   },
 };
