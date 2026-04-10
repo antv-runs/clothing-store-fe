@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ProductReviewsHeader } from "./index";
 
@@ -24,9 +25,9 @@ export const Default: Story = {
     reviewCount: 42,
     selectedRating: "All",
     selectedSort: "latest",
-    onRatingChange: (val) => console.log("rating", val),
-    onSortChange: (val) => console.log("sort", val),
-    onWriteReview: () => console.log("write"),
+    onRatingChange: (val) => logger.log("rating", val),
+    onSortChange: (val) => logger.log("sort", val),
+    onWriteReview: () => logger.log("write"),
   },
 };
 
@@ -36,8 +37,8 @@ export const Loading: Story = {
     selectedRating: "All",
     selectedSort: "latest",
     isLoading: true,
-    onRatingChange: (val) => console.log("rating", val),
-    onSortChange: (val) => console.log("sort", val),
-    onWriteReview: () => console.log("write"),
+    onRatingChange: (val) => logger.log("rating", val),
+    onSortChange: (val) => logger.log("sort", val),
+    onWriteReview: () => logger.log("write"),
   },
 };

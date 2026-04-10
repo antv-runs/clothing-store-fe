@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getProducts } from "@/api/Product";
 import { getReviewsByProductId } from "@/api/Review";
@@ -106,7 +107,7 @@ export const useHomeData = (): UseHomeDataResult => {
         return;
       }
 
-      console.error("Failed to load new arrivals.", error);
+      logger.error("Failed to load new arrivals.", error);
       setNewArrivals([]);
       setNewArrivalsError(NEW_ARRIVALS_ERROR);
       setNewArrivalsErrorKind(mapApiErrorToListErrorKind(error));
@@ -159,7 +160,7 @@ export const useHomeData = (): UseHomeDataResult => {
         return;
       }
 
-      console.error("Failed to load top selling products.", error);
+      logger.error("Failed to load top selling products.", error);
       setTopSelling([]);
       setTopSellingError(TOP_SELLING_ERROR);
       setTopSellingErrorKind(mapApiErrorToListErrorKind(error));
@@ -207,7 +208,7 @@ export const useHomeData = (): UseHomeDataResult => {
         return;
       }
 
-      console.error("Failed to load customer reviews.", error);
+      logger.error("Failed to load customer reviews.", error);
       setReviews([]);
       setReviewsError(REVIEWS_ERROR);
       setReviewsErrorKind(mapApiErrorToListErrorKind(error));

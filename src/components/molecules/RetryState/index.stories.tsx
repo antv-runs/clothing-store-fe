@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { RetryState } from "./index";
 
@@ -18,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     message: "Failed to load data.",
-    onRetry: () => console.log("retrying"),
+    onRetry: () => logger.log("retrying"),
   },
 };
 
@@ -26,7 +27,7 @@ export const Retrying: Story = {
   args: {
     message: "Still trying to connect...",
     isRetrying: true,
-    onRetry: () => console.log("retrying"),
+    onRetry: () => logger.log("retrying"),
   },
 };
 
@@ -34,6 +35,6 @@ export const Disabled: Story = {
   args: {
     message: "Too many attempts. Please try again later.",
     disabled: true,
-    onRetry: () => console.log("retrying"),
+    onRetry: () => logger.log("retrying"),
   },
 };

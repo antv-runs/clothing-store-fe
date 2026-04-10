@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CheckoutForm } from "./index.tsx";
 import type { CheckoutFormValues } from "./index.schema";
@@ -9,7 +10,7 @@ const meta: Meta<typeof CheckoutForm> = {
     layout: "padded",
   },
   args: {
-    onSubmit: (values: CheckoutFormValues) => console.log("Submitted", values),
+    onSubmit: (values: CheckoutFormValues) => logger.log("Submitted", values),
     isSubmitting: false,
   },
 };

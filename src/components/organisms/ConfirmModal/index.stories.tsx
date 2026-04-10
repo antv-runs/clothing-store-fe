@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ConfirmModal } from "./index";
 
@@ -19,8 +20,8 @@ export const Default: Story = {
     isOpen: true,
     title: "Delete Item",
     message: "Are you sure you want to delete this item? This action cannot be undone.",
-    onClose: () => console.log("close"),
-    onConfirm: () => console.log("confirm"),
+    onClose: () => logger.log("close"),
+    onConfirm: () => logger.log("confirm"),
   },
 };
 
@@ -30,7 +31,7 @@ export const Processing: Story = {
     title: "Processing Payment",
     message: "Please wait while we process your payment. Do not close this window.",
     isProcessing: true,
-    onClose: () => console.log("close"),
-    onConfirm: () => console.log("confirm"),
+    onClose: () => logger.log("close"),
+    onConfirm: () => logger.log("confirm"),
   },
 };

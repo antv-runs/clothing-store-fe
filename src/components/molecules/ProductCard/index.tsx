@@ -6,6 +6,7 @@ import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
 import { ProductPrice } from "@/components/molecules/ProductPrice";
 import { DEFAULT_CURRENCY } from "@/const/pricing";
+import { buildProductDetailPath } from "@/routes/paths";
 import "./index.scss";
 
 type ProductCardData = {
@@ -33,17 +34,13 @@ type ProductCardProps = {
   onImageError?: () => void;
 };
 
-function buildProductPath(productId: string | number) {
-  return `/product/${encodeURIComponent(String(productId))}`;
-}
-
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   formatPrice,
   className,
   linkMode = "inline",
-  imageLoaded = true,
-  imageError = false,
+  imageLoaded,
+  imageError,
   onImageLoad,
   onImageError,
 }) => {
@@ -56,7 +53,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   } = pricing;
 
   const isInlineLinkMode = linkMode === "inline";
-  const productPath = buildProductPath(id);
+  const productPath = buildProductDetailPath(id);
   const viewProductLabel = `View ${name}`;
   const formattedRating = rating.toFixed(1);
 
@@ -118,13 +115,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         className="product-card__rating"
         aria-label={`Rating ${formattedRating} out of 5`}
       >
-        <Text as="span" className="product-card__stars">
+        <span className="product-card__stars">
           <Star
             rating={rating}
             className="product-card__star"
             showEmpty={false}
           />
-        </Text>
+        </span>
         <Text as="span">{formattedRating}/5</Text>
       </div>
 

@@ -6,12 +6,14 @@ import { NavMenu } from "@/components/molecules/NavMenu";
 import { SearchBox } from "@/components/molecules/SearchBox";
 import { AnnouncementBar } from "@/components/organisms/AnnouncementBar";
 import "./index.scss";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/cartStore";
 
 export const Header: React.FC = () => {
+  const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(true);
   const navigate = useNavigate();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -20,7 +22,9 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <AnnouncementBar />
+      {isAnnouncementVisible && (
+        <AnnouncementBar onClose={() => setIsAnnouncementVisible(false)} />
+      )}
 
       <header className="site-header">
         <HeaderMenuToggle

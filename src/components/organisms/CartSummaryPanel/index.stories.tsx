@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CartSummaryPanel } from "./index";
 
@@ -25,7 +26,7 @@ export const Default: Story = {
       delivery: 15,
       total: 95,
     },
-    onCheckout: () => console.log("checkout"),
+    onCheckout: () => logger.log("checkout"),
   },
 };
 

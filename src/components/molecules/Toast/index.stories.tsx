@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Toast } from "./index";
 
@@ -22,7 +23,7 @@ export const Info: Story = {
     id: "t1",
     message: "This is an informational message.",
     variant: "info",
-    onClose: (id) => console.log("close", id),
+    onClose: (id) => logger.log("close", id),
   },
 };
 
@@ -31,7 +32,7 @@ export const Success: Story = {
     id: "t2",
     message: "Action completed successfully!",
     variant: "success",
-    onClose: (id) => console.log("close", id),
+    onClose: (id) => logger.log("close", id),
   },
 };
 
@@ -40,6 +41,6 @@ export const Error: Story = {
     id: "t3",
     message: "Something went wrong.",
     variant: "error",
-    onClose: (id) => console.log("close", id),
+    onClose: (id) => logger.log("close", id),
   },
 };

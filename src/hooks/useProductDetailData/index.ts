@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import { useEffect, useState, useCallback } from "react";
 import { getProductById, getProducts } from "@/api/Product";
 import {
@@ -132,7 +133,7 @@ export const useProductDetailData = (
           setErrorType("system_error");
         }
 
-        console.error("Failed to load product detail data.", error);
+        logger.error("Failed to load product detail data.", error);
         setProduct(null);
         setRelatedProducts([]);
         setRelatedLoading(false);
@@ -197,7 +198,7 @@ export const useProductDetailData = (
           return;
         }
 
-        console.error("Failed to load related products.", error);
+        logger.error("Failed to load related products.", error);
         setRelatedProducts([]);
         setRelatedError(
           mapApiErrorToMessage(error, DEFAULT_RELATED_ERROR_MESSAGE),

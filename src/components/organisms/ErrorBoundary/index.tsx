@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import { Component, Fragment } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { Heading } from "@/components/atoms/Heading";
@@ -8,7 +9,7 @@ import "./index.scss";
  * Centralized error reporter for production telemetry integration (Sentry, Datadog, etc).
  */
 export const reportError = (error: Error, errorInfo?: ErrorInfo) => {
-  console.error("Reported Error:", error, errorInfo);
+  logger.error("Reported Error:", error, errorInfo);
 };
 
 export interface FallbackProps {

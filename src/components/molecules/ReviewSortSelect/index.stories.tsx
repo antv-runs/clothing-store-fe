@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ReviewSortSelect } from "./index";
 
@@ -25,7 +26,7 @@ export const Default: Story = {
       { value: "oldest", label: "Oldest" },
       { value: "highest", label: "Highest Rating" },
     ],
-    onChange: (val) => console.log("Selected sort:", val),
+    onChange: (val) => logger.log("Selected sort:", val),
   },
 };
 
@@ -36,7 +37,7 @@ export const Disabled: Story = {
       { value: "latest", label: "Latest" },
       { value: "oldest", label: "Oldest" },
     ],
-    onChange: (val) => console.log("Selected sort:", val),
+    onChange: (val) => logger.log("Selected sort:", val),
     disabled: true,
   },
 };

@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ProductVariants } from "./index";
 
@@ -25,7 +26,7 @@ export const Default: Story = {
         { id: "s4", label: "X-Large", inStock: true },
       ],
     },
-    onColorSelect: (val) => console.log("color", val),
-    onSizeSelect: (val) => console.log("size", val),
+    onColorSelect: (val) => logger.log("color", val),
+    onSizeSelect: (val) => logger.log("size", val),
   },
 };

@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { submitReview } from "@/api/Review";
 import { mapApiErrorToMessage } from "@/utils/apiErrorList";
@@ -91,7 +92,7 @@ export const useReviewSubmit = ({
           return;
         }
 
-        console.error("Failed to submit review.", error);
+        logger.error("Failed to submit review.", error);
         setReviewStatusMessage(
           mapApiErrorToMessage(
             error,

@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ProductReviewsTab } from "./index";
 
@@ -39,10 +40,10 @@ export const Default: Story = {
         createdAt: "2023-01-01T12:00:00Z",
       },
     ],
-    onRatingChange: (val) => console.log("rating", val),
-    onSortChange: (val) => console.log("sort", val),
-    onLoadMore: () => console.log("load more"),
-    onRetry: () => console.log("retry"),
-    onWriteReview: () => console.log("write review"),
+    onRatingChange: (val) => logger.log("rating", val),
+    onSortChange: (val) => logger.log("sort", val),
+    onLoadMore: () => logger.log("load more"),
+    onRetry: () => logger.log("retry"),
+    onWriteReview: () => logger.log("write review"),
   },
 };
