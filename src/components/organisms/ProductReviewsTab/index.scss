@@ -29,6 +29,13 @@
   }
 }
 
+@media (max-width: 992px) {
+  .reviews {
+    &__load-more {
+      padding: 16px 40px;
+    }
+  }
+}
 @keyframes reviews-load-more-spin {
   to {
     transform: rotate(360deg);

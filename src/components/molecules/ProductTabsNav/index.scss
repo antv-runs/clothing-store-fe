@@ -21,6 +21,17 @@
   }
 }
 
+@media (max-width: 992px) {
+  .tabs {
+    margin-bottom: 22px;
+
+    &__tab {
+      font-size: 18px;
+      padding: 0 0 18px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .tabs {
     display: flex;

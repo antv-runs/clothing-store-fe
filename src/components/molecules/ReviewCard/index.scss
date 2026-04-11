@@ -82,3 +82,23 @@
     margin-top: auto;
   }
 }
+
+@media (max-width: 992px) {
+  .review-card {
+    padding: 20px 24px;
+
+    &__header {
+      font-size: 18px;
+    }
+
+    &__content {
+      font-size: 15px;
+      margin-bottom: 18px;
+      min-height: 62px;
+    }
+
+    &__footer {
+      font-size: 15px;
+    }
+  }
+}

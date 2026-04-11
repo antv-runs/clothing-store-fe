@@ -69,12 +69,16 @@
   .site-header {
     display: flex;
     flex-wrap: nowrap;
-    gap: 20px;
+    gap: 16px;
     min-height: 0;
     margin-top: 20px;
     padding-bottom: 20px;
     padding-left: 16px;
     padding-right: 16px;
+
+    .header-search {
+      width: auto;
+    }
   }
 
   .site-header .header-menu-toggle {

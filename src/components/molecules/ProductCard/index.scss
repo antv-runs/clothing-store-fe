@@ -144,6 +144,43 @@
   }
 }
 
+@media (max-width: 992px) {
+  .product-card {
+    &__image-wrapper {
+      height: 250px;
+      border-radius: 16px;
+      margin-bottom: 14px;
+    }
+
+    &__title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    &__rating {
+      gap: 12px;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    &__price {
+      margin-top: 6px;
+      font-size: 22px;
+      gap: 8px;
+    }
+
+    &__price-badge {
+      font-size: 11px;
+    }
+
+    &__star {
+      width: var(--star-size, 17px);
+      aspect-ratio: 24 / 23;
+      height: auto;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .product-card {
     &__image-wrapper {

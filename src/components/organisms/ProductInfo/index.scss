@@ -85,6 +85,21 @@
   }
 }
 
+@media (max-width: 992px) {
+  .product-info {
+    h1 {
+      font-size: 32px;
+      margin-bottom: 18px;
+    }
+
+    &__description {
+      font-size: 15px;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .product-info {
     padding-left: 0;
