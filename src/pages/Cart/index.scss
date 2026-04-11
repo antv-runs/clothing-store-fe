@@ -132,8 +132,12 @@
     }
   }
 
+  .cart-summary {
+    position: static;
+  }
+
   .cart-items {
-    padding: 16px;
+    padding: 20px;
     min-width: 0;
   }
 }
