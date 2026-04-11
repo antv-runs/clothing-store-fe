@@ -130,7 +130,7 @@
     grid-template-columns: 1fr;
 
     &__content {
-      padding: 54px 28px 24px;
+      padding: 54px 0 24px;
     }
 
     &__media {
@@ -138,7 +138,24 @@
     }
 
     &__image-crop {
-      right: 0;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+
+    &__image {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+
+    &__sparkle--left {
+      left: calc(50% - 280px);
+      right: auto;
+    }
+
+    &__sparkle--right {
+      right: calc(50% - 280px);
     }
   }
 }
