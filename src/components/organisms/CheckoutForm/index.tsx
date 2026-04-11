@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { checkoutSchema, type CheckoutFormValues } from "./index.schema";
+import { Text } from "@/components/atoms/Text";
 import "./index.scss";
 
 export type CheckoutFormProps = {
@@ -24,7 +24,6 @@ export const CheckoutForm = ({
     handleSubmit,
     formState: { errors },
     setError,
-    clearErrors,
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -36,18 +35,12 @@ export const CheckoutForm = ({
     },
   });
 
-  useEffect(() => {
-    if (serverErrors && Object.keys(serverErrors).length > 0) {
-      Object.entries(serverErrors).forEach(([field, message]) => {
-        setError(field as keyof CheckoutFormValues, { type: "server", message });
-      });
-    } else {
-        clearErrors();
-    }
-  }, [serverErrors, setError, clearErrors]);
-
   return (
-    <form className="checkout-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form
+      className="checkout-form"
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+    >
       <fieldset className="checkout-form__fieldset" disabled={isSubmitting}>
         <div className="checkout-form__grid">
           <label className="checkout-form__field">
@@ -64,9 +57,13 @@ export const CheckoutForm = ({
                     required
                     aria-invalid={Boolean(errors.fullName)}
                   />
-                  {errors.fullName?.message && (
-                    <p role="alert">{errors.fullName.message}</p>
-                  )}
+                  <p
+                    className="checkout-form__field__error"
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    {errors.fullName?.message}
+                  </p>
                 </>
               )}
             />
@@ -86,9 +83,13 @@ export const CheckoutForm = ({
                     required
                     aria-invalid={Boolean(errors.email)}
                   />
-                  {errors.email?.message && (
-                    <p role="alert">{errors.email.message}</p>
-                  )}
+                  <p
+                    className="checkout-form__field__error"
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    {errors.email?.message}
+                  </p>
                 </>
               )}
             />
@@ -103,14 +104,22 @@ export const CheckoutForm = ({
                 <>
                   <Input
                     {...field}
+                    onChange={(e) => {
+                      const numericValue = e.target.value.replace(/\D/g, "");
+                      field.onChange(numericValue);
+                    }}
                     type="tel"
                     autoComplete="tel"
                     required
                     aria-invalid={Boolean(errors.phone)}
                   />
-                  {errors.phone?.message && (
-                    <p role="alert">{errors.phone.message}</p>
-                  )}
+                  <p
+                    className="checkout-form__field__error"
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    {errors.phone?.message}
+                  </p>
                 </>
               )}
             />
@@ -130,9 +139,13 @@ export const CheckoutForm = ({
                     required
                     aria-invalid={Boolean(errors.address)}
                   />
-                  {errors.address?.message && (
-                    <p role="alert">{errors.address.message}</p>
-                  )}
+                  <p
+                    className="checkout-form__field__error"
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    {errors.address?.message}
+                  </p>
                 </>
               )}
             />
@@ -151,6 +164,24 @@ export const CheckoutForm = ({
       >
         Place Order
       </Button>
+
+      {serverErrors && Object.keys(serverErrors).length > 0 && (
+        <div
+          className="checkout-form__server-errors"
+          role="alert"
+          aria-live="assertive"
+        >
+          <ul>
+            {Object.entries(serverErrors).map(([field, msg]) => (
+              <li key={field}>
+                <Text as="p" lineClamp={1}>
+                  {msg}
+                </Text>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </form>
   );
 };

@@ -109,9 +109,17 @@ const Cart: React.FC = () => {
                     variant: "success",
                   });
                 }}
-                onUpdateQuantity={(newQty) =>
-                  updateItemQuantity(item.id, item.color, item.size, newQty)
-                }
+                onUpdateQuantity={(newQty) => {
+                  if (newQty <= 0) {
+                    removeItem(item.id, item.color, item.size);
+                    showToast({
+                      message: "Item removed from cart",
+                      variant: "success",
+                    });
+                  } else {
+                    updateItemQuantity(item.id, item.color, item.size, newQty);
+                  }
+                }}
               />
             ))}
           </div>

@@ -32,14 +32,39 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
     setInputValue(String(item.quantity));
   }, [item.quantity]);
 
+  const requestRemove = () => {
+    setIsModalOpen(true);
+  };
+
+  const confirmRemove = () => {
+    setIsModalOpen(false);
+    onRemove?.();
+  };
+
   const commitQuantity = () => {
-    let parsed = parseInt(inputValue, 10);
-    if (isNaN(parsed) || parsed < 1) {
-      parsed = 1;
+    const parsed = parseInt(inputValue, 10);
+    if (isNaN(parsed)) {
+      setInputValue(String(item.quantity));
+      return;
     }
+    
+    if (parsed <= 0) {
+      setInputValue(String(item.quantity));
+      requestRemove();
+      return;
+    }
+    
     setInputValue(String(parsed));
     if (parsed !== item.quantity) {
       onUpdateQuantity?.(parsed);
+    }
+  };
+
+  const handleDecrease = () => {
+    if (item.quantity <= 1) {
+      requestRemove();
+    } else {
+      onUpdateQuantity?.(item.quantity - 1);
     }
   };
 
@@ -101,7 +126,7 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
             svgName="icn_trash"
             iconWidth={18}
             iconHeight={19.5}
-            onClick={() => setIsModalOpen(true)}
+            onClick={requestRemove}
           />
         </div>
 
@@ -131,7 +156,7 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
             decrementButtonClassName="cart-item__qty-btn"
             incrementButtonClassName="cart-item__qty-btn"
             value={inputValue as unknown as number}
-            min={1}
+            min={0}
             disabled={isLocked}
             onChange={handleInputChange}
             onBlur={commitQuantity}
@@ -141,7 +166,7 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
                 commitQuantity();
               }
             }}
-            onDecrease={() => onUpdateQuantity?.(item.quantity - 1)}
+            onDecrease={handleDecrease}
             onIncrease={() => onUpdateQuantity?.(item.quantity + 1)}
             iconWidth={16}
             iconHeight={16}
@@ -151,10 +176,7 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
       <ConfirmModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={() => {
-          setIsModalOpen(false);
-          onRemove?.();
-        }}
+        onConfirm={confirmRemove}
         title="Remove item?"
         message={`Are you sure you want to remove "${item.name}" from your cart?`}
         confirmText="Remove"
