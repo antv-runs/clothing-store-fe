@@ -1,0 +1,40 @@
+// Slider — structural / behavioral base styles.
+//
+// These rules are required for Slider to function correctly regardless of
+// which consumer is using it. Visual / layout customization (gaps, widths,
+// colors, breakpoints) belongs in the consumer's own SCSS file.
+
+.slider {
+  position: relative; // required: nav buttons are position:absolute within this container
+
+  &__viewport {
+    overflow-x: auto;      // required: enables scrollLeft-based scrolling
+    overflow-y: hidden;    // required: prevents vertical scroll bleed
+    scrollbar-width: none; // required: hidden scrollbar preserves layout height (Firefox)
+    touch-action: pan-x;   // required: prevents browser swipe interference on mobile
+    cursor: grab;          // required: signals draggability to the user
+
+    &::-webkit-scrollbar {
+      display: none; // required: hidden scrollbar (Chromium / Safari)
+    }
+
+    &.is-dragging {
+      cursor: grabbing;   // required: visual feedback while dragging (set via classList)
+      user-select: none;  // required: prevents text selection during drag
+    }
+  }
+
+  &--loading {
+    .slider__viewport {
+      cursor: default;   // required: disables grab cursor while loading
+      user-select: none; // required: disables text selection while loading
+    }
+  }
+
+  &__nav {
+    position: absolute;          // required: overlays the track
+    z-index: 100;                // required: renders above track items
+    top: 50%;                    // required: vertical centering baseline
+    transform: translateY(-50%); // required: corrects vertical centering
+  }
+}
