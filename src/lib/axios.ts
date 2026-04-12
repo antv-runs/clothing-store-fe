@@ -1,6 +1,10 @@
 // Axios HTTP client (moved from services/httpClient.ts)
 import axios from "axios";
 import type { AxiosResponse } from "axios";
+import {
+  API_ERROR_MESSAGES,
+  isGlobalMutationErrorCode,
+} from "@/const/apiErrorCodes";
 import type { HttpClientOptions } from "@/types/common";
 import { handleApiError } from "@/utils/apiError";
 
@@ -21,21 +25,20 @@ const GLOBAL_ERROR_THROTTLE_MS = 3000;
 httpClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    const normalizedError = handleApiError(error);
     const method = error.config?.method?.toUpperCase() || "";
     const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
 
     if (isMutation) {
-      const isNetworkError = !error.response;
-      const isServerError = error.response && error.response.status >= 500;
+      const isGlobalMutationError = isGlobalMutationErrorCode(
+        normalizedError.code,
+      );
 
-      if (isNetworkError || isServerError) {
+      if (isGlobalMutationError) {
         const now = Date.now();
         if (now - lastGlobalErrorTime > GLOBAL_ERROR_THROTTLE_MS) {
           lastGlobalErrorTime = now;
-
-          const message = isNetworkError
-            ? "Unable to connect. Please check your connection and try again."
-            : "Server error. Please try again in a moment.";
+          const message = API_ERROR_MESSAGES[normalizedError.code];
 
           window.dispatchEvent(
             new CustomEvent("global-api-error", {
@@ -46,7 +49,7 @@ httpClient.interceptors.response.use(
       }
     }
 
-    return Promise.reject(handleApiError(error));
+    return Promise.reject(normalizedError);
   },
 );
 

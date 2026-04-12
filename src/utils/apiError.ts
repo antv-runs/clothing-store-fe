@@ -1,12 +1,36 @@
 import axios from "axios";
+import type { AxiosError } from "axios";
+import {
+  ApiErrorCode,
+  API_ERROR_MESSAGES,
+  STATUS_TO_API_ERROR_CODE,
+  isApiErrorCode,
+  isSupportedStatusCode,
+  type STATUS_CODE,
+} from "@/const/apiErrorCodes";
 import type { NormalizedApiError } from "@/types/api/apiError";
+import type { StandardizedApiError } from "@/types/apiError";
+
+type ValidationErrorMap = Record<string, string[]>;
+
+type StandardizedAxiosApiError = StandardizedApiError & {
+  status?: STATUS_CODE;
+  validationErrors?: ValidationErrorMap;
+};
+
+type BackendErrorResponse = {
+  code?: unknown;
+  error_code?: unknown;
+  errors?: unknown;
+  field_errors?: unknown;
+};
 
 export class ApiError extends Error implements NormalizedApiError {
   public readonly isApiError = true;
-  public status?: number;
-  public code?: string;
+  public status?: STATUS_CODE;
+  public code: ApiErrorCode;
   public uiMessage: string;
-  public validationErrors?: Record<string, string[]>;
+  public validationErrors?: ValidationErrorMap;
 
   constructor({
     message,
@@ -16,16 +40,16 @@ export class ApiError extends Error implements NormalizedApiError {
     validationErrors,
   }: {
     message: string;
-    uiMessage: string;
-    status?: number;
-    code?: string;
-    validationErrors?: Record<string, string[]>;
+    uiMessage?: string;
+    status?: STATUS_CODE;
+    code?: ApiErrorCode;
+    validationErrors?: ValidationErrorMap;
   }) {
     super(message);
     this.name = "ApiError";
-    this.uiMessage = uiMessage;
+    this.uiMessage = uiMessage ?? message;
     this.status = status;
-    this.code = code;
+    this.code = code ?? ApiErrorCode.INTERNAL_SERVER_ERROR;
     this.validationErrors = validationErrors;
 
     // Set prototype explicitly for built-in error extension in TS
@@ -33,66 +57,117 @@ export class ApiError extends Error implements NormalizedApiError {
   }
 }
 
+const toSupportedStatusCode = (status?: number): STATUS_CODE | undefined => {
+  if (!status || !isSupportedStatusCode(status)) {
+    return undefined;
+  }
+
+  return status;
+};
+
+const extractValidationErrors = (
+  responseData: unknown,
+): ValidationErrorMap | undefined => {
+  if (!responseData || typeof responseData !== "object") {
+    return undefined;
+  }
+
+  const candidate = responseData as {
+    errors?: unknown;
+    field_errors?: unknown;
+  };
+
+  const validationSource = candidate.errors ?? candidate.field_errors;
+
+  if (!validationSource || typeof validationSource !== "object") {
+    return undefined;
+  }
+
+  const normalizedEntries = Object.entries(validationSource).filter(
+    ([, value]) => Array.isArray(value),
+  ) as Array<[string, string[]]>;
+
+  if (normalizedEntries.length === 0) {
+    return undefined;
+  }
+
+  return Object.fromEntries(normalizedEntries);
+};
+
+const extractBackendCode = (responseData: unknown): ApiErrorCode | null => {
+  if (!responseData || typeof responseData !== "object") {
+    return null;
+  }
+
+  const data = responseData as BackendErrorResponse;
+  const rawCode = data.code ?? data.error_code;
+
+  if (isApiErrorCode(rawCode)) {
+    return rawCode;
+  }
+
+  return null;
+};
+
+const resolveApiErrorCode = (
+  error: AxiosError<unknown>,
+  status?: STATUS_CODE,
+): ApiErrorCode => {
+  if (!error.response) {
+    return ApiErrorCode.NETWORK_ERROR;
+  }
+
+  const backendCode = extractBackendCode(error.response.data);
+  if (backendCode) {
+    return backendCode;
+  }
+
+  if (status) {
+    return STATUS_TO_API_ERROR_CODE[status];
+  }
+
+  return ApiErrorCode.INTERNAL_SERVER_ERROR;
+};
+
+export const mapAxiosErrorToStandardizedError = (
+  error: AxiosError<unknown>,
+): StandardizedAxiosApiError => {
+  const status = toSupportedStatusCode(error.response?.status);
+  const code = resolveApiErrorCode(error, status);
+
+  return {
+    code,
+    message: API_ERROR_MESSAGES[code],
+    status,
+    validationErrors:
+      code === ApiErrorCode.INVALID_PARAMETERS
+        ? extractValidationErrors(error.response?.data)
+        : undefined,
+  };
+};
+
 export function handleApiError(error: unknown): ApiError {
   if (error instanceof ApiError) {
     return error;
   }
 
   if (axios.isAxiosError(error)) {
-    const status = error.response?.status;
-    const responseData = error.response?.data as unknown as Record<string, unknown>;
-    const code = error.code;
-    const message = error.message;
-
-    let uiMessage = "An unexpected error occurred.";
-    let validationErrors: Record<string, string[]> | undefined;
-
-    if (!error.response) {
-      uiMessage = "Network error. Please check your connection.";
-    } else if (status === 400) {
-      uiMessage = "Invalid request. Please check your input.";
-    } else if (status === 401) {
-      uiMessage = "You are not authorized. Please log in again.";
-    } else if (status === 403) {
-      uiMessage = "You do not have permission to perform this action.";
-    } else if (status === 404) {
-      uiMessage = "Requested resource not found.";
-    } else if (status === 422) {
-      uiMessage = "Please check your input.";
-      
-      // Flexibly extract validation errors
-      if (responseData && typeof responseData === "object") {
-        if (responseData.errors) {
-          validationErrors = responseData.errors as Record<string, string[]>;
-        } else if (responseData.field_errors) {
-          validationErrors = responseData.field_errors as Record<string, string[]>;
-        }
-      }
-    } else if (status && status >= 500) {
-      uiMessage = "Server error. Please try again later.";
-    }
-
-    const normalizedCode =
-      !error.response
-        ? code || "NETWORK_ERROR"
-        : status === 400 || status === 422
-          ? "INVALID_PARAMS"
-          : status && status >= 500
-            ? "SERVER_ERROR"
-            : code || (status ? `HTTP_${status}` : "UNKNOWN_ERROR");
+    const standardizedError = mapAxiosErrorToStandardizedError(error);
 
     return new ApiError({
-      message,
-      uiMessage,
-      status,
-      code: normalizedCode,
-      validationErrors,
+      message: standardizedError.message,
+      uiMessage: standardizedError.message,
+      status: standardizedError.status,
+      code: standardizedError.code,
+      validationErrors: standardizedError.validationErrors,
     });
   }
 
-  const defaultMessage = error instanceof Error ? error.message : String(error);
+  const fallbackCode = ApiErrorCode.INTERNAL_SERVER_ERROR;
+  const defaultMessage = API_ERROR_MESSAGES[fallbackCode];
   return new ApiError({
     message: defaultMessage,
-    uiMessage: "An unexpected error occurred.",
+    uiMessage: defaultMessage,
+    code: fallbackCode,
   });
 }

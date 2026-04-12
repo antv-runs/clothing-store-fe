@@ -1,6 +1,7 @@
 import { logger } from "@/utils/logger";
 import { useEffect, useState, useCallback } from "react";
 import { getProductById, getProducts } from "@/api/Product";
+import { ApiErrorCode } from "@/const/apiErrorCodes";
 import {
   isRetryableListErrorKind,
   mapApiErrorToListErrorKind,
@@ -122,7 +123,7 @@ export const useProductDetailData = (
         if (error instanceof ApiError) {
           if (error.status === 404) {
             setErrorType("not_found");
-          } else if (error.code === "NETWORK_ERROR") {
+          } else if (error.code === ApiErrorCode.NETWORK_ERROR) {
             setErrorType("network_error");
           } else {
             setErrorType("system_error");
