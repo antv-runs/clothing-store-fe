@@ -114,7 +114,7 @@ export const WriteReviewModal = ({
             </label>
 
             <label className="review-modal__field">
-              <span>Comment</span>
+              <span>Comment <abbr className="required-mark" title="Required" aria-hidden="true">*</abbr></span>
               <Controller
                 name="comment"
                 control={control}
@@ -133,7 +133,7 @@ export const WriteReviewModal = ({
             </label>
 
             <div className="review-modal__field review-modal__field--rating">
-              <span>Star Rating</span>
+              <span>Star Rating <abbr className="required-mark" title="Required" aria-hidden="true">*</abbr></span>
               <div className="review-modal__rating-row">
                 <Controller
                   name="stars"

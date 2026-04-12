@@ -44,7 +44,7 @@ export const CheckoutForm = ({
       <fieldset className="checkout-form__fieldset" disabled={isSubmitting}>
         <div className="checkout-form__grid">
           <label className="checkout-form__field">
-            <span>Full Name</span>
+            <span>Full Name <abbr className="required-mark" title="Required" aria-hidden="true">*</abbr></span>
             <Controller
               name="fullName"
               control={control}
@@ -70,7 +70,7 @@ export const CheckoutForm = ({
           </label>
 
           <label className="checkout-form__field">
-            <span>Email</span>
+            <span>Email <abbr className="required-mark" title="Required" aria-hidden="true">*</abbr></span>
             <Controller
               name="email"
               control={control}
@@ -96,7 +96,7 @@ export const CheckoutForm = ({
           </label>
 
           <label className="checkout-form__field checkout-form__field--full">
-            <span>Phone</span>
+            <span>Phone <abbr className="required-mark" title="Required" aria-hidden="true">*</abbr></span>
             <Controller
               name="phone"
               control={control}
@@ -126,7 +126,7 @@ export const CheckoutForm = ({
           </label>
 
           <label className="checkout-form__field checkout-form__field--full">
-            <span>Address</span>
+            <span>Address <abbr className="required-mark" title="Required" aria-hidden="true">*</abbr></span>
             <Controller
               name="address"
               control={control}

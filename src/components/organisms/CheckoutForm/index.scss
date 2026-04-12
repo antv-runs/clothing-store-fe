@@ -54,6 +54,13 @@
         opacity: 0;
       }
     }
+
+    .required-mark {
+      color: v.$color-danger;
+      text-decoration: none;
+      margin-left: 2px;
+      font-style: normal;
+    }
   }
 
   &__submit {
