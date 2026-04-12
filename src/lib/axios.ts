@@ -27,7 +27,9 @@ httpClient.interceptors.response.use(
   (error) => {
     const normalizedError = handleApiError(error);
     const method = error.config?.method?.toUpperCase() || "";
-    const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
+    const isMutation = ["GET", "POST", "PUT", "PATCH", "DELETE"].includes(
+      method,
+    );
 
     if (isMutation) {
       const isGlobalMutationError = isGlobalMutationErrorCode(
@@ -43,7 +45,7 @@ httpClient.interceptors.response.use(
           window.dispatchEvent(
             new CustomEvent("global-api-error", {
               detail: { message },
-            })
+            }),
           );
         }
       }

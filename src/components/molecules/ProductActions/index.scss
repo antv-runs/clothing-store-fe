@@ -98,6 +98,21 @@
 }
 
 /**
+ * Smaller desktop responsive: Allow buttons to be flexible and avoid cramped sizing
+ */
+@media (max-width: 1239px) {
+  .product-overview__actions {
+    gap: 16px;
+    --quantity-control-width: 150px;
+
+    .add-to-cart-button {
+      flex: 1 1 auto;
+      width: auto;
+    }
+  }
+}
+
+/**
  * Tablet responsive: Intermediate scaling retaining two-column action balance
  */
 @media (max-width: 992px) {

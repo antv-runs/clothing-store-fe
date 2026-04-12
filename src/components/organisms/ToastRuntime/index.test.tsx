@@ -4,8 +4,8 @@ import { Provider } from "react-redux";
 import { ToastRuntime } from "./index";
 import httpClient, { __resetGlobalErrorTimeForTesting } from "@/lib/axios";
 import MockAdapter from "axios-mock-adapter";
-import { store } from "@/store/rootStore";
-import { clearToasts } from "@/actions/toastAction";
+import { store } from "@/store";
+import { clearToasts } from "@/store/toast/toastSlice";
 
 jest.mock("@/components/organisms/ToastContainer", () => ({
   ToastContainer: ({

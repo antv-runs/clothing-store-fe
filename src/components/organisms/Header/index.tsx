@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store/rootStore";
+import type { RootState } from "@/store";
 
 export const Header: React.FC = () => {
   const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(true);

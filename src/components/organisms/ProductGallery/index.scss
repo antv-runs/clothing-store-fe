@@ -205,6 +205,26 @@
     pointer-events: none;
   }
 
+  @media (max-width: 1239px) and (min-width: 993px) {
+    min-width: 0;
+
+    &__thumbnails {
+      grid-auto-rows: 140px;
+    }
+
+    &__thumb {
+      max-width: 125px;
+      max-height: 140px;
+    }
+
+    &__main {
+      min-width: 0;
+      max-height: none;
+      aspect-ratio: 444 / 530;
+      height: auto;
+    }
+  }
+
   @media (max-width: 992px) {
     max-width: 100%;
 

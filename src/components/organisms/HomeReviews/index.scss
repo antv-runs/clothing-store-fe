@@ -177,6 +177,13 @@
   }
 }
 
+@media (max-width: 1239px) {
+  .home-reviews {
+    --safe-zone-gutter: 32px;
+    --center-offset: var(--safe-zone-gutter);
+  }
+}
+
 @media (max-width: 992px) {
   .home-reviews {
     --safe-zone-gutter: 24px;

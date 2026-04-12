@@ -107,6 +107,21 @@
   }
 }
 
+@media (max-width: 1239px) {
+  .product-overview__choose,
+  .product-overview__size {
+    margin-bottom: 18px;
+  }
+
+  .product-overview__choose-colors {
+    gap: 14px;
+  }
+
+  .product-overview__size-options {
+    gap: 10px;
+  }
+}
+
 @media (max-width: 992px) {
   .product-overview__choose,
   .product-overview__size {

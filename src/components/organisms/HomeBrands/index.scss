@@ -74,6 +74,18 @@
   }
 }
 
+@media (max-width: 1239px) {
+  .home-brands {
+    &__list {
+      gap: 72px;            // reduced from 106px — logos still fit in one row at ≥~1130px
+      flex-wrap: wrap;      // allow graceful wrapping below ~1130px instead of silent overflow
+      justify-content: center; // center logos whether single-row or wrapped
+      min-height: auto;     // release the rigid 122px — let content height drive it
+      padding: 24px 0;      // consistent vertical breathing room in both 1- and 2-row states
+    }
+  }
+}
+
 @media (max-width: 992px) {
   .home-brands {
     &__list {

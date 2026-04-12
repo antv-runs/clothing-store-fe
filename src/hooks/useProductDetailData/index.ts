@@ -1,19 +1,21 @@
 import { logger } from "@/utils/logger";
 import { useEffect, useState, useCallback } from "react";
-import { getProductById, getProducts } from "@/api/Product";
-import { ApiErrorCode } from "@/const/apiErrorCodes";
+import { getProducts } from "@/api/Product";
 import {
   isRetryableListErrorKind,
   mapApiErrorToListErrorKind,
   mapApiErrorToMessage,
 } from "@/utils/apiErrorList";
-import { ApiError } from "@/utils/apiError";
 import type { Product } from "@/types/product";
 import {
   LIST_ERROR_KIND,
   type ListCoreState,
   type ListErrorKind,
 } from "@/types/listState";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "@/store";
+import { fetchProductById } from "@/store/product/productThunks";
+import { selectProductById, selectProductLoading, selectProductError } from "@/store/product/productSlice";
 
 export type DetailErrorType = "not_found" | "network_error" | "system_error" | null;
 
@@ -39,8 +41,11 @@ const DEFAULT_RELATED_ERROR_MESSAGE =
 export const useProductDetailData = (
   productId: string,
 ): UseProductDetailDataResult => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [product, setProduct] = useState<Product | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const product = useSelector((state: RootState) => selectProductById(state, productId));
+  const isLoading = useSelector((state: RootState) => selectProductLoading(state, productId));
+  const productError = useSelector((state: RootState) => selectProductError(state, productId));
+
   const [errorType, setErrorType] = useState<DetailErrorType>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [relatedLoading, setRelatedLoading] = useState(false);
@@ -48,15 +53,16 @@ export const useProductDetailData = (
   const [relatedErrorKind, setRelatedErrorKind] =
     useState<ListErrorKind | null>(null);
   const [isRetryingRelated, setIsRetryingRelated] = useState(false);
-  const [retryTrigger, setRetryTrigger] = useState(0);
   const [relatedRetryTrigger, setRelatedRetryTrigger] = useState(0);
   const [relatedRetryProductId, setRelatedRetryProductId] = useState<
     string | number | null
   >(null);
 
   const retry = useCallback(() => {
-    setRetryTrigger((prev) => prev + 1);
-  }, []);
+    if (productId) {
+      dispatch(fetchProductById(productId));
+    }
+  }, [dispatch, productId]);
 
   const retryRelatedProducts = useCallback(() => {
     if (
@@ -73,88 +79,36 @@ export const useProductDetailData = (
   }, [isRetryingRelated, product?.id, relatedError, relatedErrorKind]);
 
   useEffect(() => {
-    let isActive = true;
-
     if (!productId) {
-      setProduct(null);
       setErrorType("not_found");
-      setIsLoading(false);
       setRelatedProducts([]);
       setRelatedLoading(false);
       setRelatedError(null);
       setRelatedErrorKind(null);
       setIsRetryingRelated(false);
       setRelatedRetryProductId(null);
-      return () => {
-        isActive = false;
-      };
+      return;
     }
 
-    const loadProductDetail = async () => {
-      setIsLoading(true);
-      setErrorType(null);
-      setProduct(null);
-      setRelatedProducts([]);
-      setRelatedLoading(false);
-      setRelatedError(null);
-      setRelatedErrorKind(null);
-      setIsRetryingRelated(false);
-      setRelatedRetryProductId(null);
+    // If product is not in cache, fetch it
+    if (!product && !isLoading) {
+      dispatch(fetchProductById(productId));
+    }
 
-      try {
-        const productResult = await getProductById(productId);
-
-        if (!isActive) {
-          return;
-        }
-
-        if (!productResult) {
-          setErrorType("not_found");
-          setProduct(null);
-          return;
-        }
-
-        setProduct(productResult);
-      } catch (error) {
-        if (!isActive) {
-          return;
-        }
-
-        if (error instanceof ApiError) {
-          if (error.status === 404) {
-            setErrorType("not_found");
-          } else if (error.code === ApiErrorCode.NETWORK_ERROR) {
-            setErrorType("network_error");
-          } else {
-            setErrorType("system_error");
-          }
-        } else if (!navigator.onLine) {
-          setErrorType("network_error");
-        } else {
-          setErrorType("system_error");
-        }
-
-        logger.error("Failed to load product detail data.", error);
-        setProduct(null);
-        setRelatedProducts([]);
-        setRelatedLoading(false);
-        setRelatedError(null);
-        setRelatedErrorKind(null);
-        setIsRetryingRelated(false);
-        setRelatedRetryProductId(null);
-      } finally {
-        if (isActive) {
-          setIsLoading(false);
-        }
+    // Update error type based on Redux error state
+    if (productError) {
+      // Since productError is a string, we need to infer the error type
+      if (productError.includes("404") || productError.includes("not found")) {
+        setErrorType("not_found");
+      } else if (productError.includes("network") || productError.includes("fetch")) {
+        setErrorType("network_error");
+      } else {
+        setErrorType("system_error");
       }
-    };
-
-    void loadProductDetail();
-
-    return () => {
-      isActive = false;
-    };
-  }, [productId, retryTrigger]);
+    } else if (product) {
+      setErrorType(null);
+    }
+  }, [productId, product, isLoading, productError, dispatch]);
 
   useEffect(() => {
     let isActive = true;
@@ -246,7 +200,7 @@ export const useProductDetailData = (
   };
 
   return {
-    product,
+    product: product || null,
     isLoading,
     errorType,
     relatedProducts,

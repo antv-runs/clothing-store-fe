@@ -33,6 +33,26 @@
   }
 }
 
+// 993px–1200px: reduce flex gap and logo size progressively.
+// The 40px gap × 4 items wastes 160px at desktop. At 1000px, tightening to
+// 24px recovers 64px for SearchBox without changing any layout structure.
+// Logo 28px matches the 992px tablet value, eliminating the abrupt size jump.
+//
+// .site-header is NOT wrapped in .container so the global container padding
+// (0 32px at ≤1200px) does not apply here — mirror it explicitly.
+@media (max-width: 1239px) {
+  .site-header {
+    gap: 24px;
+    margin-top: 20px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .logo {
+    font-size: 28px;
+  }
+}
+
 @media (max-width: 992px) {
   .site-header {
     display: grid;
