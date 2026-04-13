@@ -9,13 +9,7 @@ import {
 } from "@/utils/apiErrorList";
 import { useSelector, useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
-import {
-  addItem as actionAddItem,
-  setQuantity as actionSetQuantity,
-  removeItem as actionRemoveItem,
-  clearCart as actionClearCart,
-  selectCartItems,
-} from "@/reducers/cartReducer";
+import { useCart } from "@/hooks/useCart";
 import { getProductById } from "@/api/Product";
 import {
   setProduct,
@@ -93,7 +87,13 @@ const HYDRATION_ERROR_MESSAGE =
 
 export const useCartRows = (): UseCartRowsResult => {
   const dispatch = useDispatch<AppDispatch>();
-  const cartRows = useSelector(selectCartItems);
+  const {
+    items: cartRows,
+    addItem: cartAddItem,
+    setQuantity: cartSetQuantity,
+    removeItem: cartRemoveItem,
+    clearCart: cartClearCart,
+  } = useCart();
   const products = useSelector(selectProductsMap);
 
   const [phase, setPhase] = useState<CartHydrationPhase>("bootstrapping");
@@ -202,9 +202,9 @@ export const useCartRows = (): UseCartRowsResult => {
 
   const addItem = useCallback(
     (item: CartRow) => {
-      dispatch(actionAddItem(item));
+      cartAddItem(item);
     },
-    [dispatch],
+    [cartAddItem],
   );
 
   const updateItemQuantity = useCallback(
@@ -214,9 +214,9 @@ export const useCartRows = (): UseCartRowsResult => {
       size: string | null = null,
       quantity: number,
     ) => {
-      dispatch(actionSetQuantity({ productId, color, size, quantity }));
+      cartSetQuantity(productId, color, size, quantity);
     },
-    [dispatch],
+    [cartSetQuantity],
   );
 
   const removeItem = useCallback(
@@ -225,14 +225,14 @@ export const useCartRows = (): UseCartRowsResult => {
       color: string | null = null,
       size: string | null = null,
     ) => {
-      dispatch(actionRemoveItem({ productId, color, size }));
+      cartRemoveItem(productId, color, size);
     },
-    [dispatch],
+    [cartRemoveItem],
   );
 
   const clearCart = useCallback(() => {
-    dispatch(actionClearCart());
-  }, [dispatch]);
+    cartClearCart();
+  }, [cartClearCart]);
 
   // ── Derived data ────────────────────────────────────────────────────
 

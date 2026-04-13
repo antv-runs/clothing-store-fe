@@ -23,7 +23,6 @@ export const CheckoutForm = ({
     control,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {

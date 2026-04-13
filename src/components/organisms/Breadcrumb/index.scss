@@ -6,7 +6,7 @@
 
 .breadcrumb__list {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 12px;
   list-style: none;
@@ -27,20 +27,6 @@
   -webkit-mask: url("/images/icn_breadcrumb_next.svg") no-repeat center /
     contain;
   mask: url("/images/icn_breadcrumb_next.svg") no-repeat center / contain;
-}
-
-.breadcrumb__list--truncate {
-  flex-wrap: nowrap;
-
-  .breadcrumb__item {
-    flex: 0 0 auto;
-  }
-
-  .breadcrumb__item--active {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
-  }
 }
 
 @media (max-width: 992px) {

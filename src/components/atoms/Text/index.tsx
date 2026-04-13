@@ -1,13 +1,11 @@
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 import clsx from "clsx";
 import "./index.scss";
 
-type TextProps = {
+type TextProps = HTMLAttributes<HTMLParagraphElement | HTMLSpanElement | HTMLDivElement> & {
   as?: "p" | "span" | "div";
   children: ReactNode;
-  className?: string;
   lineClamp?: number;
-  hidden?: boolean;
 };
 
 export const Text = ({
@@ -15,7 +13,7 @@ export const Text = ({
   children,
   className,
   lineClamp,
-  hidden,
+  ...rest
 }: TextProps) => {
   return (
     <Component
@@ -24,7 +22,7 @@ export const Text = ({
         lineClamp && `text--clamp-${lineClamp}`,
         className,
       )}
-      hidden={hidden}
+      {...rest}
     >
       {children}
     </Component>

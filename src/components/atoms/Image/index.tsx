@@ -9,14 +9,12 @@ type ImageProps = BaseImageProps & {
   src?: string;
   fallbackSrc?: string;
   alt: string;
-  id?: string;
   className?: string;
   imgClassName?: string;
   placeholderClassName?: string;
   width?: number | string;
   height?: number | string;
   aspectRatio?: number | string;
-  ratio?: number | string;
   fit?: CSSProperties["objectFit"];
   objectPosition?: CSSProperties["objectPosition"];
   loading?: "lazy" | "eager";
@@ -44,14 +42,12 @@ export const Image = ({
   src,
   fallbackSrc,
   alt,
-  id,
   className,
   imgClassName,
   placeholderClassName,
   width,
   height,
   aspectRatio,
-  ratio,
   fit = "cover",
   objectPosition,
   loading,
@@ -95,7 +91,7 @@ export const Image = ({
   const finalIsLoaded = externalIsLoaded ?? internalIsLoaded;
   const finalIsError = externalIsError ?? internalIsError;
 
-  const resolvedAspectRatio = aspectRatio ?? ratio;
+  const resolvedAspectRatio = aspectRatio;
   const resolvedWidth = toCssDimension(width);
   const resolvedHeight = toCssDimension(height);
   const resolvedAspectRatioValue =
@@ -137,7 +133,6 @@ export const Image = ({
   if (!renderWrapper) {
     return (
       <img
-        id={id}
         className={resolvedImgClassName}
         src={imgSrc || ""}
         alt={alt}
@@ -162,7 +157,6 @@ export const Image = ({
   return (
     <div className={resolvedWrapperClassName} style={wrapperStyle}>
       <img
-        id={id}
         className={resolvedImgClassName}
         src={imgSrc || ""}
         alt={alt}

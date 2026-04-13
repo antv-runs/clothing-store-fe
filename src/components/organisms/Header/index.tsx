@@ -9,13 +9,12 @@ import "./index.scss";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
-import { useSelector } from "react-redux";
-import { selectCartItemCount } from "@/reducers/cartReducer";
+import { useCart } from "@/hooks/useCart";
 
 export const Header: React.FC = () => {
   const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(true);
   const navigate = useNavigate();
-  const totalQuantity = useSelector(selectCartItemCount);
+  const { totalCount: totalQuantity } = useCart();
 
   const handleCartClick = () => navigate(ROUTES.CART);
 

@@ -78,16 +78,16 @@ describe("Checkout", () => {
 
       renderCheckout();
 
-      fireEvent.change(screen.getByLabelText("Full Name"), {
+      fireEvent.change(screen.getByLabelText(/Full Name/i), {
         target: { value: "John Doe" },
       });
-      fireEvent.change(screen.getByLabelText("Email"), {
+      fireEvent.change(screen.getByLabelText(/Email/i), {
         target: { value: "john@example.com" },
       });
-      fireEvent.change(screen.getByLabelText("Phone"), {
+      fireEvent.change(screen.getByLabelText(/Phone/i), {
         target: { value: "0123456789" },
       });
-      fireEvent.change(screen.getByLabelText("Address"), {
+      fireEvent.change(screen.getByLabelText(/Address/i), {
         target: { value: "123 Main Street" },
       });
 
@@ -107,16 +107,16 @@ describe("Checkout", () => {
 
       renderCheckout();
 
-      fireEvent.change(screen.getByLabelText("Full Name"), {
+      fireEvent.change(screen.getByLabelText(/Full Name/i), {
         target: { value: "John Doe" },
       });
-      fireEvent.change(screen.getByLabelText("Email"), {
+      fireEvent.change(screen.getByLabelText(/Email/i), {
         target: { value: "john@example.com" },
       });
-      fireEvent.change(screen.getByLabelText("Phone"), {
+      fireEvent.change(screen.getByLabelText(/Phone/i), {
         target: { value: "0123456789" },
       });
-      fireEvent.change(screen.getByLabelText("Address"), {
+      fireEvent.change(screen.getByLabelText(/Address/i), {
         target: { value: "123 Main Street" },
       });
 
@@ -146,16 +146,16 @@ describe("Checkout", () => {
 
       renderCheckout();
 
-      fireEvent.change(screen.getByLabelText("Full Name"), {
+      fireEvent.change(screen.getByLabelText(/Full Name/i), {
         target: { value: "John Doe" },
       });
-      fireEvent.change(screen.getByLabelText("Email"), {
+      fireEvent.change(screen.getByLabelText(/Email/i), {
         target: { value: "john@example.com" },
       });
-      fireEvent.change(screen.getByLabelText("Phone"), {
+      fireEvent.change(screen.getByLabelText(/Phone/i), {
         target: { value: "0123456789" },
       });
-      fireEvent.change(screen.getByLabelText("Address"), {
+      fireEvent.change(screen.getByLabelText(/Address/i), {
         target: { value: "123 Main Street" },
       });
 
@@ -192,16 +192,16 @@ describe("Checkout", () => {
 
       renderCheckout();
 
-      fireEvent.change(screen.getByLabelText("Full Name"), {
+      fireEvent.change(screen.getByLabelText(/Full Name/i), {
         target: { value: "John Doe" },
       });
-      fireEvent.change(screen.getByLabelText("Email"), {
+      fireEvent.change(screen.getByLabelText(/Email/i), {
         target: { value: "john@example.com" },
       });
-      fireEvent.change(screen.getByLabelText("Phone"), {
+      fireEvent.change(screen.getByLabelText(/Phone/i), {
         target: { value: "0123456789" },
       });
-      fireEvent.change(screen.getByLabelText("Address"), {
+      fireEvent.change(screen.getByLabelText(/Address/i), {
         target: { value: "123 Main Street" },
       });
 
@@ -235,16 +235,16 @@ describe("Checkout", () => {
 
       renderCheckout();
 
-      fireEvent.change(screen.getByLabelText("Full Name"), {
+      fireEvent.change(screen.getByLabelText(/Full Name/i), {
         target: { value: "John Doe" },
       });
-      fireEvent.change(screen.getByLabelText("Email"), {
+      fireEvent.change(screen.getByLabelText(/Email/i), {
         target: { value: "john@example.com" },
       });
-      fireEvent.change(screen.getByLabelText("Phone"), {
+      fireEvent.change(screen.getByLabelText(/Phone/i), {
         target: { value: "0123456789" },
       });
-      fireEvent.change(screen.getByLabelText("Address"), {
+      fireEvent.change(screen.getByLabelText(/Address/i), {
         target: { value: "123 Main Street" },
       });
 
@@ -268,16 +268,16 @@ describe("Checkout", () => {
 
       renderCheckout();
 
-      fireEvent.change(screen.getByLabelText("Full Name"), {
+      fireEvent.change(screen.getByLabelText(/Full Name/i), {
         target: { value: "John Doe" },
       });
-      fireEvent.change(screen.getByLabelText("Email"), {
+      fireEvent.change(screen.getByLabelText(/Email/i), {
         target: { value: "john@example.com" },
       });
-      fireEvent.change(screen.getByLabelText("Phone"), {
+      fireEvent.change(screen.getByLabelText(/Phone/i), {
         target: { value: "0123456789" },
       });
-      fireEvent.change(screen.getByLabelText("Address"), {
+      fireEvent.change(screen.getByLabelText(/Address/i), {
         target: { value: "123 Main Street" },
       });
 

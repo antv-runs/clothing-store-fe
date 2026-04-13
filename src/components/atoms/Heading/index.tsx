@@ -1,27 +1,23 @@
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 import clsx from "clsx";
 import "./index.scss";
 
 type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-type HeadingProps = {
+type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   as?: HeadingTag;
   children?: ReactNode;
-  title?: string;
-  className?: string;
   noOfLines?: number;
 };
 
 export const Heading = ({
   as: Component = "h2",
   children,
-  title,
   className,
   noOfLines,
+  ...rest
 }: HeadingProps) => {
-  const content = children ?? title;
-
-  if (!content) {
+  if (!children) {
     return null;
   }
 
@@ -38,8 +34,9 @@ export const Heading = ({
         clampedLines && `heading--clamp-${clampedLines}`,
         className,
       )}
+      {...rest}
     >
-      {content}
+      {children}
     </Component>
   );
 };
