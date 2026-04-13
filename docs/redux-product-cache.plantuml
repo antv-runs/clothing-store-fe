@@ -1,0 +1,79 @@
+@startuml
+skinparam maxMessageSize 150
+autonumber
+
+actor User
+participant "ProductDetail Page" as UI
+participant "useProductDetailData\n(Hook)" as Hook
+participant "Redux Store" as Store
+participant "API Server" as API
+
+User -> UI : Navigates to Product Page (id)
+activate UI
+
+UI -> Hook : Mounts & requests data(id)
+activate Hook
+
+Hook -> Store : Check cached data (selectProductById)
+activate Store
+Store --> Hook : Return product (if any)
+deactivate Store
+
+alt if product is cached in `byId[id]`
+    Hook --> UI : Returns cached product immediately
+    UI --> User : Renders product
+else if not cached
+    Hook -> Store : dispatch(setProductLoading({ id, loading: true }))
+    activate Store
+    Store -> Store : Updates `loadingById[id] = true`
+    Store --> Hook : State updated
+    deactivate Store
+
+    Hook --> UI : Returns { isLoading: true }
+    UI --> User : Shows Skeleton Loader
+
+    Hook -> API : getProductById(id)
+    activate API
+
+    alt API Success
+        API --> Hook : Returns Product Data
+        Hook -> Store : dispatch(setProduct({ id, product: data }))
+        activate Store
+        Store -> Store : Updates `byId[id] = data`
+        deactivate Store
+        
+        Hook -> Store : dispatch(setProductError({ id, error: null }))
+        activate Store
+        Store -> Store : Clears `errorById[id]`
+        deactivate Store
+
+        Hook -> Store : dispatch(setProductLoading({ id, loading: false }))
+        activate Store
+        Store -> Store : Updates `loadingById[id] = false`
+        deactivate Store
+
+        Hook --> UI : Returns { product: data, isLoading: false }
+        UI --> User : Renders Product Detail
+
+    else API Failure (e.g. 404, 500)
+        API --> Hook : Throws Error
+        deactivate API
+
+        Hook -> Store : dispatch(setProductError({ id, error: message }))
+        activate Store
+        Store -> Store : Updates `errorById[id] = message`
+        deactivate Store
+
+        Hook -> Store : dispatch(setProductLoading({ id, loading: false }))
+        activate Store
+        Store -> Store : Updates `loadingById[id] = false`
+        deactivate Store
+
+        Hook --> UI : Returns { errorType, isLoading: false }
+        UI --> User : Renders Error/NotFound UI
+    end
+end
+
+deactivate Hook
+deactivate UI
+@enduml
