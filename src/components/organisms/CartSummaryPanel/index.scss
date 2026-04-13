@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/mixins" as m;
 @use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .cart-summary {
   @include m.panel();
@@ -195,7 +196,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .cart-summary {
     padding: 24px;
     min-width: 0;
@@ -225,7 +226,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .cart-summary {
     &__title {
       font-size: 20px;

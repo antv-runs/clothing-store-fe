@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .products-tabs {
   margin-bottom: 70px;
@@ -135,13 +136,13 @@
 /**
  * Tablet responsive: Adjust global depth spacings and maintain logical scales.
  */
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .products-tabs {
     margin-bottom: 60px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .products-tabs {
     margin-bottom: 50px;
   }

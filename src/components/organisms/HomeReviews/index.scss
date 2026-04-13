@@ -1,8 +1,9 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .home-reviews {
-  --container-width: 1240px;
+  --container-width: $bp-xl;
   --safe-zone-gutter: max(calc((100vw - var(--container-width)) / 2), 0px);
   --card-width: 400px;
   --review-card-width: var(--card-width);
@@ -177,14 +178,14 @@
   }
 }
 
-@media (max-width: 1239px) {
+@media (max-width: #{$bp-xl - 1px}) {
   .home-reviews {
     --safe-zone-gutter: 32px;
     --center-offset: var(--safe-zone-gutter);
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .home-reviews {
     --safe-zone-gutter: 24px;
     --card-width: 360px;
@@ -231,7 +232,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .home-reviews {
     --card-width-mobile: 358px;
     --card-width: var(--card-width-mobile);

@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .review-card {
   border: 1px solid rgba(0, 0, 0, 0.1019607843);
@@ -83,7 +84,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .review-card {
     padding: 20px 24px;
 

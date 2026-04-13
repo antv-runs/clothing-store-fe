@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .footer {
   background-color: v.$color-surface;
@@ -19,7 +20,7 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1240px;
+  max-width: $bp-xl;
   margin: 0 auto;
 
   &__title {
@@ -55,7 +56,7 @@
 
 .footer-main {
   width: 100%;
-  max-width: 1240px;
+  max-width: $bp-xl;
   margin: 0 auto;
   padding: 140px 0 0 0;
 
@@ -179,7 +180,7 @@
   }
 }
 
-@media (max-width: 1240px) {
+@media (max-width: $bp-xl) {
   .footer-main {
     &__content {
       grid-template-columns: 220px minmax(0, 1fr);
@@ -193,11 +194,11 @@
   }
 }
 
-// 993px–1200px: footer-form and footer-main share the same max-width:1240px +
+// 993px–1200px: footer-form and footer-main share the same max-width:$bp-xl +
 // margin:auto pattern as .container and .site-header. Neither has horizontal
-// padding at desktop, so content sits flush to the viewport edge below 1240px.
+// padding at desktop, so content sits flush to the viewport edge below $bp-xl.
 // Mirror the same 32px gutter established in _global.scss and Header.
-@media (max-width: 1239px) {
+@media (max-width: #{$bp-xl - 1px}) {
   .footer-form {
     width: calc(100% - 64px);
   }
@@ -208,7 +209,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .footer-form {
     width: calc(100% - 64px);
     margin: 0 auto;
@@ -249,7 +250,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .footer-form {
     width: calc(100% - 32px);
     max-width: none;

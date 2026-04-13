@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/mixins" as m;
 @use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .cart-page {
   margin-bottom: 80px;
@@ -131,7 +132,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .cart-page {
     &__layout {
       grid-template-columns: 1fr;
@@ -148,7 +149,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .cart-page {
     margin-bottom: 50px;
 

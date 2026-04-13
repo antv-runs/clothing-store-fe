@@ -1,6 +1,7 @@
 // === Abstracts (no output — variables + mixins) ===
 @use "./abstracts/variables";
 @use "./abstracts/mixins";
+@use "./abstracts/breakpoints";
 
 // === Base ===
 @use "./base/reset";

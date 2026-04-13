@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-overview {
   margin-bottom: 75px;
@@ -92,7 +93,7 @@
 /**
  * Smaller desktop responsive: Scale down column gaps
  */
-@media (max-width: 1239px) {
+@media (max-width: #{$bp-xl - 1px}) {
   .product-overview {
     &__details {
       gap: 30px;
@@ -103,7 +104,7 @@
 /**
  * Tablet responsive: Stack columns vertically
  */
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .product-overview {
     &__details {
       flex-direction: column;
@@ -125,7 +126,7 @@
 /**
  * Mobile responsive: Adjust spacing and sizing
  */
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .product-overview {
     margin-bottom: 40px;
 

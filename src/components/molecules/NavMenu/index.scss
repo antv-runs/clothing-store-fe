@@ -1,4 +1,5 @@
 @use "../../../styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .header-links {
   ul {
@@ -24,13 +25,13 @@
 }
 
 // 993px–1200px: tighten link gap to reduce nav width before tablet breakpoint.
-@media (max-width: 1239px) {
+@media (max-width: #{$bp-xl - 1px}) {
   .header-links ul {
     gap: 16px;
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .header-links {
     display: none;
   }

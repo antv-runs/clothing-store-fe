@@ -5,6 +5,7 @@ import type { Review } from "@/types/review";
 import type { ProductFaq } from "@/types/product";
 import { ProductTabsNav } from "@/components/molecules/ProductTabsNav";
 import { ProductReviewsTab } from "@/components/organisms/ProductReviewsTab";
+import { BREAKPOINTS } from "@/const/breakpoints";
 
 type TabKey = "tc-details" | "tc-reviews" | "tc-faqs";
 
@@ -56,7 +57,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   const handleTabSelect = (tab: TabKey) => {
     setActiveTab(tab);
 
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= BREAKPOINTS.MD) {
       const target = panelRefs.current.get(tab);
       target?.scrollIntoView({ behavior: "smooth", block: "start" });
     }

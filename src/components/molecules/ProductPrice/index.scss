@@ -1,4 +1,5 @@
 @use "../../../styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-price {
   display: flex;
@@ -52,7 +53,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .product-info__price {
     margin-bottom: 18px;
     gap: 10px;
@@ -69,7 +70,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .product-info__price-current,
   .product-info__price-old {
     font-size: 24px;

@@ -1,5 +1,6 @@
 @use "../../../styles/abstracts/variables" as v;
 @use "../../../styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .header-icon {
   display: flex;
@@ -49,7 +50,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .header-icon {
     gap: 15px;
     flex: 0 0 auto;

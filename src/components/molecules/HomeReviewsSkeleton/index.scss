@@ -1,3 +1,4 @@
+@use "@/styles/abstracts/breakpoints" as *;
 .home-reviews {
   &__track--loading {
     overflow: hidden;
@@ -47,7 +48,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .home-reviews-skeleton {
     &__item {
       min-height: var(--review-card-height);

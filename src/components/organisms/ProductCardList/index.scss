@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-card-list {
   --nav-icon-size: 50px;
@@ -127,7 +128,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .product-card-list {
     --nav-icon-size: 44px;
 
@@ -180,7 +181,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .product-card-list {
     --nav-icon-size: 40px;
 

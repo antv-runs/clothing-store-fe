@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/mixins" as m;
 @use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .checkout-form {
   @include m.panel();
@@ -95,7 +96,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .checkout-form {
     padding: 20px;
 
@@ -110,7 +111,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .checkout-form {
     padding: 16px;
 

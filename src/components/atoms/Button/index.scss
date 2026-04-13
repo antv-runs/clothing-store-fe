@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .button {
   border: none;
@@ -89,12 +90,12 @@
 
   @include m.primary-lift-hover($hover-opacity: 0.9);
 
-  @media (max-width: 992px) {
+  @media (max-width: $bp-lg) {
     padding: 16px 30px;
     font-size: 15px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: $bp-md) {
     width: 100%;
     padding: 14px 20px;
     font-size: 14px;

@@ -1,4 +1,5 @@
 @use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-detail-skeleton {
   &__crumb {
@@ -107,7 +108,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .product-detail-skeleton {
     &__thumb {
       flex: 0 0 112px;

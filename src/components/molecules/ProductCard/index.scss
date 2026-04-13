@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-card {
   position: relative;
@@ -144,7 +145,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .product-card {
     &__image-wrapper {
       height: 250px;
@@ -181,7 +182,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .product-card {
     &__image-wrapper {
       width: 198px;

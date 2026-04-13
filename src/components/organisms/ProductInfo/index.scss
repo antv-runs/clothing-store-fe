@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-info {
   flex: 1;
@@ -85,7 +86,7 @@
   }
 }
 
-@media (max-width: 1239px) {
+@media (max-width: #{$bp-xl - 1px}) {
   .product-info {
     h1 {
       font-size: 36px;
@@ -98,7 +99,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .product-info {
     h1 {
       font-size: 32px;
@@ -113,7 +114,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .product-info {
     padding-left: 0;
 

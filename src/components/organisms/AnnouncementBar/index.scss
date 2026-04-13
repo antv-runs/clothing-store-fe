@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .announcement-bar {
   width: 100%;
@@ -11,7 +12,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: 1240px;
+    max-width: $bp-xl;
     margin: 0 auto;
     padding: 10px 16px;
   }
@@ -53,13 +54,13 @@
   }
 }
 
-@media (max-width: 1240px) {
+@media (max-width: $bp-xl) {
   .announcement-bar__close {
     right: 32px;
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .announcement-bar__text {
     font-size: 12px;
   }
@@ -69,7 +70,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .announcement-bar__close {
     display: none;
   }

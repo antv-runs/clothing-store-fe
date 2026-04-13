@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 // Adapted from ex4 _reviews.scss for visual parity
 .reviews {
@@ -138,7 +139,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .reviews {
     &__actions {
       gap: 10px;
@@ -169,7 +170,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .reviews {
     &__actions {
       gap: 8px;

@@ -1,4 +1,5 @@
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 html,
 body {
@@ -26,23 +27,23 @@ svg:not([class*="--full"]):not([class*="--half"]):not([class*="--empty"]) {
 
 .container {
   width: 100%;
-  max-width: 1240px;
+  max-width: $bp-xl;
   margin: 0 auto;
 }
 
-@media (max-width: 1239px) {
+@media (max-width: #{$bp-xl - 1px}) {
   .container {
     padding: 0 32px;
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .container {
     padding: 0 24px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .container {
     margin-top: 0;
     padding: 0 16px;

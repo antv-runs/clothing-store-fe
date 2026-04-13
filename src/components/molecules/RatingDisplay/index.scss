@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-info__rating {
   display: flex;
@@ -74,7 +75,7 @@
 }
 
 // Tablet responsive sizes
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .rating-display__star {
     width: 21.6px !important;
     height: 21.6px !important;
@@ -97,7 +98,7 @@
 }
 
 // Mobile responsive sizes
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .rating-display__star {
     width: 18.6px !important;
     height: 18.6px !important;

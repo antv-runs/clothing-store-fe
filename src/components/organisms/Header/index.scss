@@ -1,11 +1,12 @@
 @use "../../../styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .site-header {
   display: flex;
   align-items: center;
   gap: 40px;
   width: 100%;
-  max-width: 1240px;
+  max-width: $bp-xl;
   margin: 24px auto 0;
   min-height: 56px;
   padding-bottom: 24px;
@@ -36,11 +37,11 @@
 // 993px–1200px: reduce flex gap and logo size progressively.
 // The 40px gap × 4 items wastes 160px at desktop. At 1000px, tightening to
 // 24px recovers 64px for SearchBox without changing any layout structure.
-// Logo 28px matches the 992px tablet value, eliminating the abrupt size jump.
+// Logo 28px matches the $bp-lg tablet value, eliminating the abrupt size jump.
 //
 // .site-header is NOT wrapped in .container so the global container padding
 // (0 32px at ≤1200px) does not apply here — mirror it explicitly.
-@media (max-width: 1239px) {
+@media (max-width: #{$bp-xl - 1px}) {
   .site-header {
     gap: 24px;
     margin-top: 20px;
@@ -53,7 +54,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .site-header {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -85,7 +86,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .site-header {
     display: flex;
     flex-wrap: nowrap;

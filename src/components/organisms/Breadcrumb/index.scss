@@ -1,4 +1,5 @@
 @use "@/styles/abstracts/variables" as v;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .breadcrumb {
   min-width: 0;
@@ -29,7 +30,7 @@
   mask: url("/images/icn_breadcrumb_next.svg") no-repeat center / contain;
 }
 
-@media (max-width: 992px) {
+@media (max-width: $bp-lg) {
   .breadcrumb__list {
     gap: 10px;
     font-size: 15px;
@@ -40,7 +41,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $bp-md) {
   .breadcrumb__list {
     gap: 8px;
     font-size: 14px;

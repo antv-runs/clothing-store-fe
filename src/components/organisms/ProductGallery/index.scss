@@ -1,5 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/breakpoints" as *;
 
 .product-gallery {
   display: flex;
@@ -205,7 +206,7 @@
     pointer-events: none;
   }
 
-  @media (max-width: 1239px) and (min-width: 993px) {
+  @media (max-width: #{$bp-xl - 1px}) and (min-width: 993px) {
     min-width: 0;
 
     &__thumbnails {
@@ -225,7 +226,7 @@
     }
   }
 
-  @media (max-width: 992px) {
+  @media (max-width: $bp-lg) {
     max-width: 100%;
 
     &__thumbnails {
@@ -245,7 +246,7 @@
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: $bp-md) {
     flex-direction: column-reverse;
 
     &__thumbnails {
