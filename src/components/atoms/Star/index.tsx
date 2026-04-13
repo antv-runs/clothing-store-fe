@@ -1,4 +1,5 @@
 import React from "react";
+import { MAX_RATING } from "@/const/ui";
 
 interface StarProps {
   rating: number;
@@ -13,12 +14,12 @@ export const Star: React.FC<StarProps> = ({
   rating,
   className = "",
   showEmpty = true,
-  maxStars = 5,
+  maxStars = MAX_RATING,
   size,
   halfStarMode = "path",
 }) => {
   const clipIdPrefix = React.useId();
-  const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || 5));
+  const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || MAX_RATING));
   const safeRating = Math.max(
     0,
     Math.min(normalizedMaxStars, Number(rating) || 0),

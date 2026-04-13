@@ -4,6 +4,7 @@ import type { ErrorInfo, ReactNode } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { UI_TEXT } from "@/const/uiText";
 import "./index.scss";
 
 /**
@@ -116,8 +117,8 @@ export class ErrorBoundary extends Component<Props, State> {
                   (this.state.error.message.includes("Failed to fetch dynamically imported module") ||
                     this.state.error.message.includes("Importing a module script failed") ||
                     this.state.error.name === "ChunkLoadError")
-                  ? "A page resource failed to load. Please retry."
-                  : "We're sorry, an unexpected error occurred while loading this page."}
+                  ? ERROR_MESSAGES.PAGE_RESOURCE_LOAD
+                  : ERROR_MESSAGES.PAGE_LOAD_UNEXPECTED}
               </p>
 
               <div className="error-boundary-page__actions">
@@ -136,7 +137,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   variant="primary"
                   onClick={this.handleGoHome}
                 >
-                  Go back to Home
+                  {UI_TEXT.GO_BACK_TO_HOME}
                 </Button>
               </div>
             </div>

@@ -5,6 +5,8 @@ import { Button } from "@/components/atoms/Button";
 import "./index.scss";
 import { Text } from "@/components/atoms/Text";
 import { InputWithIcon } from "@/components/molecules/InputWithIcon";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { UI_TEXT } from "@/const/uiText";
 
 interface CartSummary {
   subtotal: number;
@@ -52,7 +54,7 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
       try {
         await onApplyCoupon(trimmedCode);
       } catch {
-        setCouponError("Failed to apply coupon");
+        setCouponError(ERROR_MESSAGES.COUPON_APPLY_FAILED);
       }
     }
   };
@@ -60,32 +62,32 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
   return (
     <aside
       className="cart-summary"
-      aria-label="Order summary"
+      aria-label={UI_TEXT.ORDER_SUMMARY}
       aria-busy="false"
     >
       <Heading as="h2" className="cart-summary__title">
-        Order Summary
+        {UI_TEXT.ORDER_SUMMARY}
       </Heading>
 
       <dl className="cart-summary__rows">
         <div className="cart-summary__row u-mb-28">
-          <dt>Subtotal</dt>
+          <dt>{UI_TEXT.SUBTOTAL}</dt>
           <dd>{formatPrice(summary.subtotal)}</dd>
         </div>
         <div className="cart-summary__row u-mb-28">
-          <dt>Discount (-{summary.discountPercent}%)</dt>
+          <dt>{UI_TEXT.DISCOUNT} (-{summary.discountPercent}%)</dt>
           <dd className="cart-summary__discount">
             -{formatPrice(summary.discount)}
           </dd>
         </div>
         <div className="cart-summary__row">
-          <dt>Delivery Fee</dt>
+          <dt>{UI_TEXT.DELIVERY_FEE}</dt>
           <dd>{formatPrice(summary.delivery)}</dd>
         </div>
       </dl>
 
       <div className="cart-summary__total">
-        <p>Total</p>
+        <p>{UI_TEXT.TOTAL}</p>
         <p>{formatPrice(summary.total)}</p>
       </div>
 
@@ -132,7 +134,7 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
         isLoading={isCheckoutLoading}
         onClick={onCheckout}
       >
-        <span className="cart-summary__checkout-text">Go to Checkout</span>
+        <span className="cart-summary__checkout-text">{UI_TEXT.GO_TO_CHECKOUT}</span>
       </Button>
     </aside>
   );

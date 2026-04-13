@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./index.scss";
+import { UI_TEXT } from "@/const/uiText";
 
 /**
  * OfflineBanner — Shows a non-blocking fixed banner when the browser
@@ -53,8 +54,8 @@ export const OfflineBanner: React.FC = () => {
       </span>
       <span className="offline-banner__text">
         {showBackOnline
-          ? "Back online"
-          : "No internet connection"}
+          ? UI_TEXT.BACK_ONLINE
+          : UI_TEXT.NO_INTERNET_CONNECTION}
       </span>
     </div>
   );

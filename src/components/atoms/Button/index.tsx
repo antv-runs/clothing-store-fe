@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { UI_TEXT } from "@/const/uiText";
 
 type ButtonProps = {
   children: ReactNode;
@@ -121,7 +122,7 @@ export const Button = ({
           {loadingText && (
             <span className="button__loading-text">{loadingText}</span>
           )}
-          {!loadingText && <span className="button__sr-only">Loading</span>}
+          {!loadingText && <span className="button__sr-only">{UI_TEXT.LOADING}</span>}
         </span>
       )}
 

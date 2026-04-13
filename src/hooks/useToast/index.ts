@@ -6,6 +6,7 @@ import {
 } from "@/reducers/toastReducer";
 import type { AppDispatch } from "@/store";
 import type { ToastControls, ToastData } from "@/types/toast";
+import { TOAST_DEFAULT_DURATION } from "@/const/ui";
 
 export const useToast = (): ToastControls => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,7 +23,7 @@ export const useToast = (): ToastControls => {
       const id = Math.random().toString(36).substring(2, 9);
       dispatch(addToast({ ...toast, id }));
 
-      const duration = toast.duration ?? 5000;
+      const duration = toast.duration ?? TOAST_DEFAULT_DURATION;
       if (duration > 0) {
         setTimeout(() => {
           dispatch(dismissToastAction({ id }));

@@ -1,6 +1,7 @@
 import React from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { CheckoutItemRow } from "@/components/organisms/CheckoutItemRow";
+import { UI_TEXT } from "@/const/uiText";
 import type { Product } from "@/types/product";
 import "./index.scss";
 
@@ -33,9 +34,9 @@ export const CheckoutSummaryPanel: React.FC<CheckoutSummaryPanelProps> = ({
   formatPrice,
 }) => {
   return (
-    <aside className="checkout-summary" aria-label="Order summary">
+    <aside className="checkout-summary" aria-label={UI_TEXT.ORDER_SUMMARY}>
       <Heading as="h2" className="checkout-summary__title">
-        Order Summary
+        {UI_TEXT.ORDER_SUMMARY}
       </Heading>
 
       <div className="checkout-summary__items">
@@ -50,12 +51,12 @@ export const CheckoutSummaryPanel: React.FC<CheckoutSummaryPanelProps> = ({
 
       <dl className="checkout-summary__rows">
         <div className="checkout-summary__row u-mb-28">
-          <dt>Subtotal</dt>
+          <dt>{UI_TEXT.SUBTOTAL}</dt>
           <dd>{formatPrice(summary.subtotal)}</dd>
         </div>
         <div className="checkout-summary__row u-mb-28">
           <dt>
-            Discount{" "}
+            {UI_TEXT.DISCOUNT}{" "}
             {summary.discountPercent && summary.discountPercent > 0
               ? `(-${summary.discountPercent}%)`
               : ""}
@@ -65,13 +66,13 @@ export const CheckoutSummaryPanel: React.FC<CheckoutSummaryPanelProps> = ({
           </dd>
         </div>
         <div className="checkout-summary__row">
-          <dt>Delivery Fee</dt>
+          <dt>{UI_TEXT.DELIVERY_FEE}</dt>
           <dd>{formatPrice(summary.delivery)}</dd>
         </div>
       </dl>
 
       <div className="checkout-summary__total">
-        <p>Total</p>
+        <p>{UI_TEXT.TOTAL}</p>
         <p>{formatPrice(summary.total)}</p>
       </div>
     </aside>

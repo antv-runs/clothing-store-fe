@@ -6,6 +6,7 @@ import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
 import { ProductPrice } from "@/components/molecules/ProductPrice";
 import { DEFAULT_CURRENCY } from "@/const/pricing";
+import { MAX_RATING } from "@/const/ui";
 import { buildProductDetailPath } from "@/routes/paths";
 import "./index.scss";
 
@@ -113,7 +114,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <div
         className="product-card__rating"
-        aria-label={`Rating ${formattedRating} out of 5`}
+        aria-label={`Rating ${formattedRating} out of ${MAX_RATING}`}
       >
         <span className="product-card__stars">
           <Star
@@ -122,7 +123,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             showEmpty={false}
           />
         </span>
-        <Text as="span">{formattedRating}/5</Text>
+        <Text as="span">{formattedRating}/{MAX_RATING}</Text>
       </div>
 
       <ProductPrice

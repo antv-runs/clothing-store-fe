@@ -10,7 +10,11 @@ export const ERROR_MESSAGES = {
   CHECKOUT_UNEXPECTED: "An unexpected error occurred while placing your order.",
   CHECKOUT_GENERIC: "An unexpected error occurred. Please try again or contact support.",
   CHECKOUT_LOAD: "We couldn't securely load your checkout data right now.",
+  CART_HYDRATION_LOAD: "We couldn't securely load your cart data right now.",
   REVIEW_EMPTY: "Please write a comment before submitting.",
   CART_ADD_ERROR: "Unable to add item to cart",
+  COUPON_APPLY_FAILED: "Failed to apply coupon",
+  PAGE_RESOURCE_LOAD: "A page resource failed to load. Please retry.",
+  PAGE_LOAD_UNEXPECTED: "We're sorry, an unexpected error occurred while loading this page.",
   REVIEW_SUBMIT_FAILED: "Failed to submit review. Please try again.",
 } as const;

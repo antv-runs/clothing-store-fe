@@ -1,8 +1,7 @@
 import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import { CART_STORAGE_KEY } from "@/const/storageKeys";
+import { DEFAULT_QUANTITY } from "@/const/ui";
 import type { CartRow } from "@/types/cart";
-
-const DEFAULT_QUANTITY = 1;
 
 let cart: CartRow[] = readStoredCartRows();
 let subscribers: Set<() => void> = new Set();

@@ -1,6 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { Icon } from "@/components/atoms/Icon";
+import { ICON_DEFAULT_SIZE } from "@/const/ui";
 import "./IconLink.scss";
 
 type IconLinkProps = {
@@ -18,8 +19,8 @@ type IconLinkProps = {
 
 export const IconLink: React.FC<IconLinkProps> = ({
   size = 36,
-  iconWidth = 20,
-  iconHeight = 20,
+  iconWidth = ICON_DEFAULT_SIZE,
+  iconHeight = ICON_DEFAULT_SIZE,
   href,
   label,
   iconName,

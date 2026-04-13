@@ -3,6 +3,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
 import { ROUTES } from "@/routes/paths";
+import { UI_TEXT } from "@/const/uiText";
 import "./index.scss";
 
 const NotFound: React.FC = () => {
@@ -54,7 +55,7 @@ const NotFound: React.FC = () => {
             variant="primary"
             onClick={handleGoHome}
           >
-            Go back to Home
+            {UI_TEXT.GO_BACK_TO_HOME}
           </Button>
         </div>
       </section>

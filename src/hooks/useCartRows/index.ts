@@ -17,6 +17,7 @@ import {
   setProductError,
   selectProductsMap,
 } from "@/reducers/productReducer";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
 
 type CartItem = Product & {
   quantity: number;
@@ -81,9 +82,6 @@ type UseCartRowsResult = {
   ) => void;
   clearCart: () => void;
 };
-
-const HYDRATION_ERROR_MESSAGE =
-  "We couldn't securely load your cart data right now.";
 
 export const useCartRows = (): UseCartRowsResult => {
   const dispatch = useDispatch<AppDispatch>();
@@ -182,7 +180,7 @@ export const useCartRows = (): UseCartRowsResult => {
         logger.error("Failed to load cart product details", error);
         isBootstrappedRef.current = true;
         setPhase("error");
-        setHydrationError(HYDRATION_ERROR_MESSAGE);
+        setHydrationError(ERROR_MESSAGES.CART_HYDRATION_LOAD);
         setHydrationErrorKind(mapApiErrorToListErrorKind(error));
       }
     };

@@ -1,10 +1,9 @@
 import type { CartRow, CartStorageRow } from "@/types/cart";
 
 import { CART_STORAGE_KEY } from "@/const/storageKeys";
+import { DEFAULT_QUANTITY } from "@/const/ui";
 
 type StorageLike = Pick<Storage, "getItem" | "setItem">;
-
-const DEFAULT_QUANTITY = 1;
 
 const normalizeStorageKey = (key: string): string => {
   return String(key || "").trim();

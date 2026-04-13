@@ -11,6 +11,7 @@ import { useCartRows } from "@/hooks/useCartRows";
 import { ROUTES } from "@/routes/paths";
 import { formatPrice } from "@/utils/formatters";
 import { useToast } from "@/hooks/useToast";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
 import "./index.scss";
 
 export type ProcessingAction = "idle" | "checkout" | "coupon";
@@ -79,7 +80,7 @@ const Cart: React.FC = () => {
 
         {hasError && (
           <RetryState
-            message="We couldn't securely load your cart data right now."
+            message={ERROR_MESSAGES.CART_HYDRATION_LOAD}
             onRetry={retryHydration}
             isRetrying={isRetryingHydration}
           />

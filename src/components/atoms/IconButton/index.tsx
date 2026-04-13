@@ -1,6 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { Icon } from "@/components/atoms/Icon";
+import { ICON_DEFAULT_SIZE } from "@/const/ui";
 import "./index.scss";
 
 type IconButtonVariant = "default" | "ghost" | "circular";
@@ -19,8 +20,8 @@ const IconButtonComponent = ({
   svgName,
   ariaLabel,
   color,
-  iconWidth = 20,
-  iconHeight = 20,
+  iconWidth = ICON_DEFAULT_SIZE,
+  iconHeight = ICON_DEFAULT_SIZE,
   className,
   variant = "default",
   type = "button",

@@ -2,6 +2,7 @@ import React from "react";
 import { Rating } from "@/components/atoms/Rating";
 import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
+import { MAX_RATING } from "@/const/ui";
 import "./index.scss";
 
 interface RatingDisplayProps {
@@ -16,10 +17,10 @@ interface RatingDisplayProps {
  */
 export const RatingDisplay: React.FC<RatingDisplayProps> = ({
   rating,
-  maxStars = 5,
+  maxStars = MAX_RATING,
   showEmpty = false,
 }) => {
-  const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || 5));
+  const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || MAX_RATING));
   const safeRating = Math.max(
     0,
     Math.min(normalizedMaxStars, Number(rating) || 0),

@@ -4,14 +4,12 @@ import {
   API_ERROR_MESSAGES,
   isGlobalMutationErrorCode,
 } from "@/const/apiErrorCodes";
+import { API_BASE_URL, GLOBAL_ERROR_THROTTLE_MS } from "@/const/apiConfig";
 import type { HttpClientOptions } from "@/types/common";
 import { handleApiError } from "@/utils/apiError";
 
-const BASE_URL = "https://api.vanannek.blog";
-// const BASE_URL = "http://localhost:3456";
-
 const httpClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -19,7 +17,6 @@ const httpClient = axios.create({
 });
 
 let lastGlobalErrorTime = 0;
-const GLOBAL_ERROR_THROTTLE_MS = 3000;
 
 httpClient.interceptors.response.use(
   (response) => response,

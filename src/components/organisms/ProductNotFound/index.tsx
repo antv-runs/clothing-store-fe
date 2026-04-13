@@ -3,13 +3,14 @@ import { Button } from "@/components/atoms/Button";
 import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
+import { UI_TEXT } from "@/const/uiText";
 
 type ProductNotFoundProps = {
   message?: string;
 };
 
 export const ProductNotFound = ({
-  message = "Product not found.",
+  message = UI_TEXT.PRODUCT_NOT_FOUND,
 }: ProductNotFoundProps) => {
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ export const ProductNotFound = ({
           className="product-not-found__action"
           onClick={handleBackHome}
         >
-          Back to Home
+          {UI_TEXT.BACK_TO_HOME}
         </Button>
       </section>
     </div>

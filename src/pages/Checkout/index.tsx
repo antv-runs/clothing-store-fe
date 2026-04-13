@@ -23,6 +23,7 @@ import type { CheckoutFormValues } from "@/components/organisms/CheckoutForm/ind
 import "./index.scss";
 import { ERROR_MESSAGES } from "@/const/errorMessages";
 import { UI_TEXT } from "@/const/uiText";
+import { TOAST_DEFAULT_DURATION } from "@/const/ui";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -91,7 +92,7 @@ const Checkout: React.FC = () => {
       showToast({
         message: errorMsg,
         variant: "error",
-        duration: 5000,
+        duration: TOAST_DEFAULT_DURATION,
       });
       return;
     }
@@ -111,7 +112,7 @@ const Checkout: React.FC = () => {
       showToast({
         message: UI_TEXT.ORDER_PLACED_SUCCESS,
         variant: "success",
-        duration: 5000,
+        duration: TOAST_DEFAULT_DURATION,
       });
     } catch (error: unknown) {
       const validationErrors = mapApiValidationErrors(error);
@@ -134,7 +135,7 @@ const Checkout: React.FC = () => {
         showToast({
           message: errorMsg,
           variant: "error",
-          duration: 5000,
+          duration: TOAST_DEFAULT_DURATION,
         });
       } else if (isApiError(error)) {
         const errorMsg = mapApiErrorToMessage(
@@ -152,7 +153,7 @@ const Checkout: React.FC = () => {
           showToast({
             message: errorMsg,
             variant: "error",
-            duration: 5000,
+            duration: TOAST_DEFAULT_DURATION,
           });
         }
       } else {
@@ -163,7 +164,7 @@ const Checkout: React.FC = () => {
         showToast({
           message: errorMsg,
           variant: "error",
-          duration: 5000,
+          duration: TOAST_DEFAULT_DURATION,
         });
       }
     } finally {
@@ -202,7 +203,7 @@ const Checkout: React.FC = () => {
               variant="primary"
               onClick={() => navigate(ROUTES.HOME)}
             >
-              Back to Home
+              {UI_TEXT.BACK_TO_HOME}
             </Button>
           </div>
         ) : hasError ? (

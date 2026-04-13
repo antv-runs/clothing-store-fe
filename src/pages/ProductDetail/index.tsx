@@ -23,16 +23,8 @@ import "./index.scss";
 
 import { ERROR_MESSAGES } from "@/const/errorMessages";
 import { UI_TEXT } from "@/const/uiText";
-
-const DEFAULT_QUANTITY = 1;
-
-const normalizeQuantity = (value: number | string): number => {
-  const parsed = Number(value);
-  return Math.max(
-    DEFAULT_QUANTITY,
-    Number.isFinite(parsed) ? parsed : DEFAULT_QUANTITY,
-  );
-};
+import { TOAST_DEFAULT_DURATION, DEFAULT_QUANTITY } from "@/const/ui";
+import { normalizeQuantity } from "@/utils/quantity";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
@@ -83,7 +75,7 @@ const ProductDetail: React.FC = () => {
     showToast({
       message: UI_TEXT.REVIEW_SUBMIT_SUCCESS_TOAST,
       variant: "success",
-      duration: 5000,
+      duration: TOAST_DEFAULT_DURATION,
     });
     await reloadReviews();
   }, [reloadReviews, showToast]);

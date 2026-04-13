@@ -3,7 +3,7 @@
 @use "@/styles/abstracts/breakpoints" as *;
 
 .home-reviews {
-  --container-width: $bp-xl;
+  --container-width: #{$bp-xl};
   --safe-zone-gutter: max(calc((100vw - var(--container-width)) / 2), 0px);
   --card-width: 400px;
   --review-card-width: var(--card-width);
