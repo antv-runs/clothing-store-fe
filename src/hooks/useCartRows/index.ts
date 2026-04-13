@@ -8,14 +8,21 @@ import {
   mapApiErrorToListErrorKind,
 } from "@/utils/apiErrorList";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store";
+import type { AppDispatch } from "@/store";
 import {
   addItem as actionAddItem,
   setQuantity as actionSetQuantity,
   removeItem as actionRemoveItem,
   clearCart as actionClearCart,
-} from "@/store/cart/cartSlice";
-import { fetchProductById } from "@/store/product/productThunks";
+  selectCartItems,
+} from "@/reducers/cartReducer";
+import { getProductById } from "@/api/Product";
+import {
+  setProduct,
+  setProductLoading,
+  setProductError,
+  selectProductsMap,
+} from "@/reducers/productReducer";
 
 type CartItem = Product & {
   quantity: number;
@@ -86,8 +93,8 @@ const HYDRATION_ERROR_MESSAGE =
 
 export const useCartRows = (): UseCartRowsResult => {
   const dispatch = useDispatch<AppDispatch>();
-  const cartRows = useSelector((state: RootState) => state.cart.items);
-  const products = useSelector((state: RootState) => state.product.byId);
+  const cartRows = useSelector(selectCartItems);
+  const products = useSelector(selectProductsMap);
 
   const [phase, setPhase] = useState<CartHydrationPhase>("bootstrapping");
   const [hydrationError, setHydrationError] = useState<string | null>(null);
@@ -138,7 +145,26 @@ export const useCartRows = (): UseCartRowsResult => {
 
       try {
         await Promise.all(
-          missingIds.map((id) => dispatch(fetchProductById(id))),
+          missingIds.map(async (id) => {
+            dispatch(setProductLoading({ id, loading: true }));
+            try {
+              const product = await getProductById(id);
+              if (product) {
+                dispatch(setProduct({ id, product }));
+                dispatch(setProductLoading({ id, loading: false }));
+                dispatch(setProductError({ id, error: null }));
+              } else {
+                dispatch(setProductError({ id, error: "Product not found" }));
+                dispatch(setProductLoading({ id, loading: false }));
+              }
+            } catch (err) {
+              const errorMessage =
+                err instanceof Error ? err.message : "Failed to fetch product";
+              dispatch(setProductError({ id, error: errorMessage }));
+              dispatch(setProductLoading({ id, loading: false }));
+              throw err;
+            }
+          }),
         );
 
         if (!isActive) {

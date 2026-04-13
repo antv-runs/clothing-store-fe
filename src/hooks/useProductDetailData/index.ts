@@ -14,8 +14,15 @@ import {
 } from "@/types/listState";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store";
-import { fetchProductById } from "@/store/product/productThunks";
-import { selectProductById, selectProductLoading, selectProductError } from "@/store/product/productSlice";
+import { getProductById } from "@/api/Product";
+import {
+  setProduct,
+  setProductLoading,
+  setProductError,
+  selectProductById,
+  selectProductLoading,
+  selectProductError,
+} from "@/reducers/productReducer";
 
 export type DetailErrorType = "not_found" | "network_error" | "system_error" | null;
 
@@ -58,11 +65,34 @@ export const useProductDetailData = (
     string | number | null
   >(null);
 
+  const fetchProduct = useCallback(
+    async (id: string) => {
+      dispatch(setProductLoading({ id, loading: true }));
+      try {
+        const result = await getProductById(id);
+        if (result) {
+          dispatch(setProduct({ id, product: result }));
+          dispatch(setProductLoading({ id, loading: false }));
+          dispatch(setProductError({ id, error: null }));
+        } else {
+          dispatch(setProductError({ id, error: "Product not found (404)" }));
+          dispatch(setProductLoading({ id, loading: false }));
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to fetch product";
+        dispatch(setProductError({ id, error: errorMessage }));
+        dispatch(setProductLoading({ id, loading: false }));
+      }
+    },
+    [dispatch],
+  );
+
   const retry = useCallback(() => {
     if (productId) {
-      dispatch(fetchProductById(productId));
+      fetchProduct(productId);
     }
-  }, [dispatch, productId]);
+  }, [fetchProduct, productId]);
 
   const retryRelatedProducts = useCallback(() => {
     if (
@@ -92,7 +122,7 @@ export const useProductDetailData = (
 
     // If product is not in cache, fetch it
     if (!product && !isLoading) {
-      dispatch(fetchProductById(productId));
+      fetchProduct(productId);
     }
 
     // Update error type based on Redux error state
@@ -108,7 +138,7 @@ export const useProductDetailData = (
     } else if (product) {
       setErrorType(null);
     }
-  }, [productId, product, isLoading, productError, dispatch]);
+  }, [productId, product, isLoading, productError, fetchProduct]);
 
   useEffect(() => {
     let isActive = true;

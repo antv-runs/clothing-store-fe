@@ -10,7 +10,6 @@ type HeadingProps = {
   title?: string;
   className?: string;
   noOfLines?: number;
-  id?: string;
 };
 
 export const Heading = ({
@@ -19,7 +18,6 @@ export const Heading = ({
   title,
   className,
   noOfLines,
-  id,
 }: HeadingProps) => {
   const content = children ?? title;
 
@@ -34,7 +32,6 @@ export const Heading = ({
 
   return (
     <Component
-      id={id}
       className={clsx(
         "heading",
         clampedLines && "heading--clamp",

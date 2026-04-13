@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import {
   addToast,
   dismissToast as dismissToastAction,
-} from "@/store/toast/toastSlice";
+} from "@/reducers/toastReducer";
 import type { AppDispatch } from "@/store";
 import type { ToastControls, ToastData } from "@/types/toast";
 

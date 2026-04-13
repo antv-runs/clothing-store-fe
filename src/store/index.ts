@@ -1,15 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "@/store/cart/cartSlice";
-import toastReducer from "@/store/toast/toastSlice";
-import productReducer from "@/store/product/productSlice";
+import rootReducer from "./rootReducer";
 import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 
 export const store = configureStore({
-  reducer: {
-    cart: cartReducer,
-    toast: toastReducer,
-    product: productReducer,
-  },
+  reducer: rootReducer,
   preloadedState: {
     cart: { items: readStoredCartRows() },
     toast: { items: [] },
