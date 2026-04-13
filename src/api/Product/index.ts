@@ -17,8 +17,6 @@ export async function getProducts(
 ): Promise<ProductListResult> {
   const queryStr = buildQueryString(params).toString();
   const url = `/api/products${queryStr ? `?${queryStr}` : ""}`;
-  // Simulate a server error for testing error handling
-  // const url = `https://httpbin.org/status/500`;
   const res = await get<PaginatedApiResponse<ApiProduct>>(url);
   const {
     data: apiProducts,
@@ -30,11 +28,6 @@ export async function getProducts(
     meta,
     links,
   };
-
-  // simulate empty data to avoid breaking the UI when API is not ready
-  // return {
-  //   data: [],
-  // };
 }
 
 export async function getProductById(

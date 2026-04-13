@@ -1,4 +1,3 @@
-// Axios HTTP client (moved from services/httpClient.ts)
 import axios from "axios";
 import type { AxiosResponse } from "axios";
 import {
