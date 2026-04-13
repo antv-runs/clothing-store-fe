@@ -8,7 +8,7 @@ import {
 } from "@/utils/apiErrorList";
 import type { Product } from "@/types/product";
 import type { Review } from "@/types/review";
-import type { ListCoreState, ListErrorKind } from "@/types/listState";
+import type { ListErrorKind } from "@/types/listState";
 
 type UseHomeDataResult = {
   newArrivals: Product[];
@@ -28,13 +28,9 @@ type UseHomeDataResult = {
   reviewsErrorKind: ListErrorKind | null;
   isNewArrivalsEmpty: boolean;
   isTopSellingEmpty: boolean;
-  isReviewsEmpty: boolean;
   retryNewArrivals: () => void;
   retryTopSelling: () => void;
   retryReviews: () => void;
-  newArrivalsList: ListCoreState<Product>;
-  topSellingList: ListCoreState<Product>;
-  reviewsList: ListCoreState<Review>;
 };
 
 const NEW_ARRIVALS_ERROR = "Failed to load new arrivals. Please try again.";
@@ -273,40 +269,6 @@ export const useHomeData = (): UseHomeDataResult => {
     !isNewArrivalsLoading && !newArrivalsError && newArrivals.length === 0;
   const isTopSellingEmpty =
     !isTopSellingLoading && !topSellingError && topSelling.length === 0;
-  const isReviewsEmpty = !isReviewsLoading && !reviewsError && reviews.length === 0;
-
-  const newArrivalsList: ListCoreState<Product> = {
-    data: newArrivals,
-    isLoading: isNewArrivalsLoading,
-    isRetrying: isRetryingNewArrivals,
-    isRetryable: isRetryableListErrorKind(newArrivalsErrorKind),
-    isEmpty: isNewArrivalsEmpty,
-    error: newArrivalsError,
-    errorKind: newArrivalsErrorKind,
-    retry: retryNewArrivals,
-  };
-
-  const topSellingList: ListCoreState<Product> = {
-    data: topSelling,
-    isLoading: isTopSellingLoading,
-    isRetrying: isRetryingTopSelling,
-    isRetryable: isRetryableListErrorKind(topSellingErrorKind),
-    isEmpty: isTopSellingEmpty,
-    error: topSellingError,
-    errorKind: topSellingErrorKind,
-    retry: retryTopSelling,
-  };
-
-  const reviewsList: ListCoreState<Review> = {
-    data: reviews,
-    isLoading: isReviewsLoading,
-    isRetrying: isRetryingReviews,
-    isRetryable: isRetryableListErrorKind(reviewsErrorKind),
-    isEmpty: isReviewsEmpty,
-    error: reviewsError,
-    errorKind: reviewsErrorKind,
-    retry: retryReviews,
-  };
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -334,12 +296,8 @@ export const useHomeData = (): UseHomeDataResult => {
     reviewsErrorKind,
     isNewArrivalsEmpty,
     isTopSellingEmpty,
-    isReviewsEmpty,
     retryNewArrivals,
     retryTopSelling,
     retryReviews,
-    newArrivalsList,
-    topSellingList,
-    reviewsList,
   };
 };

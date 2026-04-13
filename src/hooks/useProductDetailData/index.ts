@@ -9,7 +9,6 @@ import {
 import type { Product } from "@/types/product";
 import {
   LIST_ERROR_KIND,
-  type ListCoreState,
   type ListErrorKind,
 } from "@/types/listState";
 import { useSelector, useDispatch } from "react-redux";
@@ -35,10 +34,7 @@ type UseProductDetailDataResult = {
   relatedError: string | null;
   relatedErrorKind: ListErrorKind | null;
   isRetryingRelated: boolean;
-  isRetryableRelated: boolean;
-  relatedIsEmpty: boolean;
   retryRelatedProducts: () => void;
-  relatedList: ListCoreState<Product>;
   retry: () => void;
 };
 
@@ -213,24 +209,7 @@ export const useProductDetailData = (
   const resolvedRelatedErrorKind: ListErrorKind | null = relatedInvalidState
     ? LIST_ERROR_KIND.INVALID_STATE
     : relatedErrorKind;
-  const isRelatedRetryable = isRetryableListErrorKind(resolvedRelatedErrorKind);
-  const relatedIsEmpty =
-    Boolean(product?.id) &&
-    !relatedLoading &&
-    !isRetryingRelated &&
-    !relatedError &&
-    relatedProducts.length === 0;
-  const relatedList: ListCoreState<Product> = {
-    data: relatedProducts,
-    isLoading: relatedLoading,
-    isRetrying: isRetryingRelated,
-    isRetryable: isRelatedRetryable,
-    isEmpty: relatedIsEmpty,
-    error: relatedError,
-    errorKind: resolvedRelatedErrorKind,
-    retry: retryRelatedProducts,
-    invalidState: relatedInvalidState,
-  };
+
 
   return {
     product: product || null,
@@ -241,10 +220,7 @@ export const useProductDetailData = (
     relatedError,
     relatedErrorKind: resolvedRelatedErrorKind,
     isRetryingRelated,
-    isRetryableRelated: isRelatedRetryable,
-    relatedIsEmpty,
     retryRelatedProducts,
-    relatedList,
     retry,
   };
 };
