@@ -7,7 +7,7 @@ const BreadcrumbSkeleton: React.FC = () => {
   return (
     <nav className="breadcrumb" aria-label="Breadcrumb">
       <ol
-        className="breadcrumb__list u-mb-40 breadcrumb__list--truncate"
+        className="breadcrumb__list u-mb-40"
         aria-hidden="true"
       >
         <li className="breadcrumb__item">

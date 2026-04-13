@@ -2,14 +2,12 @@ import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { getReviewsByProductId } from "@/api/Review";
 import {
-  isRetryableListErrorKind,
   mapApiErrorToListErrorKind,
   mapApiErrorToMessage,
 } from "@/utils/apiErrorList";
 import type { Review } from "@/types/review";
 import {
   LIST_ERROR_KIND,
-  type ListCoreState,
   type ListErrorKind,
 } from "@/types/listState";
 
@@ -43,7 +41,6 @@ type State = {
   isRetrying: boolean;
   error: string | null;
   errorKind: ListErrorKind | null;
-  loadMoreError: string | null;
 };
 
 type Action =
@@ -83,7 +80,6 @@ const initialState: State = {
   isRetrying: false,
   error: null,
   errorKind: null,
-  loadMoreError: null,
 };
 
 const queryRating = (rating: string) => {
@@ -113,7 +109,6 @@ const reducer = (state: State, action: Action): State => {
         isLoadingMore: false,
         isRetrying: true,
         errorKind: state.errorKind,
-        loadMoreError: null,
       };
 
     case REVIEW_ACTION.REQUEST_SUCCESS:
@@ -129,7 +124,6 @@ const reducer = (state: State, action: Action): State => {
         isLoadingMore: false,
         isRetrying: false,
         errorKind: null,
-        loadMoreError: null,
         error: null,
       };
 
@@ -141,7 +135,6 @@ const reducer = (state: State, action: Action): State => {
           isLoadingMore: false,
           isRetrying: false,
           errorKind: state.errorKind,
-          loadMoreError: action.message,
         };
       }
 
@@ -151,7 +144,6 @@ const reducer = (state: State, action: Action): State => {
         isLoadingMore: false,
         isRetrying: false,
         errorKind: action.errorKind,
-        loadMoreError: null,
         error: action.message,
       };
 
@@ -355,29 +347,9 @@ export const useProductReviews = (
   const resolvedErrorKind: ListErrorKind | null = invalidParams
     ? LIST_ERROR_KIND.INVALID_PARAMS
     : state.errorKind;
-  const isRetryable = isRetryableListErrorKind(resolvedErrorKind);
-  const isEmpty =
-    !invalidParams && !state.isLoading && !state.error && state.reviews.length === 0;
-  const listState: ListCoreState<Review> = {
-    data: state.reviews,
-    isLoading: state.isLoading,
-    isRetrying: state.isRetrying,
-    isRetryable,
-    isEmpty,
-    error: state.error,
-    errorKind: resolvedErrorKind,
-    retry: () => {
-      if (!isRetryable) {
-        return;
-      }
 
-      void reloadReviews();
-    },
-    invalidParams,
-  };
 
   return {
-    data: state.reviews,
     reviews: state.reviews,
     reviewCount: state.total || state.reviews.length,
     selectedRating: state.filter,
@@ -386,20 +358,8 @@ export const useProductReviews = (
     isLoading: state.isLoading,
     isLoadingMore: state.isLoadingMore,
     isRetrying: state.isRetrying,
-    isEmpty,
     error: state.error,
     errorKind: resolvedErrorKind,
-    loadMoreError: state.loadMoreError,
-    isRetryable,
-    retry: () => {
-      if (!isRetryable) {
-        return;
-      }
-
-      void reloadReviews();
-    },
-    invalidParams,
-    listState,
     setFilter,
     setSort,
     loadMore,

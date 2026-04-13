@@ -3,14 +3,20 @@
 .breadcrumb__item {
   display: inline-flex;
   align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .breadcrumb__item--active {
   color: v.$color-black;
+  flex: 0 1 auto;
 }
 
-.breadcrumb__current {
+.breadcrumb__current,
+.breadcrumb__link {
   display: block;
+  flex: 0 1 auto;
+  min-width: 40px; /* guarantees previous items remain visible as 'Ho...' */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -19,8 +25,13 @@
 .breadcrumb__link {
   text-decoration: none;
   color: inherit;
+  max-width: 140px; /* prevents long category names from dominating */
+
+  &:hover {
+    color: v.$color-black;
+  }
 }
 
-.breadcrumb__link:hover {
-  color: v.$color-black;
+.breadcrumb__current {
+  max-width: 320px; /* prevents the active item from consuming the whole row */
 }

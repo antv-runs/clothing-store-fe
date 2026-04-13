@@ -133,8 +133,7 @@
       opacity 150ms ease;
 
     @media (hover: hover) {
-      @include m.icon-lift-hover(
-        $hover-opacity: 0.7,
+      @include m.icon-lift-hover($hover-opacity: 0.7,
         $hover-selector: "&:not(:disabled):hover"
       );
     }
@@ -149,7 +148,7 @@
     font-size: 14px;
     line-height: 1.4;
     color: v.$color-muted;
-    margin-bottom: 4px;
+    margin-bottom: 0;
   }
 
   &__foot {
@@ -214,6 +213,7 @@
   }
 
   &--skeleton {
+
     .cart-item__name,
     .cart-item__meta,
     .cart-item__price,
@@ -297,6 +297,9 @@
 @media (max-width: 768px) {
   .cart-item {
     align-items: flex-start;
+    gap: 10px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
 
     &__image {
       width: 100px;
@@ -345,7 +348,7 @@
       flex-wrap: nowrap;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     &__quantity {

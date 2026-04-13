@@ -9,13 +9,19 @@ import {
 import type { Product } from "@/types/product";
 import {
   LIST_ERROR_KIND,
-  type ListCoreState,
   type ListErrorKind,
 } from "@/types/listState";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store";
-import { fetchProductById } from "@/store/product/productThunks";
-import { selectProductById, selectProductLoading, selectProductError } from "@/store/product/productSlice";
+import { getProductById } from "@/api/Product";
+import {
+  setProduct,
+  setProductLoading,
+  setProductError,
+  selectProductById,
+  selectProductLoading,
+  selectProductError,
+} from "@/reducers/productReducer";
 
 export type DetailErrorType = "not_found" | "network_error" | "system_error" | null;
 
@@ -28,10 +34,7 @@ type UseProductDetailDataResult = {
   relatedError: string | null;
   relatedErrorKind: ListErrorKind | null;
   isRetryingRelated: boolean;
-  isRetryableRelated: boolean;
-  relatedIsEmpty: boolean;
   retryRelatedProducts: () => void;
-  relatedList: ListCoreState<Product>;
   retry: () => void;
 };
 
@@ -58,11 +61,34 @@ export const useProductDetailData = (
     string | number | null
   >(null);
 
+  const fetchProduct = useCallback(
+    async (id: string) => {
+      dispatch(setProductLoading({ id, loading: true }));
+      try {
+        const result = await getProductById(id);
+        if (result) {
+          dispatch(setProduct({ id, product: result }));
+          dispatch(setProductLoading({ id, loading: false }));
+          dispatch(setProductError({ id, error: null }));
+        } else {
+          dispatch(setProductError({ id, error: "Product not found (404)" }));
+          dispatch(setProductLoading({ id, loading: false }));
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to fetch product";
+        dispatch(setProductError({ id, error: errorMessage }));
+        dispatch(setProductLoading({ id, loading: false }));
+      }
+    },
+    [dispatch],
+  );
+
   const retry = useCallback(() => {
     if (productId) {
-      dispatch(fetchProductById(productId));
+      fetchProduct(productId);
     }
-  }, [dispatch, productId]);
+  }, [fetchProduct, productId]);
 
   const retryRelatedProducts = useCallback(() => {
     if (
@@ -90,9 +116,12 @@ export const useProductDetailData = (
       return;
     }
 
-    // If product is not in cache, fetch it
-    if (!product && !isLoading) {
-      dispatch(fetchProductById(productId));
+    // If product is not in cache and no error has been recorded, fetch it.
+    // Without the !productError guard, a 404 would loop forever:
+    // product stays undefined, isLoading resets to false, and the effect
+    // fires fetchProduct again on every render cycle.
+    if (!product && !isLoading && !productError) {
+      fetchProduct(productId);
     }
 
     // Update error type based on Redux error state
@@ -108,7 +137,7 @@ export const useProductDetailData = (
     } else if (product) {
       setErrorType(null);
     }
-  }, [productId, product, isLoading, productError, dispatch]);
+  }, [productId, product, isLoading, productError, fetchProduct]);
 
   useEffect(() => {
     let isActive = true;
@@ -180,24 +209,7 @@ export const useProductDetailData = (
   const resolvedRelatedErrorKind: ListErrorKind | null = relatedInvalidState
     ? LIST_ERROR_KIND.INVALID_STATE
     : relatedErrorKind;
-  const isRelatedRetryable = isRetryableListErrorKind(resolvedRelatedErrorKind);
-  const relatedIsEmpty =
-    Boolean(product?.id) &&
-    !relatedLoading &&
-    !isRetryingRelated &&
-    !relatedError &&
-    relatedProducts.length === 0;
-  const relatedList: ListCoreState<Product> = {
-    data: relatedProducts,
-    isLoading: relatedLoading,
-    isRetrying: isRetryingRelated,
-    isRetryable: isRelatedRetryable,
-    isEmpty: relatedIsEmpty,
-    error: relatedError,
-    errorKind: resolvedRelatedErrorKind,
-    retry: retryRelatedProducts,
-    invalidState: relatedInvalidState,
-  };
+
 
   return {
     product: product || null,
@@ -208,10 +220,7 @@ export const useProductDetailData = (
     relatedError,
     relatedErrorKind: resolvedRelatedErrorKind,
     isRetryingRelated,
-    isRetryableRelated: isRelatedRetryable,
-    relatedIsEmpty,
     retryRelatedProducts,
-    relatedList,
     retry,
   };
 };

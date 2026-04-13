@@ -55,20 +55,20 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
 
   const prependedClones: CarouselItem[] = showNavigation
     ? products.slice(-cloneCount).map((p) => ({
-        ...p,
-        isClone: true,
-        originalId: p.id,
-        clonePosition: "tail" as const,
-      }))
+      ...p,
+      isClone: true,
+      originalId: p.id,
+      clonePosition: "tail" as const,
+    }))
     : [];
 
   const appendedClones: CarouselItem[] = showNavigation
     ? products.slice(0, cloneCount).map((p) => ({
-        ...p,
-        isClone: true,
-        originalId: p.id,
-        clonePosition: "head" as const,
-      }))
+      ...p,
+      isClone: true,
+      originalId: p.id,
+      clonePosition: "head" as const,
+    }))
     : [];
 
   const allItems: CarouselItem[] = [...prependedClones, ...products, ...appendedClones];
@@ -132,60 +132,60 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
       >
         {loading
           ? skeletonItems.map((index) => (
-              <li
-                key={`skeleton-${index}`}
-                className="product-card-list__item product-card-list__item--skeleton"
-                data-is-clone="false"
-              >
-                <article className="product-card" aria-hidden="true">
-                  <div className="product-card__image-wrapper product-image-wrapper">
-                    <Skeleton variant="rect" width="100%" height="100%" />
-                  </div>
-                  <div className="product-card__title">
-                    <Skeleton className="product-card-list__skeleton-title" variant="line" />
-                  </div>
-                  <div className="product-card__rating">
-                    <span className="product-card__stars" aria-hidden="true">
-                      <Skeleton className="product-card-list__skeleton-stars" variant="line" />
-                    </span>
-                    <Skeleton className="product-card-list__skeleton-rating" variant="line" />
-                  </div>
-                  <div className="product-card__price">
-                    <span className="product-card__price-current">
-                      <Skeleton className="product-card-list__skeleton-price" variant="line" />
-                    </span>
-                  </div>
-                </article>
-              </li>
-            ))
+            <li
+              key={`skeleton-${index}`}
+              className="product-card-list__item product-card-list__item--skeleton"
+              data-is-clone="false"
+            >
+              <article className="product-card" aria-hidden="true">
+                <div className="product-card__image-wrapper product-image-wrapper">
+                  <Skeleton variant="rect" width="100%" height="100%" />
+                </div>
+                <div className="product-card__title">
+                  <Skeleton className="product-card-list__skeleton-title" variant="line" />
+                </div>
+                <div className="product-card__rating">
+                  <span className="product-card__stars" aria-hidden="true">
+                    <Skeleton className="product-card-list__skeleton-stars" variant="line" />
+                  </span>
+                  <Skeleton className="product-card-list__skeleton-rating" variant="line" />
+                </div>
+                <div className="product-card__price">
+                  <span className="product-card__price-current">
+                    <Skeleton className="product-card-list__skeleton-price" variant="line" />
+                  </span>
+                </div>
+              </article>
+            </li>
+          ))
           : allItems.map((item, index) => {
-              const displayId = item.originalId || item.id;
-              return (
-                <li
-                  key={
-                    item.isClone
-                      ? `clone-${item.clonePosition}-${item.id}-${index}`
-                      : item.id
-                  }
-                  className="product-card-list__item"
-                  data-product-id={displayId}
-                  data-is-clone={item.isClone ? "true" : "false"}
-                >
-                  <ProductCard
-                    product={item}
-                    formatPrice={formatPrice}
-                    {...(linkMode && { linkMode })}
-                    {...(onImageLoad &&
-                      onImageError && {
-                        imageLoaded: imageLoaded.has(String(displayId)),
-                        imageError: imageError.has(String(displayId)),
-                        onImageLoad: () => onImageLoad(String(displayId)),
-                        onImageError: () => onImageError(String(displayId)),
-                      })}
-                  />
-                </li>
-              );
-            })}
+            const displayId = item.originalId || item.id;
+            return (
+              <li
+                key={
+                  item.isClone
+                    ? `clone-${item.clonePosition}-${item.id}-${index}`
+                    : item.id
+                }
+                className="product-card-list__item"
+                data-product-id={displayId}
+                data-is-clone={item.isClone ? "true" : "false"}
+              >
+                <ProductCard
+                  product={item}
+                  formatPrice={formatPrice}
+                  {...(linkMode && { linkMode })}
+                  {...(onImageLoad &&
+                    onImageError && {
+                    imageLoaded: imageLoaded.has(String(displayId)),
+                    imageError: imageError.has(String(displayId)),
+                    onImageLoad: () => onImageLoad(String(displayId)),
+                    onImageError: () => onImageError(String(displayId)),
+                  })}
+                />
+              </li>
+            );
+          })}
       </SliderList>
     </Slider>
   );

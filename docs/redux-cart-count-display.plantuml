@@ -1,8 +1,0 @@
-@startuml Cart Count Display Flow
-participant "Header Component" as UI
-participant "Redux Store" as Store
-
-Store -> UI: state.cart.items (via useSelector)
-UI -> UI: calculate totalQuantity = sum(quantities)
-UI -> UI: render count in header
-@enduml

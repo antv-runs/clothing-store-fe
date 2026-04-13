@@ -53,10 +53,17 @@
   }
 }
 
+@media (max-width: 1240px) {
+  .announcement-bar__close {
+    right: 32px;
+  }
+}
+
 @media (max-width: 992px) {
   .announcement-bar__text {
     font-size: 12px;
   }
+
   .announcement-bar__close {
     display: none;
   }

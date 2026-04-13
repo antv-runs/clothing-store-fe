@@ -5,7 +5,7 @@ import { ToastRuntime } from "./index";
 import httpClient, { __resetGlobalErrorTimeForTesting } from "@/lib/axios";
 import MockAdapter from "axios-mock-adapter";
 import { store } from "@/store";
-import { clearToasts } from "@/store/toast/toastSlice";
+import { clearToasts } from "@/reducers/toastReducer";
 
 jest.mock("@/components/organisms/ToastContainer", () => ({
   ToastContainer: ({
@@ -125,7 +125,7 @@ describe("ToastRuntime", () => {
     ).toBeInTheDocument();
   });
 
-  it("does not show a global error toast for GET requests, even on 500", async () => {
+  it("shows a global error toast for GET requests when returning 500", async () => {
     renderWithStore(<ToastRuntime />);
 
     mock.onGet("/test-get").reply(500);
@@ -135,8 +135,8 @@ describe("ToastRuntime", () => {
     });
 
     expect(
-      screen.queryByText("Server error. Please try again in a moment."),
-    ).not.toBeInTheDocument();
+      screen.getByText("Server error. Please try again in a moment."),
+    ).toBeInTheDocument();
   });
 
   it("does not show a global error toast for 4xx mutation errors", async () => {

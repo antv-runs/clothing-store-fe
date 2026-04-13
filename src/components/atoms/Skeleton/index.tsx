@@ -9,7 +9,6 @@ interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   width?: string | number;
   height?: string | number;
   radius?: string | number;
-  ariaHidden?: boolean;
 }
 
 export const Skeleton = ({
@@ -19,7 +18,6 @@ export const Skeleton = ({
   radius,
   className,
   style,
-  ariaHidden = true,
   ...rest
 }: SkeletonProps) => {
   const skeletonStyle: CSSProperties = { ...style };
@@ -40,8 +38,8 @@ export const Skeleton = ({
     <div
       className={clsx("skeleton", `skeleton--${variant}`, className)}
       style={skeletonStyle}
-      aria-hidden={ariaHidden}
       role="presentation"
+      aria-hidden="true"
       {...rest}
     />
   );

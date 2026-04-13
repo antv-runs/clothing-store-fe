@@ -13,8 +13,7 @@ type IconButtonProps = {
   iconHeight?: number | string;
   className?: string;
   variant?: IconButtonVariant;
-  type?: "button" | "submit" | "reset";
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "aria-label" | "type">;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "aria-label">;
 
 const IconButtonComponent = ({
   svgName,

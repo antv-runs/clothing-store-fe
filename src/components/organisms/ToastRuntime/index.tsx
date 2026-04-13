@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "@/components/organisms/ToastContainer";
 import { useToast } from "@/hooks/useToast";
-import type { RootState } from "@/store";
+import { selectToastItems } from "@/reducers/toastReducer";
 
 /**
  * Redux-backed runtime bridge for global toast rendering and global API error events.
  */
 export const ToastRuntime = () => {
   const { showToast, dismissToast } = useToast();
-  const toasts = useSelector((state: RootState) => state.toast.items);
+  const toasts = useSelector(selectToastItems);
 
   useEffect(() => {
     const handleGlobalError = (event: Event) => {
