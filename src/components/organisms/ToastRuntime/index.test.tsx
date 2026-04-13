@@ -125,7 +125,7 @@ describe("ToastRuntime", () => {
     ).toBeInTheDocument();
   });
 
-  it("does not show a global error toast for GET requests, even on 500", async () => {
+  it("shows a global error toast for GET requests when returning 500", async () => {
     renderWithStore(<ToastRuntime />);
 
     mock.onGet("/test-get").reply(500);
@@ -135,8 +135,8 @@ describe("ToastRuntime", () => {
     });
 
     expect(
-      screen.queryByText("Server error. Please try again in a moment."),
-    ).not.toBeInTheDocument();
+      screen.getByText("Server error. Please try again in a moment."),
+    ).toBeInTheDocument();
   });
 
   it("does not show a global error toast for 4xx mutation errors", async () => {
