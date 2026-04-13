@@ -15,6 +15,7 @@ export const UI_TEXT = {
   GO_TO_CHECKOUT: "Go to Checkout",
   BACK_TO_HOME: "Back to Home",
   GO_BACK_TO_HOME: "Go back to Home",
+  TRY_AGAIN: "Try Again",
   PRODUCT_NOT_FOUND: "Product not found.",
   LOADING: "Loading",
 } as const;

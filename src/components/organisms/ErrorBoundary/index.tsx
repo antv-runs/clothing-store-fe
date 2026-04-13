@@ -5,6 +5,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { ERROR_MESSAGES } from "@/const/errorMessages";
 import { UI_TEXT } from "@/const/uiText";
+import { isChunkLoadError } from "@/utils/chunkLoadError";
 import "./index.scss";
 
 /**
@@ -64,26 +65,29 @@ export class ErrorBoundary extends Component<Props, State> {
 
     if (
       prevResetKeys.length !== nextResetKeys.length ||
-      nextResetKeys.some((value, index) => !Object.is(value, prevResetKeys[index]))
+      nextResetKeys.some(
+        (value, index) => !Object.is(value, prevResetKeys[index]),
+      )
     ) {
-      this.setState(prev => ({ hasError: false, error: null, retryKey: prev.retryKey + 1 }));
+      this.setState((prev) => ({
+        hasError: false,
+        error: null,
+        retryKey: prev.retryKey + 1,
+      }));
     }
   }
 
   private handleRetry = () => {
-    if (this.state.error) {
-      const isChunkError =
-        this.state.error.message.includes("Failed to fetch dynamically imported module") ||
-        this.state.error.message.includes("Importing a module script failed") ||
-        this.state.error.name === "ChunkLoadError";
-
-      if (isChunkError) {
-        window.location.reload();
-        return;
-      }
+    if (isChunkLoadError(this.state.error)) {
+      window.location.reload();
+      return;
     }
 
-    this.setState(prev => ({ hasError: false, error: null, retryKey: prev.retryKey + 1 }));
+    this.setState((prev) => ({
+      hasError: false,
+      error: null,
+      retryKey: prev.retryKey + 1,
+    }));
   };
 
   private handleGoHome = () => {
@@ -106,17 +110,14 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="container u-mt-25">
-          <section className="error-boundary-page" aria-label="Application Error">
+          <section className="error-boundary-page">
             <div className="error-boundary-page__content">
               <Heading as="h1" className="error-boundary-page__title">
                 {this.props.fallbackMessage || ERROR_MESSAGES.GENERIC_ERROR}
               </Heading>
 
               <p className="error-boundary-page__message">
-                {this.state.error &&
-                  (this.state.error.message.includes("Failed to fetch dynamically imported module") ||
-                    this.state.error.message.includes("Importing a module script failed") ||
-                    this.state.error.name === "ChunkLoadError")
+                {isChunkLoadError(this.state.error)
                   ? ERROR_MESSAGES.PAGE_RESOURCE_LOAD
                   : ERROR_MESSAGES.PAGE_LOAD_UNEXPECTED}
               </p>
@@ -128,7 +129,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   variant="primary"
                   onClick={this.handleRetry}
                 >
-                  Try Again
+                  {UI_TEXT.TRY_AGAIN}
                 </Button>
                 <div className="error-boundary-page__spacer" />
                 <Button
