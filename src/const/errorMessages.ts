@@ -1,0 +1,16 @@
+export const ERROR_MESSAGES = {
+  NEW_ARRIVALS_LOAD: "Failed to load new arrivals. Please try again.",
+  TOP_SELLING_LOAD: "Failed to load top selling products. Please try again.",
+  REVIEWS_LOAD: "Failed to load customer reviews. Please try again.",
+  PRODUCT_LOAD_NETWORK: "Failed to load product. Please check your connection and try again.",
+  PRODUCT_LOAD_SYSTEM: "Something went wrong while loading this product.",
+  GENERIC_ERROR: "Something went wrong",
+  INVALID_ORDER_DATA: "Invalid order data. Please review your information and cart.",
+  CHECKOUT_VALIDATION: "Please review the highlighted fields and try again.",
+  CHECKOUT_UNEXPECTED: "An unexpected error occurred while placing your order.",
+  CHECKOUT_GENERIC: "An unexpected error occurred. Please try again or contact support.",
+  CHECKOUT_LOAD: "We couldn't securely load your checkout data right now.",
+  REVIEW_EMPTY: "Please write a comment before submitting.",
+  CART_ADD_ERROR: "Unable to add item to cart",
+  REVIEW_SUBMIT_FAILED: "Failed to submit review. Please try again.",
+} as const;

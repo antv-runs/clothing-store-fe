@@ -21,6 +21,8 @@ import { formatPrice } from "@/utils/formatters";
 import type { CreateOrderRequest } from "@/types/api/order";
 import type { CheckoutFormValues } from "@/components/organisms/CheckoutForm/index.schema";
 import "./index.scss";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { UI_TEXT } from "@/const/uiText";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -84,7 +86,7 @@ const Checkout: React.FC = () => {
       const errorMsg =
         error instanceof Error
           ? error.message
-          : "Invalid order data. Please review your information and cart.";
+          : ERROR_MESSAGES.INVALID_ORDER_DATA;
       setSubmitStatus("error");
       showToast({
         message: errorMsg,
@@ -103,11 +105,11 @@ const Checkout: React.FC = () => {
       clearCart();
       setServerErrors({});
       setSuccessMessage(
-        "Your order has been placed successfully. We will process it shortly.",
+        UI_TEXT.ORDER_PLACED_SUCCESS_LONG,
       );
       setSubmitStatus("success");
       showToast({
-        message: "Order placed successfully. We will process it shortly.",
+        message: UI_TEXT.ORDER_PLACED_SUCCESS,
         variant: "success",
         duration: 5000,
       });
@@ -124,7 +126,7 @@ const Checkout: React.FC = () => {
 
         const errorMsg = mapApiErrorToMessage(
           error,
-          "Please review the highlighted fields and try again.",
+          ERROR_MESSAGES.CHECKOUT_VALIDATION,
         );
 
         setSubmitStatus("error");
@@ -137,7 +139,7 @@ const Checkout: React.FC = () => {
       } else if (isApiError(error)) {
         const errorMsg = mapApiErrorToMessage(
           error,
-          "An unexpected error occurred while placing your order.",
+          ERROR_MESSAGES.CHECKOUT_UNEXPECTED,
         );
 
         setSubmitStatus("error");
@@ -154,8 +156,7 @@ const Checkout: React.FC = () => {
           });
         }
       } else {
-        const errorMsg =
-          "An unexpected error occurred. Please try again or contact support.";
+        const errorMsg = ERROR_MESSAGES.CHECKOUT_GENERIC;
 
         setSubmitStatus("error");
 
@@ -206,7 +207,7 @@ const Checkout: React.FC = () => {
           </div>
         ) : hasError ? (
           <RetryState
-            message="We couldn't securely load your checkout data right now."
+            message={ERROR_MESSAGES.CHECKOUT_LOAD}
             onRetry={retryHydration}
             isRetrying={isRetryingHydration}
           />

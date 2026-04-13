@@ -33,10 +33,7 @@ type UseHomeDataResult = {
   retryReviews: () => void;
 };
 
-const NEW_ARRIVALS_ERROR = "Failed to load new arrivals. Please try again.";
-const TOP_SELLING_ERROR =
-  "Failed to load top selling products. Please try again.";
-const REVIEWS_ERROR = "Failed to load customer reviews. Please try again.";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
 
 export const useHomeData = (): UseHomeDataResult => {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
@@ -105,7 +102,7 @@ export const useHomeData = (): UseHomeDataResult => {
 
       logger.error("Failed to load new arrivals.", error);
       setNewArrivals([]);
-      setNewArrivalsError(NEW_ARRIVALS_ERROR);
+      setNewArrivalsError(ERROR_MESSAGES.NEW_ARRIVALS_LOAD);
       setNewArrivalsErrorKind(mapApiErrorToListErrorKind(error));
     } finally {
       if (
@@ -158,7 +155,7 @@ export const useHomeData = (): UseHomeDataResult => {
 
       logger.error("Failed to load top selling products.", error);
       setTopSelling([]);
-      setTopSellingError(TOP_SELLING_ERROR);
+      setTopSellingError(ERROR_MESSAGES.TOP_SELLING_LOAD);
       setTopSellingErrorKind(mapApiErrorToListErrorKind(error));
     } finally {
       if (
@@ -206,7 +203,7 @@ export const useHomeData = (): UseHomeDataResult => {
 
       logger.error("Failed to load customer reviews.", error);
       setReviews([]);
-      setReviewsError(REVIEWS_ERROR);
+      setReviewsError(ERROR_MESSAGES.REVIEWS_LOAD);
       setReviewsErrorKind(mapApiErrorToListErrorKind(error));
     } finally {
       if (isMountedRef.current && requestId === reviewsRequestIdRef.current) {

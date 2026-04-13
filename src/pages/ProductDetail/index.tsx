@@ -21,10 +21,10 @@ import { Button } from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
 import "./index.scss";
 
+import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { UI_TEXT } from "@/const/uiText";
+
 const DEFAULT_QUANTITY = 1;
-const NETWORK_ERROR_MESSAGE =
-  "Failed to load product. Please check your connection and try again.";
-const SYSTEM_ERROR_MESSAGE = "Something went wrong while loading this product.";
 
 const normalizeQuantity = (value: number | string): number => {
   const parsed = Number(value);
@@ -81,7 +81,7 @@ const ProductDetail: React.FC = () => {
   const handleReviewSubmitSuccess = useCallback(async () => {
     setIsWriteReviewModalOpen(false);
     showToast({
-      message: "Review submitted successfully. Thank you for your feedback!",
+      message: UI_TEXT.REVIEW_SUBMIT_SUCCESS_TOAST,
       variant: "success",
       duration: 5000,
     });
@@ -196,7 +196,7 @@ const ProductDetail: React.FC = () => {
 
     if (!product?.id) {
       showToast({
-        message: "Unable to add item to cart",
+        message: ERROR_MESSAGES.CART_ADD_ERROR,
         variant: "error",
       });
       return;
@@ -217,12 +217,12 @@ const ProductDetail: React.FC = () => {
       });
 
       showToast({
-        message: "Item added to cart",
+        message: UI_TEXT.ITEM_ADDED_TO_CART,
         variant: "success",
       });
     } catch {
       showToast({
-        message: "Unable to add item to cart",
+        message: ERROR_MESSAGES.CART_ADD_ERROR,
         variant: "error",
       });
     } finally {
@@ -239,8 +239,8 @@ const ProductDetail: React.FC = () => {
   if (errorType === "network_error" || errorType === "system_error") {
     const message =
       errorType === "network_error"
-        ? NETWORK_ERROR_MESSAGE
-        : SYSTEM_ERROR_MESSAGE;
+        ? ERROR_MESSAGES.PRODUCT_LOAD_NETWORK
+        : ERROR_MESSAGES.PRODUCT_LOAD_SYSTEM;
 
     return (
       <div className="container u-mt-25">

@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { submitReview } from "@/api/Review";
 import { mapApiErrorToMessage } from "@/utils/apiErrorList";
 import { DEFAULT_GUEST_USERNAME } from "@/const/user";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { UI_TEXT } from "@/const/uiText";
 
 type ReviewSubmission = {
   username: string;
@@ -62,14 +64,14 @@ export const useReviewSubmit = ({
       const normalizedStars = Math.max(1, Math.min(5, Number(stars) || 5));
 
       if (!normalizedComment) {
-        setReviewStatusMessage("Please write a comment before submitting.");
+        setReviewStatusMessage(ERROR_MESSAGES.REVIEW_EMPTY);
         return;
       }
 
       isReviewSubmitInFlightRef.current = true;
       const requestId = ++reviewSubmitRequestIdRef.current;
       setIsSubmittingReview(true);
-      setReviewStatusMessage("Submitting review...");
+      setReviewStatusMessage(UI_TEXT.REVIEW_SUBMITTING);
 
       try {
         await submitReview(productId, {
@@ -85,7 +87,7 @@ export const useReviewSubmit = ({
           return;
         }
 
-        setReviewStatusMessage("Review submitted successfully.");
+        setReviewStatusMessage(UI_TEXT.REVIEW_SUBMITTED);
         await onSuccess?.();
       } catch (error) {
         if (
@@ -99,7 +101,7 @@ export const useReviewSubmit = ({
         setReviewStatusMessage(
           mapApiErrorToMessage(
             error,
-            "Failed to submit review. Please try again.",
+            ERROR_MESSAGES.REVIEW_SUBMIT_FAILED,
           ),
         );
       } finally {

@@ -1,0 +1,16 @@
+export const VALIDATION_MESSAGES = {
+  REQUIRED_FULL_NAME: "Full name is required.",
+  SHORT_FULL_NAME: "Full name is too short.",
+  LONG_FULL_NAME: "Full name is too long.",
+  NO_NUMBERS_FULL_NAME: "Full name cannot contain numbers.",
+  REQUIRED_EMAIL: "Email is required.",
+  INVALID_EMAIL: "Please enter a valid email address.",
+  REQUIRED_PHONE: "Phone is required.",
+  NUMBERS_ONLY_PHONE: "Phone number must contain only numbers.",
+  SHORT_PHONE: "Phone number must be at least 9 digits.",
+  LONG_PHONE: "Phone number is too long.",
+  REQUIRED_ADDRESS: "Address is required.",
+  SHORT_ADDRESS: "Address is too short.",
+  LONG_ADDRESS: "Address is too long.",
+  INVALID_CHARS_ADDRESS: "Address must contain valid characters.",
+} as const;

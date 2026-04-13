@@ -3,6 +3,7 @@ import { Component, Fragment } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
 import "./index.scss";
 
 /**
@@ -107,7 +108,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <section className="error-boundary-page" aria-label="Application Error">
             <div className="error-boundary-page__content">
               <Heading as="h1" className="error-boundary-page__title">
-                {this.props.fallbackMessage || "Something went wrong"}
+                {this.props.fallbackMessage || ERROR_MESSAGES.GENERIC_ERROR}
               </Heading>
 
               <p className="error-boundary-page__message">
