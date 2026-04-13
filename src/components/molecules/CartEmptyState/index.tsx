@@ -1,4 +1,3 @@
-import React from "react";
 import { Text } from "@/components/atoms/Text";
 import { TextLink } from "@/components/atoms/TextLink";
 import "./index.scss";
@@ -13,11 +12,15 @@ interface CartEmptyStateProps {
 export const CartEmptyState: React.FC<CartEmptyStateProps> = ({
   isVisible,
 }) => {
+  const displayStyle = { display: isVisible ? "flex" : "none" };
+
   return (
     <div
       className="cart-empty"
-      style={{ display: isVisible ? "flex" : "none" }}
+      style={displayStyle}
+      role="status"
       aria-live="polite"
+      aria-atomic="true"
     >
       <div className="cart-empty__inner">
         <Text as="p" className="cart-empty__text">
