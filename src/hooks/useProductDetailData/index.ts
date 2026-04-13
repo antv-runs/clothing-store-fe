@@ -120,8 +120,11 @@ export const useProductDetailData = (
       return;
     }
 
-    // If product is not in cache, fetch it
-    if (!product && !isLoading) {
+    // If product is not in cache and no error has been recorded, fetch it.
+    // Without the !productError guard, a 404 would loop forever:
+    // product stays undefined, isLoading resets to false, and the effect
+    // fires fetchProduct again on every render cycle.
+    if (!product && !isLoading && !productError) {
       fetchProduct(productId);
     }
 
