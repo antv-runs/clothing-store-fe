@@ -1,8 +1,7 @@
-import { useRef, useCallback, useLayoutEffect, useEffect } from "react";
-import { getTrackGap } from "@/utils/carousel";
+import { useRef, useCallback, useLayoutEffect } from "react";
 
 interface UseInfiniteLoopOptions {
-  viewportRef: React.RefObject<HTMLDivElement>;
+  viewportRef: React.RefObject<HTMLDivElement | null>;
   getLoopRange: () => { start: number; end: number } | null;
   enabled: boolean;
   /** Triggers re-sync when the item list changes (e.g. after data load). */

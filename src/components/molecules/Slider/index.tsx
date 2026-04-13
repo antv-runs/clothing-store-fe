@@ -47,7 +47,7 @@ export interface SliderProps {
    * Useful when the caller needs direct access to the viewport's scrollLeft
    * (e.g. for infinite-loop normalization via useInfiniteLoop).
    */
-  viewportRef?: React.RefObject<HTMLDivElement>;
+  viewportRef?: React.RefObject<HTMLDivElement | null>;
   /**
    * Called after mount (or after products change) so callers can trigger
    * a button-state refresh when external scroll normalization repositions

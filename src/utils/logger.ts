@@ -1,11 +1,11 @@
 export const logger = {
   log: (...args: unknown[]) => {
-    if (process.env.NODE_ENV !== "production") {
+    if (import.meta.env.DEV) {
       console.log(...args);
     }
   },
   error: (...args: unknown[]) => {
-    if (process.env.NODE_ENV !== "production") {
+    if (import.meta.env.DEV) {
       console.error(...args);
     }
   },

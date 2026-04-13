@@ -98,7 +98,6 @@ const reducer = (state: State, action: Action): State => {
         isLoadingMore: action.append,
         isRetrying: false,
         errorKind: null,
-        loadMoreError: null,
         error: null,
       };
 
