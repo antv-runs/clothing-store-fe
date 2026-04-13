@@ -52,6 +52,23 @@
   }
 }
 
+@media (max-width: 992px) {
+  .product-info__price {
+    margin-bottom: 18px;
+    gap: 10px;
+
+    &-current,
+    &-old {
+      font-size: 28px;
+    }
+
+    &-discount {
+      font-size: 15px;
+      padding: 5px 12px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .product-info__price-current,
   .product-info__price-old {

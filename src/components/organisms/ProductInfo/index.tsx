@@ -13,7 +13,9 @@ interface ProductInfoProps {
 export const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
   return (
     <>
-      <Heading as="h1">{product.name}</Heading>
+      <Heading as="h1" noOfLines={2}>
+        {product.name}
+      </Heading>
 
       <RatingDisplay rating={product.rating} showEmpty={false} />
 

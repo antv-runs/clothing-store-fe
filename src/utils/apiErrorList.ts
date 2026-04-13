@@ -1,3 +1,4 @@
+import { ApiErrorCode } from "@/const/apiErrorCodes";
 import { LIST_ERROR_KIND, type ListErrorKind } from "@/types/listState";
 import { ApiError } from "@/utils/apiError";
 
@@ -46,11 +47,7 @@ const NON_RETRYABLE_LIST_ERROR_KINDS = new Set<ListErrorKind>([
 
 export const mapApiErrorToListErrorKind = (error: unknown): ListErrorKind => {
   if (isApiError(error)) {
-    if (error.code === "MALFORMED_RESPONSE") {
-      return LIST_ERROR_KIND.MALFORMED_DATA;
-    }
-
-    if (!error.status || error.code === "NETWORK_ERROR") {
+    if (!error.status || error.code === ApiErrorCode.NETWORK_ERROR) {
       return LIST_ERROR_KIND.NETWORK;
     }
 

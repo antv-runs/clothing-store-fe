@@ -98,7 +98,59 @@
 }
 
 /**
- * Tablet responsive: Reduce sizes and adjust layout
+ * Smaller desktop responsive: Allow buttons to be flexible and avoid cramped sizing
+ */
+@media (max-width: 1239px) {
+  .product-overview__actions {
+    gap: 16px;
+    --quantity-control-width: 150px;
+
+    .add-to-cart-button {
+      flex: 1 1 auto;
+      width: auto;
+    }
+  }
+}
+
+/**
+ * Tablet responsive: Intermediate scaling retaining two-column action balance
+ */
+@media (max-width: 992px) {
+  .product-overview__actions {
+    font-size: 15px;
+    gap: 16px;
+    --quantity-control-width: 140px;
+    --quantity-button-width: 38px;
+    --quantity-icon-width: 18px;
+    --quantity-icon-height: 18px;
+
+    form {
+      flex: 0 0 var(--quantity-control-width);
+      width: var(--quantity-control-width);
+      height: 48px;
+    }
+
+    .quantity-button-minus,
+    .quantity-button-plus {
+      flex: 0 0 var(--quantity-button-width);
+      width: var(--quantity-button-width);
+      font-size: 15px;
+    }
+
+    .add-to-cart-button {
+      flex: 1 1 auto;
+      width: auto;
+      height: 48px;
+    }
+
+    form input {
+      font-size: 15px;
+    }
+  }
+}
+
+/**
+ * Mobile responsive: Reduce sizes and adjust layout
  */
 @media (max-width: 768px) {
   .product-overview__actions {

@@ -1,22 +1,21 @@
 import { logger } from "@/utils/logger";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getProductById } from "@/api/Product";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CartRow } from "@/types/cart";
 import type { Product } from "@/types/product";
-import { normalizeId } from "@/utils/formatters";
 import type { ListCoreState, ListErrorKind } from "@/types/listState";
 import {
   isRetryableListErrorKind,
   mapApiErrorToListErrorKind,
 } from "@/utils/apiErrorList";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/cartStore";
+import type { RootState, AppDispatch } from "@/store";
 import {
   addItem as actionAddItem,
   setQuantity as actionSetQuantity,
   removeItem as actionRemoveItem,
   clearCart as actionClearCart,
-} from "@/actions/cartAction";
+} from "@/store/cart/cartSlice";
+import { fetchProductById } from "@/store/product/productThunks";
 
 type CartItem = Product & {
   quantity: number;
@@ -32,18 +31,37 @@ type CartSummary = {
   total: number;
 };
 
+/**
+ * Cart hydration lifecycle phases:
+ * - `bootstrapping`: Initial mount. Effect has not completed its first run yet.
+ * - `hydrating`:     Actively fetching product details (used for retries / subsequent fetches).
+ * - `ready`:         All product data resolved (or cart is empty). Safe to evaluate isEmpty.
+ * - `error`:         Product hydration failed. Retry is available.
+ */
+export type CartHydrationPhase =
+  | "bootstrapping"
+  | "hydrating"
+  | "ready"
+  | "error";
+
 type UseCartRowsResult = {
   cartRows: CartRow[];
   cartItems: CartItem[];
   summary: CartSummary;
   data: CartItem[];
+  phase: CartHydrationPhase;
+  /** true only when phase is 'ready' AND cartItems is empty */
   isEmpty: boolean;
+  /** true during bootstrapping or hydrating */
   isLoading: boolean;
   isRetrying: boolean;
   isRetryingHydration: boolean;
   error: string | null;
   errorKind: ListErrorKind | null;
+  /** true when phase is 'error' */
   hasError: boolean;
+  /** true when phase is 'bootstrapping' */
+  isHydrating: boolean;
   retry: () => void;
   retryHydration: () => void;
   hydrationList: ListCoreState<CartItem>;
@@ -69,31 +87,28 @@ const HYDRATION_ERROR_MESSAGE =
 export const useCartRows = (): UseCartRowsResult => {
   const dispatch = useDispatch<AppDispatch>();
   const cartRows = useSelector((state: RootState) => state.cart.items);
+  const products = useSelector((state: RootState) => state.product.byId);
 
-  const [fetchedProducts, setFetchedProducts] = useState<
-    Record<string, Product>
-  >({});
-  const [isLoading, setIsLoading] = useState(cartRows.length > 0);
-  const [isRetryingHydration, setIsRetryingHydration] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [phase, setPhase] = useState<CartHydrationPhase>("bootstrapping");
   const [hydrationError, setHydrationError] = useState<string | null>(null);
   const [hydrationErrorKind, setHydrationErrorKind] =
     useState<ListErrorKind | null>(null);
   const [retryTrigger, setRetryTrigger] = useState(0);
 
+  // Track whether the very first effect pass has completed.
+  // Until it does, the phase MUST remain 'bootstrapping'.
+  const isBootstrappedRef = useRef(false);
+
   const retryHydration = useCallback(() => {
-    if (
-      isRetryingHydration ||
-      !hasError ||
-      !isRetryableListErrorKind(hydrationErrorKind)
-    ) {
+    if (phase !== "error" || !isRetryableListErrorKind(hydrationErrorKind)) {
       return;
     }
 
-    setIsLoading(false);
-    setIsRetryingHydration(true);
+    setPhase("hydrating");
+    setHydrationError(null);
+    setHydrationErrorKind(null);
     setRetryTrigger((prev) => prev + 1);
-  }, [hasError, hydrationErrorKind, isRetryingHydration]);
+  }, [phase, hydrationErrorKind]);
 
   useEffect(() => {
     let isActive = true;
@@ -102,46 +117,36 @@ export const useCartRows = (): UseCartRowsResult => {
       const uniqueIds = Array.from(
         new Set(cartRows.map((row) => row.productId)),
       );
-      const missingIds = uniqueIds.filter((id) => !fetchedProducts[id]);
+      const missingIds = uniqueIds.filter((id) => !products[id]);
 
       if (missingIds.length === 0) {
-        setIsLoading(false);
-        setHasError(false);
-        setHydrationError(null);
-        setHydrationErrorKind(null);
-        setIsRetryingHydration(false);
+        // All product data is already cached (or cart is empty).
+        if (isActive) {
+          isBootstrappedRef.current = true;
+          setPhase("ready");
+          setHydrationError(null);
+          setHydrationErrorKind(null);
+        }
         return;
       }
 
-      if (!isRetryingHydration) {
-        setIsLoading(true);
-        setHasError(false);
-        setHydrationError(null);
-        setHydrationErrorKind(null);
+      // If we're past the initial bootstrap, signal that we're actively hydrating
+      // (for subsequent item additions). During bootstrap, phase stays 'bootstrapping'.
+      if (isActive && isBootstrappedRef.current) {
+        setPhase("hydrating");
       }
 
       try {
-        const results = await Promise.all(
-          missingIds.map((id) => getProductById(id)),
+        await Promise.all(
+          missingIds.map((id) => dispatch(fetchProductById(id))),
         );
 
         if (!isActive) {
           return;
         }
 
-        const newProducts: Record<string, Product> = {};
-        missingIds.forEach((id, index) => {
-          const product = results[index];
-          if (product) {
-            newProducts[id] = product;
-          }
-        });
-
-        setFetchedProducts((prev) => ({
-          ...prev,
-          ...newProducts,
-        }));
-        setHasError(false);
+        isBootstrappedRef.current = true;
+        setPhase("ready");
         setHydrationError(null);
         setHydrationErrorKind(null);
       } catch (error) {
@@ -149,14 +154,10 @@ export const useCartRows = (): UseCartRowsResult => {
           return;
         }
         logger.error("Failed to load cart product details", error);
-        setHasError(true);
+        isBootstrappedRef.current = true;
+        setPhase("error");
         setHydrationError(HYDRATION_ERROR_MESSAGE);
         setHydrationErrorKind(mapApiErrorToListErrorKind(error));
-      } finally {
-        if (isActive) {
-          setIsLoading(false);
-          setIsRetryingHydration(false);
-        }
       }
     };
 
@@ -165,7 +166,9 @@ export const useCartRows = (): UseCartRowsResult => {
     return () => {
       isActive = false;
     };
-  }, [cartRows, fetchedProducts, isRetryingHydration, retryTrigger]);
+  }, [cartRows, products, retryTrigger, dispatch]);
+
+  // ── Action dispatchers ──────────────────────────────────────────────
 
   const getCartRows = useCallback(() => {
     return cartRows;
@@ -173,7 +176,7 @@ export const useCartRows = (): UseCartRowsResult => {
 
   const addItem = useCallback(
     (item: CartRow) => {
-      dispatch(actionAddItem(item) as any);
+      dispatch(actionAddItem(item));
     },
     [dispatch],
   );
@@ -185,7 +188,7 @@ export const useCartRows = (): UseCartRowsResult => {
       size: string | null = null,
       quantity: number,
     ) => {
-      dispatch(actionSetQuantity(productId, color, size, quantity) as any);
+      dispatch(actionSetQuantity({ productId, color, size, quantity }));
     },
     [dispatch],
   );
@@ -196,24 +199,21 @@ export const useCartRows = (): UseCartRowsResult => {
       color: string | null = null,
       size: string | null = null,
     ) => {
-      dispatch(actionRemoveItem(productId, color, size) as any);
+      dispatch(actionRemoveItem({ productId, color, size }));
     },
     [dispatch],
   );
 
   const clearCart = useCallback(() => {
-    dispatch(actionClearCart() as any);
+    dispatch(actionClearCart());
   }, [dispatch]);
+
+  // ── Derived data ────────────────────────────────────────────────────
 
   const cartItems = useMemo(() => {
     return cartRows
       .map((row) => {
-        const productKey =
-          Object.keys(fetchedProducts).find((key) =>
-            normalizeId(String(key), row.productId),
-          ) || row.productId;
-
-        const product = fetchedProducts[productKey];
+        const product = products[row.productId];
         if (!product) {
           return null;
         }
@@ -226,7 +226,7 @@ export const useCartRows = (): UseCartRowsResult => {
         };
       })
       .filter((item): item is CartItem => item !== null);
-  }, [cartRows, fetchedProducts]);
+  }, [cartRows, products]);
 
   const summary = useMemo(() => {
     const subtotal = cartItems.reduce((acc, item) => {
@@ -254,9 +254,37 @@ export const useCartRows = (): UseCartRowsResult => {
     return { subtotal, discount, discountPercent, delivery, total };
   }, [cartItems]);
 
-  const isEmpty =
-    cartRows.length === 0 ||
-    (!isLoading && !hasError && cartItems.length === 0);
+  // ── Minimum skeleton duration ───────────────────────────────────────
+  // When the cart resolves instantly (e.g. empty cart, synchronous
+  // bootstrap), the skeleton would flash for a single frame. A short
+  // minimum duration keeps it visible just long enough for a smooth UX
+  // without feeling slow. If hydration takes longer than this, no extra
+  // delay is added.
+
+  const MIN_SKELETON_MS = 500;
+  const [isMinDurationElapsed, setIsMinDurationElapsed] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMinDurationElapsed(true);
+    }, MIN_SKELETON_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ── Derived booleans from phase ─────────────────────────────────────
+  // Gate the phase so consumers see 'bootstrapping' until the minimum
+  // skeleton duration has elapsed. After that, the real phase flows through.
+
+  const effectivePhase: CartHydrationPhase = isMinDurationElapsed
+    ? phase
+    : "bootstrapping";
+
+  const hasError = effectivePhase === "error";
+  const isHydrating = effectivePhase === "bootstrapping";
+  const isLoading =
+    effectivePhase === "bootstrapping" || effectivePhase === "hydrating";
+  const isRetryingHydration = effectivePhase === "hydrating";
+  const isEmpty = effectivePhase === "ready" && cartItems.length === 0;
 
   // Expose hydration lifecycle as structured state for domain pages,
   // but Cart/Checkout remain local hybrid/derived consumers (no ListStateWrapper).
@@ -276,6 +304,7 @@ export const useCartRows = (): UseCartRowsResult => {
     cartItems,
     summary,
     data: cartItems,
+    phase: effectivePhase,
     isEmpty,
     isLoading,
     isRetrying: isRetryingHydration,
@@ -283,6 +312,7 @@ export const useCartRows = (): UseCartRowsResult => {
     error: hydrationError,
     errorKind: hydrationErrorKind,
     hasError,
+    isHydrating,
     retry: retryHydration,
     retryHydration,
     hydrationList,

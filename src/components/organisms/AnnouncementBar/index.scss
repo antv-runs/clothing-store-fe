@@ -57,6 +57,9 @@
   .announcement-bar__text {
     font-size: 12px;
   }
+  .announcement-bar__close {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {

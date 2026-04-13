@@ -3,8 +3,8 @@ import { useDispatch } from "react-redux";
 import {
   addToast,
   dismissToast as dismissToastAction,
-} from "@/actions/toastAction";
-import type { AppDispatch } from "@/store/cartStore";
+} from "@/store/toast/toastSlice";
+import type { AppDispatch } from "@/store";
 import type { ToastControls, ToastData } from "@/types/toast";
 
 export const useToast = (): ToastControls => {
@@ -12,7 +12,7 @@ export const useToast = (): ToastControls => {
 
   const dismissToast = useCallback(
     (id: string) => {
-      dispatch(dismissToastAction(id));
+      dispatch(dismissToastAction({ id }));
     },
     [dispatch],
   );
@@ -25,7 +25,7 @@ export const useToast = (): ToastControls => {
       const duration = toast.duration ?? 5000;
       if (duration > 0) {
         setTimeout(() => {
-          dispatch(dismissToastAction(id));
+          dispatch(dismissToastAction({ id }));
         }, duration);
       }
 

@@ -43,6 +43,17 @@
   }
 }
 
+@media (max-width: 992px) {
+  .breadcrumb__list {
+    gap: 10px;
+    font-size: 15px;
+  }
+
+  .breadcrumb__item + .breadcrumb__item::before {
+    margin-right: 10px;
+  }
+}
+
 @media (max-width: 768px) {
   .breadcrumb__list {
     gap: 8px;

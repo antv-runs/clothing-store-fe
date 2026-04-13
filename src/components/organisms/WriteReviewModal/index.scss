@@ -94,6 +94,13 @@
       resize: vertical;
       min-height: 96px;
     }
+
+    .required-mark {
+      color: v.$color-danger;
+      text-decoration: none;
+      margin-left: 2px;
+      font-style: normal;
+    }
   }
 
   &__field--rating {

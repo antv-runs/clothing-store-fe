@@ -4,11 +4,15 @@ import { Provider } from "react-redux";
 import { ToastRuntime } from "./index";
 import httpClient, { __resetGlobalErrorTimeForTesting } from "@/lib/axios";
 import MockAdapter from "axios-mock-adapter";
-import { store } from "@/store/cartStore";
-import { clearToasts } from "@/actions/toastAction";
+import { store } from "@/store";
+import { clearToasts } from "@/store/toast/toastSlice";
 
 jest.mock("@/components/organisms/ToastContainer", () => ({
-  ToastContainer: ({ toasts }: { toasts: Array<{ id: string; message: ReactNode }> }) => {
+  ToastContainer: ({
+    toasts,
+  }: {
+    toasts: Array<{ id: string; message: ReactNode }>;
+  }) => {
     if (toasts.length === 0) {
       return null;
     }
@@ -93,7 +97,9 @@ describe("ToastRuntime", () => {
     mock.onPost("/test-500").reply(500);
 
     await act(async () => {
-      await httpClient.post("/test-500", { foo: "bar" }).catch((e) => expect(e).toBeTruthy());
+      await httpClient
+        .post("/test-500", { foo: "bar" })
+        .catch((e) => expect(e).toBeTruthy());
     });
 
     expect(
@@ -107,7 +113,9 @@ describe("ToastRuntime", () => {
     mock.onPost("/test-network").networkError();
 
     await act(async () => {
-      await httpClient.post("/test-network", { foo: "bar" }).catch((e) => expect(e).toBeTruthy());
+      await httpClient
+        .post("/test-network", { foo: "bar" })
+        .catch((e) => expect(e).toBeTruthy());
     });
 
     expect(
@@ -137,7 +145,9 @@ describe("ToastRuntime", () => {
     mock.onPost("/test-404").reply(404);
 
     await act(async () => {
-      await httpClient.post("/test-404", { foo: "bar" }).catch((e) => expect(e).toBeTruthy());
+      await httpClient
+        .post("/test-404", { foo: "bar" })
+        .catch((e) => expect(e).toBeTruthy());
     });
 
     expect(
@@ -170,14 +180,19 @@ describe("ToastRuntime", () => {
     mock.onPost("/test-throttle").reply(500);
 
     await act(async () => {
-      await httpClient.post("/test-throttle").catch((e) => expect(e).toBeTruthy());
+      await httpClient
+        .post("/test-throttle")
+        .catch((e) => expect(e).toBeTruthy());
     });
     await act(async () => {
-      await httpClient.post("/test-throttle").catch((e) => expect(e).toBeTruthy());
+      await httpClient
+        .post("/test-throttle")
+        .catch((e) => expect(e).toBeTruthy());
     });
 
     const globalErrorCallsBeforeAdvance = dispatchSpy.mock.calls.filter(
-      ([event]) => event instanceof CustomEvent && event.type === "global-api-error",
+      ([event]) =>
+        event instanceof CustomEvent && event.type === "global-api-error",
     );
 
     expect(globalErrorCallsBeforeAdvance).toHaveLength(1);
@@ -187,11 +202,14 @@ describe("ToastRuntime", () => {
     });
 
     await act(async () => {
-      await httpClient.post("/test-throttle").catch((e) => expect(e).toBeTruthy());
+      await httpClient
+        .post("/test-throttle")
+        .catch((e) => expect(e).toBeTruthy());
     });
 
     const globalErrorCallsAfterAdvance = dispatchSpy.mock.calls.filter(
-      ([event]) => event instanceof CustomEvent && event.type === "global-api-error",
+      ([event]) =>
+        event instanceof CustomEvent && event.type === "global-api-error",
     );
 
     expect(globalErrorCallsAfterAdvance).toHaveLength(2);

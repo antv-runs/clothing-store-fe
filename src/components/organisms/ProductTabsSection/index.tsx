@@ -30,10 +30,6 @@ interface ProductTabsSectionProps {
 
 const DEFAULT_ACTIVE_TAB: TabKey = "tc-reviews";
 
-/**
- * ProductTabsSection - Product details/reviews/faqs tabs content.
- * Preserves current tab markup and classes.
- */
 export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   details,
   faqs,
@@ -53,7 +49,6 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   reviewErrorKind,
   onWriteReview,
 }) => {
-
   const [activeTab, setActiveTab] = useState<TabKey>(DEFAULT_ACTIVE_TAB);
 
   const panelRefs = useRef<Map<TabKey, HTMLElement>>(new Map());
@@ -94,9 +89,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         aria-hidden={activeTab !== "tc-details"}
         className={detailsPanelClassName}
       >
-        <div>
-          {details}
-        </div>
+        <div>{details}</div>
       </section>
 
       <ProductReviewsTab

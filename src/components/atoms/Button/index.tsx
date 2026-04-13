@@ -26,7 +26,6 @@ export const Button = ({
   className,
   type = "button",
   disabled,
-  style,
   ...buttonProps
 }: ButtonProps) => {
   const isDisabled = disabled || isLoading;
@@ -103,7 +102,7 @@ export const Button = ({
         !unstyled && `button--${variant}`,
         className,
       )}
-      style={{ ...style, ...loadingLockStyle }}
+      style={loadingLockStyle}
       {...buttonProps}
     >
       <span

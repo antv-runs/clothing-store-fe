@@ -4,30 +4,17 @@
 .product-card-list {
   --nav-icon-size: 50px;
 
-  position: relative;
+  // position: relative is now provided by Slider base styles (.slider)
 
   &--loading {
-    .product-card-list__viewport {
-      cursor: default;
-      user-select: none;
-    }
+    // cursor: default and user-select: none on the viewport during loading
+    // are now provided by Slider base styles (.slider--loading .slider__viewport)
   }
 
   &__viewport {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    touch-action: pan-x;
-    cursor: grab;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &.is-dragging {
-      cursor: grabbing;
-      user-select: none;
-    }
+    // overflow-x, overflow-y, scrollbar-width, touch-action, cursor: grab,
+    // ::-webkit-scrollbar, and .is-dragging states are now in Slider/index.scss.
+    // Only product-card-list–specific viewport overrides remain here.
   }
 
   &__track {
@@ -68,13 +55,11 @@
   }
 
   &__nav {
-    position: absolute;
+    // position: absolute, z-index, top: 50%, transform are now in Slider/index.scss.
+    // Only product-card-list–specific nav styling remains here.
     padding: 5px;
     @include flex-center;
     transition: opacity 0.3s ease;
-    z-index: 100;
-    top: 50%;
-    transform: translateY(-50%);
     opacity: 0.5;
 
     .icon {
@@ -142,15 +127,73 @@
   }
 }
 
+@media (max-width: 992px) {
+  .product-card-list {
+    --nav-icon-size: 44px;
+
+    &__viewport {
+      margin-right: -24px;
+    }
+
+    &__track {
+      margin-top: 48px;
+      gap: 18px;
+      padding-right: 24px;
+    }
+
+    &__item {
+      max-width: 250px;
+      width: 250px;
+
+      &--skeleton {
+        width: 250px;
+        max-width: 250px;
+        flex: 0 0 250px;
+      }
+    }
+
+    &__nav {
+      display: none;
+
+      &--prev {
+        left: -24px;
+      }
+
+      &--next {
+        right: -24px;
+      }
+    }
+
+    &__skeleton-title {
+      height: 22px;
+    }
+
+    &__skeleton-stars,
+    &__skeleton-rating {
+      height: 15px;
+    }
+
+    &__skeleton-price {
+      width: 100px;
+      height: 26px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .product-card-list {
     --nav-icon-size: 40px;
+
+    &__viewport {
+      margin-right: -16px;
+    }
 
     &__track {
       margin-top: 40px;
       gap: 16px;
       scroll-behavior: smooth;
       overscroll-behavior-x: contain;
+      padding-right: 16px;
     }
 
     &__item {
@@ -160,6 +203,8 @@
     }
 
     &__nav {
+      display: none;
+
       &--prev {
         left: -20px;
       }

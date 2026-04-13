@@ -21,8 +21,9 @@ export const checkoutSchema = z.object({
     .string()
     .trim()
     .min(1, "Phone is required.")
-    .min(6, "Phone number is too short.")
-    .max(20, "Phone number is too long."),
+    .regex(/^\d+$/, "Phone number must contain only numbers.")
+    .min(9, "Phone number must be at least 9 digits.")
+    .max(15, "Phone number is too long."),
 
   address: z
     .string()

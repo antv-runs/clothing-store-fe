@@ -23,7 +23,14 @@
   }
 }
 
-@media (max-width: 768px) {
+// 993px–1200px: tighten link gap to reduce nav width before tablet breakpoint.
+@media (max-width: 1239px) {
+  .header-links ul {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 992px) {
   .header-links {
     display: none;
   }

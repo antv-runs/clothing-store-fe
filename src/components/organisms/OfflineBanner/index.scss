@@ -1,0 +1,59 @@
+@use "@/styles/abstracts/variables" as v;
+
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: v.$color-danger;
+  color: v.$color-white;
+  font-family: v.$font-family-base;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  transform: translateY(-100%);
+  animation: offline-banner-slide-in 0.3s ease forwards;
+
+  &--online {
+    background-color: v.$color-success;
+    animation: offline-banner-slide-in 0.3s ease forwards,
+      offline-banner-slide-out 0.3s ease 2.2s forwards;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  &__text {
+    white-space: nowrap;
+  }
+}
+
+@keyframes offline-banner-slide-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes offline-banner-slide-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}

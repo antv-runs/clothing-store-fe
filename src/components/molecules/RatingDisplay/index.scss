@@ -73,6 +73,29 @@
   }
 }
 
+// Tablet responsive sizes
+@media (max-width: 992px) {
+  .rating-display__star {
+    width: 21.6px !important;
+    height: 21.6px !important;
+
+    &[viewBox="0 0 12 23"] {
+      width: 10.2px !important;
+      height: 19.4px !important;
+    }
+  }
+
+  .product-info__rating {
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+
+  .product-info__rating .rating-display__text,
+  .product-info__rating .product-info__rating-text {
+    font-size: 15px;
+  }
+}
+
 // Mobile responsive sizes
 @media (max-width: 768px) {
   .rating-display__star {

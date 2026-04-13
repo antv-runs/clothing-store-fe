@@ -179,19 +179,62 @@
   }
 }
 
+@media (max-width: 1240px) {
+  .footer-main {
+    &__content {
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 60px;
+    }
+
+    &__links {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      column-gap: 40px;
+    }
+  }
+}
+
+// 993px–1200px: footer-form and footer-main share the same max-width:1240px +
+// margin:auto pattern as .container and .site-header. Neither has horizontal
+// padding at desktop, so content sits flush to the viewport edge below 1240px.
+// Mirror the same 32px gutter established in _global.scss and Header.
+@media (max-width: 1239px) {
+  .footer-form {
+    width: calc(100% - 64px);
+  }
+
+  .footer-main {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
 @media (max-width: 992px) {
   .footer-form {
+    width: calc(100% - 64px);
+    margin: 0 auto;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 20px;
 
     &__title {
       font-size: 30px;
+      max-width: 100%;
+    }
+
+    &__form {
+      max-width: 100%;
+      width: 100%;
     }
   }
 
   .footer-main {
     padding-top: 120px;
+    padding-left: 32px;
+    padding-right: 32px;
+
+    &__info {
+      max-width: 100%;
+    }
 
     &__content {
       grid-template-columns: 1fr;
@@ -208,22 +251,23 @@
 
 @media (max-width: 768px) {
   .footer-form {
-    width: min(358px, calc(100% - 32px));
-    max-width: 358px;
-    min-height: 293px;
+    width: calc(100% - 32px);
+    max-width: none;
+    min-height: auto;
     padding: 32px 24px 28px;
     margin: 0 auto;
     align-items: stretch;
     text-align: left;
+    gap: 30px;
 
     &__title {
       font-size: 32px;
     }
 
     &__form {
-      width: min(311px, 100%);
-      max-width: 311px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: none;
+      margin: 0;
       font-size: 14px;
     }
 

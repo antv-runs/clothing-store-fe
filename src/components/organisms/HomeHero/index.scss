@@ -117,20 +117,39 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1239px) {
   .home-hero {
     &__title {
       font-size: 54px;
     }
+
+    &__content {
+      padding: 64px 0;
+    }
+
+    &__stats {
+      margin-top: 40px;
+    }
+
+    &__divider {
+      margin: 0 20px;
+    }
+
   }
 }
 
-@media (max-width: 992px) {
+// ── Stack to single-column at 1100px ─────────────────────────────────────────
+// The 2-column layout cannot be reliably fixed in 993–1100px: __image uses
+// height:150% and width:auto with no overflow constraint, so the rendered
+// image (~660px+ wide) bleeds into the content column regardless of crop sizing.
+// The existing stacked layout is the right solution — move it up to 1100px.
+// The 992px rule below remains intact for true tablets.
+@media (max-width: 1100px) {
   .home-hero {
     grid-template-columns: 1fr;
 
     &__content {
-      padding: 54px 28px 24px;
+      padding: 54px 0 24px;
     }
 
     &__media {
@@ -138,7 +157,62 @@
     }
 
     &__image-crop {
-      right: 0;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      width: 600px;  // restore desktop dimensions — image is now centered safely
+      height: 663px;
+    }
+
+    &__image {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+
+    &__sparkle--left {
+      left: calc(50% - 280px);
+      right: auto;
+    }
+
+    &__sparkle--right {
+      right: calc(50% - 280px);
+    }
+  }
+}
+
+
+@media (max-width: 992px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+
+    &__content {
+      padding: 54px 0 24px;
+    }
+
+    &__media {
+      min-height: 663px;
+    }
+
+    &__image-crop {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+
+    &__image {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+
+    &__sparkle--left {
+      left: calc(50% - 280px);
+      right: auto;
+    }
+
+    &__sparkle--right {
+      right: calc(50% - 280px);
     }
   }
 }

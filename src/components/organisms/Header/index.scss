@@ -33,22 +33,72 @@
   }
 }
 
+// 993px–1200px: reduce flex gap and logo size progressively.
+// The 40px gap × 4 items wastes 160px at desktop. At 1000px, tightening to
+// 24px recovers 64px for SearchBox without changing any layout structure.
+// Logo 28px matches the 992px tablet value, eliminating the abrupt size jump.
+//
+// .site-header is NOT wrapped in .container so the global container padding
+// (0 32px at ≤1200px) does not apply here — mirror it explicitly.
+@media (max-width: 1239px) {
+  .site-header {
+    gap: 24px;
+    margin-top: 20px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .logo {
+    font-size: 28px;
+  }
+}
+
 @media (max-width: 992px) {
   .site-header {
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+
+    .header-menu-toggle {
+      display: inline-flex;
+    }
+
+    .logo {
+      font-size: 28px;
+      line-height: 1;
+      white-space: nowrap;
+      justify-self: start;
+    }
+
+    .header-icon {
+      justify-self: end;
+    }
+
+    .header-search {
+      grid-row: 2;
+      grid-column: 1 / -1;
+      width: 100%;
+    }
   }
 }
 
 @media (max-width: 768px) {
   .site-header {
+    display: flex;
     flex-wrap: nowrap;
-    gap: 20px;
+    gap: 16px;
     min-height: 0;
     margin-top: 20px;
     padding-bottom: 20px;
     padding-left: 16px;
     padding-right: 16px;
+
+    .header-search {
+      width: auto;
+    }
   }
 
   .site-header .header-menu-toggle {

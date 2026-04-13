@@ -1,0 +1,14 @@
+@startuml Add Item Flow
+participant "ProductDetail Page" as UI
+participant "useCartRows Hook" as Hook
+participant "Redux Store" as Store
+participant "cartSlice Reducer" as Slice
+participant "localStorage (via subscribe)" as Persist
+
+UI -> Hook: addItem({productId, quantity, color, size})
+Hook -> Store: dispatch(addItem(action))
+Store -> Slice: addItem reducer
+Slice -> Store: updated state
+Store -> Persist: writeStoredCartRows(items)
+Store -> UI: re-render via useSelector
+@enduml

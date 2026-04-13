@@ -65,6 +65,25 @@
   }
 }
 
+// 993px–1200px: switch to proportional widths so cards never overflow.
+// calc(63% - 10px) + calc(37% - 10px) + 20px gap = 100% of the container
+// at any width, matching the original 684:407 (≈63:37) ratio.
+@media (max-width: 1239px) {
+  .home-style-card {
+    &--large {
+      width: calc(63% - 10px);
+      min-width: 0;
+      max-width: calc(63% - 10px);
+    }
+
+    &--small {
+      width: calc(37% - 10px);
+      min-width: 0;
+      max-width: calc(37% - 10px);
+    }
+  }
+}
+
 @media (max-width: 992px) {
   .home-styles {
     &__box {

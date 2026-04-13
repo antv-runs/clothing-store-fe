@@ -4,7 +4,7 @@ import Checkout from "@/pages/Checkout";
 import { createOrder } from "@/api/Order";
 import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
 import { ApiError } from "@/utils/apiError";
-import { store } from "@/store/cartStore";
+import { store } from "@/store";
 import * as toastHook from "@/hooks/useToast";
 
 const mockNavigate = jest.fn();

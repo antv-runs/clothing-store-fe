@@ -1,15 +1,6 @@
 @use "@/styles/abstracts/variables" as v;
 @use "@/styles/abstracts/mixins" as m;
 
-/**
- * ProductTabsSection Component Styles
- * 
- * Handles:
- * - Product details/reviews/FAQs tabs
- * - Tab content visibility and animations
- * - Loading and skeleton states
- */
-
 .products-tabs {
   margin-bottom: 70px;
 
@@ -142,8 +133,14 @@
 }
 
 /**
- * Tablet responsive: Adjust reviews list layout
+ * Tablet responsive: Adjust global depth spacings and maintain logical scales.
  */
+@media (max-width: 992px) {
+  .products-tabs {
+    margin-bottom: 60px;
+  }
+}
+
 @media (max-width: 768px) {
   .products-tabs {
     margin-bottom: 50px;

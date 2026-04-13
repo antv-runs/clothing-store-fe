@@ -75,9 +75,7 @@ const Cart: React.FC = () => {
           Your Cart
         </Heading>
 
-        {/* Classification boundary: Cart is a hybrid hydration + domain flow,
-            so it must keep local skeleton/retry rendering and not use ListStateWrapper. */}
-        {isLoading && !hasError && <CartPageSkeleton />}
+        {isLoading && <CartPageSkeleton />}
 
         {hasError && (
           <RetryState
@@ -87,46 +85,54 @@ const Cart: React.FC = () => {
           />
         )}
 
-        <CartEmptyState isVisible={isEmpty && !isLoading && !hasError} />
+        <CartEmptyState isVisible={isEmpty} />
 
-        <section
-          className="cart-page__layout"
-          aria-label="Cart summary"
-          // Keep the layout mounted during retry to prevent skeleton flash/flicker.
-          style={{ display: isEmpty || isLoading || hasError ? "none" : "" }}
-        >
-          <div className="cart-items" aria-busy="false" aria-live="polite">
-            {cartItems.map((item) => (
-              <CartItemRow
-                key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
-                item={item}
-                formatPrice={formatPrice}
-                isLocked={isProcessing}
-                onRemove={() => {
-                  removeItem(item.id, item.color, item.size);
-                  showToast({
-                    message: "Item removed from cart",
-                    variant: "success",
-                  });
-                }}
-                onUpdateQuantity={(newQty) =>
-                  updateItemQuantity(item.id, item.color, item.size, newQty)
-                }
-              />
-            ))}
-          </div>
+        {!isLoading && !isEmpty && !hasError && (
+          <section
+            className="cart-page__layout"
+            aria-label="Cart summary"
+          >
+            <div className="cart-items" aria-busy="false" aria-live="polite">
+              {cartItems.map((item) => (
+                <CartItemRow
+                  key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
+                  item={item}
+                  formatPrice={formatPrice}
+                  isLocked={isProcessing}
+                  onRemove={() => {
+                    removeItem(item.id, item.color, item.size);
+                    showToast({
+                      message: "Item removed from cart",
+                      variant: "success",
+                    });
+                  }}
+                  onUpdateQuantity={(newQty) => {
+                    if (newQty <= 0) {
+                      removeItem(item.id, item.color, item.size);
+                      showToast({
+                        message: "Item removed from cart",
+                        variant: "success",
+                      });
+                    } else {
+                      updateItemQuantity(item.id, item.color, item.size, newQty);
+                    }
+                  }}
+                />
+              ))}
+            </div>
 
-          <CartSummaryPanel
-            summary={summary}
-            formatPrice={formatPrice}
-            isCheckoutDisabled={isEmpty}
-            isLocked={isProcessing}
-            isCheckoutLoading={processingAction === "checkout"}
-            isCouponLoading={processingAction === "coupon"}
-            onCheckout={handleCheckout}
-            onApplyCoupon={handleApplyCoupon}
-          />
-        </section>
+            <CartSummaryPanel
+              summary={summary}
+              formatPrice={formatPrice}
+              isCheckoutDisabled={isEmpty}
+              isLocked={isProcessing}
+              isCheckoutLoading={processingAction === "checkout"}
+              isCouponLoading={processingAction === "coupon"}
+              onCheckout={handleCheckout}
+              onApplyCoupon={handleApplyCoupon}
+            />
+          </section>
+        )}
       </section>
     </div>
   );

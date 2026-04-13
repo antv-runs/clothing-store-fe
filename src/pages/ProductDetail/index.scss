@@ -90,6 +90,17 @@
 }
 
 /**
+ * Smaller desktop responsive: Scale down column gaps
+ */
+@media (max-width: 1239px) {
+  .product-overview {
+    &__details {
+      gap: 30px;
+    }
+  }
+}
+
+/**
  * Tablet responsive: Stack columns vertically
  */
 @media (max-width: 992px) {

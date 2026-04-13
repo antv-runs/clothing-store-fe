@@ -8,10 +8,6 @@ interface BreadcrumbProps {
   id?: string;
 }
 
-/**
- * Breadcrumb organism - Full breadcrumb navigation
- * Renders list of breadcrumb items with proper ARIA attributes
- */
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   items,
   className = "u-mb-40",
