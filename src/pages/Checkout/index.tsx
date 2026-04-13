@@ -175,7 +175,7 @@ const Checkout: React.FC = () => {
 
   return (
     <div className="container u-mt-25">
-      <section className="checkout-page" aria-label="Checkout">
+      <div className="checkout-page">
         <Breadcrumb
           items={["Home", "Cart", "Checkout"]}
           className="checkout-page__breadcrumb"
@@ -229,7 +229,7 @@ const Checkout: React.FC = () => {
             />
           </div>
         )}
-      </section>
+      </div>
     </div>
   );
 };

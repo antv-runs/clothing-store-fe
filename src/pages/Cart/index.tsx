@@ -30,7 +30,8 @@ const Cart: React.FC = () => {
     updateItemQuantity,
     removeItem,
   } = useCartRows();
-  const [processingAction, setProcessingAction] = useState<ProcessingAction>("idle");
+  const [processingAction, setProcessingAction] =
+    useState<ProcessingAction>("idle");
   const isProcessing = processingAction !== "idle";
 
   const handleApplyCoupon = () => {
@@ -65,76 +66,68 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <div className="container u-mt-25">
-      <section className="cart-page" aria-label="Shopping cart">
-        <Breadcrumb
-          items={["Home", "Cart"]}
-          className="cart-page__breadcrumb"
+    <div className="container u-mt-25 cart-page">
+      <Breadcrumb items={["Home", "Cart"]} className="cart-page__breadcrumb" />
+
+      <Heading as="h1" className="cart-page__title">
+        Your Cart
+      </Heading>
+
+      {isLoading && <CartPageSkeleton />}
+
+      {hasError && (
+        <RetryState
+          message={ERROR_MESSAGES.CART_HYDRATION_LOAD}
+          onRetry={retryHydration}
+          isRetrying={isRetryingHydration}
         />
+      )}
 
-        <Heading as="h1" className="cart-page__title">
-          Your Cart
-        </Heading>
+      <CartEmptyState isVisible={isEmpty} />
 
-        {isLoading && <CartPageSkeleton />}
-
-        {hasError && (
-          <RetryState
-            message={ERROR_MESSAGES.CART_HYDRATION_LOAD}
-            onRetry={retryHydration}
-            isRetrying={isRetryingHydration}
-          />
-        )}
-
-        <CartEmptyState isVisible={isEmpty} />
-
-        {!isLoading && !isEmpty && !hasError && (
-          <section
-            className="cart-page__layout"
-            aria-label="Cart summary"
-          >
-            <div className="cart-items" aria-busy="false" aria-live="polite">
-              {cartItems.map((item) => (
-                <CartItemRow
-                  key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
-                  item={item}
-                  formatPrice={formatPrice}
-                  isLocked={isProcessing}
-                  onRemove={() => {
+      {!isLoading && !isEmpty && !hasError && (
+        <div className="cart-page__layout">
+          <div className="cart-items" aria-busy="false" aria-live="polite">
+            {cartItems.map((item) => (
+              <CartItemRow
+                key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
+                item={item}
+                formatPrice={formatPrice}
+                isLocked={isProcessing}
+                onRemove={() => {
+                  removeItem(item.id, item.color, item.size);
+                  showToast({
+                    message: "Item removed from cart",
+                    variant: "success",
+                  });
+                }}
+                onUpdateQuantity={(newQty) => {
+                  if (newQty <= 0) {
                     removeItem(item.id, item.color, item.size);
                     showToast({
                       message: "Item removed from cart",
                       variant: "success",
                     });
-                  }}
-                  onUpdateQuantity={(newQty) => {
-                    if (newQty <= 0) {
-                      removeItem(item.id, item.color, item.size);
-                      showToast({
-                        message: "Item removed from cart",
-                        variant: "success",
-                      });
-                    } else {
-                      updateItemQuantity(item.id, item.color, item.size, newQty);
-                    }
-                  }}
-                />
-              ))}
-            </div>
+                  } else {
+                    updateItemQuantity(item.id, item.color, item.size, newQty);
+                  }
+                }}
+              />
+            ))}
+          </div>
 
-            <CartSummaryPanel
-              summary={summary}
-              formatPrice={formatPrice}
-              isCheckoutDisabled={isEmpty}
-              isLocked={isProcessing}
-              isCheckoutLoading={processingAction === "checkout"}
-              isCouponLoading={processingAction === "coupon"}
-              onCheckout={handleCheckout}
-              onApplyCoupon={handleApplyCoupon}
-            />
-          </section>
-        )}
-      </section>
+          <CartSummaryPanel
+            summary={summary}
+            formatPrice={formatPrice}
+            isCheckoutDisabled={isEmpty}
+            isLocked={isProcessing}
+            isCheckoutLoading={processingAction === "checkout"}
+            isCouponLoading={processingAction === "coupon"}
+            onCheckout={handleCheckout}
+            onApplyCoupon={handleApplyCoupon}
+          />
+        </div>
+      )}
     </div>
   );
 };

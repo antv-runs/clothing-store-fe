@@ -59,7 +59,7 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
   );
 
   return (
-    <section
+    <div
       id="tc-reviews"
       ref={panelRef}
       data-tab-content="tc-reviews"
@@ -109,6 +109,6 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
           </div>
         </>
       </ListStateWrapper>
-    </section>
+    </div>
   );
 };

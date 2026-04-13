@@ -76,10 +76,10 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   );
 
   return (
-    <section className="products-tabs">
+    <div className="products-tabs">
       <ProductTabsNav activeTab={activeTab} onTabSelect={handleTabSelect} />
 
-      <section
+      <div
         id="tc-details"
         ref={(el) => {
           if (el) panelRefs.current.set("tc-details", el);
@@ -91,7 +91,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         className={detailsPanelClassName}
       >
         <div>{details}</div>
-      </section>
+      </div>
 
       <ProductReviewsTab
         panelRef={(el: HTMLElement | null) => {
@@ -115,7 +115,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         onWriteReview={onWriteReview}
       />
 
-      <section
+      <div
         id="tc-faqs"
         ref={(el) => {
           if (el) panelRefs.current.set("tc-faqs", el);
@@ -138,7 +138,7 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
             <li>No FAQs available.</li>
           )}
         </ul>
-      </section>
-    </section>
+      </div>
+    </div>
   );
 };

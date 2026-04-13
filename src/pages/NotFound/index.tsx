@@ -15,7 +15,7 @@ const NotFound: React.FC = () => {
 
   return (
     <div className="container u-mt-25">
-      <section className="not-found-page" aria-label="Page not found">
+      <div className="not-found-page">
         <div className="not-found-page__content">
           <Heading as="h1" className="not-found-page__code" aria-label="404">
             <span className="not-found-page__digit">4</span>
@@ -58,7 +58,7 @@ const NotFound: React.FC = () => {
             {UI_TEXT.GO_BACK_TO_HOME}
           </Button>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

@@ -236,10 +236,7 @@ const ProductDetail: React.FC = () => {
 
     return (
       <div className="container u-mt-25">
-        <section
-          className="product-overview product-not-found"
-          aria-label="Error loading product"
-        >
+        <div className="product-overview product-not-found">
           <Text as="p" className="product-overview__description">
             {message}
           </Text>
@@ -250,7 +247,7 @@ const ProductDetail: React.FC = () => {
           >
             Retry
           </Button>
-        </section>
+        </div>
       </div>
     );
   }
