@@ -5,6 +5,12 @@ import { InputWithIcon } from "@/components/molecules/InputWithIcon";
 import { FooterNavSection } from "@/components/molecules/FooterNavSection";
 import { PaymentMethods } from "@/components/molecules/PaymentMethods";
 import { SocialLinks } from "@/components/molecules/SocialLinks";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  newsletterSchema,
+  type NewsletterFormValues,
+} from "@/components/organisms/Footer/index.schema";
 
 const socialLinks = [
   {
@@ -85,6 +91,25 @@ const footerSections = [
 ];
 
 export const Footer = () => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<NewsletterFormValues>({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  const { ref: emailInputRef, ...emailRegister } = register("email");
+  const isEmailInvalid = Boolean(errors.email);
+
+  const handleNewsletterSubmit = () => {
+    reset({ email: "" });
+  };
+
   return (
     <>
       {/* Newsletter Section */}
@@ -92,15 +117,24 @@ export const Footer = () => {
         <Text as="p" className="footer-form__title">
           STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </Text>
-        <form className="footer-form__form" action="#">
+        <form className="footer-form__form" onSubmit={handleSubmit(handleNewsletterSubmit)} noValidate>
           <InputWithIcon
             iconName="icn_mail"
             placeholder="Enter your email address"
             type="email"
             ariaLabel="Email address"
-            className="footer-form__input"
+            className={
+              isEmailInvalid
+                ? "footer-form__input input--error"
+                : "footer-form__input"
+            }
+            inputClassName={isEmailInvalid ? "footer-form__input-control--invalid" : undefined}
+            ariaInvalid={isEmailInvalid}
+            isInvalid={isEmailInvalid}
+            inputRef={emailInputRef}
+            {...emailRegister}
           />
-          <Button className="footer-form__button" type="button" unstyled>
+          <Button className="footer-form__button" type="submit" unstyled>
             Subscribe to Newsletter
           </Button>
         </form>

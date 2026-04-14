@@ -20,6 +20,7 @@ type InputProps = {
   onBlur?: FocusEventHandler<HTMLInputElement>;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  inputRef?: React.Ref<HTMLInputElement>;
   "aria-label"?: string;
   "aria-describedby"?: string;
   "aria-invalid"?: boolean | "false" | "true" | "grammar" | "spelling";
@@ -46,12 +47,14 @@ export const Input = ({
   onBlur,
   onFocus,
   onKeyDown,
+  inputRef,
   "aria-label": ariaLabel,
   "aria-describedby": ariaDescribedBy,
   "aria-invalid": ariaInvalid,
 }: InputProps) => {
   return (
     <input
+      ref={inputRef}
       value={value}
       defaultValue={defaultValue}
       placeholder={placeholder}

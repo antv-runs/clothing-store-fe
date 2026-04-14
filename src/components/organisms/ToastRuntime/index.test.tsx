@@ -67,6 +67,38 @@ describe("ToastRuntime", () => {
     expect(screen.getByText("Network Failed")).toBeInTheDocument();
   });
 
+  it("renders only the newest three toasts when more than three are present", () => {
+    renderWithStore(<ToastRuntime />);
+
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent("global-api-error", {
+          detail: { message: "Toast 1" },
+        }),
+      );
+      window.dispatchEvent(
+        new CustomEvent("global-api-error", {
+          detail: { message: "Toast 2" },
+        }),
+      );
+      window.dispatchEvent(
+        new CustomEvent("global-api-error", {
+          detail: { message: "Toast 3" },
+        }),
+      );
+      window.dispatchEvent(
+        new CustomEvent("global-api-error", {
+          detail: { message: "Toast 4" },
+        }),
+      );
+    });
+
+    expect(screen.queryByText("Toast 1")).not.toBeInTheDocument();
+    expect(screen.getByText("Toast 2")).toBeInTheDocument();
+    expect(screen.getByText("Toast 3")).toBeInTheDocument();
+    expect(screen.getByText("Toast 4")).toBeInTheDocument();
+  });
+
   it("auto dismisses the toast after the default duration", async () => {
     jest.useFakeTimers();
 

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
@@ -11,7 +11,7 @@ import { useCartRows } from "@/hooks/useCartRows";
 import { ROUTES } from "@/routes/paths";
 import { formatPrice } from "@/utils/formatters";
 import { useToast } from "@/hooks/useToast";
-import { ERROR_MESSAGES } from "@/const/messages";
+import { ERROR_MESSAGES, UI_TEXT } from "@/const/messages";
 import "./index.scss";
 
 type ProcessingAction = "idle" | "checkout" | "coupon";
@@ -33,6 +33,7 @@ const Cart = () => {
   const [processingAction, setProcessingAction] =
     useState<ProcessingAction>("idle");
   const isProcessing = processingAction !== "idle";
+  const maxQuantityToastByItemRef = useRef<Record<string, number>>({});
 
   const handleApplyCoupon = () => {
     if (isProcessing) return Promise.resolve();
@@ -65,6 +66,20 @@ const Cart = () => {
     }, 600);
   };
 
+  const showMaxQuantityToast = (itemKey: string) => {
+    const now = Date.now();
+    const lastShownAt = maxQuantityToastByItemRef.current[itemKey] ?? 0;
+    if (now - lastShownAt < 1200) {
+      return;
+    }
+
+    maxQuantityToastByItemRef.current[itemKey] = now;
+    showToast({
+      message: UI_TEXT.CART_MAX_QUANTITY_REACHED,
+      variant: "info",
+    });
+  };
+
   return (
     <div className="container u-mt-25 cart-page">
       <Breadcrumb
@@ -94,9 +109,11 @@ const Cart = () => {
       {!isLoading && !isEmpty && !hasError && (
         <div className="cart-page__layout">
           <div className="cart-items" aria-busy="false" aria-live="polite">
-            {cartItems.map((item) => (
+            {cartItems.map((item) => {
+              const itemKey = `${item.id}-${item.color || "none"}-${item.size || "none"}`;
+              return (
               <CartItemRow
-                key={`${item.id}-${item.color || "none"}-${item.size || "none"}`}
+                key={itemKey}
                 item={item}
                 formatPrice={formatPrice}
                 isLocked={isProcessing}
@@ -118,8 +135,12 @@ const Cart = () => {
                     updateItemQuantity(item.id, item.color, item.size, newQty);
                   }
                 }}
+                onReachMaxQuantity={() => {
+                  showMaxQuantityToast(itemKey);
+                }}
               />
-            ))}
+              );
+            })}
           </div>
 
           <CartSummaryPanel

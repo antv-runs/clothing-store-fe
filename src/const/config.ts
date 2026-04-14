@@ -12,4 +12,8 @@ export const ICON_DEFAULT_SIZE = 24;
 
 export const DEFAULT_QUANTITY = 1;
 
+export const CART_MAX_ITEM_QUANTITY = 50;
+
 export const TOAST_DEFAULT_DURATION = 3000;
+
+export const MAX_VISIBLE_TOASTS = 3;

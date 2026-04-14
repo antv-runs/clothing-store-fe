@@ -63,6 +63,8 @@ export const UI_TEXT = {
   REVIEW_SUBMITTING: "Submitting review...",
   REVIEW_SUBMITTED: "Review submitted successfully.",
   ITEM_ADDED_TO_CART: "Item added to cart",
+  CART_MAX_QUANTITY_REACHED:
+    "You\'ve reached the maximum quantity for this product",
   BACK_ONLINE: "Back online",
   NO_INTERNET_CONNECTION: "No internet connection",
   ORDER_SUMMARY: "Order Summary",

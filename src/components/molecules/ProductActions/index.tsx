@@ -8,9 +8,11 @@ type ProductActionsProps = HTMLAttributes<HTMLDivElement> & {
   selectedColorId?: string | null;
   selectedSizeId?: string | null;
   quantity: number;
+  maxQuantity?: number;
   isAddingToCart?: boolean;
   onDecreaseQuantity: () => void;
   onIncreaseQuantity: () => void;
+  onMaxQuantityReached?: () => void;
   onQuantityChange: (value: string) => void;
   onAddToCart: () => void;
 };
@@ -23,9 +25,11 @@ export const ProductActions = ({
   selectedColorId,
   selectedSizeId,
   quantity,
+  maxQuantity,
   isAddingToCart = false,
   onDecreaseQuantity,
   onIncreaseQuantity,
+  onMaxQuantityReached,
   onQuantityChange,
   onAddToCart,
   className,
@@ -41,11 +45,13 @@ export const ProductActions = ({
         incrementButtonClassName="quantity-button-plus"
         value={quantity}
         min={1}
+        max={maxQuantity}
         step={1}
         iconWidth={20}
         iconHeight={20}
         onDecrease={onDecreaseQuantity}
         onIncrease={onIncreaseQuantity}
+        onMaxReached={onMaxQuantityReached}
         onChange={(event) => onQuantityChange(event.target.value)}
       />
       <Button

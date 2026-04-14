@@ -7,6 +7,7 @@ import { ConfirmModal } from "@/components/organisms/ConfirmModal";
 import clsx from "clsx";
 import "./index.scss";
 import type { Product } from "@/types/product";
+import { CART_MAX_ITEM_QUANTITY } from "@/const/config";
 
 type CartItemRowProps = HTMLAttributes<HTMLElement> & {
   item: Product & {
@@ -18,6 +19,7 @@ type CartItemRowProps = HTMLAttributes<HTMLElement> & {
   isLocked?: boolean;
   onRemove?: () => void;
   onUpdateQuantity?: (val: number) => void;
+  onReachMaxQuantity?: () => void;
 };
 
 export const CartItemRow = ({
@@ -26,6 +28,7 @@ export const CartItemRow = ({
   isLocked = false,
   onRemove,
   onUpdateQuantity,
+  onReachMaxQuantity,
   className,
   ...rest
 }: CartItemRowProps) => {
@@ -36,6 +39,10 @@ export const CartItemRow = ({
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setInputValue(String(item.quantity));
   }, [item.quantity]);
+
+  const maxQuantity = item.stock?.quantity && item.stock.quantity > 0
+    ? item.stock.quantity
+    : CART_MAX_ITEM_QUANTITY;
 
   const requestRemove = () => {
     setIsModalOpen(true);
@@ -59,9 +66,14 @@ export const CartItemRow = ({
       return;
     }
     
-    setInputValue(String(parsed));
-    if (parsed !== item.quantity) {
-      onUpdateQuantity?.(parsed);
+    const nextQuantity = Math.min(parsed, maxQuantity);
+    if (parsed > maxQuantity) {
+      onReachMaxQuantity?.();
+    }
+
+    setInputValue(String(nextQuantity));
+    if (nextQuantity !== item.quantity) {
+      onUpdateQuantity?.(nextQuantity);
     }
   };
 
@@ -71,6 +83,15 @@ export const CartItemRow = ({
     } else {
       onUpdateQuantity?.(item.quantity - 1);
     }
+  };
+
+  const handleIncrease = () => {
+    if (item.quantity >= maxQuantity) {
+      onReachMaxQuantity?.();
+      return;
+    }
+
+    onUpdateQuantity?.(item.quantity + 1);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +184,7 @@ export const CartItemRow = ({
             incrementButtonClassName="cart-item__qty-btn"
             value={inputValue as unknown as number}
             min={0}
+            max={maxQuantity}
             disabled={isLocked}
             onChange={handleInputChange}
             onBlur={commitQuantity}
@@ -173,7 +195,8 @@ export const CartItemRow = ({
               }
             }}
             onDecrease={handleDecrease}
-            onIncrease={() => onUpdateQuantity?.(item.quantity + 1)}
+            onIncrease={handleIncrease}
+            onMaxReached={() => onReachMaxQuantity?.()}
             iconWidth={16}
             iconHeight={16}
           />

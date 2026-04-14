@@ -234,16 +234,16 @@
 
 @media (max-width: $bp-md) {
   .home-reviews {
+    --safe-zone-gutter: 16px;
     --card-width-mobile: 358px;
     --card-width: var(--card-width-mobile);
     --review-card-width: var(--card-width-mobile);
     --review-card-height: 186px;
-    --mobile-offset: calc((100vw - var(--card-width-mobile)) / 2);
     margin-top: 50px;
 
     &__viewport::before,
     &__viewport::after {
-      width: max(calc(var(--mobile-offset) - 3px), 0px);
+      width: max(calc(var(--safe-zone-gutter) - 3px), 0px);
     }
 
     &__head {
@@ -266,9 +266,9 @@
 
     &__track {
       gap: var(--review-card-gap);
-      padding-left: var(--mobile-offset);
-      padding-right: var(--mobile-offset);
-      scroll-padding-left: var(--mobile-offset);
+      padding-left: var(--safe-zone-gutter);
+      padding-right: var(--safe-zone-gutter);
+      scroll-padding-left: var(--safe-zone-gutter);
     }
 
     .reviews__item {

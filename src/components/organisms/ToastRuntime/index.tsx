@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "@/components/organisms/ToastContainer";
 import { useToast } from "@/hooks/useToast";
+import { useVisibleToasts } from "@/hooks/useVisibleToasts";
 import { selectToastItems } from "@/reducers/toastReducer";
 
 /**
@@ -10,6 +11,7 @@ import { selectToastItems } from "@/reducers/toastReducer";
 export const ToastRuntime = () => {
   const { showToast, dismissToast } = useToast();
   const toasts = useSelector(selectToastItems);
+  const visibleToasts = useVisibleToasts(toasts);
 
   useEffect(() => {
     const handleGlobalError = (event: Event) => {
@@ -29,5 +31,5 @@ export const ToastRuntime = () => {
     };
   }, [showToast]);
 
-  return <ToastContainer toasts={toasts} onDismiss={dismissToast} />;
+  return <ToastContainer toasts={visibleToasts} onDismiss={dismissToast} />;
 };

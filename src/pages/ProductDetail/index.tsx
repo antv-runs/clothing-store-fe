@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { ProductGallery } from "@/components/organisms/ProductGallery";
@@ -24,7 +24,11 @@ import "./index.scss";
 
 import { ERROR_MESSAGES } from "@/const/messages";
 import { UI_TEXT } from "@/const/messages";
-import { TOAST_DEFAULT_DURATION, DEFAULT_QUANTITY } from "@/const/config";
+import {
+  TOAST_DEFAULT_DURATION,
+  DEFAULT_QUANTITY,
+  CART_MAX_ITEM_QUANTITY,
+} from "@/const/config";
 import { normalizeQuantity } from "@/utils/number";
 
 const ProductDetail = () => {
@@ -51,6 +55,7 @@ const ProductDetail = () => {
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [isWriteReviewModalOpen, setIsWriteReviewModalOpen] =
     useState<boolean>(false);
+  const maxQuantityToastAtRef = useRef(0);
 
   const {
     reviews,
@@ -68,7 +73,7 @@ const ProductDetail = () => {
     loadMore,
     reloadReviews,
   } = useProductReviews(product?.id);
-  const { addItem } = useCartRows();
+  const { addItem, cartRows } = useCartRows();
   const { showToast } = useToast();
 
   const handleReviewSubmitSuccess = useCallback(async () => {
@@ -169,17 +174,47 @@ const ProductDetail = () => {
     return product?.variants?.sizes?.[0]?.id ?? null;
   };
 
+  const maxQuantity =
+    product?.stock?.quantity && product.stock.quantity > 0
+      ? product.stock.quantity
+      : CART_MAX_ITEM_QUANTITY;
+
+  const showMaxQuantityToast = useCallback(() => {
+    const now = Date.now();
+    if (now - maxQuantityToastAtRef.current < 1200) {
+      return;
+    }
+    maxQuantityToastAtRef.current = now;
+    showToast({
+      message: UI_TEXT.CART_MAX_QUANTITY_REACHED,
+      variant: "info",
+    });
+  }, [showToast]);
+
   const handleDecreaseQuantity = () => {
     setQuantity((prev) => Math.max(DEFAULT_QUANTITY, prev - 1));
   };
 
   const handleIncreaseQuantity = () => {
+    if (quantity >= maxQuantity) {
+      showMaxQuantityToast();
+      return;
+    }
+
     setQuantity((prev) => prev + 1);
   };
 
   const handleQuantityChange = (value: string) => {
     const sanitized = value.replace(/[^0-9]/g, "");
-    setQuantity(normalizeQuantity(sanitized || DEFAULT_QUANTITY));
+    const nextQuantity = normalizeQuantity(sanitized || DEFAULT_QUANTITY);
+
+    if (nextQuantity > maxQuantity) {
+      setQuantity(maxQuantity);
+      showMaxQuantityToast();
+      return;
+    }
+
+    setQuantity(nextQuantity);
   };
 
   const handleAddToCart = () => {
@@ -197,21 +232,52 @@ const ProductDetail = () => {
 
     const safeColorId = getSafeSelectedColorId();
     const safeSizeId = getSafeSelectedSizeId();
-    const safeQuantity = normalizeQuantity(quantity);
+    const requestedQuantity = Math.min(
+      normalizeQuantity(quantity),
+      maxQuantity,
+    );
+    if (requestedQuantity !== quantity) {
+      setQuantity(requestedQuantity);
+    }
+
+    const productId = String(product.id);
+    const existingQuantity = cartRows
+      .filter(
+        (row) =>
+          row.productId === productId &&
+          row.color === safeColorId &&
+          row.size === safeSizeId,
+      )
+      .reduce((sum, row) => sum + row.quantity, 0);
+
+    const remainingAllowed = maxQuantity - existingQuantity;
+
+    if (remainingAllowed <= 0) {
+      showToast({
+        message: UI_TEXT.CART_MAX_QUANTITY_REACHED,
+        variant: "info",
+      });
+      return;
+    }
+
+    const quantityToAdd = Math.min(requestedQuantity, remainingAllowed);
+    const isPartialAdd = requestedQuantity > remainingAllowed;
 
     setIsAddingToCart(true);
 
     try {
       addItem({
-        productId: String(product.id),
-        quantity: safeQuantity,
+        productId,
+        quantity: quantityToAdd,
         color: safeColorId,
         size: safeSizeId,
       });
 
       showToast({
-        message: UI_TEXT.ITEM_ADDED_TO_CART,
-        variant: "success",
+        message: isPartialAdd
+          ? `Only ${quantityToAdd} item(s) were added. Maximum quantity reached.`
+          : UI_TEXT.ITEM_ADDED_TO_CART,
+        variant: isPartialAdd ? "info" : "success",
       });
     } catch {
       showToast({
@@ -314,9 +380,11 @@ const ProductDetail = () => {
               selectedColorId={getSafeSelectedColorId()}
               selectedSizeId={getSafeSelectedSizeId()}
               quantity={quantity}
+              maxQuantity={maxQuantity}
               isAddingToCart={isAddingToCart}
               onDecreaseQuantity={handleDecreaseQuantity}
               onIncreaseQuantity={handleIncreaseQuantity}
+              onMaxQuantityReached={showMaxQuantityToast}
               onQuantityChange={handleQuantityChange}
               onAddToCart={handleAddToCart}
             />
@@ -392,4 +460,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-

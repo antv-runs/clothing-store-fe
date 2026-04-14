@@ -21,6 +21,7 @@ type QuantityStepperProps = Omit<HTMLAttributes<HTMLFormElement>, "onChange" | "
   iconHeight?: number | string;
   onDecrease?: MouseEventHandler<HTMLButtonElement>;
   onIncrease?: MouseEventHandler<HTMLButtonElement>;
+  onMaxReached?: MouseEventHandler<HTMLButtonElement>;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
@@ -45,6 +46,7 @@ export const QuantityStepper = ({
   iconHeight = 20,
   onDecrease,
   onIncrease,
+  onMaxReached,
   onChange,
   onBlur,
   onKeyDown,
@@ -54,7 +56,8 @@ export const QuantityStepper = ({
   const currentValue = value !== undefined ? value : (defaultValue !== undefined ? defaultValue : min);
 
   const isMinusDisabled = disabled || currentValue <= min;
-  const isPlusDisabled = disabled || (max !== undefined && currentValue >= max);
+  const isAtMax = max !== undefined && currentValue >= max;
+  const isPlusDisabled = disabled;
 
   const handleDecrease: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     if (!isMinusDisabled) {
@@ -63,9 +66,16 @@ export const QuantityStepper = ({
   };
 
   const handleIncrease: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    if (!isPlusDisabled) {
-      onIncrease?.(e);
+    if (isPlusDisabled) {
+      return;
     }
+
+    if (isAtMax) {
+      onMaxReached?.(e);
+      return;
+    }
+
+    onIncrease?.(e);
   };
 
   const handleSubmit = readOnly
@@ -109,7 +119,11 @@ export const QuantityStepper = ({
       />
       <IconButton
         svgName="icn_plus"
-        className={clsx("quantity-stepper__button", incrementButtonClassName)}
+        className={clsx(
+          "quantity-stepper__button",
+          isAtMax && "quantity-stepper__button--disabled",
+          incrementButtonClassName,
+        )}
         ariaLabel="Increase quantity"
         iconWidth={iconWidth}
         iconHeight={iconHeight}

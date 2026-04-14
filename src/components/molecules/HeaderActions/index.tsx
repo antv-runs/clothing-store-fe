@@ -22,6 +22,8 @@ export const HeaderActions = ({
   className,
   ...rest
 }: HeaderActionsProps) => {
+  const displayCount = totalQuantity > 99 ? "99+" : totalQuantity;
+
   return (
     <div className={clsx("header-icon", className)} {...rest}>
       <div className="header-icon__cart-wrapper">
@@ -35,7 +37,7 @@ export const HeaderActions = ({
           onClick={onCartClick}
         />
         {totalQuantity > 0 && (
-          <span className="header-icon__cart-badge">{totalQuantity}</span>
+          <span className="header-icon__cart-badge">{displayCount}</span>
         )}
       </div>
       <IconButton

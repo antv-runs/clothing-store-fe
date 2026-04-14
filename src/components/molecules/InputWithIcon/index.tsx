@@ -19,7 +19,12 @@ type InputWithIconProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   iconWidth?: number | string;
   iconHeight?: number | string;
   value?: string | number | readonly string[];
+  name?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  inputRef?: React.Ref<HTMLInputElement>;
+  ariaInvalid?: boolean;
+  isInvalid?: boolean;
 };
 
 export const InputWithIcon = ({
@@ -35,7 +40,12 @@ export const InputWithIcon = ({
   iconWidth = 20.25,
   iconHeight = 15.75,
   value,
+  name,
   onChange,
+  onBlur,
+  inputRef,
+  ariaInvalid,
+  isInvalid = false,
   style,
   ...rest
 }: InputWithIconProps) => {
@@ -50,6 +60,7 @@ export const InputWithIcon = ({
       className={clsx(
         "input-with-icon",
         `input-with-icon--${iconPosition}`,
+        isInvalid && "input-with-icon--error",
         className,
       )}
       style={rootStyle}
@@ -59,13 +70,17 @@ export const InputWithIcon = ({
         <Icon svgName={iconName} width={iconWidth} height={iconHeight} />
       </span>
       <Input
+        inputRef={inputRef}
         type={type}
+        name={name}
         className={clsx("input-with-icon__input", inputClassName)}
         placeholder={placeholder}
         aria-label={ariaLabel}
+        aria-invalid={ariaInvalid}
         disabled={disabled}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         unstyled
       />
     </div>
