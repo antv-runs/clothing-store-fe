@@ -9,6 +9,7 @@ import {
 import type { Product } from "@/types/product";
 import type { Review } from "@/types/review";
 import type { ListErrorKind } from "@/types/listState";
+import { ERROR_MESSAGES } from "@/const/errorMessages";
 
 type UseHomeDataResult = {
   newArrivals: Product[];
@@ -32,8 +33,6 @@ type UseHomeDataResult = {
   retryTopSelling: () => void;
   retryReviews: () => void;
 };
-
-import { ERROR_MESSAGES } from "@/const/errorMessages";
 
 export const useHomeData = (): UseHomeDataResult => {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);

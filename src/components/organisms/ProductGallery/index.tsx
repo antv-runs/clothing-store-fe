@@ -1,14 +1,15 @@
+import type { HTMLAttributes } from "react";
 import React, { useState, useRef, useCallback } from "react";
 import clsx from "clsx";
 import { Image } from "@/components/atoms/Image";
 import type { ProductImage } from "@/types/product";
 import "./index.scss";
 
-interface ProductGalleryProps {
+type ProductGalleryProps = HTMLAttributes<HTMLDivElement> & {
   images: ProductImage[];
   productName: string;
   thumbnail?: string;
-}
+};
 
 /**
  * Creates a safe fallback placeholder image as an SVG data URL.
@@ -25,11 +26,13 @@ function createFallbackPlaceholder(productName: string): string {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-export const ProductGallery: React.FC<ProductGalleryProps> = ({
+export const ProductGallery = ({
   images,
   productName,
   thumbnail,
-}) => {
+  className,
+  ...rest
+}: ProductGalleryProps) => {
   // Thumbnail loading state
   const [loadedThumbIds, setLoadedThumbIds] = useState<Set<string>>(new Set());
   const [erroredThumbIds, setErroredThumbIds] = useState<Set<string>>(
@@ -199,7 +202,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
    * Maintains stable layout with fallback placeholder
    */
   const renderEmptyState = () => (
-    <div className="product-gallery">
+    <div className={clsx("product-gallery", className)} {...rest}>
       <div className="product-gallery__thumbnails product-gallery__thumbnails--empty" />
 
       <div className="product-gallery__main">
@@ -221,7 +224,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
    * Render gallery with images
    */
   const renderGalleryWithImages = () => (
-    <div className="product-gallery">
+    <div className={clsx("product-gallery", className)} {...rest}>
       {/* Thumbnail Gallery */}
       <div
         ref={thumbnailsContainerRef}

@@ -1,7 +1,9 @@
+import type { HTMLAttributes } from "react";
 import { Link } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
 import { Image } from "@/components/atoms/Image";
 import { Text } from "@/components/atoms/Text";
+import clsx from "clsx";
 import "./index.scss";
 
 const HOME_STYLE_CARDS = [
@@ -31,9 +33,11 @@ const HOME_STYLE_CARDS = [
   },
 ];
 
-export const HomeStyleGrid: React.FC = () => {
+type HomeStyleGridProps = HTMLAttributes<HTMLElement>;
+
+export const HomeStyleGrid = ({ className, ...rest }: HomeStyleGridProps) => {
   return (
-    <section className="home-styles" aria-labelledby="home-styles-title">
+    <section className={clsx("home-styles", className)} aria-labelledby="home-styles-title" {...rest}>
       <div className="home-styles__box">
         <Heading as="h2" id="home-styles-title">
           BROWSE BY DRESS STYLE

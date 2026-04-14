@@ -1,9 +1,12 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { Skeleton } from "@/components/atoms/Skeleton";
+import clsx from "clsx";
 
-export const CartPageSkeleton: React.FC = () => {
+type CartPageSkeletonProps = HTMLAttributes<HTMLElement>;
+
+export const CartPageSkeleton = ({ className, ...rest }: CartPageSkeletonProps) => {
   return (
-    <section className="cart-page__layout" aria-hidden="true">
+    <section className={clsx("cart-page__layout", className)} aria-hidden="true" {...rest}>
       <div className="cart-items">
         {[1, 2].map((i) => (
           <article

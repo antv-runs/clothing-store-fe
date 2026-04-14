@@ -1,5 +1,7 @@
+import type { HTMLAttributes } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import { TextLink } from "@/components/atoms/TextLink";
+import clsx from "clsx";
 import "./index.scss";
 
 type NavMenuItem = {
@@ -15,9 +17,9 @@ const NAV_ITEMS: NavMenuItem[] = [
   { label: "Brands", href: "#" },
 ];
 
-export const NavMenu: React.FC = () => {
+export const NavMenu = ({ className, ...rest }: HTMLAttributes<HTMLElement>) => {
   return (
-    <nav className="header-links" aria-label="Main navigation">
+    <nav className={clsx("header-links", className)} aria-label="Main navigation" {...rest}>
       <ul>
         {NAV_ITEMS.map((item) => (
           <li key={item.label}>

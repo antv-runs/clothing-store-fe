@@ -1,3 +1,5 @@
+import type { HTMLAttributes } from "react";
+import clsx from "clsx";
 import "./index.scss";
 import { TextLink } from "@/components/atoms/TextLink";
 
@@ -6,10 +8,9 @@ type FooterNavLink = {
   href: string;
 };
 
-type FooterNavSectionProps = {
+type FooterNavSectionProps = HTMLAttributes<HTMLElement> & {
   title: string;
   links: FooterNavLink[];
-  className?: string;
 };
 
 function getSectionId(title: string) {
@@ -20,14 +21,12 @@ export const FooterNavSection = ({
   title,
   links,
   className,
+  ...rest
 }: FooterNavSectionProps) => {
   const sectionId = getSectionId(title);
-  const sectionClassName = className
-    ? `footer-nav-section ${className}`
-    : "footer-nav-section";
 
   return (
-    <section className={sectionClassName} aria-labelledby={sectionId}>
+    <section className={clsx("footer-nav-section", className)} aria-labelledby={sectionId} {...rest}>
       <h4 id={sectionId} className="footer-nav-section__title">
         {title}
       </h4>

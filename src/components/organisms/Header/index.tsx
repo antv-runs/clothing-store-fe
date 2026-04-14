@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from "react";
 import {
   HeaderActions,
   HeaderMenuToggle,
@@ -5,13 +6,16 @@ import {
 import { NavMenu } from "@/components/molecules/NavMenu";
 import { SearchBox } from "@/components/molecules/SearchBox";
 import { AnnouncementBar } from "@/components/organisms/AnnouncementBar";
+import clsx from "clsx";
 import "./index.scss";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
 import { useCart } from "@/hooks/useCart";
 
-export const Header: React.FC = () => {
+export type HeaderProps = HTMLAttributes<HTMLElement>;
+
+export const Header = ({ className, ...rest }: HeaderProps) => {
   const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(true);
   const navigate = useNavigate();
   const { totalCount: totalQuantity } = useCart();
@@ -24,7 +28,7 @@ export const Header: React.FC = () => {
         <AnnouncementBar onClose={() => setIsAnnouncementVisible(false)} />
       )}
 
-      <header className="site-header">
+      <header className={clsx("site-header", className)} {...rest}>
         <HeaderMenuToggle
           className="header-menu-toggle"
           ariaLabel="Open menu"

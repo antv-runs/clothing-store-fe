@@ -1,12 +1,16 @@
+import type { HTMLAttributes } from "react";
 import { useState, useEffect } from "react";
+import clsx from "clsx";
 import "./index.scss";
 import { UI_TEXT } from "@/const/uiText";
+
+type OfflineBannerProps = HTMLAttributes<HTMLDivElement>;
 
 /**
  * OfflineBanner — Shows a non-blocking fixed banner when the browser
  * loses internet connectivity. Automatically hides when back online.
  */
-export const OfflineBanner: React.FC = () => {
+export const OfflineBanner = ({ className, ...rest }: OfflineBannerProps) => {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [showBackOnline, setShowBackOnline] = useState(false);
 
@@ -45,9 +49,10 @@ export const OfflineBanner: React.FC = () => {
 
   return (
     <div
-      className={`offline-banner ${showBackOnline ? "offline-banner--online" : ""}`}
+      className={clsx("offline-banner", showBackOnline && "offline-banner--online", className)}
       role="status"
       aria-live="assertive"
+      {...rest}
     >
       <span className="offline-banner__icon" aria-hidden="true">
         {showBackOnline ? "✓" : "⚠"}

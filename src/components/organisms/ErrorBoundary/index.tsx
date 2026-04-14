@@ -15,25 +15,25 @@ export const reportError = (error: Error, errorInfo?: ErrorInfo) => {
   logger.error("Reported Error:", error, errorInfo);
 };
 
-export interface FallbackProps {
+export type FallbackProps = {
   error: Error;
   resetErrorBoundary: () => void;
-}
+};
 
-interface Props {
+type Props = {
   children?: ReactNode;
   fallbackMessage?: string;
   fallback?: ReactNode;
   fallbackRender?: (props: FallbackProps) => ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
   resetKeys?: ReadonlyArray<unknown>;
-}
+};
 
-interface State {
+type State = {
   hasError: boolean;
   error: Error | null;
   retryKey: number;
-}
+};
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
@@ -109,41 +109,38 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="container u-mt-25">
-          <section className="error-boundary-page">
-            <div className="error-boundary-page__content">
-              <Heading as="h1" className="error-boundary-page__title">
-                {this.props.fallbackMessage || ERROR_MESSAGES.GENERIC_ERROR}
-              </Heading>
+        <section className="error-boundary-page container u-mt-25">
+          <div className="error-boundary-page__content">
+            <Heading as="h1" className="error-boundary-page__title">
+              {this.props.fallbackMessage || ERROR_MESSAGES.GENERIC_ERROR}
+            </Heading>
 
-              <p className="error-boundary-page__message">
-                {isChunkLoadError(this.state.error)
-                  ? ERROR_MESSAGES.PAGE_RESOURCE_LOAD
-                  : ERROR_MESSAGES.PAGE_LOAD_UNEXPECTED}
-              </p>
+            <p className="error-boundary-page__message">
+              {isChunkLoadError(this.state.error)
+                ? ERROR_MESSAGES.PAGE_RESOURCE_LOAD
+                : ERROR_MESSAGES.PAGE_LOAD_UNEXPECTED}
+            </p>
 
-              <div className="error-boundary-page__actions">
-                <Button
-                  className="error-boundary-page__action"
-                  type="button"
-                  variant="primary"
-                  onClick={this.handleRetry}
-                >
-                  {UI_TEXT.TRY_AGAIN}
-                </Button>
-                <div className="error-boundary-page__spacer" />
-                <Button
-                  className="error-boundary-page__action"
-                  type="button"
-                  variant="primary"
-                  onClick={this.handleGoHome}
-                >
-                  {UI_TEXT.GO_BACK_TO_HOME}
-                </Button>
-              </div>
+            <div className="error-boundary-page__actions">
+              <Button
+                className="error-boundary-page__action"
+                type="button"
+                variant="primary"
+                onClick={this.handleRetry}
+              >
+                {UI_TEXT.TRY_AGAIN}
+              </Button>
+              <Button
+                className="error-boundary-page__action"
+                type="button"
+                variant="primary"
+                onClick={this.handleGoHome}
+              >
+                {UI_TEXT.GO_BACK_TO_HOME}
+              </Button>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       );
     }
 

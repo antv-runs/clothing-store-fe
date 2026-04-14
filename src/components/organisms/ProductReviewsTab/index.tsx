@@ -1,4 +1,5 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
+import clsx from "clsx";
 import "./index.scss";
 import type { Review } from "@/types/review";
 import type { ListErrorKind } from "@/types/listState";
@@ -9,7 +10,7 @@ import { ProductReviewsListSkeleton } from "@/components/molecules/ProductReview
 import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 import { EmptyState } from "@/components/molecules/EmptyState";
 
-interface ProductReviewsTabProps {
+type ProductReviewsTabProps = HTMLAttributes<HTMLDivElement> & {
   panelRef?: (el: HTMLElement | null) => void;
   reviews: Review[];
   reviewCount: number;
@@ -27,12 +28,12 @@ interface ProductReviewsTabProps {
   error?: string | null;
   errorKind?: ListErrorKind | null;
   onWriteReview: () => void;
-}
+};
 
 /**
  * ProductReviewsTab - Reviews tab content section.
  */
-export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
+export const ProductReviewsTab = ({
   panelRef,
   reviews,
   reviewCount,
@@ -50,7 +51,9 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
   error,
   errorKind,
   onWriteReview,
-}) => {
+  className,
+  ...rest
+}: ProductReviewsTabProps) => {
   const isEmpty = !isLoading && !error && reviews.length === 0;
   const loadingContent = (
     <ul className="reviews__list" aria-busy="true" aria-live="polite">
@@ -66,7 +69,8 @@ export const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({
       role="tabpanel"
       aria-labelledby="tab-tc-reviews"
       aria-hidden={!isActive}
-      className={`reviews products-tabs__content${isActive ? " products-tabs__content--active" : ""}`}
+      className={clsx(`reviews products-tabs__content${isActive ? " products-tabs__content--active" : ""}`, className)}
+      {...rest}
     >
       <ProductReviewsHeader
         reviewCount={reviewCount}

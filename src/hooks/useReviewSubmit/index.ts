@@ -6,11 +6,7 @@ import { DEFAULT_GUEST_USERNAME } from "@/const/user";
 import { ERROR_MESSAGES } from "@/const/errorMessages";
 import { UI_TEXT } from "@/const/uiText";
 
-type ReviewSubmission = {
-  username: string;
-  comment: string;
-  stars: number;
-};
+import type { CreateReviewPayload } from "@/types/api/review";
 
 interface UseReviewSubmitOptions {
   productId: string | number | null | undefined;
@@ -21,7 +17,7 @@ interface UseReviewSubmitResult {
   isSubmittingReview: boolean;
   reviewStatusMessage: string;
   clearReviewStatusMessage: () => void;
-  handleReviewSubmit: (values: ReviewSubmission) => Promise<void>;
+  handleReviewSubmit: (values: CreateReviewPayload) => Promise<void>;
 }
 
 export const useReviewSubmit = ({
@@ -48,7 +44,7 @@ export const useReviewSubmit = ({
   }, []);
 
   const handleReviewSubmit = useCallback(
-    async ({ username, comment, stars }: ReviewSubmission) => {
+    async ({ username, comment, stars }: CreateReviewPayload) => {
       if (
         !productId ||
         isSubmittingReview ||

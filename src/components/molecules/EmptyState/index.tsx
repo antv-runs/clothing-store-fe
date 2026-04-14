@@ -1,14 +1,15 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import "./index.scss";
 import { Text } from "@/components/atoms/Text";
+import clsx from "clsx";
 
-type EmptyStateProps = {
+type EmptyStateProps = HTMLAttributes<HTMLParagraphElement | HTMLSpanElement | HTMLDivElement> & {
   message: string;
 };
 
-export const EmptyState: React.FC<EmptyStateProps> = ({ message }) => {
+export const EmptyState = ({ message, className, ...rest }: EmptyStateProps) => {
   return (
-    <Text as="p" className={"empty"}>
+    <Text as="p" className={clsx("empty", className)} {...rest}>
       {message}
     </Text>
   );

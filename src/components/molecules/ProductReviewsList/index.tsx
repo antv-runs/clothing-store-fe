@@ -1,20 +1,23 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import "./index.scss";
 import type { Review } from "@/types/review";
 import { ReviewCard } from "@/components/molecules/ReviewCard";
+import clsx from "clsx";
 
-interface ProductReviewsListProps {
+type ProductReviewsListProps = HTMLAttributes<HTMLUListElement> & {
   reviews: Review[];
-}
+};
 
 /**
  * ProductReviewsList - Reviews list content inside reviews tab.
  */
-export const ProductReviewsList: React.FC<ProductReviewsListProps> = ({
+export const ProductReviewsList = ({
   reviews,
-}) => {
+  className,
+  ...rest
+}: ProductReviewsListProps) => {
   return (
-    <ul className="reviews__list">
+    <ul className={clsx("reviews__list", className)} {...rest}>
       {reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
     </ul>
   );

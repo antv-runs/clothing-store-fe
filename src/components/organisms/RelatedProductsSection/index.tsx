@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import type { HTMLAttributes } from "react";
+import { useState } from "react";
+import clsx from "clsx";
 import "./index.scss";
 import { ProductCardList } from "@/components/organisms/ProductCardList";
 import { ErrorBoundary } from "@/components/organisms/ErrorBoundary";
@@ -8,7 +10,7 @@ import { EmptyState } from "@/components/molecules/EmptyState";
 import type { ListErrorKind } from "@/types/listState";
 import type { Product } from "@/types/product";
 
-interface RelatedProductsSectionProps {
+type RelatedProductsSectionProps = HTMLAttributes<HTMLElement> & {
   products: Product[];
   isLoading: boolean;
   error: string | null;
@@ -17,7 +19,7 @@ interface RelatedProductsSectionProps {
   onRetry: () => void;
   title?: string;
   formatPrice: (amount: number, currency?: string) => string;
-}
+};
 
 /**
  * RelatedProductsSection - Product recommendations carousel section.
@@ -27,7 +29,7 @@ interface RelatedProductsSectionProps {
  * - Image state management for product cards
  * - ProductCardList with navigation enabled
  */
-export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
+export const RelatedProductsSection = ({
   products,
   isLoading,
   error,
@@ -36,7 +38,9 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   onRetry,
   title = "You Might Also Like",
   formatPrice,
-}) => {
+  className,
+  ...rest
+}: RelatedProductsSectionProps) => {
   const [loadedImageIds, setLoadedImageIds] = useState<Set<string>>(new Set());
   const [errorImageIds, setErrorImageIds] = useState<Set<string>>(new Set());
 
@@ -57,7 +61,7 @@ export const RelatedProductsSection: React.FC<RelatedProductsSectionProps> = ({
   };
 
   return (
-    <section className="other-products u-mb-85">
+    <section className={clsx("other-products u-mb-85", className)} {...rest}>
       <Heading as="h2" className="other-products__title">
         {title}
       </Heading>

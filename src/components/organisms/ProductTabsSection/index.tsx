@@ -1,15 +1,20 @@
-import React, { useMemo, useState, useRef } from "react";
-import "./index.scss";
+import { useState, useRef } from "react";
+import type { HTMLAttributes } from "react";
+import clsx from "clsx";
+
 import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import type { ProductFaq } from "@/types/product";
+
 import { ProductTabsNav } from "@/components/molecules/ProductTabsNav";
 import { ProductReviewsTab } from "@/components/organisms/ProductReviewsTab";
 import { BREAKPOINTS } from "@/const/breakpoints";
 
+import "./index.scss";
+
 type TabKey = "tc-details" | "tc-reviews" | "tc-faqs";
 
-interface ProductTabsSectionProps {
+type ProductTabsSectionProps = HTMLAttributes<HTMLDivElement> & {
   details: string;
   faqs: ProductFaq[];
   reviews: Review[];
@@ -27,11 +32,11 @@ interface ProductTabsSectionProps {
   reviewError?: string | null;
   reviewErrorKind?: ListErrorKind | null;
   onWriteReview: () => void;
-}
+};
 
 const DEFAULT_ACTIVE_TAB: TabKey = "tc-reviews";
 
-export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
+export const ProductTabsSection = ({
   details,
   faqs,
   reviews,
@@ -49,9 +54,10 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
   reviewError,
   reviewErrorKind,
   onWriteReview,
-}) => {
+  className,
+  ...rest
+}: ProductTabsSectionProps) => {
   const [activeTab, setActiveTab] = useState<TabKey>(DEFAULT_ACTIVE_TAB);
-
   const panelRefs = useRef<Map<TabKey, HTMLElement>>(new Map());
 
   const handleTabSelect = (tab: TabKey) => {
@@ -63,20 +69,8 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
     }
   };
 
-  const detailsPanelClassName = useMemo(
-    () =>
-      `products-tabs__content${activeTab === "tc-details" ? " products-tabs__content--active" : ""}`,
-    [activeTab],
-  );
-
-  const faqsPanelClassName = useMemo(
-    () =>
-      `products-tabs__content${activeTab === "tc-faqs" ? " products-tabs__content--active" : ""}`,
-    [activeTab],
-  );
-
   return (
-    <div className="products-tabs">
+    <div className={clsx("products-tabs", className)} {...rest}>
       <ProductTabsNav activeTab={activeTab} onTabSelect={handleTabSelect} />
 
       <div
@@ -88,7 +82,9 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         role="tabpanel"
         aria-labelledby="tab-tc-details"
         aria-hidden={activeTab !== "tc-details"}
-        className={detailsPanelClassName}
+        className={clsx("products-tabs__content", {
+          "products-tabs__content--active": activeTab === "tc-details",
+        })}
       >
         <div>{details}</div>
       </div>
@@ -124,7 +120,9 @@ export const ProductTabsSection: React.FC<ProductTabsSectionProps> = ({
         role="tabpanel"
         aria-labelledby="tab-tc-faqs"
         aria-hidden={activeTab !== "tc-faqs"}
-        className={faqsPanelClassName}
+        className={clsx("products-tabs__content", {
+          "products-tabs__content--active": activeTab === "tc-faqs",
+        })}
       >
         <ul className="faqs">
           {faqs.length ? (

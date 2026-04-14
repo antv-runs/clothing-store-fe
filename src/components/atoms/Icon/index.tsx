@@ -1,12 +1,8 @@
 import React from "react";
 import { ReactSVG } from "react-svg";
 import clsx from "clsx";
+import { toCssDimension } from "@/utils/css";
 import "./index.scss";
-
-function toCssDimension(value: number | string) {
-  return typeof value === "number" ? `${value}px` : value;
-}
-
 export type IconProps = {
   svgName: string;
   color?: string;

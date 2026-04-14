@@ -1,10 +1,11 @@
+import type { HTMLAttributes } from "react";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import clsx from "clsx";
 import { IconButton } from "@/components/atoms/IconButton";
 import { getFirstItemScrollStep } from "@/utils/carousel";
 import "./index.scss";
 
-export interface SliderProps {
+export type SliderProps = Omit<HTMLAttributes<HTMLDivElement>, "onScroll"> & {
   children: React.ReactNode;
   /** Optional extra class on the outer wrapper. Base class is "slider". */
   className?: string;
@@ -54,9 +55,9 @@ export interface SliderProps {
    * the viewport (e.g. after useInfiniteLoop sets the initial scrollLeft).
    */
   onReady?: () => void;
-}
+};
 
-export const Slider: React.FC<SliderProps> = ({
+export const Slider = ({
   children,
   className,
   viewportClassName,
@@ -70,7 +71,8 @@ export const Slider: React.FC<SliderProps> = ({
   onScroll,
   viewportRef: externalViewportRef,
   onReady,
-}) => {
+  ...rest
+}: SliderProps) => {
   const internalViewportRef = useRef<HTMLDivElement>(null);
 
   // When an external ref is provided, sync it with the internal one via a
@@ -304,6 +306,7 @@ export const Slider: React.FC<SliderProps> = ({
         loading && "slider--loading",
         className,
       )}
+      {...rest}
     >
       {showNavigation && (
         <IconButton

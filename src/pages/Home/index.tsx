@@ -6,7 +6,7 @@ import { HomeReviews } from "@/components/organisms/HomeReviews";
 import { useHomeData } from "@/hooks/useHomeData";
 import "./index.scss";
 
-const Home: React.FC = () => {
+const Home = () => {
   const {
     newArrivals,
     topSelling,

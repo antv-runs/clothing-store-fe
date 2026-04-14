@@ -1,5 +1,7 @@
+import type { HTMLAttributes } from "react";
 import { Link } from "react-router-dom";
 import { Image } from "@/components/atoms/Image";
+import clsx from "clsx";
 import "./index.scss";
 import { Heading } from "@/components/atoms/Heading";
 import { Icon } from "@/components/atoms/Icon";
@@ -11,9 +13,11 @@ const HOME_HERO_STATS = [
   { value: "30,000+", label: "Happy Customers" },
 ];
 
-export const HomeHero: React.FC = () => {
+type HomeHeroProps = HTMLAttributes<HTMLElement>;
+
+export const HomeHero = ({ className, ...rest }: HomeHeroProps) => {
   return (
-    <section className="home-hero" aria-labelledby="home-hero-title">
+    <section className={clsx("home-hero", className)} aria-labelledby="home-hero-title" {...rest}>
       <div className="home-hero__content">
         <Heading as="h1" className="home-hero__title">
           FIND CLOTHES THAT MATCHES YOUR STYLE

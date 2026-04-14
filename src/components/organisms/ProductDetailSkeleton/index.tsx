@@ -1,7 +1,10 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
+import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import "./index.scss";
+
+type ProductDetailSkeletonProps = HTMLAttributes<HTMLDivElement>;
 
 const BreadcrumbSkeleton: React.FC = () => {
   return (
@@ -291,9 +294,9 @@ const RelatedProductsSkeleton: React.FC = () => {
   );
 };
 
-export const ProductDetailSkeleton: React.FC = () => {
+export const ProductDetailSkeleton = ({ className, ...rest }: ProductDetailSkeletonProps) => {
   return (
-    <div className="container u-mt-25 product-detail-page product-detail-skeleton">
+    <div className={clsx("container u-mt-25 product-detail-page product-detail-skeleton", className)} {...rest}>
       <section
         className="product-overview"
         aria-label="Product overview loading"

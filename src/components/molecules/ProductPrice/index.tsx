@@ -1,4 +1,4 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import clsx from "clsx";
 import { Price } from "@/components/atoms/Price";
 import type { ProductPricing } from "@/types/product";
@@ -6,24 +6,23 @@ import { Text } from "@/components/atoms/Text";
 import { DEFAULT_CURRENCY } from "@/const/pricing";
 import "./index.scss";
 
-interface ProductPriceProps {
+type ProductPriceProps = HTMLAttributes<HTMLDivElement> & {
   pricing?: ProductPricing;
   currentAmount?: number;
   originalAmount?: number | null;
   discountPercent?: number | null;
   currency?: string;
   formatPrice?: (amount: number, currency?: string) => string;
-  className?: string;
   currentClassName?: string;
   originalClassName?: string;
   discountClassName?: string;
-}
+};
 
 /**
  * ProductPrice molecule - Displays product pricing info
  * Shows: current price, original price (if on sale), discount percentage
  */
-export const ProductPrice: React.FC<ProductPriceProps> = ({
+export const ProductPrice = ({
   pricing,
   currentAmount,
   originalAmount,
@@ -34,7 +33,8 @@ export const ProductPrice: React.FC<ProductPriceProps> = ({
   currentClassName,
   originalClassName,
   discountClassName,
-}) => {
+  ...rest
+}: ProductPriceProps) => {
   const isLegacyMode = Boolean(pricing);
   const resolvedCurrent = currentAmount ?? pricing?.current;
 
@@ -66,6 +66,7 @@ export const ProductPrice: React.FC<ProductPriceProps> = ({
         isLegacyMode && "product-info__price",
         className,
       )}
+      {...rest}
     >
       <Text
         as="p"

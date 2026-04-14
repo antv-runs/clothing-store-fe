@@ -1,26 +1,32 @@
+import type { HTMLAttributes } from "react";
 import { Text } from "@/components/atoms/Text";
 import { TextLink } from "@/components/atoms/TextLink";
+import clsx from "clsx";
 import "./index.scss";
 
-interface CartEmptyStateProps {
+type CartEmptyStateProps = HTMLAttributes<HTMLDivElement> & {
   isVisible: boolean;
-}
+};
 
 /**
  * CartEmptyState - Empty cart message block.
  */
-export const CartEmptyState: React.FC<CartEmptyStateProps> = ({
+export const CartEmptyState = ({
   isVisible,
-}) => {
-  const displayStyle = { display: isVisible ? "flex" : "none" };
+  className,
+  style,
+  ...rest
+}: CartEmptyStateProps) => {
+  const displayStyle = { display: isVisible ? "flex" : "none", ...style };
 
   return (
     <div
-      className="cart-empty"
+      className={clsx("cart-empty", className)}
       style={displayStyle}
       role="status"
       aria-live="polite"
       aria-atomic="true"
+      {...rest}
     >
       <div className="cart-empty__inner">
         <Text as="p" className="cart-empty__text">

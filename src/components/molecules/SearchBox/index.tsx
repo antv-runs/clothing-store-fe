@@ -1,14 +1,16 @@
+import type { HTMLAttributes } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Input } from "@/components/atoms/Input";
+import clsx from "clsx";
 import "./index.scss";
 
-type SearchBoxProps = {
+type SearchBoxProps = HTMLAttributes<HTMLFormElement> & {
   action?: string;
 };
 
-export const SearchBox: React.FC<SearchBoxProps> = ({ action = "#" }) => {
+export const SearchBox = ({ action = "#", className, ...rest }: SearchBoxProps) => {
   return (
-    <form action={action} className="header-search">
+    <form action={action} className={clsx("header-search", className)} {...rest}>
       <Input
         type="text"
         placeholder="Search for products..."

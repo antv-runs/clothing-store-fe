@@ -1,7 +1,6 @@
 import type { HTMLAttributes } from "react";
 import { MAX_RATING } from "@/const/ui";
 import clsx from "clsx";
-import "./index.scss";
 
 type RatingProps = HTMLAttributes<HTMLSpanElement> & {
   rating: number;

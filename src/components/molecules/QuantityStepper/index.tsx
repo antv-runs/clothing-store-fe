@@ -1,10 +1,9 @@
-import React from "react";
+import type { HTMLAttributes, MouseEventHandler, ChangeEventHandler, FocusEventHandler, KeyboardEventHandler } from "react";
 import clsx from "clsx";
 import { IconButton } from "@/components/atoms/IconButton";
 import "./index.scss";
 
-interface QuantityStepperProps {
-  className?: string;
+type QuantityStepperProps = Omit<HTMLAttributes<HTMLFormElement>, "onChange" | "onBlur" | "onKeyDown"> & {
   ariaLabel?: string;
   action?: string;
   inputId?: string;
@@ -20,14 +19,14 @@ interface QuantityStepperProps {
   disabled?: boolean;
   iconWidth?: number | string;
   iconHeight?: number | string;
-  onDecrease?: React.MouseEventHandler<HTMLButtonElement>;
-  onIncrease?: React.MouseEventHandler<HTMLButtonElement>;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onBlur?: React.FocusEventHandler<HTMLInputElement>;
-  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-}
+  onDecrease?: MouseEventHandler<HTMLButtonElement>;
+  onIncrease?: MouseEventHandler<HTMLButtonElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+};
 
-export const QuantityStepper: React.FC<QuantityStepperProps> = ({
+export const QuantityStepper = ({
   className,
   ariaLabel,
   action,
@@ -49,7 +48,9 @@ export const QuantityStepper: React.FC<QuantityStepperProps> = ({
   onChange,
   onBlur,
   onKeyDown,
-}) => {
+  onSubmit,
+  ...rest
+}: QuantityStepperProps) => {
   const currentValue = value !== undefined ? value : (defaultValue !== undefined ? defaultValue : min);
 
   const isMinusDisabled = disabled || currentValue <= min;
@@ -78,7 +79,8 @@ export const QuantityStepper: React.FC<QuantityStepperProps> = ({
       action={action}
       className={clsx("quantity-stepper", className)}
       aria-label={ariaLabel}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit || onSubmit}
+      {...rest}
     >
       <IconButton
         svgName="icn_minus"

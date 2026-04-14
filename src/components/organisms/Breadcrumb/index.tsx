@@ -1,23 +1,23 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { BreadcrumbItem } from "@/components/molecules/BreadcrumbItem";
+import clsx from "clsx";
 import "./index.scss";
 
-interface BreadcrumbProps {
+type BreadcrumbProps = HTMLAttributes<HTMLElement> & {
   items: string[];
-  className?: string;
-  id?: string;
-}
+};
 
-export const Breadcrumb: React.FC<BreadcrumbProps> = ({
+export const Breadcrumb = ({
   items,
   className = "u-mb-40",
   id = "breadcrumb-list",
-}) => {
+  ...rest
+}: BreadcrumbProps) => {
   return (
-    <nav className="breadcrumb" aria-label="Breadcrumb">
+    <nav className="breadcrumb" aria-label="Breadcrumb" {...rest}>
       <ol
         id={id}
-        className={["breadcrumb__list", className].filter(Boolean).join(" ")}
+        className={clsx("breadcrumb__list", className)}
       >
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

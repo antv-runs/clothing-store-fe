@@ -1,4 +1,6 @@
+import type { HTMLAttributes } from "react";
 import { Image } from "@/components/atoms/Image";
+import clsx from "clsx";
 import "./index.scss";
 
 const HOME_BRANDS_TOP = [
@@ -34,9 +36,11 @@ const HOME_BRANDS_BOTTOM = [
 
 const HOME_BRANDS = [...HOME_BRANDS_TOP, ...HOME_BRANDS_BOTTOM];
 
-export const HomeBrands: React.FC = () => {
+type HomeBrandsProps = HTMLAttributes<HTMLElement>;
+
+export const HomeBrands = ({ className, ...rest }: HomeBrandsProps) => {
   return (
-    <section className="home-brands" aria-label="Partner brands">
+    <section className={clsx("home-brands", className)} aria-label="Partner brands" {...rest}>
       <ul className="home-brands__list">
         {HOME_BRANDS.map((brand) => (
           <li

@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { ProductVariants as ProductVariantsData } from "@/types/product";
 import { Text } from "@/components/atoms/Text";
 import { Icon } from "@/components/atoms/Icon";
 import "./index.scss";
 
-interface ProductVariantsProps {
+type ProductVariantsProps = {
   variants: ProductVariantsData;
   /** Callback fired when user selects a color. Receives the selected color ID. */
   onColorSelect?: (colorId: string) => void;
   /** Callback fired when user selects a size. Receives the selected size ID. */
   onSizeSelect?: (sizeId: string) => void;
-}
+};
 
 /**
  * Determines if a color code represents a light color
@@ -99,11 +99,11 @@ const isLightColor = (colorCode: string): boolean => {
  * ProductVariants organism - Color and size selectors
  * Displays available product variants for user selection with interactive state management
  */
-export const ProductVariants: React.FC<ProductVariantsProps> = ({
+export const ProductVariants = ({
   variants,
   onColorSelect,
   onSizeSelect,
-}) => {
+}: ProductVariantsProps) => {
   const [selectedColorId, setSelectedColorId] = useState<string | null>(() =>
     variants?.colors?.length ? variants.colors[0]?.id || null : null,
   );

@@ -2,7 +2,6 @@ import type { HTMLAttributes } from "react";
 import { formatPrice as formatPriceUtil } from "@/utils/formatters";
 import { DEFAULT_CURRENCY } from "@/const/pricing";
 import clsx from "clsx";
-import "./index.scss";
 
 type PriceProps = HTMLAttributes<HTMLSpanElement> & {
   amount: number;

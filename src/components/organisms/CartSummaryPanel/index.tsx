@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type { HTMLAttributes } from "react";
+import { useState } from "react";
 import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
@@ -8,15 +9,15 @@ import { InputWithIcon } from "@/components/molecules/InputWithIcon";
 import { ERROR_MESSAGES } from "@/const/errorMessages";
 import { UI_TEXT } from "@/const/uiText";
 
-interface CartSummary {
+type CartSummary = {
   subtotal: number;
   discount: number;
   discountPercent: number;
   delivery: number;
   total: number;
-}
+};
 
-interface CartSummaryPanelProps {
+type CartSummaryPanelProps = HTMLAttributes<HTMLElement> & {
   summary: CartSummary;
   formatPrice: (amount: number, currency?: string) => string;
   isCheckoutDisabled?: boolean;
@@ -25,12 +26,12 @@ interface CartSummaryPanelProps {
   isCouponLoading?: boolean;
   onCheckout?: () => void;
   onApplyCoupon?: (code: string) => Promise<void> | void;
-}
+};
 
 /**
  * CartSummaryPanel - Order summary and checkout action area.
  */
-export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
+export const CartSummaryPanel = ({
   summary,
   formatPrice,
   isCheckoutDisabled = true,
@@ -39,7 +40,9 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
   isCouponLoading = false,
   onCheckout,
   onApplyCoupon,
-}) => {
+  className,
+  ...rest
+}: CartSummaryPanelProps) => {
   const [promoCode, setPromoCode] = useState("");
   const [couponError, setCouponError] = useState<string | null>(null);
 
@@ -61,9 +64,10 @@ export const CartSummaryPanel: React.FC<CartSummaryPanelProps> = ({
 
   return (
     <aside
-      className="cart-summary"
+      className={clsx("cart-summary", className)}
       aria-label={UI_TEXT.ORDER_SUMMARY}
       aria-busy="false"
+      {...rest}
     >
       <Heading as="h2" className="cart-summary__title">
         {UI_TEXT.ORDER_SUMMARY}

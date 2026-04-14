@@ -1,9 +1,10 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { Button } from "@/components/atoms/Button";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
+import clsx from "clsx";
 import "./index.scss";
 
-interface ProductActionsProps {
+type ProductActionsProps = HTMLAttributes<HTMLDivElement> & {
   selectedColorId?: string | null;
   selectedSizeId?: string | null;
   quantity: number;
@@ -12,13 +13,13 @@ interface ProductActionsProps {
   onIncreaseQuantity: () => void;
   onQuantityChange: (value: string) => void;
   onAddToCart: () => void;
-}
+};
 
 /**
  * ProductActions - Quantity controls and add-to-cart CTA.
  * Keeps original classes and markup to avoid style regressions.
  */
-export const ProductActions: React.FC<ProductActionsProps> = ({
+export const ProductActions = ({
   selectedColorId,
   selectedSizeId,
   quantity,
@@ -27,9 +28,11 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   onIncreaseQuantity,
   onQuantityChange,
   onAddToCart,
-}) => {
+  className,
+  ...rest
+}: ProductActionsProps) => {
   return (
-    <div className="product-overview__actions">
+    <div className={clsx("product-overview__actions", className)} {...rest}>
       <QuantityStepper
         action="#"
         inputId="quantity-input"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type HTMLAttributes } from "react";
 import "./index.scss";
 import {
   ReviewSortSelect,
@@ -6,11 +6,12 @@ import {
 } from "@/components/molecules/ReviewSortSelect";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Button } from "@/components/atoms/Button";
+import clsx from "clsx";
 
-interface ReviewFilterOption {
+type ReviewFilterOption = {
   label: string;
   value: string;
-}
+};
 
 const REVIEW_FILTER_OPTIONS: ReviewFilterOption[] = [
   { label: "All Reviews", value: "All" },
@@ -31,26 +32,28 @@ const REVIEW_SORT_OPTIONS: ReviewSortOption[] = [
   { value: "highest", label: "Highest Rating" },
 ];
 
-export interface ProductReviewsFilterProps {
+export type ProductReviewsFilterProps = HTMLAttributes<HTMLDivElement> & {
   selectedRating: string;
   onRatingChange: (value: string) => void;
   selectedSort: "latest" | "oldest" | "highest";
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   isDisabled?: boolean;
   onWriteReview: () => void;
-}
+};
 
 /**
  * ProductReviewsFilter - Review filter dropdown and sort controls.
  */
-export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
+export const ProductReviewsFilter = ({
   selectedRating,
   onRatingChange,
   selectedSort,
   onSortChange,
   isDisabled = false,
   onWriteReview,
-}) => {
+  className,
+  ...rest
+}: ProductReviewsFilterProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const filterRef = React.useRef<HTMLDivElement>(null);
 
@@ -87,7 +90,7 @@ export const ProductReviewsFilter: React.FC<ProductReviewsFilterProps> = ({
   };
 
   return (
-    <div className="reviews__actions" ref={filterRef}>
+    <div className={clsx("reviews__actions", className)} ref={filterRef} {...rest}>
       <div className="reviews__filter">
         <IconButton
           id="btn-filter-by-stars"

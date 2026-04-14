@@ -24,10 +24,9 @@ type ProductCardData = {
   };
 };
 
-type ProductCardProps = {
+type ProductCardProps = React.HTMLAttributes<HTMLElement> & {
   product: ProductCardData;
   formatPrice: (amount: number, currency?: string) => string;
-  className?: string;
   linkMode?: "inline" | "overlay";
   imageLoaded?: boolean;
   imageError?: boolean;
@@ -35,7 +34,7 @@ type ProductCardProps = {
   onImageError?: () => void;
 };
 
-export const ProductCard: React.FC<ProductCardProps> = ({
+export const ProductCard = ({
   product,
   formatPrice,
   className,
@@ -44,7 +43,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   imageError,
   onImageLoad,
   onImageError,
-}) => {
+  ...rest
+}: ProductCardProps) => {
   const { id, name, thumbnail, thumbnailAlt, rating, pricing } = product;
   const {
     current: currentPrice,
@@ -103,7 +103,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   );
 
   return (
-    <article className={cardClassName}>
+    <article className={cardClassName} {...rest}>
       <div className="product-card__image-wrapper product-image-wrapper">
         {imageContent}
       </div>

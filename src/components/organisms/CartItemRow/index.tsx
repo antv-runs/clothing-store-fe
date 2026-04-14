@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import type { HTMLAttributes } from "react";
+import { useState, useEffect } from "react";
 import { ProductPrice } from "@/components/molecules/ProductPrice";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
 import { IconButton } from "@/components/atoms/IconButton";
 import { ConfirmModal } from "@/components/organisms/ConfirmModal";
+import clsx from "clsx";
 import "./index.scss";
 import type { Product } from "@/types/product";
 
-interface CartItemRowProps {
+type CartItemRowProps = HTMLAttributes<HTMLElement> & {
   item: Product & {
     quantity: number;
     color: string | null;
@@ -16,15 +18,17 @@ interface CartItemRowProps {
   isLocked?: boolean;
   onRemove?: () => void;
   onUpdateQuantity?: (val: number) => void;
-}
+};
 
-export const CartItemRow: React.FC<CartItemRowProps> = ({
+export const CartItemRow = ({
   item,
   formatPrice,
   isLocked = false,
   onRemove,
   onUpdateQuantity,
-}) => {
+  className,
+  ...rest
+}: CartItemRowProps) => {
   const [inputValue, setInputValue] = useState(String(item.quantity));
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -80,10 +84,11 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
 
   return (
     <article
-      className="cart-item"
+      className={clsx("cart-item", className)}
       data-cart-product-id={item.id}
       data-cart-color={item.color || ""}
       data-cart-size={item.size || ""}
+      {...rest}
     >
       <a
         href={`/product/${encodeURIComponent(item.id)}`}

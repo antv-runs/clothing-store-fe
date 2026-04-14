@@ -1,4 +1,4 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import "./index.scss";
 import { Star } from "@/components/atoms/Star";
 import { IconButton } from "@/components/atoms/IconButton";
@@ -6,18 +6,19 @@ import { ReviewMeta } from "@/components/molecules/ReviewMeta";
 import { formatDate } from "@/utils/formatters";
 import type { Review } from "@/types/review";
 import { Text } from "@/components/atoms/Text";
+import clsx from "clsx";
 
-interface ReviewCardProps {
+type ReviewCardProps = HTMLAttributes<HTMLLIElement> & {
   review: Review;
-}
+};
 
 /**
  * ReviewCard molecule - Individual review card
  * Displays reviewer info, rating, content, and date
  */
-export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
+export const ReviewCard = ({ review, className, ...rest }: ReviewCardProps) => {
   return (
-    <li className="reviews__item review-card" data-stars={review.ratingStar}>
+    <li className={clsx("reviews__item review-card", className)} data-stars={review.ratingStar} {...rest}>
       <div className="review-card__meta">
         <div className="review-card__stars">
           <Star

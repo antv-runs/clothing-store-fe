@@ -1,19 +1,22 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { Skeleton } from "@/components/atoms/Skeleton";
+import clsx from "clsx";
 import "./index.scss";
 
-interface HomeReviewsSkeletonProps {
+type HomeReviewsSkeletonProps = HTMLAttributes<HTMLDivElement> & {
   count?: number;
-}
+};
 
 /**
  * HomeReviewsSkeleton - Loading state shaped for HomeReviews horizontal carousel.
  */
-export const HomeReviewsSkeleton: React.FC<HomeReviewsSkeletonProps> = ({
+export const HomeReviewsSkeleton = ({
   count = 4,
-}) => {
+  className,
+  ...rest
+}: HomeReviewsSkeletonProps) => {
   return (
-    <div className="home-reviews__viewport" role="status" aria-live="polite">
+    <div className={clsx("home-reviews__viewport", className)} role="status" aria-live="polite" {...rest}>
       <ul
         className="home-reviews__track reviews__list home-reviews__track--loading"
         aria-busy="true"

@@ -15,6 +15,10 @@
 
   margin-top: 85px;
 
+  .reviews__list {
+    margin-bottom: 0;
+  }
+
   .review-card__content {
     padding-right: 0;
   }
@@ -82,22 +86,18 @@
 
     &::before {
       left: 0;
-      background: linear-gradient(
-        to right,
-        rgba(v.$color-white, 0.2) 0%,
-        rgba(v.$color-white, 0.08) 15%,
-        rgba(v.$color-white, 0) 100%
-      );
+      background: linear-gradient(to right,
+          rgba(v.$color-white, 0.2) 0%,
+          rgba(v.$color-white, 0.08) 15%,
+          rgba(v.$color-white, 0) 100%);
     }
 
     &::after {
       right: 0;
-      background: linear-gradient(
-        to left,
-        rgba(v.$color-white, 0.2) 0%,
-        rgba(v.$color-white, 0.08) 15%,
-        rgba(v.$color-white, 0) 100%
-      );
+      background: linear-gradient(to left,
+          rgba(v.$color-white, 0.2) 0%,
+          rgba(v.$color-white, 0.08) 15%,
+          rgba(v.$color-white, 0) 100%);
     }
 
     &.has-overflow.is-not-at-start::before {

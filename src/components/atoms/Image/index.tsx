@@ -1,6 +1,7 @@
 import type { CSSProperties, ImgHTMLAttributes, ReactEventHandler } from "react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { toCssDimension } from "@/utils/css";
 import "./index.scss";
 
 type BaseImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "width" | "height" | "src" | "alt" | "onLoad" | "onError" | "onClick">;
@@ -29,14 +30,6 @@ type ImageProps = BaseImageProps & {
   onError?: ReactEventHandler<HTMLImageElement>;
   onClick?: ReactEventHandler<HTMLImageElement>;
 };
-
-function toCssDimension(value?: number | string) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  return typeof value === "number" ? `${value}px` : value;
-}
 
 export const Image = ({
   src,

@@ -1,9 +1,10 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import "./index.scss";
 import { ProductReviewsFilter } from "@/components/molecules/ProductReviewsFilter";
+import clsx from "clsx";
 
-interface ProductReviewsHeaderProps {
+type ProductReviewsHeaderProps = HTMLAttributes<HTMLDivElement> & {
   reviewCount: number;
   selectedRating: string;
   selectedSort: "latest" | "oldest" | "highest";
@@ -11,12 +12,12 @@ interface ProductReviewsHeaderProps {
   onSortChange: (value: "latest" | "oldest" | "highest") => void;
   isLoading?: boolean;
   onWriteReview: () => void;
-}
+};
 
 /**
  * ProductReviewsHeader - Reviews tab heading and controls.
  */
-export const ProductReviewsHeader: React.FC<ProductReviewsHeaderProps> = ({
+export const ProductReviewsHeader = ({
   reviewCount,
   selectedRating,
   selectedSort,
@@ -24,9 +25,11 @@ export const ProductReviewsHeader: React.FC<ProductReviewsHeaderProps> = ({
   onSortChange,
   isLoading = false,
   onWriteReview,
-}) => {
+  className,
+  ...rest
+}: ProductReviewsHeaderProps) => {
   return (
-    <div className="reviews__header">
+    <div className={clsx("reviews__header", className)} {...rest}>
       <Heading as="h2" className="reviews__title">
         All Reviews
         <span>

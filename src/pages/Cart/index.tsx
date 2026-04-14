@@ -14,9 +14,9 @@ import { useToast } from "@/hooks/useToast";
 import { ERROR_MESSAGES } from "@/const/errorMessages";
 import "./index.scss";
 
-export type ProcessingAction = "idle" | "checkout" | "coupon";
+type ProcessingAction = "idle" | "checkout" | "coupon";
 
-const Cart: React.FC = () => {
+const Cart = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const {

@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
@@ -11,10 +12,9 @@ import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 import "./index.scss";
 import { EmptyState } from "@/components/molecules/EmptyState";
 
-type HomeProductSectionProps = {
+type HomeProductSectionProps = HTMLAttributes<HTMLElement> & {
   title: string;
   productsList: Product[];
-  className?: string;
   withTopBorder?: boolean;
   isLoading?: boolean;
   isEmpty?: boolean;
@@ -26,7 +26,7 @@ type HomeProductSectionProps = {
   skeletonCount?: number;
 };
 
-export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
+export const HomeProductSection = ({
   title,
   productsList,
   className,
@@ -39,7 +39,8 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
   onRetry,
   emptyMessage = "No products available in this section.",
   skeletonCount = 4,
-}) => {
+  ...rest
+}: HomeProductSectionProps) => {
   const sectionSlug = title.toLowerCase().replace(/\s+/g, "-");
   const hasRetryState = Boolean(error) || isRetrying;
 
@@ -70,6 +71,7 @@ export const HomeProductSection: React.FC<HomeProductSectionProps> = ({
         className,
       )}
       aria-labelledby={`home-${sectionSlug}-title`}
+      {...rest}
     >
       <Heading
         as="h2"

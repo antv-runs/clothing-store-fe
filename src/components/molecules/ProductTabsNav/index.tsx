@@ -1,12 +1,13 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import "./index.scss";
+import clsx from "clsx";
 
 type TabKey = "tc-details" | "tc-reviews" | "tc-faqs";
 
-interface ProductTabsNavProps {
+type ProductTabsNavProps = HTMLAttributes<HTMLDivElement> & {
   activeTab: TabKey;
   onTabSelect: (tab: TabKey) => void;
-}
+};
 
 const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "tc-details", label: "Product Details" },
@@ -17,12 +18,14 @@ const tabs: Array<{ key: TabKey; label: string }> = [
 /**
  * ProductTabsNav organism fragment - Tabs navigation for product tabbed content.
  */
-export const ProductTabsNav: React.FC<ProductTabsNavProps> = ({
+export const ProductTabsNav = ({
   activeTab,
   onTabSelect,
-}) => {
+  className,
+  ...rest
+}: ProductTabsNavProps) => {
   return (
-    <div className="tabs" role="tablist" aria-label="Product tabs">
+    <div className={clsx("tabs", className)} role="tablist" aria-label="Product tabs" {...rest}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.key;
         return (

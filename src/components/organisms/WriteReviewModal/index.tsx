@@ -1,6 +1,8 @@
+import type { HTMLAttributes } from "react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import clsx from "clsx";
 import "./index.scss";
 import { Button } from "@/components/atoms/Button";
 import { IconButton } from "@/components/atoms/IconButton";
@@ -18,12 +20,12 @@ type ReviewSubmission = {
   stars: number;
 };
 
-interface WriteReviewModalProps {
+type WriteReviewModalProps = Omit<HTMLAttributes<HTMLDivElement>, "onSubmit"> & {
   isOpen: boolean;
   isSubmitting?: boolean;
   onClose: () => void;
   onSubmit: (values: ReviewSubmission) => void | Promise<void>;
-}
+};
 
 /**
  * WriteReviewModal - Static review modal markup.
@@ -34,6 +36,8 @@ export const WriteReviewModal = ({
   isSubmitting = false,
   onClose,
   onSubmit,
+  className,
+  ...rest
 }: WriteReviewModalProps) => {
   const { control, handleSubmit, reset } = useForm<ReviewModalFormValues>({
     resolver: zodResolver(reviewModalSchema),
@@ -67,11 +71,12 @@ export const WriteReviewModal = ({
 
   return (
     <div
-      className={`review-modal${isOpen ? " review-modal--open" : ""}`}
+      className={clsx("review-modal", isOpen && "review-modal--open", className)}
       aria-hidden={!isOpen}
       role="dialog"
       aria-modal="true"
       aria-labelledby="write-review-title"
+      {...rest}
     >
       <div className="review-modal__backdrop" onClick={handleClose}></div>
       <div className="review-modal__dialog" role="document">

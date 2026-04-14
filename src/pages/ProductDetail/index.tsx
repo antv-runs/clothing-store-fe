@@ -26,7 +26,7 @@ import { UI_TEXT } from "@/const/uiText";
 import { TOAST_DEFAULT_DURATION, DEFAULT_QUANTITY } from "@/const/ui";
 import { normalizeQuantity } from "@/utils/quantity";
 
-const ProductDetail: React.FC = () => {
+const ProductDetail = () => {
   const { id } = useParams();
   const normalizedRouteId = String(id || "").trim();
 

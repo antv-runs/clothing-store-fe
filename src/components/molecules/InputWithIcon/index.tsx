@@ -1,16 +1,16 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, HTMLAttributes } from "react";
 import clsx from "clsx";
 import { Icon } from "@/components/atoms/Icon";
 import { Input } from "@/components/atoms/Input";
+import { toCssDimension } from "@/utils/css";
 import "./index.scss";
 
 type IconPosition = "outside-start" | "inline-start";
 
-type InputWithIconProps = {
+type InputWithIconProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   iconName: string;
   placeholder?: string;
   type?: "text" | "email" | "password" | "search" | "tel" | "url";
-  className?: string;
   inputClassName?: string;
   iconClassName?: string;
   ariaLabel?: string;
@@ -21,14 +21,6 @@ type InputWithIconProps = {
   value?: string | number | readonly string[];
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
-
-function toCssDimension(value?: number | string) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  return typeof value === "number" ? `${value}px` : value;
-}
 
 export const InputWithIcon = ({
   iconName,
@@ -44,10 +36,13 @@ export const InputWithIcon = ({
   iconHeight = 15.75,
   value,
   onChange,
+  style,
+  ...rest
 }: InputWithIconProps) => {
-  const style = {
+  const rootStyle = {
     "--input-with-icon-width": toCssDimension(iconWidth),
     "--input-with-icon-height": toCssDimension(iconHeight),
+    ...style
   } as CSSProperties;
 
   return (
@@ -57,7 +52,8 @@ export const InputWithIcon = ({
         `input-with-icon--${iconPosition}`,
         className,
       )}
-      style={style}
+      style={rootStyle}
+      {...rest}
     >
       <figure className={clsx("input-with-icon__icon", iconClassName)}>
         <Icon svgName={iconName} width={iconWidth} height={iconHeight} />

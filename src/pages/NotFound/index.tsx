@@ -6,7 +6,7 @@ import { ROUTES } from "@/routes/paths";
 import { UI_TEXT } from "@/const/uiText";
 import "./index.scss";
 
-const NotFound: React.FC = () => {
+const NotFound = () => {
   const navigate = useNavigate();
 
   const handleGoHome = () => {

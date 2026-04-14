@@ -1,5 +1,4 @@
 import type { ImgHTMLAttributes } from "react";
-import "./index.scss";
 
 type BrandImageProps = {
   src: string;

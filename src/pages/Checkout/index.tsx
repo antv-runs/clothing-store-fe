@@ -27,7 +27,7 @@ import { TOAST_DEFAULT_DURATION } from "@/const/ui";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
-const Checkout: React.FC = () => {
+const Checkout = () => {
   const { showToast } = useToast();
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);

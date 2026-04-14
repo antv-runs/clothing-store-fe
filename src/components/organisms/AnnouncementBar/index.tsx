@@ -1,15 +1,17 @@
+import type { HTMLAttributes } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Text } from "@/components/atoms/Text";
 import { TextLink } from "@/components/atoms/TextLink";
+import clsx from "clsx";
 import "./index.scss";
 
-type AnnouncementBarProps = {
+type AnnouncementBarProps = HTMLAttributes<HTMLDivElement> & {
   onClose?: () => void;
 };
 
-export const AnnouncementBar: React.FC<AnnouncementBarProps> = ({ onClose }) => {
+export const AnnouncementBar = ({ onClose, className, ...rest }: AnnouncementBarProps) => {
   return (
-    <div className="announcement-bar">
+    <div className={clsx("announcement-bar", className)} {...rest}>
       <div className="announcement-bar__container">
         <Text as="p" className="announcement-bar__text">
           Sign up and get 20% off to your first order.{" "}

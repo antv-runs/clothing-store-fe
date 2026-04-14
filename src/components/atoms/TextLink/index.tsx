@@ -1,6 +1,5 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import clsx from "clsx";
-import "./index.scss";
 
 type TextLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   href: string;

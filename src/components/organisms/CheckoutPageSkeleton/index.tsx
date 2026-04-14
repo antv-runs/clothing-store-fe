@@ -1,9 +1,12 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { Skeleton } from "@/components/atoms/Skeleton";
+import clsx from "clsx";
 
-export const CheckoutPageSkeleton: React.FC = () => {
+type CheckoutPageSkeletonProps = HTMLAttributes<HTMLDivElement>;
+
+export const CheckoutPageSkeleton = ({ className, ...rest }: CheckoutPageSkeletonProps) => {
   return (
-    <div className="checkout-page__layout" aria-hidden="true">
+    <div className={clsx("checkout-page__layout", className)} aria-hidden="true" {...rest}>
       <div className="checkout-form">
         <div className="checkout-form__grid">
           <div className="checkout-form__field">

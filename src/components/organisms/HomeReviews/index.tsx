@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from "react";
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Heading } from "@/components/atoms/Heading";
@@ -7,26 +8,29 @@ import { ListStateWrapper } from "@/components/molecules/ListStateWrapper";
 import type { ListErrorKind } from "@/types/listState";
 import type { Review } from "@/types/review";
 import { getFirstItemScrollStep } from "@/utils/carousel";
+import clsx from "clsx";
 import "./index.scss";
 import { EmptyState } from "@/components/molecules/EmptyState";
 
-interface HomeReviewsProps {
+type HomeReviewsProps = HTMLAttributes<HTMLElement> & {
   reviews: Review[];
   isLoading: boolean;
   isRetrying?: boolean;
   error?: string | null;
   errorKind?: ListErrorKind | null;
   onRetry?: () => void;
-}
+};
 
-export const HomeReviews: React.FC<HomeReviewsProps> = ({
+export const HomeReviews = ({
   reviews,
   isLoading,
   isRetrying = false,
   error = null,
   errorKind,
   onRetry,
-}) => {
+  className,
+  ...rest
+}: HomeReviewsProps) => {
   const reviewsTrackRef = useRef<HTMLUListElement | null>(null);
   const [hasOverflow, setHasOverflow] = useState(false);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -84,7 +88,7 @@ export const HomeReviews: React.FC<HomeReviewsProps> = ({
   const loadingContent = <HomeReviewsSkeleton />;
 
   return (
-    <section className="home-reviews" aria-labelledby="home-reviews-title">
+    <section className={clsx("home-reviews", className)} aria-labelledby="home-reviews-title" {...rest}>
       <div className="home-reviews__head">
         <Heading as="h2" id="home-reviews-title">
           OUR HAPPY CUSTOMERS

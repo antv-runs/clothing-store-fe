@@ -1,26 +1,29 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, HTMLAttributes } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
+import clsx from "clsx";
 import "./index.scss";
 
 type HeaderMenuToggleProps = Omit<ComponentProps<typeof IconButton>, "type">;
 
-export const HeaderMenuToggle: React.FC<HeaderMenuToggleProps> = (props) => {
+export const HeaderMenuToggle = (props: HeaderMenuToggleProps) => {
   return <IconButton type="button" {...props} />;
 };
 
-export interface HeaderActionsProps {
+export type HeaderActionsProps = HTMLAttributes<HTMLDivElement> & {
   totalQuantity: number;
   onCartClick?: () => void;
   onProfileClick?: () => void;
-}
+};
 
-export const HeaderActions: React.FC<HeaderActionsProps> = ({
+export const HeaderActions = ({
   totalQuantity,
   onCartClick,
   onProfileClick,
-}) => {
+  className,
+  ...rest
+}: HeaderActionsProps) => {
   return (
-    <div className="header-icon">
+    <div className={clsx("header-icon", className)} {...rest}>
       <div className="header-icon__cart-wrapper">
         <IconButton
           className="header-icon__cart"

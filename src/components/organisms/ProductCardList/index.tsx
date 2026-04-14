@@ -1,4 +1,5 @@
-import React, { useRef, useCallback } from "react";
+import type { HTMLAttributes } from "react";
+import { useRef, useCallback } from "react";
 import { ProductCard } from "@/components/molecules/ProductCard";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { Slider } from "@/components/molecules/Slider";
@@ -6,9 +7,10 @@ import { SliderList } from "@/components/molecules/Slider/SliderList";
 import { useInfiniteLoop } from "@/hooks/useInfiniteLoop";
 import type { Product } from "@/types/product";
 import { getTrackGap } from "@/utils/carousel";
+import clsx from "clsx";
 import "./index.scss";
 
-interface ProductCardListProps {
+type ProductCardListProps = Omit<HTMLAttributes<HTMLDivElement>, "onScroll"> & {
   products: Product[];
   formatPrice: (amount: number, currency?: string) => string;
   showNavigation?: boolean;
@@ -19,13 +21,13 @@ interface ProductCardListProps {
   imageError?: Set<string>;
   onImageLoad?: (productId: string) => void;
   onImageError?: (productId: string) => void;
-}
+};
 
-interface CarouselItem extends Product {
+type CarouselItem = Product & {
   isClone?: boolean;
   originalId?: string;
   clonePosition?: "head" | "tail";
-}
+};
 
 /**
  * ProductCardList — data orchestrator for the product carousel.
@@ -34,7 +36,7 @@ interface CarouselItem extends Product {
  * interaction to <Slider>. Infinite-loop normalization is handled by
  * useInfiniteLoop and passed to Slider via the `onScroll` prop.
  */
-export const ProductCardList: React.FC<ProductCardListProps> = ({
+export const ProductCardList = ({
   products,
   formatPrice,
   showNavigation = false,
@@ -45,7 +47,9 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
   imageError = new Set(),
   onImageLoad,
   onImageError,
-}) => {
+  className,
+  ...rest
+}: ProductCardListProps) => {
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLUListElement>(null);
 
@@ -118,7 +122,8 @@ export const ProductCardList: React.FC<ProductCardListProps> = ({
       loading={loading}
       onScroll={showNavigation ? handleSliderScroll : undefined}
       forceNavigationEnabled={showNavigation && cloneCount > 0}
-      className="product-card-list"
+      className={clsx("product-card-list", className)}
+      {...rest}
       viewportClassName="product-card-list__viewport"
       navClassName="product-card-list__nav"
       prevButtonClassName="product-card-list__nav--prev"

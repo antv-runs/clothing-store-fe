@@ -1,28 +1,31 @@
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 import { IconButton } from "@/components/atoms/IconButton";
 import "./index.scss";
 import clsx from "clsx";
 
-export type ToastVariant = "success" | "error" | "info";
+import type { ToastVariant } from "@/types/toast";
 
-export interface ToastProps {
+export type ToastProps = HTMLAttributes<HTMLDivElement> & {
   id: string;
   message: ReactNode;
   variant?: ToastVariant;
   onClose?: (id: string) => void;
-}
+};
 
 export const Toast = ({
   id,
   message,
   variant = "info",
   onClose,
+  className,
+  ...rest
 }: ToastProps) => {
   return (
     <div
-      className={clsx("toast", `toast--${variant}`)}
+      className={clsx("toast", `toast--${variant}`, className)}
       role="status"
       aria-live="polite"
+      {...rest}
     >
       <div className="toast__content">
         <p>{message}</p>

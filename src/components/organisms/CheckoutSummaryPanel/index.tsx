@@ -1,17 +1,18 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { CheckoutItemRow } from "@/components/organisms/CheckoutItemRow";
 import { UI_TEXT } from "@/const/uiText";
 import type { Product } from "@/types/product";
+import clsx from "clsx";
 import "./index.scss";
 
-interface CartSummary {
+type CartSummary = {
   subtotal: number;
   discount: number;
   delivery: number;
   total: number;
   discountPercent?: number;
-}
+};
 
 type CheckoutItemType = Product & {
   quantity: number;
@@ -19,22 +20,24 @@ type CheckoutItemType = Product & {
   size: string | null;
 };
 
-interface CheckoutSummaryPanelProps {
+type CheckoutSummaryPanelProps = HTMLAttributes<HTMLElement> & {
   items: CheckoutItemType[];
   summary: CartSummary;
   formatPrice: (amount: number, currency?: string) => string;
-}
+};
 
 /**
  * CheckoutSummaryPanel - Read-only cart summary for the checkout page.
  */
-export const CheckoutSummaryPanel: React.FC<CheckoutSummaryPanelProps> = ({
+export const CheckoutSummaryPanel = ({
   items,
   summary,
   formatPrice,
-}) => {
+  className,
+  ...rest
+}: CheckoutSummaryPanelProps) => {
   return (
-    <aside className="checkout-summary" aria-label={UI_TEXT.ORDER_SUMMARY}>
+    <aside className={clsx("checkout-summary", className)} aria-label={UI_TEXT.ORDER_SUMMARY} {...rest}>
       <Heading as="h2" className="checkout-summary__title">
         {UI_TEXT.ORDER_SUMMARY}
       </Heading>
