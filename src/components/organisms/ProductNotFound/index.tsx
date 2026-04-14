@@ -1,9 +1,9 @@
-import { Text } from "@/components/atoms/Text";
+﻿import { Text } from "@/components/atoms/Text";
 import { Button } from "@/components/atoms/Button";
 import "./index.scss";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
-import { UI_TEXT } from "@/const/uiText";
+import { UI_TEXT } from "@/const/messages";
 
 type ProductNotFoundProps = {
   message?: string;
@@ -39,3 +39,4 @@ export const ProductNotFound = ({
     </div>
   );
 };
+

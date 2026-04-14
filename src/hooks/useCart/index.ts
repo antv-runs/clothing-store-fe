@@ -1,5 +1,5 @@
-import { useSyncExternalStore, useCallback } from "react";
-import { cartStore } from "@/utils/cartStore";
+﻿import { useSyncExternalStore, useCallback } from "react";
+import { cartStore } from "@/utils/cart";
 
 export const useCart = () => {
   const items = useSyncExternalStore(cartStore.subscribe, cartStore.getSnapshot);
@@ -25,3 +25,4 @@ export const useCart = () => {
     clearCart,
   };
 };
+

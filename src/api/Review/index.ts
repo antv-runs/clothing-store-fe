@@ -1,4 +1,4 @@
-import { get, post } from "@/lib/axios";
+﻿import { get, post } from "@/lib/axios";
 import type { ApiResponse, PaginatedApiResponse } from "@/types/pagination";
 import type { ProductReviewsResult, Review } from "@/types/review";
 import type {
@@ -9,7 +9,7 @@ import type {
 import {
   mapApiReviewToReview,
   mapApiReviewsToReviews,
-} from "@/utils/reviewMapper";
+} from "@/utils/mappers/reviewMapper";
 import {
   unwrapApiResponse,
   unwrapPaginatedResponse,
@@ -67,3 +67,4 @@ export async function submitReview(
   const apiReview = unwrapApiResponse(res, "Failed to submit review");
   return mapApiReviewToReview(apiReview, normalizedProductId);
 }
+

@@ -1,14 +1,21 @@
-import React, { type HTMLAttributes } from "react";
-import { MAX_RATING } from "@/const/ui";
+﻿import { useId, type CSSProperties } from "react";
+import { MAX_RATING } from "@/const/config";
+import { clamp, toNumber } from "@/utils/number";
+import "./index.scss";
 
-type StarProps = HTMLAttributes<HTMLSpanElement> & {
-  rating: number;
+type StarProps = {
+  rating: number | string;
   showEmpty?: boolean;
   maxStars?: number;
   size?: number | string;
   halfStarMode?: "path" | "clip";
+  className?: string;
 };
 
+/**
+ * Star atom - Strict implementation for rendering visual star ratings.
+ * Uses SVG paths for precise control over partial star fills.
+ */
 export const Star = ({
   rating,
   className = "",
@@ -17,12 +24,9 @@ export const Star = ({
   size,
   halfStarMode = "path",
 }: StarProps) => {
-  const clipIdPrefix = React.useId();
-  const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || MAX_RATING));
-  const safeRating = Math.max(
-    0,
-    Math.min(normalizedMaxStars, Number(rating) || 0),
-  );
+  const clipIdPrefix = useId();
+  const normalizedMaxStars = Math.max(1, Math.floor(toNumber(maxStars, MAX_RATING)));
+  const safeRating = clamp(toNumber(rating), 0, normalizedMaxStars);
 
   const displayRating = Math.round(safeRating * 2) / 2;
   const fullStars = Math.floor(displayRating);
@@ -33,7 +37,7 @@ export const Star = ({
     size !== undefined
       ? ({
           "--star-size": typeof size === "number" ? `${size}px` : size,
-        } as React.CSSProperties)
+        } as CSSProperties)
       : undefined;
 
   const fullPath =
@@ -99,3 +103,4 @@ export const Star = ({
     </>
   );
 };
+

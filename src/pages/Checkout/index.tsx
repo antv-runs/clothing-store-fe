@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "@/api/Order";
 import { useToast } from "@/hooks/useToast";
@@ -15,15 +15,15 @@ import { RetryState } from "@/components/molecules/RetryState";
 import { useCartRows } from "@/hooks/useCartRows";
 import { CheckoutSummaryPanel } from "@/components/organisms/CheckoutSummaryPanel";
 import { CheckoutForm } from "@/components/organisms/CheckoutForm";
-import { mapCartToOrderRequest } from "@/utils/orderMapper";
+import { mapCartToOrderRequest } from "@/utils/mappers/orderMapper";
 import { ROUTES } from "@/routes/paths";
 import { formatPrice } from "@/utils/formatters";
 import type { CreateOrderRequest } from "@/types/api/order";
 import type { CheckoutFormValues } from "@/components/organisms/CheckoutForm/index.schema";
 import "./index.scss";
-import { ERROR_MESSAGES } from "@/const/errorMessages";
-import { UI_TEXT } from "@/const/uiText";
-import { TOAST_DEFAULT_DURATION } from "@/const/ui";
+import { ERROR_MESSAGES } from "@/const/messages";
+import { UI_TEXT } from "@/const/messages";
+import { TOAST_DEFAULT_DURATION } from "@/const/config";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -239,3 +239,4 @@ const Checkout = () => {
 };
 
 export default Checkout;
+

@@ -1,8 +1,8 @@
-import type { HTMLAttributes } from "react";
+﻿import type { HTMLAttributes } from "react";
 import { Rating } from "@/components/atoms/Rating";
 import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
-import { MAX_RATING } from "@/const/ui";
+import { MAX_RATING } from "@/const/config";
 import clsx from "clsx";
 import "./index.scss";
 
@@ -54,3 +54,4 @@ export const RatingDisplay = ({
     </div>
   );
 };
+

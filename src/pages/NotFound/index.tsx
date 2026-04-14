@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
+﻿import { useNavigate } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
 import { ROUTES } from "@/routes/paths";
-import { UI_TEXT } from "@/const/uiText";
+import { UI_TEXT } from "@/const/messages";
 import "./index.scss";
 
 const NotFound = () => {
@@ -64,3 +64,4 @@ const NotFound = () => {
 };
 
 export default NotFound;
+

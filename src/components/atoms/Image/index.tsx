@@ -1,12 +1,9 @@
-import type { CSSProperties, ImgHTMLAttributes, ReactEventHandler } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties, type ReactEventHandler } from "react";
 import clsx from "clsx";
 import { toCssDimension } from "@/utils/css";
 import "./index.scss";
 
-type BaseImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "width" | "height" | "src" | "alt" | "onLoad" | "onError" | "onClick">;
-
-type ImageProps = BaseImageProps & {
+type ImageProps = {
   src?: string;
   fallbackSrc?: string;
   alt: string;
@@ -26,11 +23,16 @@ type ImageProps = BaseImageProps & {
   loadedClassName?: string;
   errorClassName?: string;
   renderWrapper?: boolean;
+  id?: string;
   onLoad?: ReactEventHandler<HTMLImageElement>;
   onError?: ReactEventHandler<HTMLImageElement>;
   onClick?: ReactEventHandler<HTMLImageElement>;
 };
 
+/**
+ * Image atom - Strict implementation with loading and error states.
+ * Supports aspect ratio and placeholder overlays.
+ */
 export const Image = ({
   src,
   fallbackSrc,
@@ -51,10 +53,10 @@ export const Image = ({
   loadedClassName = "is-loaded",
   errorClassName = "is-error",
   renderWrapper = true,
+  id,
   onLoad,
   onError,
   onClick,
-  ...rest
 }: ImageProps) => {
   const [imgSrc, setImgSrc] = useState<string | undefined>(src);
   const [internalIsLoaded, setInternalIsLoaded] = useState(false);
@@ -126,6 +128,7 @@ export const Image = ({
   if (!renderWrapper) {
     return (
       <img
+        id={id}
         className={resolvedImgClassName}
         src={imgSrc || ""}
         alt={alt}
@@ -135,7 +138,6 @@ export const Image = ({
         onLoad={handleLoad}
         onClick={onClick}
         onError={handleError}
-        {...rest}
       />
     );
   }
@@ -148,7 +150,7 @@ export const Image = ({
   );
 
   return (
-    <div className={resolvedWrapperClassName} style={wrapperStyle}>
+    <div id={id} className={resolvedWrapperClassName} style={wrapperStyle}>
       <img
         className={resolvedImgClassName}
         src={imgSrc || ""}
@@ -159,7 +161,6 @@ export const Image = ({
         onLoad={handleLoad}
         onClick={onClick}
         onError={handleError}
-        {...rest}
       />
       {showPlaceholder ? (
         <span className={resolvedPlaceholderClassName} aria-hidden="true" />

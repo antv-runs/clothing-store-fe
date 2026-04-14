@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from "react";
+﻿import type { HTMLAttributes } from "react";
 import { useState } from "react";
 import clsx from "clsx";
 import { Heading } from "@/components/atoms/Heading";
@@ -6,8 +6,8 @@ import { Button } from "@/components/atoms/Button";
 import "./index.scss";
 import { Text } from "@/components/atoms/Text";
 import { InputWithIcon } from "@/components/molecules/InputWithIcon";
-import { ERROR_MESSAGES } from "@/const/errorMessages";
-import { UI_TEXT } from "@/const/uiText";
+import { ERROR_MESSAGES } from "@/const/messages";
+import { UI_TEXT } from "@/const/messages";
 
 type CartSummary = {
   subtotal: number;
@@ -143,3 +143,4 @@ export const CartSummaryPanel = ({
     </aside>
   );
 };
+

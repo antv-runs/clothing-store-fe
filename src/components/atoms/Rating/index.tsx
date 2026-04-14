@@ -1,18 +1,24 @@
-import type { HTMLAttributes } from "react";
-import { MAX_RATING } from "@/const/ui";
+﻿import { MAX_RATING } from "@/const/config";
+import { clamp, toNumber } from "@/utils/number";
 import clsx from "clsx";
 
-type RatingProps = HTMLAttributes<HTMLSpanElement> & {
-  rating: number;
+type RatingProps = {
+  rating: number | string;
+  className?: string;
+  id?: string;
 };
 
-export const Rating = ({ rating, className, ...rest }: RatingProps) => {
-  const safeRating = Math.max(0, Math.min(MAX_RATING, Number(rating) || 0));
+/**
+ * Rating atom - Strict implementation for displaying a numerical rating.
+ */
+export const Rating = ({ rating, className, id }: RatingProps) => {
+  const safeRating = clamp(toNumber(rating), 0, MAX_RATING);
   const displayValue = safeRating.toFixed(1);
 
   return (
-    <span className={clsx("rating", className)} {...rest}>
+    <span id={id} className={clsx("rating", className)}>
       {displayValue}/<span>{MAX_RATING}</span>
     </span>
   );
 };
+

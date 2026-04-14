@@ -1,12 +1,12 @@
-import clsx from "clsx";
+﻿import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
 import { Image } from "@/components/atoms/Image";
 import { Star } from "@/components/atoms/Star";
 import { Text } from "@/components/atoms/Text";
 import { ProductPrice } from "@/components/molecules/ProductPrice";
-import { DEFAULT_CURRENCY } from "@/const/pricing";
-import { MAX_RATING } from "@/const/ui";
+import { DEFAULT_CURRENCY } from "@/const/config";
+import { MAX_RATING } from "@/const/config";
 import { buildProductDetailPath } from "@/routes/paths";
 import "./index.scss";
 
@@ -148,3 +148,4 @@ export const ProductCard = ({
     </article>
   );
 };
+

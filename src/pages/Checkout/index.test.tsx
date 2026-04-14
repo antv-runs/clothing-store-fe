@@ -1,8 +1,8 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+﻿import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import Checkout from "@/pages/Checkout";
 import { createOrder } from "@/api/Order";
-import { readStoredCartRows, writeStoredCartRows } from "@/utils/cartStorage";
+import { readStoredCartRows, writeStoredCartRows } from "@/utils/cart";
 import { ApiError } from "@/utils/apiError";
 import { store } from "@/store";
 import * as toastHook from "@/hooks/useToast";
@@ -15,7 +15,7 @@ jest.mock("@/api/Order", () => ({
   createOrder: jest.fn(),
 }));
 
-jest.mock("@/utils/cartStorage", () => ({
+jest.mock("@/utils/cart", () => ({
   readStoredCartRows: jest.fn(),
   writeStoredCartRows: jest.fn(),
 }));
@@ -295,3 +295,4 @@ describe("Checkout", () => {
     });
   });
 });
+

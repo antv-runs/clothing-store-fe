@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+﻿import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
   addToast,
@@ -6,7 +6,7 @@ import {
 } from "@/reducers/toastReducer";
 import type { AppDispatch } from "@/store";
 import type { ToastControls, ToastData } from "@/types/toast";
-import { TOAST_DEFAULT_DURATION } from "@/const/ui";
+import { TOAST_DEFAULT_DURATION } from "@/const/config";
 
 export const useToast = (): ToastControls => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,3 +37,4 @@ export const useToast = (): ToastControls => {
 
   return { showToast, dismissToast };
 };
+

@@ -1,5 +1,3 @@
-import type { ImgHTMLAttributes } from "react";
-
 type BrandImageProps = {
   src: string;
   alt: string;
@@ -7,8 +5,12 @@ type BrandImageProps = {
   imageClassName?: string;
   width?: number | string;
   height?: number | string;
-} & Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "width" | "height" | "className">;
+  id?: string;
+};
 
+/**
+ * BrandImage atom - Strict implementation for brand logos and partner images.
+ */
 export const BrandImage = ({
   src,
   alt,
@@ -16,17 +18,16 @@ export const BrandImage = ({
   imageClassName,
   width,
   height,
-  ...imgProps
+  id,
 }: BrandImageProps) => {
   return (
-    <figure className={className}>
+    <figure id={id} className={className}>
       <img
         src={src}
         alt={alt}
         className={imageClassName}
         width={width}
         height={height}
-        {...imgProps}
       />
     </figure>
   );

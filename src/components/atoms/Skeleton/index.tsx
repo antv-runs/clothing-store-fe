@@ -1,16 +1,22 @@
-import type { CSSProperties, HTMLAttributes } from "react";
+import type { CSSProperties } from "react";
 import clsx from "clsx";
 import "./index.scss";
 
 export type SkeletonVariant = "rect" | "circle" | "line";
 
-type SkeletonProps = HTMLAttributes<HTMLDivElement> & {
+type SkeletonProps = {
   variant?: SkeletonVariant;
   width?: string | number;
   height?: string | number;
   radius?: string | number;
+  className?: string;
+  style?: CSSProperties;
+  id?: string;
 };
 
+/**
+ * Skeleton atom - Strict implementation for loading placeholders.
+ */
 export const Skeleton = ({
   variant = "rect",
   width,
@@ -18,7 +24,7 @@ export const Skeleton = ({
   radius,
   className,
   style,
-  ...rest
+  id,
 }: SkeletonProps) => {
   const skeletonStyle: CSSProperties = { ...style };
 
@@ -36,11 +42,11 @@ export const Skeleton = ({
 
   return (
     <div
+      id={id}
       className={clsx("skeleton", `skeleton--${variant}`, className)}
       style={skeletonStyle}
       role="presentation"
       aria-hidden="true"
-      {...rest}
     />
   );
 };

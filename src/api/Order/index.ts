@@ -1,5 +1,5 @@
-import { post } from "@/lib/axios";
-import { mapApiOrderToOrder } from "@/utils/orderMapper";
+﻿import { post } from "@/lib/axios";
+import { mapApiOrderToOrder } from "@/utils/mappers/orderMapper";
 import { unwrapApiResponse } from "@/utils/apiHelpers";
 import type {
   ApiOrder,
@@ -22,3 +22,4 @@ export async function createOrder(payload: CreateOrderRequest): Promise<Order> {
   );
   return mapApiOrderToOrder(orderData);
 }
+

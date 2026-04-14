@@ -1,20 +1,23 @@
-import type { HTMLAttributes } from "react";
 import clsx from "clsx";
 import "./index.scss";
 
-type SpinnerProps = HTMLAttributes<HTMLDivElement> & {
-  className?: string; // explicitly listed although part of HTMLAttributes
+type SpinnerProps = {
+  className?: string;
+  id?: string;
 };
 
-export const Spinner = ({ className, ...rest }: SpinnerProps) => {
+/**
+ * Spinner atom - Strict implementation for loading indicators.
+ */
+export const Spinner = ({ className, id }: SpinnerProps) => {
   return (
     <div
+      id={id}
       className={clsx("spinner", className)}
       role="status"
       aria-live="polite"
-      {...rest}
     >
-      <div className="spinner__circle"></div>
+      <div className="spinner__circle" />
     </div>
   );
 };

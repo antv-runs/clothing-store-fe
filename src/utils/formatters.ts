@@ -1,8 +1,8 @@
-/**
+﻿/**
  * Shared utility functions for formatting and data manipulation
  */
 
-import { DEFAULT_CURRENCY } from "@/const/pricing";
+import { DEFAULT_CURRENCY } from "@/const/config";
 
 export function formatPrice(amount: number, currency = DEFAULT_CURRENCY): string {
   return new Intl.NumberFormat("en-US", {
@@ -34,3 +34,4 @@ export function normalizeId(a: string, b: string): boolean {
   const nb = Number(b);
   return Number.isFinite(na) && na === nb;
 }
+

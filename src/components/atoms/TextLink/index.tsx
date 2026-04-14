@@ -1,12 +1,14 @@
-import { Link, type LinkProps } from "react-router-dom";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import clsx from "clsx";
 
-type TextLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> &
-  Partial<LinkProps> & {
-    href: string;
-    children: ReactNode;
-  };
+type TextLinkProps = {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  target?: string;
+  rel?: string;
+};
 
 /**
  * Check if a URL is internal (client-side route) or external
@@ -19,36 +21,38 @@ const isInternal = (href: string) => {
 /**
  * TextLink component: Smart link that switches between 
  * React Router's <Link> for internal paths and standard <a> for external ones.
+ * 
+ * Strict implementation: only allows essential navigation and styling props.
  */
 export const TextLink = ({
   href,
   children,
   className,
-  to: _to, // Omit 'to' from rest to prevent duplication with href
-  ...rest
+  target,
+  rel,
 }: TextLinkProps) => {
   const internal = isInternal(href);
+  const combinedClassName = clsx("text-link", className);
 
   if (internal) {
-    // For internal links, use React Router <Link>
-    // Note: We map 'href' to 'to' and omit 'href' from rest
     return (
       <Link
         to={href}
-        className={clsx("text-link", className)}
-        {...(rest as LinkProps)}
+        className={combinedClassName}
+        target={target}
+        rel={rel}
       >
         {children}
       </Link>
     );
   }
 
-  // Fallback to standard <a> for external links, mailto, tel, etc.
   return (
     <a
       href={href}
-      className={clsx("text-link", className)}
-      {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
+      className={combinedClassName}
+      target={target}
+      rel={rel}
     >
       {children}
     </a>

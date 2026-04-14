@@ -1,4 +1,4 @@
-import { logger } from "@/utils/logger";
+﻿import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CartRow } from "@/types/cart";
 import type { Product } from "@/types/product";
@@ -17,7 +17,7 @@ import {
   setProductError,
   selectProductsMap,
 } from "@/reducers/productReducer";
-import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { ERROR_MESSAGES } from "@/const/messages";
 
 type CartItem = Product & {
   quantity: number;
@@ -192,7 +192,7 @@ export const useCartRows = (): UseCartRowsResult => {
     };
   }, [cartRows, products, retryTrigger, dispatch]);
 
-  // ── Action dispatchers ──────────────────────────────────────────────
+  // 笏笏 Action dispatchers 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
 
   const getCartRows = useCallback(() => {
     return cartRows;
@@ -232,7 +232,7 @@ export const useCartRows = (): UseCartRowsResult => {
     cartClearCart();
   }, [cartClearCart]);
 
-  // ── Derived data ────────────────────────────────────────────────────
+  // 笏笏 Derived data 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
 
   const cartItems = useMemo(() => {
     return cartRows
@@ -278,7 +278,7 @@ export const useCartRows = (): UseCartRowsResult => {
     return { subtotal, discount, discountPercent, delivery, total };
   }, [cartItems]);
 
-  // ── Minimum skeleton duration ───────────────────────────────────────
+  // 笏笏 Minimum skeleton duration 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
   // When the cart resolves instantly (e.g. empty cart, synchronous
   // bootstrap), the skeleton would flash for a single frame. A short
   // minimum duration keeps it visible just long enough for a smooth UX
@@ -295,7 +295,7 @@ export const useCartRows = (): UseCartRowsResult => {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Derived booleans from phase ─────────────────────────────────────
+  // 笏笏 Derived booleans from phase 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
   // Gate the phase so consumers see 'bootstrapping' until the minimum
   // skeleton duration has elapsed. After that, the real phase flows through.
 
@@ -347,3 +347,4 @@ export const useCartRows = (): UseCartRowsResult => {
     clearCart,
   };
 };
+

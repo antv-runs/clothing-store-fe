@@ -1,6 +1,6 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 import { VALIDATION_LIMITS } from "@/const/validationLimits";
-import { VALIDATION_MESSAGES } from "@/const/validationMessages";
+import { VALIDATION_MESSAGES } from "@/const/messages";
 
 /**
  * Zod schema for the write-review modal form.

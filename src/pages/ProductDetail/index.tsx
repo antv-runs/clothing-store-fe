@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
 import { ProductGallery } from "@/components/organisms/ProductGallery";
@@ -22,10 +22,10 @@ import { Text } from "@/components/atoms/Text";
 import { ROUTES } from "@/routes/paths";
 import "./index.scss";
 
-import { ERROR_MESSAGES } from "@/const/errorMessages";
-import { UI_TEXT } from "@/const/uiText";
-import { TOAST_DEFAULT_DURATION, DEFAULT_QUANTITY } from "@/const/ui";
-import { normalizeQuantity } from "@/utils/quantity";
+import { ERROR_MESSAGES } from "@/const/messages";
+import { UI_TEXT } from "@/const/messages";
+import { TOAST_DEFAULT_DURATION, DEFAULT_QUANTITY } from "@/const/config";
+import { normalizeQuantity } from "@/utils/number";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -392,3 +392,4 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+

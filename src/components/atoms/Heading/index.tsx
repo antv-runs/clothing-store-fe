@@ -1,26 +1,36 @@
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
 import clsx from "clsx";
 import "./index.scss";
 
-type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+export type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
+type HeadingProps = {
   as?: HeadingTag;
-  children?: ReactNode;
+  children: ReactNode;
+  className?: string;
   noOfLines?: number;
+  id?: string;
+  hidden?: boolean;
+  "aria-live"?: "polite" | "assertive" | "off";
+  "aria-hidden"?: boolean | "false" | "true";
+  role?: string;
 };
 
+/**
+ * Heading atom - Strict implementation for semantic titles.
+ * Supports line clamping for overflow control.
+ */
 export const Heading = ({
   as: Component = "h2",
   children,
   className,
   noOfLines,
-  ...rest
+  id,
+  hidden,
+  "aria-live": ariaLive,
+  "aria-hidden": ariaHidden,
+  role,
 }: HeadingProps) => {
-  if (!children) {
-    return null;
-  }
-
   const clampedLines =
     typeof noOfLines === "number" && noOfLines > 0
       ? Math.floor(noOfLines)
@@ -28,13 +38,17 @@ export const Heading = ({
 
   return (
     <Component
+      id={id}
+      hidden={hidden}
+      aria-live={ariaLive}
+      aria-hidden={ariaHidden}
+      role={role}
       className={clsx(
         "heading",
-        clampedLines && "heading--clamp",
+        { "heading--clamp": clampedLines },
         clampedLines && `heading--clamp-${clampedLines}`,
         className,
       )}
-      {...rest}
     >
       {children}
     </Component>

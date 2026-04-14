@@ -8,10 +8,8 @@ import {
   isSupportedStatusCode,
   type STATUS_CODE,
 } from "@/const/apiErrorCodes";
-import type { NormalizedApiError } from "@/types/api/apiError";
+import type { NormalizedApiError, ValidationErrorMap } from "@/types/api/apiError";
 import type { StandardizedApiError } from "@/types/apiError";
-
-type ValidationErrorMap = Record<string, string[]>;
 
 type StandardizedAxiosApiError = StandardizedApiError & {
   status?: STATUS_CODE;
@@ -56,6 +54,10 @@ export class ApiError extends Error implements NormalizedApiError {
     Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
+
+export const isApiError = (error: unknown): error is ApiError => {
+  return error instanceof ApiError;
+};
 
 const toSupportedStatusCode = (status?: number): STATUS_CODE | undefined => {
   if (!status || !isSupportedStatusCode(status)) {

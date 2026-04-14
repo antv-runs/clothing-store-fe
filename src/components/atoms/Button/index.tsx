@@ -1,14 +1,15 @@
-import "./index.scss";
-import clsx from "clsx";
-import {
+﻿import {
   useLayoutEffect,
   useRef,
   useState,
-  type ButtonHTMLAttributes,
   type CSSProperties,
   type ReactNode,
+  type MouseEventHandler,
+  type ButtonHTMLAttributes,
 } from "react";
-import { UI_TEXT } from "@/const/uiText";
+import clsx from "clsx";
+import { UI_TEXT } from "@/const/messages";
+import "./index.scss";
 
 type ButtonProps = {
   children: ReactNode;
@@ -16,8 +17,23 @@ type ButtonProps = {
   unstyled?: boolean;
   isLoading?: boolean;
   loadingText?: ReactNode;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
+  className?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  id?: string;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  title?: string;
+  "aria-label"?: string;
+  "aria-expanded"?: boolean;
+  "aria-controls"?: string;
+  "aria-haspopup"?: ButtonHTMLAttributes<HTMLButtonElement>["aria-haspopup"];
+  onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+};
 
+/**
+ * Button atom - Strict implementation for interactive actions.
+ * Handles loading states with stable size preservation to prevent layout shifts.
+ */
 export const Button = ({
   children,
   variant = "primary",
@@ -27,7 +43,14 @@ export const Button = ({
   className,
   type = "button",
   disabled,
-  ...buttonProps
+  id,
+  onClick,
+  title,
+  "aria-label": ariaLabel,
+  "aria-expanded": ariaExpanded,
+  "aria-controls": ariaControls,
+  "aria-haspopup": ariaHasPopup,
+  onKeyDown,
 }: ButtonProps) => {
   const isDisabled = disabled || isLoading;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -94,17 +117,24 @@ export const Button = ({
 
   return (
     <button
+      id={id}
       ref={buttonRef}
       type={type}
       disabled={isDisabled}
       aria-busy={isLoading || undefined}
+      aria-label={ariaLabel}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
+      aria-haspopup={ariaHasPopup}
+      title={title}
       className={clsx(
         !unstyled && "button",
         !unstyled && `button--${variant}`,
         className,
       )}
       style={loadingLockStyle}
-      {...buttonProps}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
     >
       <span
         className={clsx(
@@ -130,3 +160,4 @@ export const Button = ({
     </button>
   );
 };
+

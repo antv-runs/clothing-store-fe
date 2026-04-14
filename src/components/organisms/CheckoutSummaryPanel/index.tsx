@@ -1,7 +1,7 @@
-import type { HTMLAttributes } from "react";
+﻿import type { HTMLAttributes } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { CheckoutItemRow } from "@/components/organisms/CheckoutItemRow";
-import { UI_TEXT } from "@/const/uiText";
+import { UI_TEXT } from "@/const/messages";
 import type { Product } from "@/types/product";
 import clsx from "clsx";
 import "./index.scss";
@@ -81,3 +81,4 @@ export const CheckoutSummaryPanel = ({
     </aside>
   );
 };
+

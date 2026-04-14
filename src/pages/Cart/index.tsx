@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heading } from "@/components/atoms/Heading";
 import { Breadcrumb } from "@/components/organisms/Breadcrumb";
@@ -11,7 +11,7 @@ import { useCartRows } from "@/hooks/useCartRows";
 import { ROUTES } from "@/routes/paths";
 import { formatPrice } from "@/utils/formatters";
 import { useToast } from "@/hooks/useToast";
-import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { ERROR_MESSAGES } from "@/const/messages";
 import "./index.scss";
 
 type ProcessingAction = "idle" | "checkout" | "coupon";
@@ -139,3 +139,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

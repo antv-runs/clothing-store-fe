@@ -1,4 +1,4 @@
-import { logger } from "@/utils/logger";
+﻿import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getProducts } from "@/api/Product";
 import { getReviewsByProductId } from "@/api/Review";
@@ -9,7 +9,7 @@ import {
 import type { Product } from "@/types/product";
 import type { Review } from "@/types/review";
 import type { ListErrorKind } from "@/types/listState";
-import { ERROR_MESSAGES } from "@/const/errorMessages";
+import { ERROR_MESSAGES } from "@/const/messages";
 
 type UseHomeDataResult = {
   newArrivals: Product[];
@@ -297,3 +297,4 @@ export const useHomeData = (): UseHomeDataResult => {
     retryReviews,
   };
 };
+

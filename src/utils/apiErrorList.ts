@@ -1,12 +1,8 @@
 import { ApiErrorCode } from "@/const/apiErrorCodes";
 import { LIST_ERROR_KIND, type ListErrorKind } from "@/types/listState";
-import { ApiError } from "@/utils/apiError";
-
-export type ValidationErrorMap = Record<string, string[]>;
-
-export const isApiError = (error: unknown): error is ApiError => {
-  return error instanceof ApiError;
-};
+import { isApiError, ApiError } from "@/utils/apiError";
+export { isApiError, ApiError };
+import type { ValidationErrorMap } from "@/types/api/apiError";
 
 export const mapApiErrorToMessage = (
   error: unknown,

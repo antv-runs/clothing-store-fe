@@ -1,18 +1,24 @@
-import React from "react";
+import { memo, type MouseEventHandler } from "react";
 import { ReactSVG } from "react-svg";
 import clsx from "clsx";
 import { toCssDimension } from "@/utils/css";
 import "./index.scss";
+
 export type IconProps = {
   svgName: string;
   color?: string;
   size?: number | string;
   width?: number | string;
   height?: number | string;
-  onClick?: React.MouseEventHandler<HTMLElement | SVGSVGElement>;
+  onClick?: MouseEventHandler<HTMLElement | SVGSVGElement>;
   className?: string;
+  id?: string;
 };
 
+/**
+ * Icon atom - Strict implementation for SVG icons.
+ * Loads icons dynamically from /public/images/.
+ */
 const IconComponent = ({
   color,
   size = "1em",
@@ -21,6 +27,7 @@ const IconComponent = ({
   svgName,
   className,
   onClick,
+  id,
 }: IconProps) => {
   const finalWidth = width ?? size;
   const finalHeight = height ?? size;
@@ -29,6 +36,7 @@ const IconComponent = ({
 
   return (
     <ReactSVG
+      id={id}
       className={clsx("icon", className)}
       src={`/images/${svgName}.svg`}
       wrapper="span"
@@ -58,4 +66,4 @@ const IconComponent = ({
   );
 };
 
-export const Icon = React.memo(IconComponent);
+export const Icon = memo(IconComponent);

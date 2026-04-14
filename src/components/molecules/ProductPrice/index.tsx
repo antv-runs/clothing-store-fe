@@ -1,9 +1,9 @@
-import type { HTMLAttributes } from "react";
+﻿import type { HTMLAttributes } from "react";
 import clsx from "clsx";
 import { Price } from "@/components/atoms/Price";
 import type { ProductPricing } from "@/types/product";
 import { Text } from "@/components/atoms/Text";
-import { DEFAULT_CURRENCY } from "@/const/pricing";
+import { DEFAULT_CURRENCY } from "@/const/config";
 import "./index.scss";
 
 type ProductPriceProps = HTMLAttributes<HTMLDivElement> & {
@@ -111,3 +111,4 @@ export const ProductPrice = ({
     </div>
   );
 };
+

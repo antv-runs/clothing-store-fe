@@ -1,7 +1,6 @@
-import type { AnchorHTMLAttributes } from "react";
-import clsx from "clsx";
+﻿import clsx from "clsx";
 import { Icon } from "@/components/atoms/Icon";
-import { ICON_DEFAULT_SIZE } from "@/const/ui";
+import { ICON_DEFAULT_SIZE } from "@/const/config";
 import "./index.scss";
 
 type IconLinkProps = {
@@ -13,8 +12,15 @@ type IconLinkProps = {
   iconName: string;
   className?: string;
   iconClassName?: string;
-} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "aria-label">;
+  target?: string;
+  rel?: string;
+  id?: string;
+  title?: string;
+};
 
+/**
+ * IconLink atom - Strict implementation for icon-only navigation.
+ */
 export const IconLink = ({
   size = 36,
   iconWidth = ICON_DEFAULT_SIZE,
@@ -26,17 +32,19 @@ export const IconLink = ({
   iconClassName,
   target,
   rel,
-  ...anchorProps
+  id,
+  title,
 }: IconLinkProps) => {
   return (
     <a
+      id={id}
       href={href}
       className={clsx("icon-link", className)}
       style={{ width: size, height: size }}
       aria-label={label}
       target={target}
       rel={rel}
-      {...anchorProps}
+      title={title}
     >
       <Icon
         svgName={iconName}
@@ -47,3 +55,4 @@ export const IconLink = ({
     </a>
   );
 };
+

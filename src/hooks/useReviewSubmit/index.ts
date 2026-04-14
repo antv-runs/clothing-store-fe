@@ -1,10 +1,10 @@
-import { logger } from "@/utils/logger";
+﻿import { logger } from "@/utils/logger";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { submitReview } from "@/api/Review";
 import { mapApiErrorToMessage } from "@/utils/apiErrorList";
 import { DEFAULT_GUEST_USERNAME } from "@/const/user";
-import { ERROR_MESSAGES } from "@/const/errorMessages";
-import { UI_TEXT } from "@/const/uiText";
+import { ERROR_MESSAGES } from "@/const/messages";
+import { UI_TEXT } from "@/const/messages";
 
 import type { CreateReviewPayload } from "@/types/api/review";
 
@@ -117,3 +117,4 @@ export const useReviewSubmit = ({
     handleReviewSubmit,
   };
 };
+

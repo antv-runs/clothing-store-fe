@@ -1,11 +1,11 @@
-import { get } from "@/lib/axios";
+﻿import { get } from "@/lib/axios";
 import type { PaginatedApiResponse, ApiResponse } from "@/types/pagination";
 import type { Product, ProductListResult } from "@/types/product";
 import type { ApiProduct, GetProductsParams } from "@/types/api/product";
 import {
   mapApiProductToProduct,
   mapApiProductsToProducts,
-} from "@/utils/productMapper";
+} from "@/utils/mappers/productMapper";
 import {
   unwrapApiResponse,
   unwrapPaginatedResponse,
@@ -39,3 +39,4 @@ export async function getProductById(
   const apiProduct = unwrapApiResponse(res, "Failed to fetch product");
   return mapApiProductToProduct(apiProduct);
 }
+

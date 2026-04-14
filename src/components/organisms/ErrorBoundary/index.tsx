@@ -1,10 +1,10 @@
-import { logger } from "@/utils/logger";
+﻿import { logger } from "@/utils/logger";
 import { Component, Fragment } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
-import { ERROR_MESSAGES } from "@/const/errorMessages";
-import { UI_TEXT } from "@/const/uiText";
+import { ERROR_MESSAGES } from "@/const/messages";
+import { UI_TEXT } from "@/const/messages";
 import { isChunkLoadError } from "@/utils/chunkLoadError";
 import "./index.scss";
 
@@ -145,3 +145,4 @@ export class ErrorBoundary extends Component<Props, State> {
     return <Fragment key={this.state.retryKey}>{this.props.children}</Fragment>;
   }
 }
+
