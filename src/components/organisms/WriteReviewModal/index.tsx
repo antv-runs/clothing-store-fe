@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from "react";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import "./index.scss";
@@ -8,6 +8,7 @@ import { Button } from "@/components/atoms/Button";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Star } from "@/components/atoms/Star";
 import { DEFAULT_GUEST_USERNAME } from "@/const/user";
+import { REVIEW_FORM_LIMITS } from "@/const/form";
 import {
   reviewModalSchema,
   DEFAULT_RATING,
@@ -39,14 +40,21 @@ export const WriteReviewModal = ({
   className,
   ...rest
 }: WriteReviewModalProps) => {
-  const { control, handleSubmit, reset } = useForm<ReviewModalFormValues>({
+  const { control, register, handleSubmit, reset, formState } = useForm<ReviewModalFormValues>({
     resolver: zodResolver(reviewModalSchema),
+    mode: "onBlur",
     defaultValues: {
       username: "",
       comment: "",
       stars: DEFAULT_RATING,
     },
   });
+
+  const commentValue = useWatch({
+    control,
+    name: "comment",
+  });
+  const commentLength = commentValue?.length ?? 0;
 
   useEffect(() => {
     if (isOpen) {
@@ -120,21 +128,27 @@ export const WriteReviewModal = ({
 
             <label className="review-modal__field">
               <span>Comment <abbr className="required-mark" title="Required" aria-hidden="true">*</abbr></span>
-              <Controller
-                name="comment"
-                control={control}
-                render={({ field }) => (
-                  <textarea
-                    name={field.name}
-                    rows={4}
-                    placeholder="Share your thoughts about this product"
-                    required
-                    value={field.value}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                  ></textarea>
-                )}
-              />
+              <div className="review-modal__comment-wrapper">
+                <textarea
+                  {...register("comment")}
+                  rows={4}
+                  placeholder="Share your thoughts about this product"
+                  maxLength={REVIEW_FORM_LIMITS.COMMENT_MAX}
+                  required
+                  aria-invalid={!!formState.errors.comment}
+                  aria-describedby={formState.errors.comment ? "comment-error" : "comment-counter"}
+                ></textarea>
+                <div className="review-modal__comment-footer">
+                  <span id="comment-counter" className="review-modal__comment-counter">
+                    {commentLength} / {REVIEW_FORM_LIMITS.COMMENT_MAX}
+                  </span>
+                </div>
+              </div>
+              {formState.errors.comment && (
+                <p id="comment-error" className="review-modal__error-message">
+                  {formState.errors.comment.message}
+                </p>
+              )}
             </label>
 
             <div className="review-modal__field review-modal__field--rating">

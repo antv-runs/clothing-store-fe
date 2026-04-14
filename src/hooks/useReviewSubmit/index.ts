@@ -107,7 +107,7 @@ export const useReviewSubmit = ({
         }
       }
     },
-    [isSubmittingReview, onSuccess, productId],
+    [onSuccess, productId],
   );
 
   return {

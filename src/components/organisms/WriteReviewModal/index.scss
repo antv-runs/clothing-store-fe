@@ -225,6 +225,33 @@
       opacity: 0.55;
     }
   }
+
+  &__comment-wrapper {
+    display: grid;
+    gap: 0;
+  }
+
+  &__comment-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 6px 12px 0 0;
+    font-size: 12px;
+    color: v.$color-muted;
+  }
+
+  &__comment-counter {
+    white-space: nowrap;
+  }
+
+  &__error-message {
+    margin: 6px 0 0 0;
+    padding: 8px 12px;
+    background-color: rgba(217, 45, 32, 0.08);
+    border-radius: 8px;
+    font-size: 13px;
+    color: v.$color-danger;
+    line-height: 1.4;
+  }
 }
 
 body.review-modal-open {
