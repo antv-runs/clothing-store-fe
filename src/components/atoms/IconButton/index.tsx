@@ -16,32 +16,41 @@ type IconButtonProps = {
   variant?: IconButtonVariant;
 } & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "aria-label">;
 
-const IconButtonComponent = ({
-  svgName,
-  ariaLabel,
-  color,
-  iconWidth = ICON_DEFAULT_SIZE,
-  iconHeight = ICON_DEFAULT_SIZE,
-  className,
-  variant = "default",
-  type = "button",
-  ...buttonProps
-}: IconButtonProps) => {
-  return (
-    <button
-      type={type}
-      className={clsx("icon-button", `icon-button--${variant}`, className)}
-      aria-label={ariaLabel}
-      {...buttonProps}
-    >
-      <Icon
-        svgName={svgName}
-        width={iconWidth}
-        height={iconHeight}
-        color={color}
-      />
-    </button>
-  );
-};
+const IconButtonComponent = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  (
+    {
+      svgName,
+      ariaLabel,
+      color,
+      iconWidth = ICON_DEFAULT_SIZE,
+      iconHeight = ICON_DEFAULT_SIZE,
+      className,
+      variant = "default",
+      type = "button",
+      ...buttonProps
+    },
+    ref
+  ) => {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={clsx("icon-button", `icon-button--${variant}`, className)}
+        aria-label={ariaLabel}
+        {...buttonProps}
+      >
+        <Icon
+          svgName={svgName}
+          width={iconWidth}
+          height={iconHeight}
+          color={color}
+        />
+      </button>
+    );
+  }
+);
+
+IconButtonComponent.displayName = "IconButton";
 
 export const IconButton = React.memo(IconButtonComponent);
+

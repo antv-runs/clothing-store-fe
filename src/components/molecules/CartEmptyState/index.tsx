@@ -28,14 +28,12 @@ export const CartEmptyState = ({
       aria-atomic="true"
       {...rest}
     >
-      <div className="cart-empty__inner">
-        <Text as="p" className="cart-empty__text">
-          Your cart is empty.
-        </Text>
-        <TextLink href="/" className="cart-empty__cta">
-          Continue Shopping
-        </TextLink>
-      </div>
+      <Text as="p" className="cart-empty__text">
+        Your cart is empty.
+      </Text>
+      <TextLink href="/" className="cart-empty__cta">
+        Continue Shopping
+      </TextLink>
     </div>
   );
 };

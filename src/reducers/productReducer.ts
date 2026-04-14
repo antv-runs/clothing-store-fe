@@ -2,11 +2,11 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Product } from "@/types/product";
 import type { RootState } from "@/store";
 
-export interface ProductState {
+export type ProductState = {
   byId: Record<string, Product>;
   loadingById: Record<string, boolean>;
   errorById: Record<string, string | null>;
-}
+};
 
 const initialState: ProductState = {
   byId: {},

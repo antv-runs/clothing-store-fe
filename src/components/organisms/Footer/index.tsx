@@ -88,7 +88,7 @@ export const Footer = () => {
   return (
     <>
       {/* Newsletter Section */}
-      <div className="footer-form">
+      <section className="footer-form" aria-label="Newsletter signup">
         <Text as="p" className="footer-form__title">
           STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </Text>
@@ -104,7 +104,7 @@ export const Footer = () => {
             Subscribe to Newsletter
           </Button>
         </form>
-      </div>
+      </section>
 
       <footer className="footer">
         {/* Main Footer Content */}

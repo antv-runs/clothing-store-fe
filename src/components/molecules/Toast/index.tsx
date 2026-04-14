@@ -23,8 +23,8 @@ export const Toast = ({
   return (
     <div
       className={clsx("toast", `toast--${variant}`, className)}
-      role="status"
-      aria-live="polite"
+      role={variant === "error" ? "alert" : "status"}
+      aria-live={variant === "error" ? "assertive" : "polite"}
       {...rest}
     >
       <div className="toast__content">

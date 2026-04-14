@@ -1,13 +1,13 @@
 import { useRef, useCallback, useLayoutEffect } from "react";
 
-interface UseInfiniteLoopOptions {
-  viewportRef: React.RefObject<HTMLDivElement | null>;
+type UseInfiniteLoopOptions = {
+  viewportRef: React.RefObject<HTMLElement | null>;
   getLoopRange: () => { start: number; end: number } | null;
-  enabled: boolean;
+  enabled?: boolean;
   /** Triggers re-sync when the item list changes (e.g. after data load). */
   itemCount: number;
   hasClones: boolean;
-}
+};
 
 /**
  * Handles infinite-loop scroll normalization for a carousel with cloned items.

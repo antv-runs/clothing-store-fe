@@ -6,7 +6,9 @@ import {
 } from "@/components/molecules/ReviewSortSelect";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Button } from "@/components/atoms/Button";
+import { DropdownMenu } from "@/components/molecules/DropdownMenu";
 import clsx from "clsx";
+import type { ReviewSort } from "@/types/review";
 
 type ReviewFilterOption = {
   label: string;
@@ -32,11 +34,11 @@ const REVIEW_SORT_OPTIONS: ReviewSortOption[] = [
   { value: "highest", label: "Highest Rating" },
 ];
 
-export type ProductReviewsFilterProps = HTMLAttributes<HTMLDivElement> & {
+type ProductReviewsFilterProps = HTMLAttributes<HTMLDivElement> & {
   selectedRating: string;
   onRatingChange: (value: string) => void;
-  selectedSort: "latest" | "oldest" | "highest";
-  onSortChange: (value: "latest" | "oldest" | "highest") => void;
+  selectedSort: ReviewSort;
+  onSortChange: (value: ReviewSort) => void;
   isDisabled?: boolean;
   onWriteReview: () => void;
 };
@@ -54,88 +56,63 @@ export const ProductReviewsFilter = ({
   className,
   ...rest
 }: ProductReviewsFilterProps) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const filterRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const handleDocumentClick = (event: MouseEvent) => {
-      if (
-        filterRef.current &&
-        !filterRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleDocumentClick);
-    return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
-    };
-  }, [isOpen]);
-
-  const handleFilterToggle = () => {
-    if (isDisabled) {
-      return;
-    }
-    setIsOpen((prev) => !prev);
-  };
-
-  const handleSelectRating = (value: string) => {
-    onRatingChange(value);
-    setIsOpen(false);
-  };
-
   return (
-    <div className={clsx("reviews__actions", className)} ref={filterRef} {...rest}>
-      <div className="reviews__filter">
-        <IconButton
-          id="btn-filter-by-stars"
-          className="reviews__action reviews__action--filter"
-          svgName="icn_filter"
-          ariaLabel="Filter reviews by star rating"
-          aria-haspopup="listbox"
-          aria-expanded={isOpen}
-          aria-controls="dropdown-filter-by-stars"
-          onClick={handleFilterToggle}
-          disabled={isDisabled}
-          iconWidth={20.25}
-          iconHeight={18.75}
-        />
-
-        <div
-          id="dropdown-filter-by-stars"
-          className={`reviews__filter-dropdown${
-            isOpen ? " reviews__filter-dropdown--show" : ""
-          }`}
-          role="listbox"
-          aria-labelledby="btn-filter-by-stars"
-          tabIndex={-1}
-        >
-          {REVIEW_FILTER_OPTIONS.map((option) => {
-            const isActive = option.value === selectedRating;
-            return (
-              <button
-                key={option.value}
-                type="button"
-                className={`reviews__filter-option${
-                  isActive ? " reviews__filter-option--active" : ""
-                }`}
-                data-stars={option.value}
-                role="option"
-                aria-selected={isActive}
-                onClick={() => handleSelectRating(option.value)}
-                disabled={isDisabled}
-              >
-                <span className="reviews__filter-stars">{option.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+    <div className={clsx("reviews__actions", className)} {...rest}>
+      <DropdownMenu
+        id="btn-filter-by-stars"
+        value={selectedRating}
+        options={REVIEW_FILTER_OPTIONS}
+        onChange={onRatingChange}
+        disabled={isDisabled}
+        className="reviews__filter"
+        dropdownClassName={(isOpen) =>
+          clsx("reviews__filter-dropdown", {
+            "reviews__filter-dropdown--show": isOpen,
+          })
+        }
+        trigger={({ isOpen, ref, toggle, onKeyDown }) => (
+          <IconButton
+            id="btn-filter-by-stars"
+            ref={ref}
+            className="reviews__action reviews__action--filter"
+            svgName="icn_filter"
+            ariaLabel="Filter reviews by star rating"
+            aria-haspopup="menu"
+            aria-expanded={isOpen}
+            aria-controls="btn-filter-by-stars-menu"
+            onClick={toggle}
+            onKeyDown={onKeyDown}
+            disabled={isDisabled}
+            iconWidth={20.25}
+            iconHeight={18.75}
+          />
+        )}
+        renderOption={({
+          option,
+          isActive,
+          ref,
+          onClick,
+          onKeyDown,
+          tabIndex,
+        }) => (
+          <button
+            ref={ref}
+            type="button"
+            className={clsx("reviews__filter-option", {
+              "reviews__filter-option--active": isActive,
+            })}
+            data-stars={option.value}
+            role="menuitemradio"
+            aria-checked={isActive}
+            onClick={onClick}
+            onKeyDown={onKeyDown}
+            disabled={isDisabled}
+            tabIndex={tabIndex}
+          >
+            <span className="reviews__filter-stars">{option.label}</span>
+          </button>
+        )}
+      />
 
       <ReviewSortSelect
         id="reviews-sort-select"
@@ -160,3 +137,4 @@ export const ProductReviewsFilter = ({
     </div>
   );
 };
+

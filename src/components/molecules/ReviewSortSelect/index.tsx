@@ -1,4 +1,7 @@
 import React from "react";
+import type { ReviewSort } from "@/types/review";
+import clsx from "clsx";
+import { DropdownMenu } from "@/components/molecules/DropdownMenu";
 import "./index.scss";
 
 type ReviewSortOption = {
@@ -6,12 +9,10 @@ type ReviewSortOption = {
   label: string;
 };
 
-type AllowedReviewSort = "latest" | "oldest" | "highest";
-
 type ReviewSortSelectProps = {
-  value: AllowedReviewSort;
+  value: ReviewSort;
   options: ReviewSortOption[];
-  onChange: (value: AllowedReviewSort) => void;
+  onChange: (value: ReviewSort) => void;
   ariaLabel?: string;
   className?: string;
   disabled?: boolean;
@@ -25,31 +26,70 @@ export const ReviewSortSelect = ({
   ariaLabel = "Sort reviews",
   className,
   disabled = false,
-  id,
+  id = "review-sort",
 }: ReviewSortSelectProps) => {
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value as AllowedReviewSort;
-    onChange(value);
-  };
+  const currentOption = options.find((opt) => opt.value === value);
 
   return (
-    <div className={className}>
-      <select
-        id={id}
-        className="reviews__select"
-        value={value}
-        onChange={handleChange}
-        aria-label={ariaLabel}
-        disabled={disabled}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
+    <DropdownMenu
+      id={id}
+      value={value}
+      options={options}
+      onChange={onChange}
+      disabled={disabled}
+      className={clsx("reviews__sort-container", className)}
+      dropdownClassName={(isOpen) =>
+        clsx("reviews__sort-dropdown", {
+          "reviews__sort-dropdown--show": isOpen,
+        })
+      }
+      trigger={({ isOpen, ref, toggle, onKeyDown }) => (
+        <button
+          id={id}
+          ref={ref}
+          type="button"
+          className={clsx("reviews__sort-trigger", {
+            "reviews__sort-trigger--active": isOpen,
+          })}
+          onClick={toggle}
+          onKeyDown={onKeyDown}
+          disabled={disabled}
+          aria-label={ariaLabel}
+          aria-haspopup="menu"
+          aria-expanded={isOpen}
+          aria-controls={`${id}-menu`}
+        >
+          <span className="reviews__sort-label">
+            {currentOption ? currentOption.label : "Sort by"}
+          </span>
+        </button>
+      )}
+      renderOption={({
+        option,
+        isActive,
+        ref,
+        onClick,
+        onKeyDown,
+        tabIndex,
+      }) => (
+        <button
+          ref={ref}
+          type="button"
+          className={clsx("reviews__sort-option", {
+            "reviews__sort-option--active": isActive,
+          })}
+          role="menuitemradio"
+          aria-checked={isActive}
+          onClick={onClick}
+          onKeyDown={onKeyDown}
+          tabIndex={tabIndex}
+        >
+          {option.label}
+        </button>
+      )}
+    />
   );
 };
+
 
 export type { ReviewSortOption, ReviewSortSelectProps };

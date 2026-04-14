@@ -5,6 +5,8 @@ import type { PaginationMeta, PaginationLinks } from "@/types/pagination";
  * Normalized UI models after mapping from API responses
  */
 
+export type ReviewSort = "latest" | "oldest" | "highest";
+
 /**
  * UI model consumed by components after normalization/mapping
  */

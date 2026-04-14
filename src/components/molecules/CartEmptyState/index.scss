@@ -3,14 +3,13 @@
 
 .cart-empty {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 40px 16px;
-
-  &__inner {
-    max-width: 400px;
-  }
+  max-width: 400px;
+  margin: 0 auto;
 
   &__text {
     margin-bottom: 24px;

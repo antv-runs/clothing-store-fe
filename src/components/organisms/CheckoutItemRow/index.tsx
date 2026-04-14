@@ -41,7 +41,7 @@ export const CheckoutItemRow = ({
       </div>
 
       <div className="checkout-item__content">
-        <h2 className="checkout-item__name">{item.name}</h2>
+        <h3 className="checkout-item__name">{item.name}</h3>
         {item.size ? (
           <p className="checkout-item__meta">Size: {item.size}</p>
         ) : null}

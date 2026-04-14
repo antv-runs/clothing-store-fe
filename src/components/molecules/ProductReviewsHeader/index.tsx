@@ -3,13 +3,14 @@ import { Heading } from "@/components/atoms/Heading";
 import "./index.scss";
 import { ProductReviewsFilter } from "@/components/molecules/ProductReviewsFilter";
 import clsx from "clsx";
+import type { ReviewSort } from "@/types/review";
 
 type ProductReviewsHeaderProps = HTMLAttributes<HTMLDivElement> & {
   reviewCount: number;
   selectedRating: string;
-  selectedSort: "latest" | "oldest" | "highest";
+  selectedSort: ReviewSort;
   onRatingChange: (value: string) => void;
-  onSortChange: (value: "latest" | "oldest" | "highest") => void;
+  onSortChange: (value: ReviewSort) => void;
   isLoading?: boolean;
   onWriteReview: () => void;
 };

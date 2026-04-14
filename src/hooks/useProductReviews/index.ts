@@ -5,7 +5,7 @@ import {
   mapApiErrorToListErrorKind,
   mapApiErrorToMessage,
 } from "@/utils/apiErrorList";
-import type { Review } from "@/types/review";
+import type { Review, ReviewSort } from "@/types/review";
 import {
   LIST_ERROR_KIND,
   type ListErrorKind,
@@ -27,8 +27,6 @@ const REVIEW_SORT = {
   HIGHEST: "highest",
 } as const;
 
-type ReviewSort = (typeof REVIEW_SORT)[keyof typeof REVIEW_SORT];
-
 type State = {
   reviews: Review[];
   total: number;
@@ -47,18 +45,18 @@ type Action =
   | { type: typeof REVIEW_ACTION.RESET }
   | { type: typeof REVIEW_ACTION.REQUEST_START; append: boolean }
   | {
-      type: typeof REVIEW_ACTION.REQUEST_SUCCESS;
-      append: boolean;
-      reviews: Review[];
-      total: number;
-      lastPage: number;
-      page: number;
-    }
+    type: typeof REVIEW_ACTION.REQUEST_SUCCESS;
+    append: boolean;
+    reviews: Review[];
+    total: number;
+    lastPage: number;
+    page: number;
+  }
   | {
-      type: typeof REVIEW_ACTION.REQUEST_ERROR;
-      message: string;
-      errorKind: ListErrorKind;
-    }
+    type: typeof REVIEW_ACTION.REQUEST_ERROR;
+    message: string;
+    errorKind: ListErrorKind;
+  }
   | { type: typeof REVIEW_ACTION.REQUEST_RETRY_START }
   | { type: typeof REVIEW_ACTION.SET_FILTER; value: string }
   | { type: typeof REVIEW_ACTION.SET_SORT; value: ReviewSort };

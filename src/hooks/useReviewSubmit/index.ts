@@ -8,17 +8,17 @@ import { UI_TEXT } from "@/const/uiText";
 
 import type { CreateReviewPayload } from "@/types/api/review";
 
-interface UseReviewSubmitOptions {
+type UseReviewSubmitOptions = {
   productId: string | number | null | undefined;
   onSuccess?: () => void | Promise<void>;
-}
+};
 
-interface UseReviewSubmitResult {
+type UseReviewSubmitResult = {
   isSubmittingReview: boolean;
   reviewStatusMessage: string;
   clearReviewStatusMessage: () => void;
   handleReviewSubmit: (values: CreateReviewPayload) => Promise<void>;
-}
+};
 
 export const useReviewSubmit = ({
   productId,

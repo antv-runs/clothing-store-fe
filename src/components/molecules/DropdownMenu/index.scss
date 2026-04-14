@@ -1,0 +1,30 @@
+/**
+ * DropdownMenu - Base layout styles.
+ * These styles provide the functional positioning for the headless menu.
+ */
+
+.dropdown-menu {
+  position: relative;
+  display: inline-block;
+
+  &__list {
+    position: absolute;
+    z-index: 100;
+    display: none;
+    left: 0;
+    top: 110%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &--show {
+      display: block;
+    }
+  }
+
+  &__item-container {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}

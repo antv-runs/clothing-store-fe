@@ -3,7 +3,7 @@ import type { HTMLAttributes } from "react";
 import clsx from "clsx";
 
 import type { ListErrorKind } from "@/types/listState";
-import type { Review } from "@/types/review";
+import type { Review, ReviewSort } from "@/types/review";
 import type { ProductFaq } from "@/types/product";
 
 import { ProductTabsNav } from "@/components/molecules/ProductTabsNav";
@@ -24,9 +24,9 @@ type ProductTabsSectionProps = HTMLAttributes<HTMLDivElement> & {
   isRetrying: boolean;
   hasMoreReviews: boolean;
   selectedRating: string;
-  selectedSort: "latest" | "oldest" | "highest";
+  selectedSort: ReviewSort;
   onRatingChange: (value: string) => void;
-  onSortChange: (value: "latest" | "oldest" | "highest") => void;
+  onSortChange: (value: ReviewSort) => void;
   onLoadMore: () => void;
   onRetry: () => void;
   reviewError?: string | null;

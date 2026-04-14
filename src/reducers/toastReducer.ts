@@ -2,9 +2,9 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { ToastData } from "@/types/toast";
 import type { RootState } from "@/store";
 
-export interface ToastState {
+export type ToastState = {
   items: ToastData[];
-}
+};
 
 const initialState: ToastState = {
   items: [],

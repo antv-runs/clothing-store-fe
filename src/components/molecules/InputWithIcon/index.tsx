@@ -55,9 +55,9 @@ export const InputWithIcon = ({
       style={rootStyle}
       {...rest}
     >
-      <figure className={clsx("input-with-icon__icon", iconClassName)}>
+      <span className={clsx("input-with-icon__icon", iconClassName)}>
         <Icon svgName={iconName} width={iconWidth} height={iconHeight} />
-      </figure>
+      </span>
       <Input
         type={type}
         className={clsx("input-with-icon__input", inputClassName)}

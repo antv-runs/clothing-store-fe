@@ -35,21 +35,20 @@ export const HomeHero = ({ className, ...rest }: HomeHeroProps) => {
 
         <div className="home-hero__stats" aria-label="Store achievements">
           {HOME_HERO_STATS.map((item, index) => [
-            <article
+            <div
               key={item.label}
               className={`home-hero__stat home-hero__stat--${index + 1}`}
             >
-              <Heading as="h2">{item.value}</Heading>
+              <strong className="home-hero__stat-value">{item.value}</strong>
               <Text as="p">{item.label}</Text>
-            </article>,
+            </div>,
             index < HOME_HERO_STATS.length - 1 ? (
               <span
                 key={`${item.label}-divider`}
-                className={`home-hero__divider ${
-                  index === HOME_HERO_STATS.length - 2
+                className={`home-hero__divider ${index === HOME_HERO_STATS.length - 2
                     ? "home-hero__divider--desktop-only"
                     : ""
-                }`}
+                  }`}
                 aria-hidden="true"
               />
             ) : null,

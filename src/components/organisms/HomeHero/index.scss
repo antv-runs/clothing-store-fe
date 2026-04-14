@@ -46,7 +46,8 @@
   &__stat {
     flex: 0 0 auto;
 
-    h2 {
+    .home-hero__stat-value {
+      display: block;
       margin: 0 0 8px;
       font-size: 40px;
       line-height: 1;
@@ -270,7 +271,7 @@
     &__stat {
       z-index: 1000;
 
-      h2 {
+      .home-hero__stat-value {
         font-size: 24px;
         margin-bottom: 0;
       }
