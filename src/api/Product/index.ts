@@ -39,4 +39,3 @@ export async function getProductById(
   const apiProduct = unwrapApiResponse(res, "Failed to fetch product");
   return mapApiProductToProduct(apiProduct);
 }
-

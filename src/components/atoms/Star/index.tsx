@@ -1,7 +1,6 @@
 ﻿import { useId, type CSSProperties } from "react";
 import { MAX_RATING } from "@/const/config";
 import { clamp, toNumber } from "@/utils/number";
-import "./index.scss";
 
 type StarProps = {
   rating: number | string;
@@ -25,7 +24,10 @@ export const Star = ({
   halfStarMode = "path",
 }: StarProps) => {
   const clipIdPrefix = useId();
-  const normalizedMaxStars = Math.max(1, Math.floor(toNumber(maxStars, MAX_RATING)));
+  const normalizedMaxStars = Math.max(
+    1,
+    Math.floor(toNumber(maxStars, MAX_RATING)),
+  );
   const safeRating = clamp(toNumber(rating), 0, normalizedMaxStars);
 
   const displayRating = Math.round(safeRating * 2) / 2;
@@ -103,4 +105,3 @@ export const Star = ({
     </>
   );
 };
-
