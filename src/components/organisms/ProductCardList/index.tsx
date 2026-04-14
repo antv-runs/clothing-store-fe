@@ -42,7 +42,7 @@ export const ProductCardList = ({
   showNavigation = false,
   loading = false,
   skeletonCount = 4,
-  linkMode,
+  linkMode = "overlay",
   imageLoaded = new Set(),
   imageError = new Set(),
   onImageLoad,
@@ -179,7 +179,7 @@ export const ProductCardList = ({
                 <ProductCard
                   product={item}
                   formatPrice={formatPrice}
-                  {...(linkMode && { linkMode })}
+                  linkMode={linkMode}
                   {...(onImageLoad &&
                     onImageError && {
                     imageLoaded: imageLoaded.has(String(displayId)),

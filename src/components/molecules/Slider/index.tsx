@@ -96,8 +96,10 @@ export const Slider = ({
   // All internal logic uses internalViewportRef — externalViewportRef is just
   // a mirror so the caller (e.g. useInfiniteLoop) can read the same node.
   const viewportRef = internalViewportRef;
+  const [isScrollable, setIsScrollable] = useState(false);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const isInteractive = showNavigation && !loading && isScrollable;
 
   // ── Interaction refs ────────────────────────────────────────────────────────
   const isMouseDownRef = useRef(false);
@@ -116,16 +118,31 @@ export const Slider = ({
     );
   }, [viewportRef]);
 
+  const isViewportScrollable = useCallback(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return false;
+    return viewport.scrollWidth - viewport.clientWidth > 1;
+  }, [viewportRef]);
+
   // ── Button state ─────────────────────────────────────────────────────────────
 
   const updateButtonStates = useCallback(() => {
     if (loading || !showNavigation) {
+      setIsScrollable(false);
       setCanScrollPrev(false);
       setCanScrollNext(false);
       return;
     }
     const viewport = viewportRef.current;
     if (!viewport) return;
+
+    const canScroll = isViewportScrollable();
+    setIsScrollable(canScroll);
+    if (!canScroll) {
+      setCanScrollPrev(false);
+      setCanScrollNext(false);
+      return;
+    }
 
     // When the caller signals that navigation should always be active
     // (e.g. clone-based infinite-loop carousel where scrollWidth is
@@ -139,12 +156,18 @@ export const Slider = ({
     const maxScroll = Math.max(viewport.scrollWidth - viewport.clientWidth, 0);
     setCanScrollPrev(viewport.scrollLeft > 0);
     setCanScrollNext(viewport.scrollLeft < maxScroll - 1);
-  }, [loading, showNavigation, forceNavigationEnabled, viewportRef]);
+  }, [
+    loading,
+    showNavigation,
+    forceNavigationEnabled,
+    viewportRef,
+    isViewportScrollable,
+  ]);
 
   // ── Snap ─────────────────────────────────────────────────────────────────────
 
   const snapToNearestItem = useCallback(() => {
-    if (!snap || !showNavigation || loading || !viewportRef.current) return;
+    if (!snap || !isInteractive || !viewportRef.current) return;
     const viewport = viewportRef.current;
     const step = getStepWidth();
     if (!step) return;
@@ -155,7 +178,7 @@ export const Slider = ({
         behavior: "smooth",
       });
     }
-  }, [snap, showNavigation, loading, getStepWidth, viewportRef]);
+  }, [snap, isInteractive, getStepWidth, viewportRef]);
 
   const debounceSnap = useCallback(() => {
     if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
@@ -166,7 +189,7 @@ export const Slider = ({
 
   const scrollByStep = useCallback(
     (direction: number) => {
-      if (loading || !viewportRef.current) return;
+      if (!isInteractive || !viewportRef.current) return;
       const step = getStepWidth();
       if (!step) return;
       viewportRef.current.scrollBy({
@@ -174,7 +197,7 @@ export const Slider = ({
         behavior: "smooth",
       });
     },
-    [loading, getStepWidth, viewportRef],
+    [isInteractive, getStepWidth, viewportRef],
   );
 
   const handlePrevClick = useCallback(() => scrollByStep(-1), [scrollByStep]);
@@ -184,39 +207,34 @@ export const Slider = ({
 
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
-      if (loading || event.button !== 0 || !showNavigation) return;
+      if (!isInteractive || event.button !== 0) return;
       isMouseDownRef.current = true;
       hasDraggedRef.current = false;
       pointerStartXRef.current = event.clientX;
       scrollStartLeftRef.current = viewportRef.current?.scrollLeft || 0;
       viewportRef.current?.classList.add("is-dragging");
     },
-    [loading, showNavigation, viewportRef],
+    [isInteractive, viewportRef],
   );
 
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
-      if (
-        loading ||
-        !isMouseDownRef.current ||
-        !viewportRef.current ||
-        !showNavigation
-      )
+      if (!isInteractive || !isMouseDownRef.current || !viewportRef.current)
         return;
       const deltaX = event.clientX - pointerStartXRef.current;
       if (Math.abs(deltaX) > 3) hasDraggedRef.current = true;
       viewportRef.current.scrollLeft = scrollStartLeftRef.current - deltaX;
       onScroll?.(viewportRef.current);
     },
-    [loading, showNavigation, onScroll, viewportRef],
+    [isInteractive, onScroll, viewportRef],
   );
 
   const handleMouseUp = useCallback(() => {
     if (!isMouseDownRef.current) return;
     isMouseDownRef.current = false;
     viewportRef.current?.classList.remove("is-dragging");
-    if (!loading) snapToNearestItem();
-  }, [loading, snapToNearestItem, viewportRef]);
+    if (isInteractive) snapToNearestItem();
+  }, [isInteractive, snapToNearestItem, viewportRef]);
 
   // ── Click guard (suppress link clicks that follow a drag) ────────────────────
 
@@ -231,14 +249,14 @@ export const Slider = ({
 
   const handleWheel = useCallback(
     (event: WheelEvent) => {
-      if (loading || !showNavigation) return;
+      if (!isInteractive) return;
       if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
       event.preventDefault();
       viewportRef.current?.scrollBy({ left: event.deltaY });
       onScroll?.(viewportRef.current!);
       debounceSnap();
     },
-    [loading, showNavigation, onScroll, debounceSnap, viewportRef],
+    [isInteractive, onScroll, debounceSnap, viewportRef],
   );
 
   // ── Event registration ────────────────────────────────────────────────────────
@@ -249,9 +267,13 @@ export const Slider = ({
 
     const onScrollEvent = () => {
       if (loading) return;
-      onScroll?.(viewport);
+      if (isInteractive) {
+        onScroll?.(viewport);
+      }
       updateButtonStates();
-      debounceSnap();
+      if (isInteractive) {
+        debounceSnap();
+      }
     };
 
     const onResize = () => updateButtonStates();
@@ -267,6 +289,17 @@ export const Slider = ({
     window.addEventListener("mouseup", onMouseUp);
     viewport.addEventListener("wheel", onWheel, { passive: false });
 
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        updateButtonStates();
+      });
+      resizeObserver.observe(viewport);
+      if (viewport.firstElementChild instanceof HTMLElement) {
+        resizeObserver.observe(viewport.firstElementChild);
+      }
+    }
+
     updateButtonStates();
 
     return () => {
@@ -276,10 +309,13 @@ export const Slider = ({
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
       viewport.removeEventListener("wheel", onWheel);
+      resizeObserver?.disconnect();
       if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
     };
   }, [
+    children,
     loading,
+    isInteractive,
     onScroll,
     updateButtonStates,
     handleMouseDown,
@@ -302,11 +338,7 @@ export const Slider = ({
 
   return (
     <div
-      className={clsx(
-        "slider",
-        loading && "slider--loading",
-        className,
-      )}
+      className={clsx("slider", loading && "slider--loading", className)}
       {...rest}
     >
       {showNavigation && (
@@ -322,7 +354,7 @@ export const Slider = ({
           ariaLabel="Previous"
           iconWidth={50}
           iconHeight={50}
-          disabled={loading || !canScrollPrev}
+          disabled={!isInteractive || !canScrollPrev}
           onClick={handlePrevClick}
         />
       )}
@@ -330,6 +362,9 @@ export const Slider = ({
       <div
         ref={setViewportRef}
         className={clsx("slider__viewport", viewportClassName)}
+        style={
+          isInteractive ? undefined : { cursor: "default", touchAction: "auto" }
+        }
         onClick={handleViewportClick}
       >
         {children}
@@ -348,7 +383,7 @@ export const Slider = ({
           ariaLabel="Next"
           iconWidth={50}
           iconHeight={50}
-          disabled={loading || !canScrollNext}
+          disabled={!isInteractive || !canScrollNext}
           onClick={handleNextClick}
         />
       )}

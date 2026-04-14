@@ -38,7 +38,7 @@ export const ProductCard = ({
   product,
   formatPrice,
   className,
-  linkMode = "inline",
+  linkMode = "overlay",
   imageLoaded,
   imageError,
   onImageLoad,
