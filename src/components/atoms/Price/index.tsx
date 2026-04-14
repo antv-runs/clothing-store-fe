@@ -1,27 +1,25 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { formatPrice as formatPriceUtil } from "@/utils/formatters";
-
 import { DEFAULT_CURRENCY } from "@/const/pricing";
+import clsx from "clsx";
+import "./index.scss";
 
-interface PriceProps {
+type PriceProps = HTMLAttributes<HTMLSpanElement> & {
   amount: number;
   currency?: string;
-  className?: string;
-}
+};
 
-/**
- * Price atom - Displays formatted currency price
- */
-export const Price: React.FC<PriceProps> = ({
+export const Price = ({
   amount,
   currency = DEFAULT_CURRENCY,
   className,
-}) => {
+  ...rest
+}: PriceProps) => {
   const formatted = formatPriceUtil(amount, currency);
 
-  if (className) {
-    return <span className={className}>{formatted}</span>;
-  }
-
-  return <span>{formatted}</span>;
+  return (
+    <span className={clsx("price", className)} {...rest}>
+      {formatted}
+    </span>
+  );
 };

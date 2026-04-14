@@ -1,8 +1,8 @@
-import React from "react";
+import type { AnchorHTMLAttributes } from "react";
 import clsx from "clsx";
 import { Icon } from "@/components/atoms/Icon";
 import { ICON_DEFAULT_SIZE } from "@/const/ui";
-import "./IconLink.scss";
+import "./index.scss";
 
 type IconLinkProps = {
   size?: number | string;
@@ -13,11 +13,9 @@ type IconLinkProps = {
   iconName: string;
   className?: string;
   iconClassName?: string;
-  target?: React.HTMLAttributeAnchorTarget;
-  rel?: string;
-};
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "target" | "rel" | "aria-label">;
 
-export const IconLink: React.FC<IconLinkProps> = ({
+export const IconLink = ({
   size = 36,
   iconWidth = ICON_DEFAULT_SIZE,
   iconHeight = ICON_DEFAULT_SIZE,
@@ -28,7 +26,8 @@ export const IconLink: React.FC<IconLinkProps> = ({
   iconClassName,
   target,
   rel,
-}) => {
+  ...anchorProps
+}: IconLinkProps & { target?: AnchorHTMLAttributes<HTMLAnchorElement>["target"], rel?: AnchorHTMLAttributes<HTMLAnchorElement>["rel"] }) => {
   return (
     <a
       href={href}
@@ -37,6 +36,7 @@ export const IconLink: React.FC<IconLinkProps> = ({
       aria-label={label}
       target={target}
       rel={rel}
+      {...anchorProps}
     >
       <Icon
         svgName={iconName}

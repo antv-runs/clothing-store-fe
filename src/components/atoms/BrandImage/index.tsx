@@ -1,4 +1,5 @@
-import React from "react";
+import type { ImgHTMLAttributes } from "react";
+import "./index.scss";
 
 type BrandImageProps = {
   src: string;
@@ -7,16 +8,17 @@ type BrandImageProps = {
   imageClassName?: string;
   width?: number | string;
   height?: number | string;
-};
+} & Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "width" | "height" | "className">;
 
-export const BrandImage: React.FC<BrandImageProps> = ({
+export const BrandImage = ({
   src,
   alt,
   className,
   imageClassName,
   width,
   height,
-}) => {
+  ...imgProps
+}: BrandImageProps) => {
   return (
     <figure className={className}>
       <img
@@ -25,6 +27,7 @@ export const BrandImage: React.FC<BrandImageProps> = ({
         className={imageClassName}
         width={width}
         height={height}
+        {...imgProps}
       />
     </figure>
   );

@@ -1,28 +1,18 @@
-import React from "react";
+import type { HTMLAttributes } from "react";
 import { MAX_RATING } from "@/const/ui";
+import clsx from "clsx";
+import "./index.scss";
 
-interface RatingProps {
+type RatingProps = HTMLAttributes<HTMLSpanElement> & {
   rating: number;
-  className?: string;
-}
+};
 
-/**
- * Rating atom - Displays rating value as "X.X/5"
- */
-export const Rating: React.FC<RatingProps> = ({ rating, className }) => {
+export const Rating = ({ rating, className, ...rest }: RatingProps) => {
   const safeRating = Math.max(0, Math.min(MAX_RATING, Number(rating) || 0));
   const displayValue = safeRating.toFixed(1);
 
-  if (className) {
-    return (
-      <span className={className}>
-        {displayValue}/<span>{MAX_RATING}</span>
-      </span>
-    );
-  }
-
   return (
-    <span>
+    <span className={clsx("rating", className)} {...rest}>
       {displayValue}/<span>{MAX_RATING}</span>
     </span>
   );

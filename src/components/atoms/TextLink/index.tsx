@@ -1,13 +1,11 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
+import clsx from "clsx";
+import "./index.scss";
 
-type TextLinkProps = {
+type TextLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   href: string;
   children: ReactNode;
-  className?: string;
-} & Omit<
-  AnchorHTMLAttributes<HTMLAnchorElement>,
-  "href" | "className" | "children"
->;
+};
 
 export const TextLink = ({
   href,
@@ -16,7 +14,7 @@ export const TextLink = ({
   ...anchorProps
 }: TextLinkProps) => {
   return (
-    <a href={href} className={className} {...anchorProps}>
+    <a href={href} className={clsx("text-link", className)} {...anchorProps}>
       {children}
     </a>
   );

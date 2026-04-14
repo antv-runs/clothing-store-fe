@@ -86,7 +86,7 @@
         to right,
         rgba(v.$color-white, 0.2) 0%,
         rgba(v.$color-white, 0.08) 15%,
-        transparent 100%
+        rgba(v.$color-white, 0) 100%
       );
     }
 
@@ -96,7 +96,7 @@
         to left,
         rgba(v.$color-white, 0.2) 0%,
         rgba(v.$color-white, 0.08) 15%,
-        transparent 100%
+        rgba(v.$color-white, 0) 100%
       );
     }
 

@@ -4,12 +4,12 @@ import "./index.scss";
 
 export type SkeletonVariant = "rect" | "circle" | "line";
 
-interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
+type SkeletonProps = HTMLAttributes<HTMLDivElement> & {
   variant?: SkeletonVariant;
   width?: string | number;
   height?: string | number;
   radius?: string | number;
-}
+};
 
 export const Skeleton = ({
   variant = "rect",

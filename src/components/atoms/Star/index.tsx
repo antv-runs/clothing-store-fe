@@ -1,23 +1,23 @@
-import React from "react";
+import React, { type HTMLAttributes } from "react";
 import { MAX_RATING } from "@/const/ui";
+import "./index.scss";
 
-interface StarProps {
+type StarProps = HTMLAttributes<HTMLSpanElement> & {
   rating: number;
-  className?: string;
   showEmpty?: boolean;
   maxStars?: number;
   size?: number | string;
   halfStarMode?: "path" | "clip";
-}
+};
 
-export const Star: React.FC<StarProps> = ({
+export const Star = ({
   rating,
   className = "",
   showEmpty = true,
   maxStars = MAX_RATING,
   size,
   halfStarMode = "path",
-}) => {
+}: StarProps) => {
   const clipIdPrefix = React.useId();
   const normalizedMaxStars = Math.max(1, Math.floor(Number(maxStars) || MAX_RATING));
   const safeRating = Math.max(

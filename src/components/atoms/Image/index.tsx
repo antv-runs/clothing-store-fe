@@ -1,7 +1,7 @@
 import type { CSSProperties, ImgHTMLAttributes, ReactEventHandler } from "react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import "./Image.scss";
+import "./index.scss";
 
 type BaseImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "width" | "height" | "src" | "alt" | "onLoad" | "onError" | "onClick">;
 
