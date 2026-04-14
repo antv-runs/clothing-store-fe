@@ -21,14 +21,20 @@ export const BreadcrumbItem = ({
   className,
   ...rest
 }: BreadcrumbItemProps) => {
-  if (isActive) {
+  const isLink = !isActive && !!href;
+
+  if (!isLink) {
     return (
       <li
-        className={clsx("breadcrumb__item breadcrumb__item--active", className)}
-        aria-current="page"
+        className={clsx(
+          "breadcrumb__item",
+          { "breadcrumb__item--active": isActive },
+          className,
+        )}
+        aria-current={isActive ? "page" : undefined}
         {...rest}
       >
-        <Text as="span" className="breadcrumb__current">
+        <Text as="span" className={isActive ? "breadcrumb__current" : "breadcrumb__text"}>
           {label}
         </Text>
       </li>
@@ -37,7 +43,7 @@ export const BreadcrumbItem = ({
 
   return (
     <li className={clsx("breadcrumb__item", className)} {...rest}>
-      <TextLink href={href || "#"} className="breadcrumb__link">
+      <TextLink href={href!} className="breadcrumb__link">
         {label}
       </TextLink>
     </li>

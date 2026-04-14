@@ -177,7 +177,11 @@ const Checkout = () => {
     <div className="container u-mt-25">
       <div className="checkout-page">
         <Breadcrumb
-          items={["Home", "Cart", "Checkout"]}
+          items={[
+            { label: "Home", href: ROUTES.HOME },
+            { label: "Cart", href: ROUTES.CART },
+            { label: "Checkout" },
+          ]}
           className="checkout-page__breadcrumb"
         />
 

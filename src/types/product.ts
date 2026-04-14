@@ -1,4 +1,5 @@
 import type { PaginationMeta, PaginationLinks } from "@/types/pagination";
+import type { BreadcrumbItemData } from "@/types/breadcrumb";
 
 /**
  * Frontend/Domain product types
@@ -74,7 +75,7 @@ export interface Product {
   category: ProductCategorySummary;
   variants: ProductVariants;
   rating: number;
-  breadcrumb: string[];
+  breadcrumb: BreadcrumbItemData[];
   faqs: ProductFaq[];
   relatedProductIds: string[];
   stock?: ProductStock;

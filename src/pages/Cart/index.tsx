@@ -67,7 +67,13 @@ const Cart = () => {
 
   return (
     <div className="container u-mt-25 cart-page">
-      <Breadcrumb items={["Home", "Cart"]} className="cart-page__breadcrumb" />
+      <Breadcrumb
+        items={[
+          { label: "Home", href: ROUTES.HOME },
+          { label: "Cart" },
+        ]}
+        className="cart-page__breadcrumb"
+      />
 
       <Heading as="h1" className="cart-page__title">
         Your Cart

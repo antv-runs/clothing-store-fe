@@ -19,6 +19,7 @@ import { useReviewSubmit } from "@/hooks/useReviewSubmit";
 import { useToast } from "@/hooks/useToast";
 import { Button } from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
+import { ROUTES } from "@/routes/paths";
 import "./index.scss";
 
 import { ERROR_MESSAGES } from "@/const/errorMessages";
@@ -261,7 +262,13 @@ const ProductDetail = () => {
       {/* Product Overview Section */}
       <section className="product-overview">
         <Breadcrumb
-          items={product.breadcrumb || ["Home", "Shop", product.name]}
+          items={
+            product.breadcrumb || [
+              { label: "Home", href: ROUTES.HOME },
+              { label: "Shop", href: ROUTES.HOME },
+              { label: product.name },
+            ]
+          }
           className="u-mb-40"
         />
 

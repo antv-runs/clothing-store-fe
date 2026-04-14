@@ -13,6 +13,7 @@ import type {
   ApiProductVariantOption,
   ApiProductVariants,
 } from "@/types/api/product";
+import { ROUTES } from "@/routes/paths";
 
 /**
  * Maps common color labels to hex color codes
@@ -127,10 +128,10 @@ export function mapApiProductToProduct(apiProduct: ApiProduct): Product {
     variants: mapApiVariantsToProductVariants(apiProduct.variants),
     rating: apiProduct.ratingAvg || 0,
     breadcrumb: [
-      "Home",
-      "Shop",
-      apiProduct.category?.name || "Products",
-      apiProduct.name,
+      { label: "Home", href: ROUTES.HOME },
+      { label: "Shop", href: ROUTES.HOME },
+      { label: apiProduct.category?.name || "Products" },
+      { label: apiProduct.name },
     ],
     faqs: [], // Backend doesn't return FAQs in API
     relatedProductIds: [], // Will be populated from related products endpoint
