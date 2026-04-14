@@ -17,7 +17,7 @@ type DropdownMenuProps<T extends string> = {
   dropdownClassName?: string | ((isOpen: boolean) => string);
   trigger: (props: {
     isOpen: boolean;
-    ref: React.RefObject<HTMLButtonElement>;
+    ref: React.RefObject<HTMLButtonElement | null>;
     toggle: () => void;
     onKeyDown: (e: React.KeyboardEvent) => void;
   }) => React.ReactNode;

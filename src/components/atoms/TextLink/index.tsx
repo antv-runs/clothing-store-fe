@@ -24,6 +24,7 @@ export const TextLink = ({
   href,
   children,
   className,
+  to: _to, // Omit 'to' from rest to prevent duplication with href
   ...rest
 }: TextLinkProps) => {
   const internal = isInternal(href);

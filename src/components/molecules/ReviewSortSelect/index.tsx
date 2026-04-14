@@ -1,4 +1,3 @@
-import React from "react";
 import type { ReviewSort } from "@/types/review";
 import clsx from "clsx";
 import { DropdownMenu } from "@/components/molecules/DropdownMenu";
