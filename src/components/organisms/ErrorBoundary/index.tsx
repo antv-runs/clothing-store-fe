@@ -11,7 +11,7 @@ import "./index.scss";
 /**
  * Centralized error reporter for production telemetry integration (Sentry, Datadog, etc).
  */
-export const reportError = (error: Error, errorInfo?: ErrorInfo) => {
+const reportError = (error: Error, errorInfo?: ErrorInfo) => {
   logger.error("Reported Error:", error, errorInfo);
 };
 
@@ -109,38 +109,36 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <section className="error-boundary-page container u-mt-25">
-          <div className="error-boundary-page__content">
-            <Heading as="h1" className="error-boundary-page__title">
-              {this.props.fallbackMessage || ERROR_MESSAGES.GENERIC_ERROR}
-            </Heading>
+        <div className="error-boundary-page container u-mt-25">
+          <Heading as="h1" className="error-boundary-page__title">
+            {this.props.fallbackMessage || ERROR_MESSAGES.GENERIC_ERROR}
+          </Heading>
 
-            <p className="error-boundary-page__message">
-              {isChunkLoadError(this.state.error)
-                ? ERROR_MESSAGES.PAGE_RESOURCE_LOAD
-                : ERROR_MESSAGES.PAGE_LOAD_UNEXPECTED}
-            </p>
+          <p className="error-boundary-page__message">
+            {isChunkLoadError(this.state.error)
+              ? ERROR_MESSAGES.PAGE_RESOURCE_LOAD
+              : ERROR_MESSAGES.PAGE_LOAD_UNEXPECTED}
+          </p>
 
-            <div className="error-boundary-page__actions">
-              <Button
-                className="error-boundary-page__action"
-                type="button"
-                variant="primary"
-                onClick={this.handleRetry}
-              >
-                {UI_TEXT.TRY_AGAIN}
-              </Button>
-              <Button
-                className="error-boundary-page__action"
-                type="button"
-                variant="primary"
-                onClick={this.handleGoHome}
-              >
-                {UI_TEXT.GO_BACK_TO_HOME}
-              </Button>
-            </div>
+          <div className="error-boundary-page__actions">
+            <Button
+              className="error-boundary-page__action"
+              type="button"
+              variant="primary"
+              onClick={this.handleRetry}
+            >
+              {UI_TEXT.TRY_AGAIN}
+            </Button>
+            <Button
+              className="error-boundary-page__action"
+              type="button"
+              variant="primary"
+              onClick={this.handleGoHome}
+            >
+              {UI_TEXT.GO_BACK_TO_HOME}
+            </Button>
           </div>
-        </section>
+        </div>
       );
     }
 

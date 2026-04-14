@@ -13,7 +13,7 @@ type IconLinkProps = {
   iconName: string;
   className?: string;
   iconClassName?: string;
-} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "target" | "rel" | "aria-label">;
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "aria-label">;
 
 export const IconLink = ({
   size = 36,
@@ -27,7 +27,7 @@ export const IconLink = ({
   target,
   rel,
   ...anchorProps
-}: IconLinkProps & { target?: AnchorHTMLAttributes<HTMLAnchorElement>["target"], rel?: AnchorHTMLAttributes<HTMLAnchorElement>["rel"] }) => {
+}: IconLinkProps) => {
   return (
     <a
       href={href}

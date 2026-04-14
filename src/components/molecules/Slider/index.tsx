@@ -114,7 +114,7 @@ export const Slider = ({
     return getFirstItemScrollStep(
       viewport.firstElementChild as HTMLElement | null,
     );
-  }, []);
+  }, [viewportRef]);
 
   // ── Button state ─────────────────────────────────────────────────────────────
 
@@ -155,7 +155,7 @@ export const Slider = ({
         behavior: "smooth",
       });
     }
-  }, [snap, showNavigation, loading, getStepWidth]);
+  }, [snap, showNavigation, loading, getStepWidth, viewportRef]);
 
   const debounceSnap = useCallback(() => {
     if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
@@ -174,7 +174,7 @@ export const Slider = ({
         behavior: "smooth",
       });
     },
-    [loading, getStepWidth],
+    [loading, getStepWidth, viewportRef],
   );
 
   const handlePrevClick = useCallback(() => scrollByStep(-1), [scrollByStep]);
@@ -191,7 +191,7 @@ export const Slider = ({
       scrollStartLeftRef.current = viewportRef.current?.scrollLeft || 0;
       viewportRef.current?.classList.add("is-dragging");
     },
-    [loading, showNavigation],
+    [loading, showNavigation, viewportRef],
   );
 
   const handleMouseMove = useCallback(
@@ -208,7 +208,7 @@ export const Slider = ({
       viewportRef.current.scrollLeft = scrollStartLeftRef.current - deltaX;
       onScroll?.(viewportRef.current);
     },
-    [loading, showNavigation, onScroll],
+    [loading, showNavigation, onScroll, viewportRef],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -216,7 +216,7 @@ export const Slider = ({
     isMouseDownRef.current = false;
     viewportRef.current?.classList.remove("is-dragging");
     if (!loading) snapToNearestItem();
-  }, [loading, snapToNearestItem]);
+  }, [loading, snapToNearestItem, viewportRef]);
 
   // ── Click guard (suppress link clicks that follow a drag) ────────────────────
 
@@ -238,7 +238,7 @@ export const Slider = ({
       onScroll?.(viewportRef.current!);
       debounceSnap();
     },
-    [loading, showNavigation, onScroll, debounceSnap],
+    [loading, showNavigation, onScroll, debounceSnap, viewportRef],
   );
 
   // ── Event registration ────────────────────────────────────────────────────────
@@ -287,6 +287,7 @@ export const Slider = ({
     handleMouseUp,
     handleWheel,
     debounceSnap,
+    viewportRef,
   ]);
 
   // Re-run button states after external normalizations (e.g. useInfiniteLoop

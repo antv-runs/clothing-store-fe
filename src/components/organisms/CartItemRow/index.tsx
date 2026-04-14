@@ -33,6 +33,7 @@ export const CartItemRow = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInputValue(String(item.quantity));
   }, [item.quantity]);
 

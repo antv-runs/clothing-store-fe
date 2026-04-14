@@ -337,8 +337,14 @@ export const useProductReviews = (
       return;
     }
 
-    await requestPageOne(productId, state.filter, state.sort, true, true);
-  }, [productId, requestPageOne, state.filter, state.sort]);
+    await requestPageOne(
+      productId,
+      state.filter,
+      state.sort,
+      true, // force
+      !!state.error, // isRetry
+    );
+  }, [productId, requestPageOne, state.filter, state.sort, state.error]);
 
   const invalidParams = !productId
     ? "A valid product id is required to load reviews."

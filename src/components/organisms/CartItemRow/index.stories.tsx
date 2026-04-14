@@ -46,7 +46,7 @@ export const Default: Story = {
 export const Locked: Story = {
   args: {
     isLocked: true,
-    formatPrice: (amount, currency) => `$${amount.toFixed(2)}`,
+    formatPrice: (amount) => `$${amount.toFixed(2)}`,
     item: {
       id: "prod-2",
       name: "Locked T-Shirt",

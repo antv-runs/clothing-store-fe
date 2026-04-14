@@ -107,7 +107,7 @@ export const ProductCardList = ({
   // ── onScroll bridge: called by Slider on every scroll/drag/wheel event ─────
 
   const handleSliderScroll = useCallback(
-    (_viewport: HTMLDivElement) => {
+    () => {
       normalizeLoopPosition();
     },
     [normalizeLoopPosition],
